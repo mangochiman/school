@@ -2,9 +2,9 @@
 *.swp
 *.swo
 config/database.yml
-config/email.yml
-config/application.yml
 config/settings.yml
+db/schema.rb
+log/
 *~
 nbproject
 Gemfile.lock

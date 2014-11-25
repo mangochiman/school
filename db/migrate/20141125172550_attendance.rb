@@ -1,6 +1,6 @@
 class Attendance < ActiveRecord::Migration
   def self.up
-    create_table :attendance, :id => :false do |t|
+    create_table :attendance, :id => false do |t|
       t.string :date
       t.integer :student_id
       t.string :status
