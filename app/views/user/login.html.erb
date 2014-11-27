@@ -6,9 +6,8 @@
 	<title>SimpleAdmin - Login to CMS</title>
 	
 	<!-- Stylesheets -->
-	<link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet'>
-	<link rel="stylesheet" href="css/style.css">
-
+	<%= javascript_include_tag("script") %>
+        <%= stylesheet_link_tag("style") %>
 	<!-- Optimize for mobile devices -->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>  
 </head>
@@ -34,14 +33,14 @@
 	
 			<div id="login-intro" class="fl">
 			
-				<h1>Login to CMS</h1>
+				<h1>Login to mySchool</h1>
 				<h5>Enter your credentials below</h5>
 			
 			</div> <!-- login-intro -->
 			
 			<!-- Change this image to your own company's logo -->
 			<!-- The logo will automatically be resized to 39px height. -->
-			<a href="#" id="company-branding" class="fr"><img src="images/company-logo.png" alt="Blue Hosting" /></a>
+			<a href="#" id="company-branding" class="fr"><img src="/images/company-logo.png" alt="Blue Hosting" /></a>
 			
 		</div> <!-- end full-width -->	
 
@@ -68,7 +67,7 @@
 				
 				<p>I've <a href="#">forgotten my password</a>.</p>
 				
-				<a href="dashboard.html" class="button round blue image-right ic-right-arrow">LOG IN</a>
+				<a href="/admin/home" class="button round blue image-right ic-right-arrow">LOG IN</a>
 
 			</fieldset>
 
