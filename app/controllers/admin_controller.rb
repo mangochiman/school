@@ -24,6 +24,10 @@ class AdminController < ApplicationController
   end
 
   def time_table
-    
+    render :layout => false
+  end
+
+  def research
+    render :layout => false
   end
 end
