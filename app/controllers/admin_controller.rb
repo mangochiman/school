@@ -5,6 +5,6 @@ class AdminController < ApplicationController
   end
 
   def settings
-       
+          render :layout => false
   end
 end
