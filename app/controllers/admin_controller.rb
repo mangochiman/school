@@ -3,4 +3,8 @@ class AdminController < ApplicationController
     
     render :layout => "application"
   end
+
+  def settings
+       
+  end
 end
