@@ -4,6 +4,6 @@ class StudentController < ApplicationController
   end
 
   def my_results
-    
+    render :layout => false
   end
 end
