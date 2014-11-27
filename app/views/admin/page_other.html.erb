@@ -12,9 +12,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	
 	<!-- jQuery & JS files -->
+        <%= javascript_include_tag("jquery") %>
 	<%= javascript_include_tag("script") %>
         <%= stylesheet_link_tag("style") %>
-        <%= javascript_include_tag("jquery") %>
 </head>
 <body>
 
@@ -60,9 +60,9 @@
 		<div class="page-full-width cf">
 	
 			<ul id="tabs" class="fl">
-				<li><a href="dashboard.html" class="dashboard-tab">Dashboard</a></li>
-				<li><a href="page-full-width.html">Full width page</a></li>
-				<li><a href="page-other.html" class="active-tab">Other page elements</a></li>
+				<li><a href="/admin/dashboard" class="dashboard-tab">Dashboard</a></li>
+				<li><a href="/admin/page_full_width">Full width page</a></li>
+				<li><a href="/admin/page_other" class="active-tab">Other page elements</a></li>
 			</ul> <!-- end tabs -->
 			
 			<!-- Change this image to your own company's logo -->
