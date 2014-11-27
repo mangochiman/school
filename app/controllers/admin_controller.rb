@@ -18,4 +18,12 @@ class AdminController < ApplicationController
   def settings
           render :layout => false
   end
+
+  def index
+    render :layout => false
+  end
+
+  def time_table
+    
+  end
 end
