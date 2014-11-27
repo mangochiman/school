@@ -6837,3 +6837,2635 @@ ActionController::RoutingError (No route matches "/css/style.css" with {:method=
 >>>>>>> d18da32ec4c4f3b3d0dba6c15eac45f3b5caa650
 
 Rendering rescues/layout (not_found)
+/!\ FAILSAFE /!\  Thu Nov 27 15:21:53 +0200 2014
+  Status: 500 Internal Server Error
+  Access denied for user 'root'@'localhost' (using password: YES)
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/mysql_adapter.rb:589:in `real_connect'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/mysql_adapter.rb:589:in `connect'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/mysql_adapter.rb:203:in `initialize'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/mysql_adapter.rb:75:in `new'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/mysql_adapter.rb:75:in `mysql_connection'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:223:in `send'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:223:in `new_connection'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:245:in `checkout_new_connection'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:188:in `checkout'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:184:in `loop'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:184:in `checkout'
+    /home/mangochiman/.rvm/rubies/ruby-1.8.7-p374/lib/ruby/1.8/monitor.rb:242:in `synchronize'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:183:in `checkout'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:98:in `connection'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:326:in `retrieve_connection'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_specification.rb:123:in `retrieve_connection'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_specification.rb:115:in `connection'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/query_cache.rb:9:in `cache'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/query_cache.rb:28:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:361:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/warden-0.10.7/lib/warden/manager.rb:35:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/warden-0.10.7/lib/warden/manager.rb:34:in `catch'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/warden-0.10.7/lib/warden/manager.rb:34:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/actionpack-2.3.5/lib/action_controller/string_coercion.rb:25:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/rack-1.0.1/lib/rack/head.rb:9:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/rack-1.0.1/lib/rack/methodoverride.rb:24:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/actionpack-2.3.5/lib/action_controller/params_parser.rb:15:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/actionpack-2.3.5/lib/action_controller/session/cookie_store.rb:93:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/devise-1.0.11/lib/devise/rails/warden_compat.rb:43:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/actionpack-2.3.5/lib/action_controller/failsafe.rb:26:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/rack-1.0.1/lib/rack/lock.rb:11:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/rack-1.0.1/lib/rack/lock.rb:11:in `synchronize'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/rack-1.0.1/lib/rack/lock.rb:11:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/actionpack-2.3.5/lib/action_controller/dispatcher.rb:114:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/actionpack-2.3.5/lib/action_controller/reloader.rb:34:in `run'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/actionpack-2.3.5/lib/action_controller/dispatcher.rb:108:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:449:in `initialize'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:449:in `new'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:448:in `times'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/helper-scripts/classic-rails-preloader.rb:187
+/!\ FAILSAFE /!\  Thu Nov 27 15:21:53 +0200 2014
+  Status: 500 Internal Server Error
+  Access denied for user 'root'@'localhost' (using password: YES)
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/mysql_adapter.rb:589:in `real_connect'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/mysql_adapter.rb:589:in `connect'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/mysql_adapter.rb:203:in `initialize'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/mysql_adapter.rb:75:in `new'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/mysql_adapter.rb:75:in `mysql_connection'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:223:in `send'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:223:in `new_connection'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:245:in `checkout_new_connection'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:188:in `checkout'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:184:in `loop'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:184:in `checkout'
+    /home/mangochiman/.rvm/rubies/ruby-1.8.7-p374/lib/ruby/1.8/monitor.rb:242:in `synchronize'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:183:in `checkout'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:98:in `connection'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:326:in `retrieve_connection'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_specification.rb:123:in `retrieve_connection'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_specification.rb:115:in `connection'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/query_cache.rb:9:in `cache'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/query_cache.rb:28:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:361:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/warden-0.10.7/lib/warden/manager.rb:35:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/warden-0.10.7/lib/warden/manager.rb:34:in `catch'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/warden-0.10.7/lib/warden/manager.rb:34:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/actionpack-2.3.5/lib/action_controller/string_coercion.rb:25:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/rack-1.0.1/lib/rack/head.rb:9:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/rack-1.0.1/lib/rack/methodoverride.rb:24:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/actionpack-2.3.5/lib/action_controller/params_parser.rb:15:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/actionpack-2.3.5/lib/action_controller/session/cookie_store.rb:93:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/devise-1.0.11/lib/devise/rails/warden_compat.rb:43:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/actionpack-2.3.5/lib/action_controller/failsafe.rb:26:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/rack-1.0.1/lib/rack/lock.rb:11:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/rack-1.0.1/lib/rack/lock.rb:11:in `synchronize'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/rack-1.0.1/lib/rack/lock.rb:11:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/actionpack-2.3.5/lib/action_controller/dispatcher.rb:114:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/actionpack-2.3.5/lib/action_controller/reloader.rb:34:in `run'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/actionpack-2.3.5/lib/action_controller/dispatcher.rb:108:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:449:in `initialize'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:449:in `new'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:448:in `times'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/helper-scripts/classic-rails-preloader.rb:187
+/!\ FAILSAFE /!\  Thu Nov 27 15:22:00 +0200 2014
+  Status: 500 Internal Server Error
+  Access denied for user 'root'@'localhost' (using password: YES)
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/mysql_adapter.rb:589:in `real_connect'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/mysql_adapter.rb:589:in `connect'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/mysql_adapter.rb:203:in `initialize'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/mysql_adapter.rb:75:in `new'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/mysql_adapter.rb:75:in `mysql_connection'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:223:in `send'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:223:in `new_connection'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:245:in `checkout_new_connection'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:188:in `checkout'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:184:in `loop'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:184:in `checkout'
+    /home/mangochiman/.rvm/rubies/ruby-1.8.7-p374/lib/ruby/1.8/monitor.rb:242:in `synchronize'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:183:in `checkout'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:98:in `connection'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:326:in `retrieve_connection'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_specification.rb:123:in `retrieve_connection'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_specification.rb:115:in `connection'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/query_cache.rb:9:in `cache'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/query_cache.rb:28:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:361:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/warden-0.10.7/lib/warden/manager.rb:35:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/warden-0.10.7/lib/warden/manager.rb:34:in `catch'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/warden-0.10.7/lib/warden/manager.rb:34:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/actionpack-2.3.5/lib/action_controller/string_coercion.rb:25:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/rack-1.0.1/lib/rack/head.rb:9:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/rack-1.0.1/lib/rack/methodoverride.rb:24:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/actionpack-2.3.5/lib/action_controller/params_parser.rb:15:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/actionpack-2.3.5/lib/action_controller/session/cookie_store.rb:93:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/devise-1.0.11/lib/devise/rails/warden_compat.rb:43:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/actionpack-2.3.5/lib/action_controller/failsafe.rb:26:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/rack-1.0.1/lib/rack/lock.rb:11:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/rack-1.0.1/lib/rack/lock.rb:11:in `synchronize'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/rack-1.0.1/lib/rack/lock.rb:11:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/actionpack-2.3.5/lib/action_controller/dispatcher.rb:114:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/actionpack-2.3.5/lib/action_controller/reloader.rb:34:in `run'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/actionpack-2.3.5/lib/action_controller/dispatcher.rb:108:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:449:in `initialize'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:449:in `new'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:448:in `times'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/helper-scripts/classic-rails-preloader.rb:187
+/!\ FAILSAFE /!\  Thu Nov 27 15:22:33 +0200 2014
+  Status: 500 Internal Server Error
+  Unknown database 'myschool'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/mysql_adapter.rb:589:in `real_connect'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/mysql_adapter.rb:589:in `connect'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/mysql_adapter.rb:203:in `initialize'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/mysql_adapter.rb:75:in `new'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/mysql_adapter.rb:75:in `mysql_connection'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:223:in `send'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:223:in `new_connection'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:245:in `checkout_new_connection'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:188:in `checkout'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:184:in `loop'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:184:in `checkout'
+    /home/mangochiman/.rvm/rubies/ruby-1.8.7-p374/lib/ruby/1.8/monitor.rb:242:in `synchronize'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:183:in `checkout'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:98:in `connection'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:326:in `retrieve_connection'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_specification.rb:123:in `retrieve_connection'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_specification.rb:115:in `connection'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/query_cache.rb:9:in `cache'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/query_cache.rb:28:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:361:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/warden-0.10.7/lib/warden/manager.rb:35:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/warden-0.10.7/lib/warden/manager.rb:34:in `catch'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/warden-0.10.7/lib/warden/manager.rb:34:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/actionpack-2.3.5/lib/action_controller/string_coercion.rb:25:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/rack-1.0.1/lib/rack/head.rb:9:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/rack-1.0.1/lib/rack/methodoverride.rb:24:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/actionpack-2.3.5/lib/action_controller/params_parser.rb:15:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/actionpack-2.3.5/lib/action_controller/session/cookie_store.rb:93:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/devise-1.0.11/lib/devise/rails/warden_compat.rb:43:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/actionpack-2.3.5/lib/action_controller/failsafe.rb:26:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/rack-1.0.1/lib/rack/lock.rb:11:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/rack-1.0.1/lib/rack/lock.rb:11:in `synchronize'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/rack-1.0.1/lib/rack/lock.rb:11:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/actionpack-2.3.5/lib/action_controller/dispatcher.rb:114:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/actionpack-2.3.5/lib/action_controller/reloader.rb:34:in `run'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/actionpack-2.3.5/lib/action_controller/dispatcher.rb:108:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:449:in `initialize'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:449:in `new'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:448:in `times'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/helper-scripts/classic-rails-preloader.rb:187
+/!\ FAILSAFE /!\  Thu Nov 27 15:22:33 +0200 2014
+  Status: 500 Internal Server Error
+  Unknown database 'myschool'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/mysql_adapter.rb:589:in `real_connect'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/mysql_adapter.rb:589:in `connect'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/mysql_adapter.rb:203:in `initialize'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/mysql_adapter.rb:75:in `new'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/mysql_adapter.rb:75:in `mysql_connection'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:223:in `send'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:223:in `new_connection'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:245:in `checkout_new_connection'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:188:in `checkout'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:184:in `loop'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:184:in `checkout'
+    /home/mangochiman/.rvm/rubies/ruby-1.8.7-p374/lib/ruby/1.8/monitor.rb:242:in `synchronize'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:183:in `checkout'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:98:in `connection'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:326:in `retrieve_connection'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_specification.rb:123:in `retrieve_connection'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_specification.rb:115:in `connection'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/query_cache.rb:9:in `cache'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/query_cache.rb:28:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/activerecord-2.3.5/lib/active_record/connection_adapters/abstract/connection_pool.rb:361:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/warden-0.10.7/lib/warden/manager.rb:35:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/warden-0.10.7/lib/warden/manager.rb:34:in `catch'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/warden-0.10.7/lib/warden/manager.rb:34:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/actionpack-2.3.5/lib/action_controller/string_coercion.rb:25:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/rack-1.0.1/lib/rack/head.rb:9:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/rack-1.0.1/lib/rack/methodoverride.rb:24:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/actionpack-2.3.5/lib/action_controller/params_parser.rb:15:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/actionpack-2.3.5/lib/action_controller/session/cookie_store.rb:93:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/devise-1.0.11/lib/devise/rails/warden_compat.rb:43:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/actionpack-2.3.5/lib/action_controller/failsafe.rb:26:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/rack-1.0.1/lib/rack/lock.rb:11:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/rack-1.0.1/lib/rack/lock.rb:11:in `synchronize'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/rack-1.0.1/lib/rack/lock.rb:11:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/actionpack-2.3.5/lib/action_controller/dispatcher.rb:114:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/actionpack-2.3.5/lib/action_controller/reloader.rb:34:in `run'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/actionpack-2.3.5/lib/action_controller/dispatcher.rb:108:in `call'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:449:in `initialize'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:449:in `new'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:448:in `times'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+    /home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/passenger-4.0.50/helper-scripts/classic-rails-preloader.rb:187
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing UserController#login (for 127.0.0.1 at 2014-11-27 15:23:08) [GET]
+Rendering user/login
+Completed in 13ms (View: 12, DB: 0) | 200 OK [http://0.0.0.0/]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing UserController#login (for 127.0.0.1 at 2014-11-27 15:23:09) [GET]
+Rendering user/login
+Completed in 2ms (View: 1, DB: 0) | 200 OK [http://0.0.0.0/]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AdminController#home (for 127.0.0.1 at 2014-11-27 15:23:10) [GET]
+Rendering template within layouts/application
+Rendering admin/home
+Completed in 78ms (View: 77, DB: 0) | 200 OK [http://0.0.0.0/admin/home]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AdminController#images to png (for 127.0.0.1 at 2014-11-27 15:23:11) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: dashboard, home, index, page_full_width, page_other, settings, and time_table):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AdminController#dashboard (for 127.0.0.1 at 2014-11-27 15:23:12) [GET]
+Rendering admin/dashboard
+Completed in 7ms (View: 6, DB: 0) | 200 OK [http://0.0.0.0/admin/dashboard]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing UserController#login (for 127.0.0.1 at 2014-11-27 15:23:16) [GET]
+Rendering user/login
+Completed in 2ms (View: 1, DB: 0) | 200 OK [http://0.0.0.0/]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AdminController#home (for 127.0.0.1 at 2014-11-27 15:23:18) [GET]
+Rendering template within layouts/application
+Rendering admin/home
+Completed in 3ms (View: 2, DB: 0) | 200 OK [http://0.0.0.0/admin/home]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AdminController#images to png (for 127.0.0.1 at 2014-11-27 15:23:18) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: dashboard, home, index, page_full_width, page_other, settings, and time_table):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing StudentController#index (for 127.0.0.1 at 2014-11-27 15:23:19) [GET]
+Rendering template within layouts/application
+Rendering student/index
+Completed in 7ms (View: 6, DB: 0) | 200 OK [http://0.0.0.0/student/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing StudentController#images to png (for 127.0.0.1 at 2014-11-27 15:23:19) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index and my_results):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing ParentController#index (for 127.0.0.1 at 2014-11-27 15:23:20) [GET]
+Rendering template within layouts/application
+Rendering parent/index
+Completed in 8ms (View: 7, DB: 0) | 200 OK [http://0.0.0.0/parent/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing ParentController#images to png (for 127.0.0.1 at 2014-11-27 15:23:20) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing ParentController#images to png (for 127.0.0.1 at 2014-11-27 15:23:20) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#index (for 127.0.0.1 at 2014-11-27 15:23:21) [GET]
+Rendering template within layouts/application
+Rendering teacher/index
+Completed in 8ms (View: 7, DB: 0) | 200 OK [http://0.0.0.0/teacher/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#images to png (for 127.0.0.1 at 2014-11-27 15:23:21) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#images to png (for 127.0.0.1 at 2014-11-27 15:23:21) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing ExaminationController#index (for 127.0.0.1 at 2014-11-27 15:23:22) [GET]
+Rendering template within layouts/application
+Rendering examination/index
+Completed in 11ms (View: 10, DB: 0) | 200 OK [http://0.0.0.0/examination/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing ExaminationController#images to png (for 127.0.0.1 at 2014-11-27 15:23:22) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing ClassRoomController#index (for 127.0.0.1 at 2014-11-27 15:23:22) [GET]
+Rendering template within layouts/application
+Rendering class_room/index
+Completed in 7ms (View: 6, DB: 0) | 200 OK [http://0.0.0.0/class_room/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing ClassRoomController#images to png (for 127.0.0.1 at 2014-11-27 15:23:22) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing ReportController#index (for 127.0.0.1 at 2014-11-27 15:23:23) [GET]
+Rendering template within layouts/application
+Rendering report/index
+Completed in 8ms (View: 7, DB: 0) | 200 OK [http://0.0.0.0/report/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing ReportController#images to png (for 127.0.0.1 at 2014-11-27 15:23:23) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing ReportController#index (for 127.0.0.1 at 2014-11-27 15:23:24) [GET]
+Rendering template within layouts/application
+Rendering report/index
+Completed in 3ms (View: 2, DB: 0) | 200 OK [http://0.0.0.0/report/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing ReportController#images to png (for 127.0.0.1 at 2014-11-27 15:23:24) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing StudentController#my_results (for 127.0.0.1 at 2014-11-27 15:23:25) [GET]
+Rendering template within layouts/application
+Rendering student/my_results
+Completed in 9ms (View: 8, DB: 0) | 200 OK [http://0.0.0.0/student/my_results]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing StudentController#images to png (for 127.0.0.1 at 2014-11-27 15:23:25) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index and my_results):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AdminController#time_table (for 127.0.0.1 at 2014-11-27 15:23:26) [GET]
+
+ActionView::MissingTemplate (Missing template admin/time_table.erb in view path app/views:/home/mangochiman/.rvm/gems/ruby-1.8.7-p374/gems/devise-1.0.11/app/views):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (internal_server_error)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing StudentController#my_results (for 127.0.0.1 at 2014-11-27 15:23:58) [GET]
+Rendering template within layouts/application
+Rendering student/my_results
+Completed in 3ms (View: 2, DB: 0) | 200 OK [http://0.0.0.0/student/my_results]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing StudentController#images to png (for 127.0.0.1 at 2014-11-27 15:23:58) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index and my_results):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AdminController#dashboard (for 127.0.0.1 at 2014-11-27 15:24:00) [GET]
+Rendering admin/dashboard
+Completed in 2ms (View: 1, DB: 0) | 200 OK [http://0.0.0.0/admin/dashboard]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AdminController#page_full_width (for 127.0.0.1 at 2014-11-27 15:24:00) [GET]
+Rendering admin/page_full_width
+Completed in 5ms (View: 5, DB: 0) | 200 OK [http://0.0.0.0/admin/page_full_width]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing UserController#login (for 127.0.0.1 at 2014-11-27 15:24:05) [GET]
+Rendering user/login
+Completed in 2ms (View: 1, DB: 0) | 200 OK [http://0.0.0.0/]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AdminController#home (for 127.0.0.1 at 2014-11-27 15:24:07) [GET]
+Rendering template within layouts/application
+Rendering admin/home
+Completed in 4ms (View: 2, DB: 0) | 200 OK [http://0.0.0.0/admin/home]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AdminController#images to png (for 127.0.0.1 at 2014-11-27 15:24:07) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: dashboard, home, index, page_full_width, page_other, settings, and time_table):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AdminController#images to png (for 127.0.0.1 at 2014-11-27 15:24:07) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: dashboard, home, index, page_full_width, page_other, settings, and time_table):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing StudentController#index (for 127.0.0.1 at 2014-11-27 15:24:08) [GET]
+Rendering template within layouts/application
+Rendering student/index
+Completed in 3ms (View: 2, DB: 0) | 200 OK [http://0.0.0.0/student/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing StudentController#images to png (for 127.0.0.1 at 2014-11-27 15:24:08) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index and my_results):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.2ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing ParentController#index (for 127.0.0.1 at 2014-11-27 15:24:09) [GET]
+Rendering template within layouts/application
+Rendering parent/index
+Completed in 2ms (View: 1, DB: 0) | 200 OK [http://0.0.0.0/parent/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing ParentController#images to png (for 127.0.0.1 at 2014-11-27 15:24:09) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#index (for 127.0.0.1 at 2014-11-27 15:24:10) [GET]
+Rendering template within layouts/application
+Rendering teacher/index
+Completed in 3ms (View: 2, DB: 0) | 200 OK [http://0.0.0.0/teacher/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#images to png (for 127.0.0.1 at 2014-11-27 15:24:10) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AdminController#research (for 127.0.0.1 at 2014-11-27 15:24:10) [GET]
+Rendering template within layouts/application
+Rendering admin/research
+Completed in 11ms (View: 9, DB: 0) | 200 OK [http://0.0.0.0/admin/research]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AdminController#images to png (for 127.0.0.1 at 2014-11-27 15:24:10) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: dashboard, home, index, page_full_width, page_other, settings, and time_table):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing ExaminationController#index (for 127.0.0.1 at 2014-11-27 15:24:11) [GET]
+Rendering template within layouts/application
+Rendering examination/index
+Completed in 3ms (View: 2, DB: 0) | 200 OK [http://0.0.0.0/examination/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing ExaminationController#images to png (for 127.0.0.1 at 2014-11-27 15:24:11) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing ClassRoomController#index (for 127.0.0.1 at 2014-11-27 15:24:11) [GET]
+Rendering template within layouts/application
+Rendering class_room/index
+Completed in 4ms (View: 2, DB: 0) | 200 OK [http://0.0.0.0/class_room/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing ClassRoomController#images to png (for 127.0.0.1 at 2014-11-27 15:24:11) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing ReportController#index (for 127.0.0.1 at 2014-11-27 15:24:12) [GET]
+Rendering template within layouts/application
+Rendering report/index
+Completed in 3ms (View: 2, DB: 0) | 200 OK [http://0.0.0.0/report/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing ReportController#images to png (for 127.0.0.1 at 2014-11-27 15:24:12) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing StudentController#my_results (for 127.0.0.1 at 2014-11-27 15:24:12) [GET]
+Rendering template within layouts/application
+Rendering student/my_results
+Completed in 4ms (View: 2, DB: 0) | 200 OK [http://0.0.0.0/student/my_results]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing StudentController#images to png (for 127.0.0.1 at 2014-11-27 15:24:12) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index and my_results):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AdminController#time_table (for 127.0.0.1 at 2014-11-27 15:24:13) [GET]
+Rendering template within layouts/application
+Rendering admin/time_table
+Completed in 9ms (View: 8, DB: 0) | 200 OK [http://0.0.0.0/admin/time_table]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AdminController#images to png (for 127.0.0.1 at 2014-11-27 15:24:13) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: dashboard, home, index, page_full_width, page_other, settings, and time_table):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AdminController#images to png (for 127.0.0.1 at 2014-11-27 15:24:13) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: dashboard, home, index, page_full_width, page_other, settings, and time_table):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing ReportController#index (for 127.0.0.1 at 2014-11-27 15:24:13) [GET]
+Rendering template within layouts/application
+Rendering report/index
+Completed in 43ms (View: 41, DB: 0) | 200 OK [http://0.0.0.0/report/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing ReportController#images to png (for 127.0.0.1 at 2014-11-27 15:24:14) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing ReportController#images to png (for 127.0.0.1 at 2014-11-27 15:24:14) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing ExaminationController#index (for 127.0.0.1 at 2014-11-27 15:24:14) [GET]
+Rendering template within layouts/application
+Rendering examination/index
+Completed in 2ms (View: 2, DB: 0) | 200 OK [http://0.0.0.0/examination/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing ExaminationController#images to png (for 127.0.0.1 at 2014-11-27 15:24:14) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AdminController#research (for 127.0.0.1 at 2014-11-27 15:24:15) [GET]
+Rendering template within layouts/application
+Rendering admin/research
+Completed in 3ms (View: 2, DB: 0) | 200 OK [http://0.0.0.0/admin/research]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AdminController#images to png (for 127.0.0.1 at 2014-11-27 15:24:15) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: dashboard, home, index, page_full_width, page_other, settings, and time_table):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#index (for 127.0.0.1 at 2014-11-27 15:24:15) [GET]
+Rendering template within layouts/application
+Rendering teacher/index
+Completed in 2ms (View: 1, DB: 0) | 200 OK [http://0.0.0.0/teacher/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#images to png (for 127.0.0.1 at 2014-11-27 15:24:15) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing ParentController#index (for 127.0.0.1 at 2014-11-27 15:24:16) [GET]
+Rendering template within layouts/application
+Rendering parent/index
+Completed in 4ms (View: 2, DB: 0) | 200 OK [http://0.0.0.0/parent/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing ParentController#images to png (for 127.0.0.1 at 2014-11-27 15:24:16) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing StudentController#index (for 127.0.0.1 at 2014-11-27 15:24:16) [GET]
+Rendering template within layouts/application
+Rendering student/index
+Completed in 2ms (View: 1, DB: 0) | 200 OK [http://0.0.0.0/student/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing StudentController#images to png (for 127.0.0.1 at 2014-11-27 15:24:16) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index and my_results):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AdminController#dashboard (for 127.0.0.1 at 2014-11-27 15:25:43) [GET]
+Rendering admin/dashboard
+Completed in 3ms (View: 2, DB: 0) | 200 OK [http://0.0.0.0/admin/dashboard]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing UserController#login (for 127.0.0.1 at 2014-11-27 15:25:49) [GET]
+Rendering user/login
+Completed in 2ms (View: 1, DB: 0) | 200 OK [http://0.0.0.0/]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AdminController#home (for 127.0.0.1 at 2014-11-27 15:25:50) [GET]
+Rendering template within layouts/application
+Rendering admin/home
+Completed in 2ms (View: 1, DB: 0) | 200 OK [http://0.0.0.0/admin/home]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AdminController#images to png (for 127.0.0.1 at 2014-11-27 15:25:51) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: dashboard, home, index, page_full_width, page_other, settings, and time_table):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#index (for 127.0.0.1 at 2014-11-27 15:25:54) [GET]
+Rendering template within layouts/application
+Rendering teacher/index
+Completed in 8ms (View: 7, DB: 0) | 200 OK [http://0.0.0.0/teacher/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#images to png (for 127.0.0.1 at 2014-11-27 15:25:54) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#index (for 127.0.0.1 at 2014-11-27 15:25:56) [GET]
+Rendering template within layouts/application
+Rendering teacher/index
+Completed in 2ms (View: 1, DB: 0) | 200 OK [http://0.0.0.0/teacher/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#images to png (for 127.0.0.1 at 2014-11-27 15:25:56) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#index (for 127.0.0.1 at 2014-11-27 15:25:57) [GET]
+Rendering template within layouts/application
+Rendering teacher/index
+Completed in 2ms (View: 1, DB: 0) | 200 OK [http://0.0.0.0/teacher/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#images to png (for 127.0.0.1 at 2014-11-27 15:25:57) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#index (for 127.0.0.1 at 2014-11-27 15:26:16) [GET]
+Rendering template within layouts/application
+Rendering teacher/index
+Completed in 7ms (View: 6, DB: 0) | 200 OK [http://0.0.0.0/teacher/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#images to png (for 127.0.0.1 at 2014-11-27 15:26:16) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#images to png (for 127.0.0.1 at 2014-11-27 15:26:16) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing StudentController#index (for 127.0.0.1 at 2014-11-27 15:26:19) [GET]
+Rendering template within layouts/application
+Rendering student/index
+Completed in 4ms (View: 2, DB: 0) | 200 OK [http://0.0.0.0/student/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing StudentController#images to png (for 127.0.0.1 at 2014-11-27 15:26:19) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index and my_results):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing ParentController#index (for 127.0.0.1 at 2014-11-27 15:26:20) [GET]
+Rendering template within layouts/application
+Rendering parent/index
+Completed in 3ms (View: 2, DB: 0) | 200 OK [http://0.0.0.0/parent/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing ParentController#images to png (for 127.0.0.1 at 2014-11-27 15:26:20) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#index (for 127.0.0.1 at 2014-11-27 15:26:21) [GET]
+Rendering template within layouts/application
+Rendering teacher/index
+Completed in 3ms (View: 2, DB: 0) | 200 OK [http://0.0.0.0/teacher/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#images to png (for 127.0.0.1 at 2014-11-27 15:26:21) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AdminController#dashboard (for 127.0.0.1 at 2014-11-27 15:26:35) [GET]
+Rendering admin/dashboard
+Completed in 3ms (View: 1, DB: 0) | 200 OK [http://0.0.0.0/admin/dashboard]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing UserController#login (for 127.0.0.1 at 2014-11-27 15:26:39) [GET]
+Rendering user/login
+Completed in 2ms (View: 1, DB: 0) | 200 OK [http://0.0.0.0/]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AdminController#home (for 127.0.0.1 at 2014-11-27 15:26:40) [GET]
+Rendering template within layouts/application
+Rendering admin/home
+Completed in 2ms (View: 1, DB: 0) | 200 OK [http://0.0.0.0/admin/home]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AdminController#images to png (for 127.0.0.1 at 2014-11-27 15:26:40) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: dashboard, home, index, page_full_width, page_other, settings, and time_table):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#index (for 127.0.0.1 at 2014-11-27 15:26:43) [GET]
+Rendering template within layouts/application
+Rendering teacher/index
+Completed in 8ms (View: 7, DB: 0) | 200 OK [http://0.0.0.0/teacher/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#images to png (for 127.0.0.1 at 2014-11-27 15:26:43) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#index (for 127.0.0.1 at 2014-11-27 15:27:40) [GET]
+Rendering template within layouts/application
+Rendering teacher/index
+Completed in 11ms (View: 10, DB: 0) | 200 OK [http://0.0.0.0/teacher/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#images to png (for 127.0.0.1 at 2014-11-27 15:27:40) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#index (for 127.0.0.1 at 2014-11-27 15:28:15) [GET]
+Rendering template within layouts/application
+Rendering teacher/index
+Completed in 8ms (View: 7, DB: 0) | 200 OK [http://0.0.0.0/teacher/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#images to png (for 127.0.0.1 at 2014-11-27 15:28:15) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#index (for 127.0.0.1 at 2014-11-27 15:28:16) [GET]
+Rendering template within layouts/application
+Rendering teacher/index
+Completed in 2ms (View: 1, DB: 0) | 200 OK [http://0.0.0.0/teacher/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#images to png (for 127.0.0.1 at 2014-11-27 15:28:16) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#index (for 127.0.0.1 at 2014-11-27 15:28:16) [GET]
+Rendering template within layouts/application
+Rendering teacher/index
+Completed in 3ms (View: 2, DB: 0) | 200 OK [http://0.0.0.0/teacher/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#images to png (for 127.0.0.1 at 2014-11-27 15:28:16) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing ParentController#index (for 127.0.0.1 at 2014-11-27 15:28:17) [GET]
+Rendering template within layouts/application
+Rendering parent/index
+Completed in 2ms (View: 1, DB: 0) | 200 OK [http://0.0.0.0/parent/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing ParentController#images to png (for 127.0.0.1 at 2014-11-27 15:28:18) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#index (for 127.0.0.1 at 2014-11-27 15:28:18) [GET]
+Rendering template within layouts/application
+Rendering teacher/index
+Completed in 2ms (View: 2, DB: 0) | 200 OK [http://0.0.0.0/teacher/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#images to png (for 127.0.0.1 at 2014-11-27 15:28:18) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AdminController#research (for 127.0.0.1 at 2014-11-27 15:28:19) [GET]
+Rendering template within layouts/application
+Rendering admin/research
+Completed in 2ms (View: 1, DB: 0) | 200 OK [http://0.0.0.0/admin/research]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AdminController#images to png (for 127.0.0.1 at 2014-11-27 15:28:19) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: dashboard, home, index, page_full_width, page_other, settings, and time_table):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#index (for 127.0.0.1 at 2014-11-27 15:28:21) [GET]
+Rendering template within layouts/application
+Rendering teacher/index
+Completed in 2ms (View: 1, DB: 0) | 200 OK [http://0.0.0.0/teacher/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#images to png (for 127.0.0.1 at 2014-11-27 15:28:21) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#index (for 127.0.0.1 at 2014-11-27 15:28:23) [GET]
+Rendering template within layouts/application
+Rendering teacher/index
+Completed in 3ms (View: 2, DB: 0) | 200 OK [http://0.0.0.0/teacher/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#images to png (for 127.0.0.1 at 2014-11-27 15:28:23) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#index (for 127.0.0.1 at 2014-11-27 15:28:36) [GET]
+Rendering template within layouts/application
+Rendering teacher/index
+Completed in 9ms (View: 7, DB: 0) | 200 OK [http://0.0.0.0/teacher/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#images to png (for 127.0.0.1 at 2014-11-27 15:28:36) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#index (for 127.0.0.1 at 2014-11-27 15:28:37) [GET]
+Rendering template within layouts/application
+Rendering teacher/index
+Completed in 3ms (View: 2, DB: 0) | 200 OK [http://0.0.0.0/teacher/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#images to png (for 127.0.0.1 at 2014-11-27 15:28:37) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#index (for 127.0.0.1 at 2014-11-27 15:28:37) [GET]
+Rendering template within layouts/application
+Rendering teacher/index
+Completed in 2ms (View: 2, DB: 0) | 200 OK [http://0.0.0.0/teacher/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#images to png (for 127.0.0.1 at 2014-11-27 15:28:38) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#index (for 127.0.0.1 at 2014-11-27 15:28:38) [GET]
+Rendering template within layouts/application
+Rendering teacher/index
+Completed in 2ms (View: 2, DB: 0) | 200 OK [http://0.0.0.0/teacher/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#images to png (for 127.0.0.1 at 2014-11-27 15:28:38) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#index (for 127.0.0.1 at 2014-11-27 15:28:38) [GET]
+Rendering template within layouts/application
+Rendering teacher/index
+Completed in 3ms (View: 2, DB: 0) | 200 OK [http://0.0.0.0/teacher/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#images to png (for 127.0.0.1 at 2014-11-27 15:28:38) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#images to png (for 127.0.0.1 at 2014-11-27 15:28:39) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#index (for 127.0.0.1 at 2014-11-27 15:28:44) [GET]
+Rendering template within layouts/application
+Rendering teacher/index
+Completed in 8ms (View: 7, DB: 0) | 200 OK [http://0.0.0.0/teacher/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#images to png (for 127.0.0.1 at 2014-11-27 15:28:44) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AdminController#time_table (for 127.0.0.1 at 2014-11-27 15:29:03) [GET]
+Rendering template within layouts/application
+Rendering admin/time_table
+Completed in 2ms (View: 1, DB: 0) | 200 OK [http://0.0.0.0/admin/time_table]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing AdminController#images to png (for 127.0.0.1 at 2014-11-27 15:29:04) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: dashboard, home, index, page_full_width, page_other, settings, and time_table):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing StudentController#my_results (for 127.0.0.1 at 2014-11-27 15:29:04) [GET]
+Rendering template within layouts/application
+Rendering student/my_results
+Completed in 3ms (View: 2, DB: 0) | 200 OK [http://0.0.0.0/student/my_results]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing StudentController#images to png (for 127.0.0.1 at 2014-11-27 15:29:04) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index and my_results):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing ReportController#index (for 127.0.0.1 at 2014-11-27 15:29:05) [GET]
+Rendering template within layouts/application
+Rendering report/index
+Completed in 3ms (View: 2, DB: 0) | 200 OK [http://0.0.0.0/report/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing ReportController#images to png (for 127.0.0.1 at 2014-11-27 15:29:05) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing UserController#login (for 127.0.0.1 at 2014-11-27 15:29:17) [GET]
+Rendering user/login
+Completed in 13ms (View: 12, DB: 0) | 200 OK [http://0.0.0.0/]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing ReportController#index (for 127.0.0.1 at 2014-11-27 15:29:27) [GET]
+Rendering template within layouts/application
+Rendering report/index
+Completed in 21ms (View: 20, DB: 0) | 200 OK [http://0.0.0.0/report/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing ReportController#images to png (for 127.0.0.1 at 2014-11-27 15:29:28) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#index (for 127.0.0.1 at 2014-11-27 15:29:31) [GET]
+Rendering template within layouts/application
+Rendering teacher/index
+Completed in 8ms (View: 8, DB: 0) | 200 OK [http://0.0.0.0/teacher/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.0ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#images to png (for 127.0.0.1 at 2014-11-27 15:29:31) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#index (for 127.0.0.1 at 2014-11-27 15:29:32) [GET]
+Rendering template within layouts/application
+Rendering teacher/index
+Completed in 2ms (View: 1, DB: 0) | 200 OK [http://0.0.0.0/teacher/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#images to png (for 127.0.0.1 at 2014-11-27 15:29:32) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#index (for 127.0.0.1 at 2014-11-27 15:29:33) [GET]
+Rendering template within layouts/application
+Rendering teacher/index
+Completed in 3ms (View: 2, DB: 0) | 200 OK [http://0.0.0.0/teacher/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#index (for 127.0.0.1 at 2014-11-27 15:29:33) [GET]
+Rendering template within layouts/application
+Rendering teacher/index
+Completed in 2ms (View: 2, DB: 0) | 200 OK [http://0.0.0.0/teacher/index]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing TeacherController#images to png (for 127.0.0.1 at 2014-11-27 15:29:33) [GET]
+  Parameters: {"id"=>"company-logo"}
+
+ActionController::UnknownAction (No action responded to images. Actions: index):
+  warden (0.10.7) lib/warden/manager.rb:35:in `call'
+  warden (0.10.7) lib/warden/manager.rb:34:in `catch'
+  warden (0.10.7) lib/warden/manager.rb:34:in `call'
+  devise (1.0.11) lib/devise/rails/warden_compat.rb:43:in `call'
+  passenger (4.0.50) lib/phusion_passenger/rack/thread_handler_extension.rb:74:in `process_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:141:in `accept_and_process_next_request'
+  passenger (4.0.50) lib/phusion_passenger/request_handler/thread_handler.rb:109:in `main_loop'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:455:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `initialize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `new'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:449:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `times'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:448:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `synchronize'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:447:in `start_threads'
+  passenger (4.0.50) lib/phusion_passenger/request_handler.rb:208:in `main_loop'
+  passenger (4.0.50) helper-scripts/classic-rails-preloader.rb:187
+
+Rendering rescues/layout (not_found)

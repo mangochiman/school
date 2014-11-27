@@ -1,4 +1,4 @@
-class ParentController < ApplicationController
+class ReportController < ApplicationController
   def index
     render :layout => false
   end
