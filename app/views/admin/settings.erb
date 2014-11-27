@@ -6,8 +6,6 @@
 	<title>SimpleAdmin - Other page elements</title>
 
 	<!-- Stylesheets -->
-	<link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet'>
-	<link rel="stylesheet" href="css/style.css">
 
 	<!-- Optimize for mobile devices -->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -15,6 +13,67 @@
 	<!-- jQuery & JS files -->
 	<%= javascript_include_tag("script") %>
         <%= stylesheet_link_tag("style") %>
+
+        <script>
+          function __$(id){
+            return document.getElementById(id)
+          }
+
+          function addElement(ele, parent, name, cl){
+            var p = __$(parent)
+            p.innerHTML = "";
+            var input = document.createElement(ele)
+            input.name = name
+            input.id = name
+            p.appendChild(input)
+
+            cl.className = "table-actions-button ic-table-reload"
+            cl.onclick = function (){
+               this.className = 'table-actions-button ic-table-edit'
+               p.innerHTML = document.getElementById(name).value
+               this.onclick = function (){
+                 addElement(ele, parent, name, cl)
+               }
+            }
+
+          }
+          
+        </script>
+        table-actions-button ic-table-edit
+        <style>
+          .table {
+            display:table;
+            width:100%;
+          }
+          
+          .ic-table-reload {
+              background-image: url("../images/icons/message-boxes/confirmation.png");
+          }
+
+          .row {
+                display:table-row;
+                width: 100%;
+          }
+
+          .text {
+            display:table-cell;
+          }
+          .input {
+            display:table-cell;
+          }
+
+          .edit{
+            display:table-cell;
+          }
+
+           .text, .input, .edit{
+            padding: 0;
+            text-align: center;
+            width: 7em;
+            border-bottom: 1px solid #f8f9fa;
+            border-left: 1px solid white;
+}
+        </style>
 </head>
 <body>
 
@@ -64,7 +123,7 @@
 				<li><a href="page-full-width.html">Full width page</a></li>
 				<li><a href="page-other.html" class="active-tab">Settings</a></li>
 			</ul> <!-- end tabs -->
-
+                        
 			<!-- Change this image to your own company's logo -->
 			<!-- The logo will automatically be resized to 30px height. -->
 			<a href="#" id="company-branding-small" class="fr"><img src="images/company-logo.png" alt="Blue Hosting" /></a>
@@ -82,13 +141,20 @@
 
 			<div class="side-menu fl">
 
-				<h3>Side Menu</h3>
+				<h3>Tasks</h3>
 				<ul>
-					<li><a href="/admin/home">Home</a></li>
-					<li><a href="#">Another link</a></li>
-					<li><a href="#">A third link</a></li>
-					<li><a href="#">Fourth link</a></li>
-				</ul>
+                                <li><a href="/admin/home">Home</a></li>
+				<li><a href="/admin/dashboard" class="active-tab dashboard-tab">Dashboard</a></li>
+				<li><a href="/admin/page_full_width">Students</a></li>
+				<li><a href="/admin/page_other">Parents</a></li>
+                                <li><a href="/admin/page_other">Teachers</a></li>
+                                <li><a href="/admin/page_other">Research</a></li>
+                                <li><a href="/admin/page_other">Exams</a></li>
+                                <li><a href="/admin/page_other">Classes</a></li>
+                                <li><a href="/admin/page_other">Reports</a></li>
+                                <li><a href="/admin/page_other">My Results</a></li>
+                                <li><a href="/admin/page_other">Time Tables</a></li>
+			</ul>
 
 			</div> <!-- end side-menu -->
 
@@ -108,15 +174,20 @@
 
 
 						<div class="content-module-main">
+                                                  <div class="table">
+                                                    <div class="row">
+                                                            <div class="text">
+                                                                Name:
+                                                            </div>
 
-                                                  <div class="text">
-                                                      Name:
+                                                            <div class="input" id="input">
+
+                                                            </div>
+                                                            <div class="edit">
+                                                            <a class="table-actions-button ic-table-edit" href="#" onclick="addElement('input', 'input', 'name', this);"></a>
+                                                            </div>
+                                                    </div>
                                                   </div>
-
-                                                  <div class="input">
-
-                                                  </div>
-
 							<div class="stripe-separator"><!-- --></div>
 
 							<h2>This is an H2 heading</h2>
