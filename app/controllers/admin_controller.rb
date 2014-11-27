@@ -14,5 +14,8 @@ class AdminController < ApplicationController
   def dashboard
    render :layout => false
   end
-  
+
+  def settings
+       
+  end
 end
