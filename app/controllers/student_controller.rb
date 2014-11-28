@@ -12,7 +12,7 @@ class StudentController < ApplicationController
   end
 
   def edit_student
-    
+    render :layout => false
   end
 
   def assign_class
