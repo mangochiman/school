@@ -8,7 +8,7 @@ class StudentController < ApplicationController
   end
 
   def add_student
-    
+    render :layout => false
   end
 
   def edit_student
