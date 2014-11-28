@@ -6,4 +6,20 @@ class StudentController < ApplicationController
   def my_results
     render :layout => false
   end
+
+  def add_student
+    
+  end
+
+  def edit_student
+    
+  end
+
+  def assign_class
+    
+  end
+
+  def assign_subjects
+    
+  end
 end
