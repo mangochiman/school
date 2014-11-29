@@ -15,11 +15,15 @@ class StudentController < ApplicationController
     render :layout => false
   end
 
+  def remove_students
+    render :layout => false
+  end
+
   def assign_class
-    
+    render :layout => false
   end
 
   def assign_subjects
-    
+    render :layout => false
   end
 end
