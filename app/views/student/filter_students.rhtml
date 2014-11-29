@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>SimpleAdmin - Dashboard</title>
+    <title>Student Section</title>
     <!-- Optimize for mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
@@ -12,7 +12,7 @@
     <%= javascript_include_tag("script") %>
     <%= stylesheet_link_tag("style") %>
     <style>
-      table{
+      /*table{
         margin-left:15%;
         width: 60%;
       }
@@ -32,8 +32,49 @@
         outline: medium none;
         padding: 0.5em 0.225em;
     }
+
     input[type="submit"] {
       margin-left: 37%;
+    }*/
+
+
+      #search-student-form fieldset {
+        border: 1px solid gray;
+        float: left;
+        margin-bottom: 15px;
+        padding: 5px;
+        width: 98.7%;
+      }
+      #search-student-form legend {
+        color: #abda0f;
+        font-size: 14px;
+        font-weight: 100;
+        margin-left: 14px;
+        padding: 2px;
+      }
+      #search-student-form fieldset input {
+        color: #505050;
+        float: left;
+        margin-right: 5px;
+        width: 140px;
+        padding: 3px;
+        font-size: 14px;
+      }
+
+      .search_table{
+        display: table;
+      }
+
+      .search_row{
+        display: table-row;
+      }
+
+      .search_td{
+        display: table-cell;
+      }
+
+      table th:first-child {
+        border-style: none none none !important;
     }
     </style>
   </head>
@@ -128,7 +169,7 @@
 
             <div class="content-module-heading cf">
 
-              <h3 class="fl">Student Registration</h3>
+              <h3 class="fl">Class assignment</h3>
               <span class="fr expand-collapse-text">Click to collapse</span>
               <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -137,49 +178,83 @@
 
             <div class="content-module-main">
 
-              <form id="registration" action="">
-
-                <table>
-                  <tr>
-                    <td><label for="simple-input">First Name</label></td>
-                    <td><input type="text" id="simple-input" class="round default-width-input" /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="simple-input">Last Name</label></td>
-                    <td><input type="text" id="simple-input" class="round default-width-input" /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="simple-input">Gender</label></td>
-                    <td>
-                      <span style="margin-left:40%;"><input type="radio" value="M" name="gender"/>Male</span>
-                      <span style="margin-left:10%;"><input type="radio" value="M" name="gender"/>Female</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><label for="simple-input">E-mail</label></td>
-                    <td><input type="text" id="simple-input" class="round default-width-input" /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="simple-input">Phone</label></td>
-                    <td><input type="text" id="simple-input" class="round default-width-input" /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="simple-input">Password</label></td>
-                    <td><input type="text" id="simple-input" class="round default-width-input" /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="simple-input">Re-type password</label></td>
-                    <td><input type="text" id="simple-input" class="round default-width-input" /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="simple-input">Date of Birth</label></td>
-                    <td><input type="text" id="simple-input" class="round default-width-input" /></td>
-                  </tr>
-                </table>
-                <div class="stripe-separator"><!--  --></div>
-                <input type="submit" value="Submit" class="round blue ic-right-arrow" />
+              <form id="search-student-form" action="#">
+                <fieldset>
+                  <legend>Filter</legend>
+                  <div style="width:71%; margin-left:10%;">
+                    <table>
+                      <tr>
+                        <td style="width:10%;">Class</td>
+                        <td style="width:5%">
+                          <select id="dropdown-actions">
+                            <option value="">Select Class</option>
+                            <option value="1">Form 1</option>
+                            <option value="2">Form 2</option>
+                            <option value="3">Form 3</option>
+                            <option value="4">Form 4</option>
+                          </select>
+                        </td>
+                        <td style="width:10%;">Gender</td>
+                        <td style="width:5%">
+                          <select id="dropdown-actions">
+                            <option value="">Select Gender</option>
+                            <option value="M">Male</option>
+                            <option value="F">Female</option>
+                          </select>
+                        </td>
+                        <td style="">Date Enrolled</td>
+                        <td>
+                          <select id="dropdown-actions">
+                            <option value="">Select Date Enrolled</option>
+                            <option value="today">Today</option>
+                            <option value="this_week">This Week</option>
+                            <option value="this_month">This Month</option>
+                            <option value="last_month">Last Month</option>
+                            <option value="this_year">This Year</option>
+                            <option value="all_dates">All Dates</option>
+                            <option value="custom_date">Custom Date</option>
+                          </select>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="6"><a href="#" class="button round blue image-right ic-search text-upper">Filter</a></td>
+                      </tr>
+                    </table>
+                  </div>
+                </fieldset>
               </form>
 
+              <table>
+
+                <thead>
+
+                  <tr>
+                    <th style="min-width:15%;">Name</th>
+                    <th>Email</th>
+                    <th>Gender</th>
+                    <th>Date Of Birth</th>
+                    <th>Phone #</th>
+                    <th>Date of Join</th>
+                    <th>Action</th>
+                  </tr>
+
+                </thead>
+
+                <tbody>
+                  <tr>
+                    <td>Adrian Purdila</td>
+                    <td><a href="#">adipurdila@gmail.com</a></td>
+                    <td>Male</td>
+                    <td>01-Jan-2010</td>
+                    <td>099xxxxxx</td>
+                    <td>15-Jan-2014</td>
+                    <td style="min-width:10%;">
+                      <a href="#" class="button round blue text-upper">Action &nbsp;</a>
+                    </td>
+                  </tr>
+                </tbody>
+
+              </table>
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->

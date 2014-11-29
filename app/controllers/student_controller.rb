@@ -26,4 +26,8 @@ class StudentController < ApplicationController
   def assign_subjects
     render :layout => false
   end
+
+  def filter_students
+    render :layout => false
+  end
 end
