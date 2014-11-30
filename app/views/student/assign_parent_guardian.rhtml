@@ -75,7 +75,10 @@
 
       table th:first-child {
         border-style: none none none !important;
-    }
+      }
+      #assign_edit_guardian{
+        min-width: 100px;
+      }
     </style>
   </head>
   <body>
@@ -170,7 +173,7 @@
 
             <div class="content-module-heading cf">
 
-              <h3 class="fl">Class assignment</h3>
+              <h3 class="fl">Parent/Guardian assignment</h3>
               <span class="fr expand-collapse-text">Click to collapse</span>
               <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -181,20 +184,14 @@
 
               <form id="search-student-form" action="#">
                 <fieldset>
-                  <legend>Filter</legend>
+                  <legend>Search</legend>
                   <div style="width:71%; margin-left:10%;">
                     <table>
                       <tr>
-                        <td style="width:10%;">Class</td>
-                        <td style="width:5%">
-                          <select id="dropdown-actions">
-                            <option value="">Select Class</option>
-                            <option value="1">Form 1</option>
-                            <option value="2">Form 2</option>
-                            <option value="3">Form 3</option>
-                            <option value="4">Form 4</option>
-                          </select>
-                        </td>
+                        <td style="width:10%;">First Name</td>
+                        <td style="width:10%;"><input type="text"/></td>
+                        <td style="width:10%;">Last Name</td>
+                        <td style="width:10%;"><input type="text"/></td>
                         <td style="width:10%;">Gender</td>
                         <td style="width:5%">
                           <select id="dropdown-actions">
@@ -203,22 +200,9 @@
                             <option value="F">Female</option>
                           </select>
                         </td>
-                        <td style="">Date Enrolled</td>
-                        <td>
-                          <select id="dropdown-actions">
-                            <option value="">Select Date Enrolled</option>
-                            <option value="today">Today</option>
-                            <option value="this_week">This Week</option>
-                            <option value="this_month">This Month</option>
-                            <option value="last_month">Last Month</option>
-                            <option value="this_year">This Year</option>
-                            <option value="all_dates">All Dates</option>
-                            <option value="custom_date">Custom Date</option>
-                          </select>
-                        </td>
                       </tr>
                       <tr>
-                        <td colspan="6"><a href="#" class="button round blue image-right ic-search text-upper">Filter</a></td>
+                        <td colspan="6"><a href="#" class="button round blue image-right ic-search text-upper">Search</a></td>
                       </tr>
                     </table>
                   </div>
@@ -236,7 +220,7 @@
                     <th>Date Of Birth</th>
                     <th>Phone #</th>
                     <th>Date of Join</th>
-                    <th>Action</th>
+                    <th style="min-width:12%;">Action</th>
                   </tr>
 
                 </thead>
@@ -249,8 +233,19 @@
                     <td>01-Jan-2010</td>
                     <td>099xxxxxx</td>
                     <td>15-Jan-2014</td>
-                    <td style="min-width:10%;">
-                      <a href="#" class="button round blue text-upper">Action &nbsp;</a>
+                    <td>
+                      <a href="#" id="assign_edit_guardian" class="button round blue image-right ic-add text-upper">Assign Guardian &nbsp;</a></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>myyyy student</td>
+                    <td><a href="#">mystudent@gmail.com</a></td>
+                    <td>Female</td>
+                    <td>01-Feb-2010</td>
+                    <td>099xxxxxx</td>
+                    <td>15-March-2014</td>
+                    <td>
+                      <a href="#" id="assign_edit_guardian" class="button round blue image-right ic-add text-upper">Edit Guardian &nbsp;</a></span>
                     </td>
                   </tr>
                 </tbody>

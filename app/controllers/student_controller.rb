@@ -27,6 +27,10 @@ class StudentController < ApplicationController
     render :layout => false
   end
 
+  def assign_parent_guardian
+    render :layout => false
+  end
+  
   def filter_students
     render :layout => false
   end
