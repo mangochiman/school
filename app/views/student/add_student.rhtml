@@ -137,17 +137,25 @@
 
 
             <div class="content-module-main">
-
-              <form id="registration" action="">
-
+              <% if flash[:notice] %>
+                  <div class="confirmation-box round">
+                    <%= flash[:notice] %>
+                  </div>
+                <% end %>
+                <% if flash[:error] %>
+                  <div class="error-box round">
+                      <%= flash[:error] %>
+                  </div>
+                <% end %>
+              <form id="registration" action="/student/create">               
                 <table>
                   <tr>
                     <td><label for="simple-input">First Name</label></td>
-                    <td><input type="text" id="simple-input" class="round default-width-input" /></td>
+                    <td><input type="text" name="first_name" id="simple-input" class="round default-width-input" /></td>
                   </tr>
                   <tr>
                     <td><label for="simple-input">Last Name</label></td>
-                    <td><input type="text" id="simple-input" class="round default-width-input" /></td>
+                    <td><input type="text" name="last_name" id="simple-input" class="round default-width-input" /></td>
                   </tr>
                   <tr>
                     <td><label for="simple-input">Gender</label></td>
@@ -158,23 +166,23 @@
                   </tr>
                   <tr>
                     <td><label for="simple-input">E-mail</label></td>
-                    <td><input type="text" id="simple-input" class="round default-width-input" /></td>
+                    <td><input type="text" name="email"  id="simple-input" class="round default-width-input" /></td>
                   </tr>
                   <tr>
                     <td><label for="simple-input">Phone</label></td>
-                    <td><input type="text" id="simple-input" class="round default-width-input" /></td>
+                    <td><input type="text" name="phone" id="simple-input" class="round default-width-input" /></td>
                   </tr>
                   <tr>
                     <td><label for="simple-input">Password</label></td>
-                    <td><input type="text" id="simple-input" class="round default-width-input" /></td>
+                    <td><input type="password" name="password" id="simple-input" class="round default-width-input" /></td>
                   </tr>
                   <tr>
                     <td><label for="simple-input">Re-type password</label></td>
-                    <td><input type="text" id="simple-input" class="round default-width-input" /></td>
+                    <td><input type="password" name="password_confirm" id="simple-input" class="round default-width-input" /></td>
                   </tr>
                   <tr>
                     <td><label for="simple-input">Date of Birth</label></td>
-                    <td><input type="text" id="simple-input" class="round default-width-input" /></td>
+                    <td><input type="text" name="dob" id="simple-input" class="round default-width-input" /></td>
                   </tr>
                 </table>
                 <div class="stripe-separator"><!--  --></div>

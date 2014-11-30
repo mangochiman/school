@@ -181,7 +181,16 @@
 
 
             <div class="content-module-main">
-
+              <% if flash[:notice] %>
+                  <div class="confirmation-box round">
+                    <%= flash[:notice] %>
+                  </div>
+                <% end %>
+                <% if flash[:error] %>
+                  <div class="error-box round">
+                      <%= flash[:error] %>
+                  </div>
+                <% end %>
               <form id="search-student-form" action="#">
                 <fieldset>
                   <legend>Search</legend>
