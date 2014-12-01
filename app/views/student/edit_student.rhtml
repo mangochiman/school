@@ -21,15 +21,29 @@
           url: "/student/search_students",
           data: "first_name=" + firstName + "&last_name=" + lastName + "&gender=" + gender,
           success: function(results){
-            x = results
-            alert(eval((x)))
+            results = eval("(" + results  + ")");
+            html = "";
+            tbody = document.getElementById("students");
+
             for (var student_id in results){
               firstName = results[student_id]["fname"];
               lastName = results[student_id]["lname"];
               phone = results[student_id]["phone"];
               email = results[student_id]["email"];
-              firstName = results[student_id]["dob"]
+              dob = results[student_id]["dob"];
+              join_date = results[student_id]["join_date"];
+              html+="<tr>";
+              html+="<td>" + firstName + ' ' + lastName +  "</td>";
+              html+="<td>" + email +  "</td>";
+              html+="<td>Male</td>";
+              html+="<td>" + dob +  "</td>";
+              html+="<td>" + phone +  "</td>";
+              html+="<td>" + join_date +  "</td>";
+              html+="<td><a href='#' class='table-actions-button ic-table-edit'></a></td>";
+              html+="</tr>";
             }
+
+            tbody.innerHTML = html
           }
 
       });
@@ -255,7 +269,7 @@
 
                 </thead>
 
-                <tbody>
+                <tbody id="students">
                   <% @students.each do |student| %>
                   <tr>
                     <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= student.fname.capitalize.to_s + ' ' + student.lname.capitalize.to_s %></td>

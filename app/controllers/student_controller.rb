@@ -60,16 +60,22 @@ class StudentController < ApplicationController
       conditions += ' AND ' unless (first_name.blank? || last_name.blank?)
       conditions += "gender = '%#{gender}%' "
     end
-    students = Student.find_by_sql("SELECT * FROM student WHERE #{conditions}")
+    unless conditions.blank?
+      students = Student.find_by_sql("SELECT * FROM student WHERE #{conditions}")
+    else
+      students = Student.all
+    end
+    
     hash = {}
     students.each do |student|
-      #student_id = student.id.to_s
-      #hash[student_id] = {}
-      #hash["fname"] = student.fname.to_s
-      hash[:lname] = student.lname.to_s
-      #hash[student_id]["phone"] = student.phone
-      #hash[student_id]["email"] = student.email
-      #hash[student_id]["dob"] = student.dob.to_date.strftime("%d-%b-%Y")
+      student_id = student.id.to_s
+      hash[student_id] = {}
+      hash[student_id]["fname"] = student.fname.to_s
+      hash[student_id]["lname"] = student.lname.to_s
+      hash[student_id]["phone"] = student.phone
+      hash[student_id]["email"] = student.email
+      hash[student_id]["dob"] = student.dob.to_date.strftime("%d-%b-%Y")
+      hash[student_id]["join_date"] = student.created_at.to_date.strftime("%d-%b-%Y")
     end
     render :json => hash
   end
