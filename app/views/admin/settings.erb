@@ -15,6 +15,8 @@
         <%= stylesheet_link_tag("style") %>
 
         <script>
+          var attribute = "";
+
           function __$(id){
             return document.getElementById(id)
           }
@@ -27,17 +29,35 @@
             input.id = name
             p.appendChild(input)
 
-            cl.className = "table-actions-button ic-table-reload"
+            cl.className = "table-actions-button ic-table-reload";
             cl.onclick = function (){
-               this.className = 'table-actions-button ic-table-edit'
-               p.innerHTML = document.getElementById(name).value
+              this.className = 'table-actions-button ic-table-edit';
+               p.innerHTML = document.getElementById(name).value;
+               attribute = p.innerHTML;
+               writeProperty(name, attribute)
                this.onclick = function (){
                  addElement(ele, parent, name, cl)
                }
             }
 
           }
-          
+
+          function writeProperty(name, value){
+                    if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+                  xmlhttp=new XMLHttpRequest();
+                      }else{// code for IE6, IE5
+                              xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+                      }
+                      xmlhttp.onreadystatechange=function() {
+                              if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+
+                                }
+                              }
+
+                      xmlhttp.open("GET","/admin/add_property?name=" + name + "&value=" + value, true);
+                      xmlhttp.send();
+          }
+
         </script>
         table-actions-button ic-table-edit
         <style>
@@ -181,12 +201,25 @@
                                                             </div>
 
                                                             <div class="input" id="input">
-
+                                                                  <%=  @settings["name"] %>
                                                             </div>
                                                             <div class="edit">
                                                             <a class="table-actions-button ic-table-edit" href="#" onclick="addElement('input', 'input', 'name', this);"></a>
                                                             </div>
                                                     </div>
+                                                    <div class="row">
+                                                            <div class="text">
+                                                                Logo:
+                                                            </div>
+
+                                                            <div class="input" id="logo">
+
+                                                            </div>
+                                                            <div class="edit">
+                                                            <a class="table-actions-button ic-table-edit" href="#" onclick="addElement('input', 'logo', 'logo', this);"></a>
+                                                            </div>
+                                                    </div>
+
                                                   </div>
 							<div class="stripe-separator"><!-- --></div>
 

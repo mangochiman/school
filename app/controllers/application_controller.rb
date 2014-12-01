@@ -7,4 +7,10 @@ class ApplicationController < ActionController::Base
 
   # Scrub sensitive parameters from your log
   # filter_parameter_logging :password
+
+  def school_setting
+       settings = {}
+       settings["name"] = GlobalProperty.find_by_property("name").value rescue ""
+       return settings
+  end
 end
