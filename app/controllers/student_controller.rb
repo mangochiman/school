@@ -39,14 +39,9 @@ class StudentController < ApplicationController
   def search_students
     first_name = params[:first_name]
     last_name = params[:last_name]
-    gender = ""
+    gender = params[:gender]
     conditions = ""
-=begin
-    unless params[:gender].blank?
-      gender = 'M' if (params[:gender].upcase == 'M')
-      gender = 'F' if (params[:gender].upcase == 'F')
-    end
-=end
+
     unless first_name.blank?
       conditions += "fname LIKE '%#{first_name}%'"
     end
@@ -60,6 +55,7 @@ class StudentController < ApplicationController
       conditions += ' AND ' unless (first_name.blank? || last_name.blank?)
       conditions += "gender = '%#{gender}%' "
     end
+    
     unless conditions.blank?
       students = Student.find_by_sql("SELECT * FROM student WHERE #{conditions}")
     else
@@ -74,6 +70,7 @@ class StudentController < ApplicationController
       hash[student_id]["lname"] = student.lname.to_s
       hash[student_id]["phone"] = student.phone
       hash[student_id]["email"] = student.email
+      hash[student_id]["gender"] = student.gender
       hash[student_id]["dob"] = student.dob.to_date.strftime("%d-%b-%Y")
       hash[student_id]["join_date"] = student.created_at.to_date.strftime("%d-%b-%Y")
     end
@@ -92,6 +89,7 @@ class StudentController < ApplicationController
     if (Student.create({
         :fname => first_name,
         :lname => last_name,
+        :gender => gender,
         :email => email,
         :phone => phone,
         :dob => date_of_birth
