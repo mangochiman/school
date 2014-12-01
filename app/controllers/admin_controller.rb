@@ -16,6 +16,7 @@ class AdminController < ApplicationController
   end
 
   def settings
+          @settings = school_setting
           render :layout => false
   end
 
@@ -29,5 +30,17 @@ class AdminController < ApplicationController
 
   def research
     render :layout => false
+  end
+
+  def add_property
+      g = GlobalProperty.find_by_property("#{params[:name]}")
+      if g.blank?
+        GlobalProperty.create(:property => params[:name],
+                                  :value => params[:value])
+      else
+        g.value = params[:value]
+        g.save
+      end
+        render :text => g.to_json
   end
 end
