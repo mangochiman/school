@@ -78,6 +78,28 @@ class StudentController < ApplicationController
     end
     render :json => hash
   end
+
+  def edit_me
+    student_id = params[:student_id]
+    @student = Student.find(student_id)
+    if request.method == :post
+      if (@student.update_attributes({
+          :fname => params[:first_name],
+          :lname => params[:last_name],
+          :gender => params[:gender],
+          :email => params[:email],
+          :phone => params[:phone],
+          :dob => params[:dob].to_date
+        }))
+        flash[:notice] = "You have successfully edited the details"
+        redirect_to :controller => "student", :action => "edit_student" and return
+      else
+        flash[:error] = "Process aborted. Check for errors and try again"
+        redirect_to :controller => "student", :action => "edit_student" and return
+      end
+    end
+    render :layout => false
+  end
   
   def create
     first_name = params[:first_name]

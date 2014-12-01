@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Student Section</title>
+    <title>SimpleAdmin - Dashboard</title>
     <!-- Optimize for mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
@@ -11,54 +11,21 @@
     <%= javascript_include_tag("jquery") %>
     <%= javascript_include_tag("script") %>
     <%= stylesheet_link_tag("style") %>
-    <script type="text/javascript">
+    <script>
+      function checkGender(){
+        <% unless @student.gender.blank?%>
+            <% if (@student.gender.upcase == "MALE") %>
+                document.getElementById('male').checked = true
+            <%  end %>
 
-      function editMe(obj){
-        studentId = obj.getAttribute("student_id");
-        window.location = "/student/edit_me?student_id=" + studentId;
+            <% if (@student.gender.upcase == "FEMALE") %>
+                document.getElementById('female').checked = true
+            <%  end %>
+        <% end %>
       }
-      
-      function loadSearchResults(){
-        firstName = document.getElementById('fname_search').value;
-        lastName = document.getElementById('lname_search').value;
-        gender = document.getElementsByClassName('gender_search')[0].value;
-        jQuery.ajax({
-          type: "POST",
-          url: "/student/search_students",
-          data: "first_name=" + firstName + "&last_name=" + lastName + "&gender=" + gender,
-          success: function(results){
-            results = eval("(" + results  + ")");
-            html = "";
-            tbody = document.getElementById("students");
-
-            for (var student_id in results){
-              firstName = results[student_id]["fname"];
-              lastName = results[student_id]["lname"];
-              gender = results[student_id]["gender"];
-              phone = results[student_id]["phone"];
-              email = results[student_id]["email"];
-              dob = results[student_id]["dob"];
-              join_date = results[student_id]["join_date"];
-              html+="<tr>";
-              html+="<td>" + firstName + ' ' + lastName +  "</td>";
-              html+="<td><a href='#'>" + email +  "</a></td>";
-              html+="<td>" + gender +  "</td>";
-              html+="<td>" + dob +  "</td>";
-              html+="<td>" + phone +  "</td>";
-              html+="<td>" + join_date +  "</td>";
-              html+="<td><a student_id=" + student_id + " onclick='editMe(this)' href='#' class='table-actions-button ic-table-edit'></a></td>";
-              html+="</tr>";
-            }
-
-            tbody.innerHTML = html
-          }
-
-      });
-
-  }
     </script>
     <style>
-      /*table{
+      table{
         margin-left:15%;
         width: 60%;
       }
@@ -78,53 +45,12 @@
         outline: medium none;
         padding: 0.5em 0.225em;
     }
-
     input[type="submit"] {
       margin-left: 37%;
-    }*/
-
-
-      #search-student-form fieldset {
-        border: 1px solid gray;
-        float: left;
-        margin-bottom: 15px;
-        padding: 5px;
-        width: 98.7%;
-      }
-      #search-student-form legend {
-        color: #abda0f;
-        font-size: 14px;
-        font-weight: 100;
-        margin-left: 14px;
-        padding: 2px;
-      }
-      #search-student-form fieldset input {
-        color: #505050;
-        float: left;
-        margin-right: 5px;
-        width: 140px;
-        padding: 3px;
-        font-size: 14px;
-      }
-
-      .search_table{
-        display: table;
-      }
-
-      .search_row{
-        display: table-row;
-      }
-
-      .search_td{
-        display: table-cell;
-      }
-
-      table th:first-child {
-        border-style: none none none !important;
     }
     </style>
   </head>
-  <body>
+  <body onload="checkGender();">
 
     <!-- TOP BAR -->
     <div id="top-bar">
@@ -216,7 +142,7 @@
 
             <div class="content-module-heading cf">
 
-              <h3 class="fl">Edit student details</h3>
+              <h3 class="fl">Student Registration</h3>
               <span class="fr expand-collapse-text">Click to collapse</span>
               <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -234,66 +160,49 @@
                       <%= flash[:error] %>
                   </div>
                 <% end %>
-              <form id="search-student-form" action="#">
-                <fieldset>
-                  <legend>Search</legend>
-                  <div style="width:71%; margin-left:10%;">
-                    <table>
-                      <tr>
-                        <td style="width:10%;">First Name</td>
-                        <td style="width:10%;"><input type="text" id="fname_search"/></td>
-                        <td style="width:10%;">Last Name</td>
-                        <td style="width:10%;"><input type="text" id="lname_search"/></td>
-                        <td style="width:10%;">Gender</td>
-                        <td style="width:5%">
-                          <select id="dropdown-actions" class="gender_search">
-                            <option value="">Select Gender</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                          </select>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td colspan="6"><a onclick="loadSearchResults();" href="#" class="button round blue image-right ic-search text-upper">Search</a></td>
-                      </tr>
-                    </table>
-                  </div>
-                </fieldset>
-              </form>
-
-              <table>
-
-                <thead>
-
+              <form id="registration" method="POST" action="/student/edit_me">
+                <table>
                   <tr>
-                    <th style="min-width:15%;">Name</th>
-                    <th>Email</th>
-                    <th>Gender</th>
-                    <th>Date Of Birth</th>
-                    <th>Phone #</th>
-                    <th>Date of Join</th>
-                    <th>Action</th>
+                    <td><label for="simple-input">First Name</label></td>
+                    <td><input type="text" name="first_name" id="simple-input" class="round default-width-input" value="<%=  @student.fname %>"/></td>
                   </tr>
-
-                </thead>
-
-                <tbody id="students">
-                  <% @students.each do |student| %>
                   <tr>
-                    <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= student.fname.capitalize.to_s + ' ' + student.lname.capitalize.to_s %></td>
-                    <td><a href="#"><%=  student.email %></a></td>
-                    <td><%=  student.gender %></td>
-                    <td><%=  student.dob.to_date.strftime("%d-%b-%Y") %></td>
-                    <td><%=  student.phone %></td>
-                    <td><%=  student.created_at.strftime("%d-%b-%Y") %></td>
+                    <td><label for="simple-input">Last Name</label></td>
+                    <td><input type="text" name="last_name" id="simple-input" class="round default-width-input" value="<%=  @student.lname %>"/></td>
+                  </tr>
+                  <tr>
+                    <td><label for="simple-input">Gender</label></td>
                     <td>
-                      <a student_id="<%= student.id %>" onclick="editMe(this)" href="#" class="table-actions-button ic-table-edit"></a>
+                      <span style="margin-left:40%;"><input type="radio" value="Male" name="gender" id="male"/>Male</span>
+                      <span style="margin-left:10%;"><input type="radio" value="Female" name="gender" id="female"/>Female</span>
                     </td>
                   </tr>
-                  <% end %>
-                </tbody>
+                  <tr>
+                    <td><label for="simple-input">E-mail</label></td>
+                    <td><input type="text" name="email"  id="simple-input" class="round default-width-input" value="<%=  @student.email %>"/></td>
+                  </tr>
+                  <tr>
+                    <td><label for="simple-input">Phone</label></td>
+                    <td><input type="text" name="phone" id="simple-input" class="round default-width-input" value="<%=  @student.phone %>"/></td>
+                  </tr>
+                  <tr>
+                    <td><label for="simple-input">Password</label></td>
+                    <td><input type="password" name="password" id="simple-input" class="round default-width-input" /></td>
+                  </tr>
+                  <tr>
+                    <td><label for="simple-input">Re-type password</label></td>
+                    <td><input type="password" name="password_confirm" id="simple-input" class="round default-width-input" /></td>
+                  </tr>
+                  <tr>
+                    <td><label for="simple-input">Date of Birth</label></td>
+                    <td><input type="text" name="dob" id="simple-input" class="round default-width-input" value="<%=  @student.dob %>"/></td>
+                  </tr>
+                </table>
+                <div class="stripe-separator"><!--  --></div>
+                <input type="hidden" name="student_id" value="<%= params[:student_id] %>" />
+                <input type="submit" value="Submit" class="round blue ic-right-arrow" />
+              </form>
 
-              </table>
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->
