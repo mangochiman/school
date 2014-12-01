@@ -5,6 +5,7 @@ class Student < ActiveRecord::Migration
       t.string :password
       t.string :fname
       t.string :lname
+      t.string :gender
       t.string :dob
       t.string :phone
       t.string :mobile

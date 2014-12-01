@@ -41,21 +41,23 @@ class StudentController < ApplicationController
     last_name = params[:last_name]
     gender = params[:gender]
     conditions = ""
-
+    multiple = false
     unless first_name.blank?
+      multiple = true
       conditions += "fname LIKE '%#{first_name}%'"
     end
     
     unless last_name.blank?
+      multiple = true
       conditions += ' AND ' unless conditions.blank?
       conditions += "lname LIKE '%#{last_name}%' "
     end
 
     unless gender.blank?
-      conditions += ' AND ' unless (first_name.blank? || last_name.blank?)
-      conditions += "gender = '%#{gender}%' "
+      conditions += ' AND ' if multiple
+      conditions += "gender = '#{gender}' "
     end
-    
+
     unless conditions.blank?
       students = Student.find_by_sql("SELECT * FROM student WHERE #{conditions}")
     else
