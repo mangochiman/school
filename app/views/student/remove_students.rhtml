@@ -9,36 +9,22 @@
 
     <!-- jQuery & JS files -->
     <script type='text/javascript' src='/javascripts/jquery.js'></script>
+    <%= javascript_include_tag("jquery") %>
     <%= javascript_include_tag("script") %>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("jquery.confirm") %>
     <%= stylesheet_link_tag("style") %>
-    <%= stylesheet_link_tag("demo") %>
-    <%= stylesheet_link_tag("confirm") %>
+    <%= stylesheet_link_tag("bootstrap") %>
+
     <style>
-      /*table{
-        margin-left:15%;
-        width: 60%;
-      }
-      table td #simple-input{
-        float: right;
-      }
-
-      table label{
-       text-align: left;
-      }
-      #simple-input{
-        font-size: 10pt !important;
-      }
-
-    form input[type="text"], input[type="password"], textarea {
-        border: 1px solid #d9dbdd;
-        outline: medium none;
-        padding: 0.5em 0.225em;
+    .modal-title {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-weight: 500;
+      line-height: 1.1;
+      font-size: 1.2em;
+      color: #317eac;
     }
-
-    input[type="submit"] {
-      margin-left: 37%;
-    }*/
-
+    
       #search-student-form fieldset {
         border: 1px solid gray;
         float: left;
@@ -189,21 +175,7 @@
                       <%= flash[:error] %>
                   </div>
                 <% end %>
-<!-- POPUP BOX ----->
 
-              <div id='confirm'>
-                  <div class='header'><span>Confirm</span></div>
-                  <div class='message'></div>
-                  <div class='buttons'>
-                    <div class='no simplemodal-close'>No</div><div class='yes'>Yes</div>
-                  </div>
-		</div>
-		<!-- preload the images -->
-		<div style='display:none'>
-			<img src='/images/confirm/header.gif' alt='' />
-			<img src='/images/confirm/button.gif' alt='' />
-		</div>
-<!-- POPUP BOX END----->
               <form id="search-student-form" action="#">
                 <fieldset>
                   <legend>Search</legend>
@@ -266,7 +238,7 @@
                     <td>099xxxxxx</td>
                     <td>15-Jan-2014</td>
                     <td>
-                      <a href="#" class="table-actions-button ic-table-delete"></a>
+                      <a href="#" class="table-actions-button ic-table-delete confirm"></a>
                     </td>
                   </tr>
                 </tbody>
@@ -291,7 +263,21 @@
       <p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
 
     </div> <!-- end footer -->
-<script type='text/javascript' src='/javascripts/jquery.simplemodal.js'></script>
-<script type='text/javascript' src='/javascripts/confirm.js'></script>
+     
+    <%= javascript_include_tag("bootstrap") %>
+    <script>
+      $(".confirm").confirm({
+          title:"Delete confirmation",
+          text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+          confirm: function(button) {
+            alert("You just confirmed.");
+          },
+          cancel: function(button) {
+            alert("You aborted the operation.");
+          },
+          confirmButton: "Yes I am",
+          cancelButton: "No"
+      });
+    </script>
   </body>
 </html>
