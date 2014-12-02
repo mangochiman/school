@@ -7,10 +7,10 @@
     <!-- Optimize for mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-    <!-- jQuery & JS files -->
     <%= javascript_include_tag("jquery") %>
     <%= javascript_include_tag("script") %>
     <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("metallic") %>
     <script>
       function checkGender(){
         <% unless @student.gender.blank?%>
@@ -195,7 +195,7 @@
                   </tr>
                   <tr>
                     <td><label for="simple-input">Date of Birth</label></td>
-                    <td><input type="text" name="dob" id="simple-input" class="round default-width-input" value="<%=  @student.dob %>"/></td>
+                    <td><input type="text" name="dob" id="simple-input" class="round default-width-input date-picker" value="<%=  @student.dob %>"/></td>
                   </tr>
                 </table>
                 <div class="stripe-separator"><!--  --></div>
@@ -223,5 +223,13 @@
 
     </div> <!-- end footer -->
 
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("zebra_datepicker") %>
+    <script>
+      $('.date-picker').Zebra_DatePicker({
+            view : 'years',
+            direction: ['<%=  (Date.today - 30.years).strftime("%Y-%m-%d") %>', '<%=  (Date.today - 12.years).strftime("%Y-%m-%d") %>']
+      });
+    </script>
   </body>
 </html>

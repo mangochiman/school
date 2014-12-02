@@ -8,9 +8,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <!-- jQuery & JS files -->
-    <%= javascript_include_tag("jquery") %>
+    <script type='text/javascript' src='/javascripts/jquery.js'></script>
     <%= javascript_include_tag("script") %>
     <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("demo") %>
+    <%= stylesheet_link_tag("confirm") %>
     <style>
       /*table{
         margin-left:15%;
@@ -36,7 +38,6 @@
     input[type="submit"] {
       margin-left: 37%;
     }*/
-
 
       #search-student-form fieldset {
         border: 1px solid gray;
@@ -188,6 +189,21 @@
                       <%= flash[:error] %>
                   </div>
                 <% end %>
+<!-- POPUP BOX ----->
+
+              <div id='confirm'>
+                  <div class='header'><span>Confirm</span></div>
+                  <div class='message'></div>
+                  <div class='buttons'>
+                    <div class='no simplemodal-close'>No</div><div class='yes'>Yes</div>
+                  </div>
+		</div>
+		<!-- preload the images -->
+		<div style='display:none'>
+			<img src='/images/confirm/header.gif' alt='' />
+			<img src='/images/confirm/button.gif' alt='' />
+		</div>
+<!-- POPUP BOX END----->
               <form id="search-student-form" action="#">
                 <fieldset>
                   <legend>Search</legend>
@@ -235,7 +251,7 @@
                 <tfoot>
                   <tr>
                     <td colspan="8" class="table-footer">
-                      <a href="#" class="button round blue image-right ic-delete text-upper">Delete</a>
+                      <a href="#" class="button round blue image-right ic-delete text-upper confirm">Delete</a>
                     </td>
                   </tr>
                 </tfoot>
@@ -275,6 +291,7 @@
       <p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
 
     </div> <!-- end footer -->
-
+<script type='text/javascript' src='/javascripts/jquery.simplemodal.js'></script>
+<script type='text/javascript' src='/javascripts/confirm.js'></script>
   </body>
 </html>
