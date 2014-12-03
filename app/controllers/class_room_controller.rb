@@ -12,6 +12,11 @@ class ClassRoomController < ApplicationController
     render :layout => false
   end
 
+  def remove_classes
+    @class_rooms = ClassRoom.all
+    render :layout => false
+  end
+  
   def assign_subjects
     render :layout => false
   end

@@ -11,7 +11,10 @@
 
     <%= javascript_include_tag("jquery") %>
     <%= javascript_include_tag("script") %>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("jquery.confirm") %>
     <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("bootstrap") %>
 
     <style>
       table{
@@ -46,9 +49,19 @@
         margin-left: 0%;
         width: 100%;
      }
-     .classes th, tbody{
+
+    .classes th, tbody{
         text-align: center;
-      }
+    }
+
+    .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: #317eac;
+    }
+    
     </style>
   </head>
   <body>
@@ -167,21 +180,29 @@
 
                 <thead>
                   <tr>
+                    <th><input type="checkbox" id="table-select-all"/></th>
                     <th style="min-width:20%;">Class Name</th>
                     <th>Year</th>
                     <th>Grade</th>
                     <th>Action</th>
                   </tr>
                 </thead>
-
+                <tfoot>
+                  <tr>
+                    <td colspan="8" class="table-footer">
+                      <a href="#" class="button round blue image-right ic-delete text-upper confirm">Delete</a>
+                    </td>
+                  </tr>
+                </tfoot>
                 <tbody id="class_rooms">
                   <% @class_rooms.each do |class_room| %>
                   <tr>
-                    <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= class_room.name%></td>
+                    <td><input type="checkbox"/></td>
+                    <td><%= class_room.name%></td>
                     <td><%=  class_room.year %></td>
                     <td><%= class_room.grade %></td>
                     <td>
-                      <a class_room_id="<%= class_room.id %>" onclick="editMe(this)" href="#" class="table-actions-button ic-table-edit"></a>
+                      <a class="table-actions-button ic-table-delete confirm"></a>
                     </td>
                   </tr>
                   <% end %>
@@ -208,5 +229,20 @@
       <p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
 
     </div> <!-- end footer -->
+    <%= javascript_include_tag("bootstrap") %>
+    <script>
+      $(".confirm").confirm({
+          title:"Delete confirmation",
+          text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+          confirm: function(button) {
+            alert("You just confirmed.");
+          },
+          cancel: function(button) {
+            alert("You aborted the operation.");
+          },
+          confirmButton: "Yes I am",
+          cancelButton: "No"
+      });
+    </script>
   </body>
 </html>
