@@ -1,0 +1,2 @@
+module SubClassRoomHelper
+end
