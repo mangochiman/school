@@ -17,6 +17,15 @@ class CourseController < ApplicationController
     render :layout => false
   end
 
+  def delete_courses
+    course_ids = params[:course_ids].split(",")
+    (course_ids || []).each do |course_id|
+     course = Course.find(course_id)
+     course.delete
+    end
+    render :text => "true" and return
+  end
+  
   def view_courses
     @courses = Course.all
     render :layout => false
