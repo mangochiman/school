@@ -22,6 +22,22 @@ class CourseController < ApplicationController
     render :layout => false
   end
 
+  def edit_me
+    @course = Course.find(params[:course_id])
+    if request.method == :post
+      if (@course.update_attributes({
+          :name => params[:course_name]
+        }))
+        flash[:notice] = "You have successfully edited the details"
+        redirect_to :action => "edit_course" and return
+      else
+        flash[:error] = "Process aborted. Check for errors and try again"
+        redirect_to :action => "edit_course" and return
+      end
+    end
+    render :layout => false
+  end
+  
   def create
     if (Course.create({
         :name => params[:course_name]

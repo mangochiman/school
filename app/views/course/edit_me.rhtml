@@ -11,16 +11,16 @@
     <%= javascript_include_tag("jquery") %>
     <%= javascript_include_tag("script") %>
     <%= stylesheet_link_tag("style") %>
-    <script>
-      function editMe(obj){
-        courseId = obj.getAttribute("course_id");
-        window.location = "/course/edit_me?course_id=" + courseId;
-      }
-    </script>
     <style>
-      table th:first-child {
-        border-style: none none none !important;
-    }
+      #course input[type="text"], input[type="password"], textarea {
+        border: 1px solid #d9dbdd;
+        outline: medium none;
+        padding: 0.5em 0.225em;
+      }
+      
+      #simple-input {
+        font-size: 10pt !important;
+      }
     </style>
   </head>
   <body>
@@ -113,7 +113,7 @@
 
             <div class="content-module-heading cf">
 
-              <h3 class="fl">Edit course</h3>
+              <h3 class="fl">Add course</h3>
               <span class="fr expand-collapse-text">Click to collapse</span>
               <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -121,7 +121,8 @@
 
 
             <div class="content-module-main">
-            <% if flash[:notice] %>
+
+              <% if flash[:notice] %>
                   <div class="confirmation-box round">
                     <%= flash[:notice] %>
                   </div>
@@ -131,38 +132,24 @@
                       <%= flash[:error] %>
                   </div>
                 <% end %>
-             <table>
-
-                <thead>
-
+              <form id="course" method="POST" action="/course/edit_me">
+                <table>
                   <tr>
-                    <th style="min-width:35%;">Course Name</th>
-                    <th style="min-width:35%;"><center>Date created</center></th>
-                    <th>Action</th>
+                    <td><label for="simple-input">Course Name</label></td>
+                    <td><input type="text" name="course_name" id="simple-input" class="round default-width-input" value="<%=@course.name%>"/></td>
                   </tr>
-
-                </thead>
-
-                <tbody id="courses">
-                  <% @courses.each do |course| %>
-                  <tr>
-                    <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%=  course.name.capitalize %></td>
-                    <td><center><%= course.created_at.to_date.strftime("%d-%b-%Y") %></center></td>
-                    <td>
-                      <a course_id="<%= course.id %>" onclick="editMe(this)" href="#" class="table-actions-button ic-table-edit"></a>
-                    </td>
-                  </tr>
-                  <% end %>
-                </tbody>
-
-              </table>
+                </table>
+                <div class="stripe-separator"><!--  --></div>
+                <input type="hidden" name="course_id" value="<%= params[:course_id] %>" />
+                <input type="submit" value="Submit" class="round blue ic-right-arrow" />
+              </form>
 
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->
 
           
-
+          
 
         </div> <!-- end side-content -->
 
