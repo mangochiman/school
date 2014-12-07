@@ -12,6 +12,23 @@ class ClassRoomController < ApplicationController
     render :layout => false
   end
 
+  def edit_me
+    @class_room = ClassRoom.find(params[:class_room_id])
+    if request.method == :post
+      if (@class_room.update_attributes({
+          :name => params[:class_name],
+          :year => params[:year],
+          :grade => params[:grade]
+        }))
+        flash[:notice] = "You have successfully edited the details"
+        redirect_to :action => "edit_class" and return
+      else
+        flash[:error] = "Process aborted. Check for errors and try again"
+        redirect_to :action => "edit_class" and return
+      end
+    end
+    render :layout => false
+  end
   def remove_classes
     @class_rooms = ClassRoom.all
     render :layout => false
