@@ -18,6 +18,12 @@ class CourseController < ApplicationController
   end
 
   def delete_courses
+    if (params[:mode] == 'single_entry')
+      course = Course.find(params[:course_id])
+      course.delete
+      render :text => "true" and return
+    end
+    
     course_ids = params[:course_ids].split(",")
     (course_ids || []).each do |course_id|
      course = Course.find(course_id)
