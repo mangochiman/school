@@ -3,16 +3,21 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Student Section</title>
+    <title>SimpleAdmin - Dashboard</title>
     <!-- Optimize for mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <!-- jQuery & JS files -->
+
     <%= javascript_include_tag("jquery") %>
     <%= javascript_include_tag("script") %>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("jquery.confirm") %>
     <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("bootstrap") %>
+
     <style>
-      /*table{
+      table{
         margin-left:15%;
         width: 60%;
       }
@@ -21,61 +26,42 @@
       }
 
       table label{
-       text-align: left;
+        text-align: left;
       }
       #simple-input{
         font-size: 10pt !important;
       }
 
-    form input[type="text"], input[type="password"], textarea {
+      #registration input[type="text"], input[type="password"], textarea {
         border: 1px solid #d9dbdd;
         outline: medium none;
         padding: 0.5em 0.225em;
-    }
-
-    input[type="submit"] {
-      margin-left: 37%;
-    }*/
-
-
-      #search-student-form fieldset {
-        border: 1px solid gray;
-        float: left;
-        margin-bottom: 15px;
-        padding: 5px;
-        width: 98.7%;
       }
-      #search-student-form legend {
-        color: #abda0f;
-        font-size: 14px;
-        font-weight: 100;
-        margin-left: 14px;
-        padding: 2px;
+      input[type="submit"] {
+        margin-left: 37%;
       }
-      #search-student-form fieldset input {
-        color: #505050;
-        float: left;
-        margin-right: 5px;
-        width: 140px;
-        padding: 3px;
-        font-size: 14px;
-      }
-
-      .search_table{
-        display: table;
-      }
-
-      .search_row{
-        display: table-row;
-      }
-
-      .search_td{
-        display: table-cell;
-      }
-
       table th:first-child {
         border-style: none none none !important;
     }
+
+    .classes{
+        position: relative;
+        margin-left: 0%;
+        width: 100%;
+     }
+
+    .classes th, tbody{
+        text-align: center;
+    }
+
+    .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: #317eac;
+    }
+    
     </style>
   </head>
   <body>
@@ -123,12 +109,12 @@
 
         <ul id="tabs" class="fl">
           <li><a href="/admin/home" class="dashboard-tab">Dashboard</a></li>
-          <li><a href="/student/index" class="active-tab"> Students</a></li>
+          <li><a href="/student/index"> Students</a></li>
           <li><a href="/parent/index">Parents</a></li>
           <li><a href="/teacher/index">Teachers</a></li>
           <li><a href="/admin/research">Research</a></li>
           <li><a href="/examination/index">Exams</a></li>
-          <li><a href="/class_room/index">Classes</a></li>
+          <li><a href="/class_room/index" class="active-tab">Classes</a></li>
           <li><a href="/course/index">Courses</a></li>
           <li><a href="/report/index">Reports</a></li>
           <li><a href="/student/my_results">My Results</a></li>
@@ -154,13 +140,14 @@
 
           <h3>Task</h3>
           <ul>
-            <li><a href="/student/add_student/">Add Student</a></li>
-            <li><a href="/student/edit_student/">Edit Student</a></li>
-            <li><a href="/student/remove_students/">Void Student</a></li>
-            <li><a href="/student/assign_class/">Assign Class</a></li>
-            <li><a href="/student/assign_subjects">Assign Subjects</a></li>
-            <li><a href="/student/assign_parent_guardian">Assign Parent/Guardian</a></li>
-            <li><a href="/student/filter_students">Filter Students By</a></li>
+            <li><a href="/class_room/add_class">Add class</a></li>
+            <li><a href="/class_room/edit_class">Edit class</a></li>
+            <li><a href="/class_room/remove_classes">Void class</a></li>
+            <li><a href="/class_room/assign_subjects">Assign subjects</a></li>
+            <li><a href="/class_room/edit_subjects">Edit subjects</a></li>
+            <li><a href="/class_room/assign_teacher">Assign teacher</a></li>
+            <li><a href="/class_room/assign_teacher">Edit teacher</a></li>
+            <li><a href="/class_room/view_classes">View classes</a></li>
           </ul>
 
         </div> <!-- end side-menu -->
@@ -171,7 +158,7 @@
 
             <div class="content-module-heading cf">
 
-              <h3 class="fl">Class assignment</h3>
+              <h3 class="fl">Student Registration</h3>
               <span class="fr expand-collapse-text">Click to collapse</span>
               <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -180,73 +167,50 @@
 
             <div class="content-module-main">
               <% if flash[:notice] %>
-                  <div class="confirmation-box round">
-                    <%= flash[:notice] %>
-                  </div>
-                <% end %>
-                <% if flash[:error] %>
-                  <div class="error-box round">
-                      <%= flash[:error] %>
-                  </div>
-                <% end %>
-              <form id="search-student-form" action="#">
-                <fieldset>
-                  <legend>Search</legend>
-                  <div style="width:71%; margin-left:10%;">
-                    <table>
-                      <tr>
-                        <td style="width:10%;">First Name</td>
-                        <td style="width:10%;"><input type="text"/></td>
-                        <td style="width:10%;">Last Name</td>
-                        <td style="width:10%;"><input type="text"/></td>
-                        <td style="width:10%;">Gender</td>
-                        <td style="width:5%">
-                          <select id="dropdown-actions">
-                            <option value="">Select Gender</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                          </select>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td colspan="6"><a href="#" class="button round blue image-right ic-search text-upper">Search</a></td>
-                      </tr>
-                    </table>
-                  </div>
-                </fieldset>
-              </form>
+                <div class="confirmation-box round">
+                  <%= flash[:notice] %>
+                </div>
+              <% end %>
+              <% if flash[:error] %>
+                <div class="error-box round">
+                  <%= flash[:error] %>
+                </div>
+              <% end %>
 
-              <table>
+              <table class="classes">
 
                 <thead>
-
                   <tr>
-                    <th style="min-width:15%;">Name</th>
-                    <th>Email</th>
-                    <th>Gender</th>
-                    <th>Date Of Birth</th>
-                    <th>Phone #</th>
-                    <th>Date of Join</th>
+                    <th><input type="checkbox" id="table-select-all"/></th>
+                    <th style="min-width:20%;">Class Name</th>
+                    <th>Year</th>
+                    <th>Grade</th>
                     <th>Action</th>
                   </tr>
-
                 </thead>
-
-                <tbody>
+                <tfoot>
                   <tr>
-                    <td>Adrian Purdila</td>
-                    <td><a href="#">adipurdila@gmail.com</a></td>
-                    <td>Male</td>
-                    <td>01-Jan-2010</td>
-                    <td>099xxxxxx</td>
-                    <td>15-Jan-2014</td>
-                    <td style="min-width:10%;">
-                      <a href="#" class="button round blue image-right ic-add text-upper">Assign Class &nbsp;</a>
+                    <td colspan="8" class="table-footer">
+                      <a href="#" class="button round blue image-right ic-delete text-upper confirm">Delete</a>
                     </td>
                   </tr>
+                </tfoot>
+                <tbody id="class_rooms">
+                  <% @class_rooms.each do |class_room| %>
+                  <tr>
+                    <td><input type="checkbox"/></td>
+                    <td><%= class_room.name%></td>
+                    <td><%=  class_room.year %></td>
+                    <td><%= class_room.grade %></td>
+                    <td>
+                      <a class="table-actions-button ic-table-delete confirm"></a>
+                    </td>
+                  </tr>
+                  <% end %>
                 </tbody>
-
+                
               </table>
+
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->
@@ -266,6 +230,20 @@
       <p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
 
     </div> <!-- end footer -->
-
+    <%= javascript_include_tag("bootstrap") %>
+    <script>
+      $(".confirm").confirm({
+          title:"Delete confirmation",
+          text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+          confirm: function(button) {
+            alert("You just confirmed.");
+          },
+          cancel: function(button) {
+            alert("You aborted the operation.");
+          },
+          confirmButton: "Yes I am",
+          cancelButton: "No"
+      });
+    </script>
   </body>
 </html>

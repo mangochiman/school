@@ -5,6 +5,7 @@ class Classroom < ActiveRecord::Migration
       t.string :grade
       t.string :section
       t.string :status
+      t.string :name
       t.string :remarks
       t.integer :teacher_id
       t.timestamps
