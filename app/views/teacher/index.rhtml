@@ -1,403 +1,361 @@
 <!DOCTYPE html>
 
 <html lang="en">
-<head>
-	<meta charset="utf-8">
-	<title>Teachers section</title>
-	<!-- Optimize for mobile devices -->
-	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <head>
+    <meta charset="utf-8">
+    <title>Student Section</title>
+    <!-- Optimize for mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-	<!-- jQuery & JS files -->
-	<%= javascript_include_tag("jquery") %>
-	<%= javascript_include_tag("script") %>
-        <%= stylesheet_link_tag("style") %>
-</head>
-<body>
+    <!-- jQuery & JS files -->
+    <%= javascript_include_tag("jquery") %>
+    <%= javascript_include_tag("script") %>
+    <%= stylesheet_link_tag("style") %>
 
-	<!-- TOP BAR -->
-	<div id="top-bar">
+    <script>
+      function editTeacher(id){
+        //alert(id)
+      }
+    </script>
+  </head>
+  <body>
 
-		<div class="page-full-width cf">
+    <!-- TOP BAR -->
+    <div id="top-bar">
 
-			<ul id="nav" class="fl">
+      <div class="page-full-width cf">
 
-				<li class="v-sep"><a href="#" class="round button dark ic-left-arrow image-left">Go to website</a></li>
-				<li class="v-sep"><a href="#" class="round button dark menu-user image-left">Logged in as <strong>admin</strong></a>
-					<ul>
-						<li><a href="#">My Profile</a></li>
-						<li><a href="/admin/settings">Settings</a></li>
-						<li><a href="#">Change Password</a></li>
-						<li><a href="#">Log out</a></li>
-					</ul>
-				</li>
+        <ul id="nav" class="fl">
 
-				<li><a href="#" class="round button dark menu-email-special image-left">3 new messages</a></li>
-				<li><a href="#" class="round button dark menu-logoff image-left">Log out</a></li>
+          <li class="v-sep"><a href="#" class="round button dark ic-left-arrow image-left">Go to website</a></li>
+          <li class="v-sep"><a href="#" class="round button dark menu-user image-left">Logged in as <strong>admin</strong></a>
+            <ul>
+              <li><a href="#">My Profile</a></li>
+              <li><a href="/admin/settings">Settings</a></li>
+              <li><a href="#">Change Password</a></li>
+              <li><a href="#">Log out</a></li>
+            </ul>
+          </li>
 
-			</ul> <!-- end nav -->
+          <li><a href="#" class="round button dark menu-email-special image-left">3 new messages</a></li>
+          <li><a href="#" class="round button dark menu-logoff image-left">Log out</a></li>
 
+        </ul> <!-- end nav -->
 
-			<form action="#" method="POST" id="search-form" class="fr">
-				<fieldset>
-					<input type="text" id="search-keyword" class="round button dark ic-search image-right" placeholder="Search..." />
-					<input type="hidden" value="SUBMIT" />
-				</fieldset>
-			</form>
 
-		</div> <!-- end full-width -->
+        <form action="#" method="POST" id="search-form" class="fr">
+          <fieldset>
+            <input type="text" id="search-keyword" class="round button dark ic-search image-right" placeholder="Search..." />
+            <input type="hidden" value="SUBMIT" />
+          </fieldset>
+        </form>
 
-	</div> <!-- end top-bar -->
+      </div> <!-- end full-width -->
 
+    </div> <!-- end top-bar -->
 
 
-	<!-- HEADER -->
-	<div id="header-with-tabs">
 
-		<div class="page-full-width cf">
+    <!-- HEADER -->
+    <div id="header-with-tabs">
 
-			<ul id="tabs" class="fl">
-				<li><a href="/admin/home" class="dashboard-tab">Dashboard</a></li>
-				<li><a href="/student/index">Students</a></li>
-				<li><a href="/parent/index">Parents</a></li>
-                                <li><a href="/teacher/index" class="active-tab">Teachers</a></li>
-                                <li><a href="/admin/research">Research</a></li>
-                                <li><a href="/examination/index">Exams</a></li>
-                                <li><a href="/class_room/index">Classes</a></li>
-                                <li><a href="/report/index">Reports</a></li>
-                                <li><a href="/student/my_results">My Results</a></li>
-                                <li><a href="/admin/time_table">Time Tables</a></li>
-			</ul> <!-- end tabs -->
+      <div class="page-full-width cf">
 
-			<!-- Change this image to your own company's logo -->
-			<!-- The logo will automatically be resized to 30px height. -->
-			<a href="#" id="company-branding-small" class="fr"><img src="/images/company-logo.png" alt="Blue Hosting" /></a>
+        <ul id="tabs" class="fl">
+          <li><a href="/admin/home" class="dashboard-tab">Dashboard</a></li>
+          <li><a href="/student/index" > Students</a></li>
+          <li><a href="/parent/index" >Parents</a></li>
+          <li><a href="/teacher/index" class="active-tab">Teachers</a></li>
+          <li><a href="/admin/research">Research</a></li>
+          <li><a href="/examination/index">Exams</a></li>
+          <li><a href="/class_room/index">Classes</a></li>
+          <li><a href="/report/index">Reports</a></li>
+          <li><a href="/student/my_results">My Results</a></li>
+          <li><a href="/admin/time_table">Time Tables</a></li>
+        </ul> <!-- end tabs -->
 
-		</div> <!-- end full-width -->
+        <!-- Change this image to your own company's logo -->
+        <!-- The logo will automatically be resized to 30px height. -->
+        <a href="#" id="company-branding-small" class="fr"><img src="/images/company-logo.png" alt="Blue Hosting" /></a>
 
-	</div> <!-- end header -->
+      </div> <!-- end full-width -->
 
+    </div> <!-- end header -->
 
 
-	<!-- MAIN CONTENT -->
-	<div id="content">
 
-		<div class="page-full-width cf">
+    <!-- MAIN CONTENT -->
+    <div id="content">
 
-			<div class="side-menu fl">
+      <div class="page-full-width cf">
 
-				<h3>Side Menu</h3>
-				<ul>
-					<li><a href="#">Side menu link</a></li>
-					<li><a href="#">Another link</a></li>
-					<li><a href="#">A third link</a></li>
-					<li><a href="#">Fourth link</a></li>
-				</ul>
+        <div class="side-menu fl">
 
-			</div> <!-- end side-menu -->
+          <h3>Task</h3>
+          <ul>
+            <li><a href="/teacher/add_teacher/">Add Teacher</a></li>
+            <li><a href="/teacher/edit_teacher/">Edit Teacher</a></li>
+            <li><a href="/teacher/assign_class/">Assign Class</a></li>
+            <li><a href="/teacher/assign_subjects">Assign Subjects</a></li>
+            <li><a href="/teacher/teacher_stats">Teacher Stats</a></li>
+            <li><a href="/teacher/filter_teachers">Filter Teachers By</a></li>
+          </ul>
 
-			<div class="side-content fr">
+        </div> <!-- end side-menu -->
 
-				<div class="content-module">
+        <div class="side-content fr">
 
-					<div class="content-module-heading cf">
+          <div class="content-module">
 
-						<h3 class="fl">Table design</h3>
-						<span class="fr expand-collapse-text">Click to collapse</span>
-						<span class="fr expand-collapse-text initial-expand">Click to expand</span>
-
-					</div> <!-- end content-module-heading -->
-
-
-					<div class="content-module-main">
-
-						<table>
-
-							<thead>
-
-								<tr>
-									<th><input type="checkbox" id="table-select-all"></th>
-									<th>Name</th>
-									<th>Username</th>
-									<th>Email</th>
-									<th>Actions</th>
-								</tr>
-
-							</thead>
-
-							<tfoot>
-
-								<tr>
-
-									<td colspan="5" class="table-footer">
-
-										<label for="table-select-actions">With selected:</label>
-
-										<select id="table-select-actions">
-											<option value="option1">Delete</option>
-											<option value="option2">Export</option>
-											<option value="option3">Archive</option>
-										</select>
+            <div class="content-module-heading cf">
 
-										<a href="#" class="round button blue text-upper small-button">Apply to selected</a>
+              <h3 class="fl">Table design</h3>
+              <span class="fr expand-collapse-text">Click to collapse</span>
+              <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
-									</td>
+            </div> <!-- end content-module-heading -->
 
-								</tr>
 
-							</tfoot>
+            <div class="content-module-main">
 
-							<tbody>
+              <table>
 
-								<tr>
-									<td><input type="checkbox"></td>
-									<td>Adrian Purdila</td>
-									<td>adipurdila</td>
-									<td><a href="#">adipurdila@gmail.com</a></td>
-									<td>
-										<a href="#" class="table-actions-button ic-table-edit"></a>
-										<a href="#" class="table-actions-button ic-table-delete"></a>
-									</td>
-								</tr>
+                <thead>
 
-								<tr>
-									<td><input type="checkbox"></td>
-									<td>Adrian Purdila</td>
-									<td>adipurdila</td>
-									<td><a href="#">adipurdila@gmail.com</a></td>
-									<td>
-										<a href="#" class="table-actions-button ic-table-edit"></a>
-										<a href="#" class="table-actions-button ic-table-delete"></a>
-									</td>
-								</tr>
+                  <tr>
+                    <th><input type="checkbox" id="table-select-all"></th>
+                    <th>First Name</th>
+                    <th>Sir Name</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                  </tr>
 
-								<tr>
-									<td><input type="checkbox"></td>
-									<td>Adrian Purdila</td>
-									<td>adipurdila</td>
-									<td><a href="#">adipurdila@gmail.com</a></td>
-									<td>
-										<a href="#" class="table-actions-button ic-table-edit"></a>
-										<a href="#" class="table-actions-button ic-table-delete"></a>
-									</td>
-								</tr>
+                </thead>
 
-								<tr>
-									<td><input type="checkbox"></td>
-									<td>Adrian Purdila</td>
-									<td>adipurdila</td>
-									<td><a href="#">adipurdila@gmail.com</a></td>
-									<td>
-										<a href="#" class="table-actions-button ic-table-edit"></a>
-										<a href="#" class="table-actions-button ic-table-delete"></a>
-									</td>
-								</tr>
+                <tfoot>
 
-								<tr>
-									<td><input type="checkbox"></td>
-									<td>Adrian Purdila</td>
-									<td>adipurdila</td>
-									<td><a href="#">adipurdila@gmail.com</a></td>
-									<td>
-										<a href="#" class="table-actions-button ic-table-edit"></a>
-										<a href="#" class="table-actions-button ic-table-delete"></a>
-									</td>
-								</tr>
+                  <tr>
 
-								<tr>
-									<td><input type="checkbox"></td>
-									<td>Adrian Purdila</td>
-									<td>adipurdila</td>
-									<td><a href="#">adipurdila@gmail.com</a></td>
-									<td>
-										<a href="#" class="table-actions-button ic-table-edit"></a>
-										<a href="#" class="table-actions-button ic-table-delete"></a>
-									</td>
-								</tr>
+                    <td colspan="5" class="table-footer">
 
-							</tbody>
+                      <label for="table-select-actions"> Viewing :</label>
 
-						</table>
+                      <select id="table-select-actions">
+                        <% if @teachers.length >= 10 %>
+                        <option value="<%= (@teachers.length - 5) %>"><%= (@teachers.length - 5) %></option>
+                        <% end %>
+                        <option value="<%= @teachers.length  %>"><%= @teachers.length  %></option>
+                        <% if @teachers.length >= 10 %>
+                        <option value="<%= (@teachers.length + 10) %>"><%= (@teachers.length - 10) %></option>
+                        <% end %>
+                      </select>
 
-					</div> <!-- end content-module-main -->
+                      <a href="#" class="round button blue text-upper small-button">Apply to selected</a>
 
-				</div> <!-- end content-module -->
+                    </td>
 
-				<div class="content-module">
+                  </tr>
 
-					<div class="content-module-heading cf">
+                </tfoot>
 
-						<h3 class="fl">Form Elements</h3>
-						<span class="fr expand-collapse-text">Click to collapse</span>
-						<span class="fr expand-collapse-text initial-expand">Click to expand</span>
+                <tbody>
+                <% (@teachers || []).each {|teacher| %>
+                  <tr>
+                    <td><input type="checkbox"></td>
+                    <td><%= teacher.fname %></td>
+                    <td><%= teacher.lname %></td>
+                    <td><a href="#"><%= teacher.email %></a></td>
+                    <td>
+                      <a href="#" class="table-actions-button ic-table-edit" onmousedown="editTeacher(<%= teacher.id   %>)"></a>
+                      <a href="#" class="table-actions-button ic-table-delete"></a>
+                    </td>
+                  </tr>
+                  <% } %>
 
-					</div> <!-- end content-module-heading -->
+                </tbody>
 
+              </table>
 
-					<div class="content-module-main cf">
+            </div> <!-- end content-module-main -->
 
-						<div class="half-size-column fl">
+          </div> <!-- end content-module -->
 
-							<form action="#">
+          <div class="content-module">
 
-								<fieldset>
+            <div class="content-module-heading cf">
 
-									<p>
-										<label for="simple-input">Simple input</label>
-										<input type="text" id="simple-input" class="round default-width-input" />
-									</p>
+              <h3 class="fl">Form Elements</h3>
+              <span class="fr expand-collapse-text">Click to collapse</span>
+              <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
-									<p>
-										<label for="full-width-input">A full width input</label>
-										<input type="text" id="full-width-input" class="round full-width-input"/>
-										<em>This is a full width input. It will take 100% of the available width.</em>
-									</p>
+            </div> <!-- end content-module-heading -->
 
-									<p>
-										<label for="another-simple-input">Text input with additional description</label>
-										<input type="text" id="another-simple-input" class="round default-width-input"/>
-										<em>You can add a hint or a small description here.</em>
-									</p>
 
-									<p class="form-error">
-										<label for="error-input">Error text input</label>
-										<input type="text" id="error-input" class="round default-width-input error-input"/>
-										<em>This is an optional error description that can be associated with an input.</em>
-									</p>
+            <div class="content-module-main cf">
 
-								</fieldset>
+              <div class="half-size-column fl">
 
-							</form>
+                <form action="#">
 
-						</div> <!-- end half-size-column -->
+                  <fieldset>
 
-						<div class="half-size-column fr">
+                    <p>
+                      <label for="simple-input">Simple input</label>
+                      <input type="text" id="simple-input" class="round default-width-input" />
+                    </p>
 
-							<form action="#">
+                    <p>
+                      <label for="full-width-input">A full width input</label>
+                      <input type="text" id="full-width-input" class="round full-width-input"/>
+                      <em>This is a full width input. It will take 100% of the available width.</em>
+                    </p>
 
-								<fieldset>
+                    <p>
+                      <label for="another-simple-input">Text input with additional description</label>
+                      <input type="text" id="another-simple-input" class="round default-width-input"/>
+                      <em>You can add a hint or a small description here.</em>
+                    </p>
 
-									<p>
-										<label for="textarea">Textarea</label>
-										<textarea id="textarea" class="round full-width-textarea"></textarea>
-									</p>
+                    <p class="form-error">
+                      <label for="error-input">Error text input</label>
+                      <input type="text" id="error-input" class="round default-width-input error-input"/>
+                      <em>This is an optional error description that can be associated with an input.</em>
+                    </p>
 
-									<div class="stripe-separator"><!--  --></div>
+                  </fieldset>
 
-									<p>
-										<label>Checkboxes</label>
-										<label for="selected-checkbox" class="alt-label"><input type="checkbox" id="selected-checkbox" checked="checked" />A selected checkbox</label>
-										<label for="unselected-checkbox" class="alt-label"><input type="checkbox" id="unselected-checkbox" />An uselected checkbox</label>
-									</p>
+                </form>
 
-									<p>
-										<label>Radio buttons</label>
-										<label for="selected-radio" class="alt-label"><input type="radio" id="selected-radio" checked="checked" />A selected radio</label>
-										<label for="unselected-radio" class="alt-label"><input type="radio" id="unselected-radio" />An uselected radio</label>
-									</p>
+              </div> <!-- end half-size-column -->
 
-									<p class="form-error-input">
-										<label for="dropdown-actions">Dropdown</label>
+              <div class="half-size-column fr">
 
-										<select id="dropdown-actions">
-											<option value="option1">Select your action here</option>
-										</select>
-									</p>
+                <form action="#">
 
-									<div class="stripe-separator"><!--  --></div>
+                  <fieldset>
 
-									<input type="submit" value="Submit Button" class="round blue ic-right-arrow" />
+                    <p>
+                      <label for="textarea">Textarea</label>
+                      <textarea id="textarea" class="round full-width-textarea"></textarea>
+                    </p>
 
-								</fieldset>
+                    <div class="stripe-separator"><!--  --></div>
 
-							</form>
+                    <p>
+                      <label>Checkboxes</label>
+                      <label for="selected-checkbox" class="alt-label"><input type="checkbox" id="selected-checkbox" checked="checked" />A selected checkbox</label>
+                      <label for="unselected-checkbox" class="alt-label"><input type="checkbox" id="unselected-checkbox" />An uselected checkbox</label>
+                    </p>
 
-						</div> <!-- end half-size-column -->
+                    <p>
+                      <label>Radio buttons</label>
+                      <label for="selected-radio" class="alt-label"><input type="radio" id="selected-radio" checked="checked" />A selected radio</label>
+                      <label for="unselected-radio" class="alt-label"><input type="radio" id="unselected-radio" />An uselected radio</label>
+                    </p>
 
-					</div> <!-- end content-module-main -->
+                    <p class="form-error-input">
+                      <label for="dropdown-actions">Dropdown</label>
 
-				</div> <!-- end content-module -->
+                      <select id="dropdown-actions">
+                        <option value="option1">Select your action here</option>
+                      </select>
+                    </p>
 
-				<div class="half-size-column fl">
+                    <div class="stripe-separator"><!--  --></div>
 
-					<div class="content-module">
+                    <input type="submit" value="Submit Button" class="round blue ic-right-arrow" />
 
-						<div class="content-module-heading cf">
+                  </fieldset>
 
-							<h3 class="fl">A half size box</h3>
-							<span class="fr expand-collapse-text">Click to collapse</span>
-							<span class="fr expand-collapse-text initial-expand">Click to expand</span>
+                </form>
 
-						</div> <!-- end content-module-heading -->
+              </div> <!-- end half-size-column -->
 
+            </div> <!-- end content-module-main -->
 
-						<div class="content-module-main">
+          </div> <!-- end content-module -->
 
-							<div class="information-box round">This is an information box. It will resize based on
+          <div class="half-size-column fl">
+
+            <div class="content-module">
+
+              <div class="content-module-heading cf">
+
+                <h3 class="fl">A half size box</h3>
+                <span class="fr expand-collapse-text">Click to collapse</span>
+                <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+              </div> <!-- end content-module-heading -->
+
+
+              <div class="content-module-main">
+
+                <div class="information-box round">This is an information box. It will resize based on
 							it’s contents.</div>
 
-							<div class="confirmation-box round">This is a confirmation box. It will resize based on
+                <div class="confirmation-box round">This is a confirmation box. It will resize based on
 							it’s contents.</div>
 
-							<div class="error-box round">This is an error box. It will also resize based on it’s
+                <div class="error-box round">This is an error box. It will also resize based on it’s
 							contents.</div>
 
-							<div class="warning-box round">This is a warning box. It will also resize based on
+                <div class="warning-box round">This is a warning box. It will also resize based on
 							it’s contents.</div>
 
-						</div> <!-- end content-module-main -->
+              </div> <!-- end content-module-main -->
 
-					</div> <!-- end content-module -->
+            </div> <!-- end content-module -->
 
-				</div>
+          </div>
 
-				<div class="half-size-column fr">
+          <div class="half-size-column fr">
 
-				<div class="content-module">
+            <div class="content-module">
 
-					<div class="content-module-heading cf">
+              <div class="content-module-heading cf">
 
-						<h3 class="fl">Another half size box</h3>
-						<span class="fr expand-collapse-text">Click to collapse</span>
-						<span class="fr expand-collapse-text initial-expand">Click to expand</span>
+                <h3 class="fl">Another half size box</h3>
+                <span class="fr expand-collapse-text">Click to collapse</span>
+                <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
-					</div> <!-- end content-module-heading -->
-
-
-					<div class="content-module-main cf">
-
-						<ul class="temporary-button-showcase">
-							<li><a href="#" class="button round blue image-right ic-add text-upper">Add</a></li>
-							<li><a href="#" class="button round blue image-right ic-edit text-upper">Edit</a></li>
-							<li><a href="#" class="button round blue image-right ic-delete text-upper">Delete</a></li>
-							<li><a href="#" class="button round blue image-right ic-download text-upper">Download</a></li>
-							<li><a href="#" class="button round blue image-right ic-upload text-upper">Upload</a></li>
-							<li><a href="#" class="button round blue image-right ic-favorite text-upper">Favorite</a></li>
-							<li><a href="#" class="button round blue image-right ic-print text-upper">Print</a></li>
-							<li><a href="#" class="button round blue image-right ic-refresh text-upper">Refresh</a></li>
-							<li><a href="#" class="button round blue image-right ic-search text-upper">Search</a></li>
-						</ul>
-
-					</div> <!-- end content-module-main -->
-
-				</div> <!-- end content-module -->
-
-			</div>
-
-			</div> <!-- end side-content -->
-
-		</div> <!-- end full-width -->
-
-	</div> <!-- end content -->
+              </div> <!-- end content-module-heading -->
 
 
+              <div class="content-module-main cf">
 
-	<!-- FOOTER -->
-	<div id="footer">
+                <ul class="temporary-button-showcase">
+                  <li><a href="#" class="button round blue image-right ic-add text-upper">Add</a></li>
+                  <li><a href="#" class="button round blue image-right ic-edit text-upper">Edit</a></li>
+                  <li><a href="#" class="button round blue image-right ic-delete text-upper">Delete</a></li>
+                  <li><a href="#" class="button round blue image-right ic-download text-upper">Download</a></li>
+                  <li><a href="#" class="button round blue image-right ic-upload text-upper">Upload</a></li>
+                  <li><a href="#" class="button round blue image-right ic-favorite text-upper">Favorite</a></li>
+                  <li><a href="#" class="button round blue image-right ic-print text-upper">Print</a></li>
+                  <li><a href="#" class="button round blue image-right ic-refresh text-upper">Refresh</a></li>
+                  <li><a href="#" class="button round blue image-right ic-search text-upper">Search</a></li>
+                </ul>
 
-		<p>&copy; Copyright 2012 <a href="#">BlueHosting, LLC</a>. All rights reserved.</p>
-		<p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
+              </div> <!-- end content-module-main -->
 
-	</div> <!-- end footer -->
+            </div> <!-- end content-module -->
 
-</body>
+          </div>
+
+        </div> <!-- end side-content -->
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end content -->
+
+
+
+    <!-- FOOTER -->
+    <div id="footer">
+
+      <p>&copy; Copyright 2012 <a href="#">BlueHosting, LLC</a>. All rights reserved.</p>
+      <p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
+
+    </div> <!-- end footer -->
+
+  </body>
 </html>
