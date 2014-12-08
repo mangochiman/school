@@ -1,11 +1,12 @@
 class Teacher < ActiveRecord::Migration
   def self.up
     create_table :teacher, :primary_key => :teacher_id do |t|
-      t.integer :email
+      t.string :email
       t.string :password
       t.string :fname
       t.string :lname
       t.string :dob
+      t.string :gender
       t.string :phone
       t.string :mobile
       t.string :date_of_join
