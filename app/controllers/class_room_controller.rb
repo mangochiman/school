@@ -29,9 +29,26 @@ class ClassRoomController < ApplicationController
     end
     render :layout => false
   end
-  def remove_classes
+  def remove_class
     @class_rooms = ClassRoom.all
     render :layout => false
+  end
+
+  def delete_class_rooms
+    if (params[:mode] == 'single_entry')
+      class_room = ClassRoom.find(params[:class_room_id])
+      class_room.delete
+      render :text => "true" and return
+    end
+
+    class_room_ids = params[:class_room_ids].split(",")
+    
+    (class_room_ids || []).each do |class_room_id|
+       class_room = ClassRoom.find(class_room_id)
+       class_room.delete
+    end
+    
+    render :text => "true" and return
   end
   
   def assign_subjects
