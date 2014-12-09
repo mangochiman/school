@@ -59,8 +59,22 @@ class ClassRoomController < ApplicationController
   def assign_me_subjects
     @class_room = ClassRoom.find(params[:class_room_id])
     @courses = Course.all
+    
+    unless (@class_room.class_room_courses.blank?)
+      assigned_course_ids = @class_room.class_room_courses.collect{|c| c.course_id}
+      @courses = Course.find(:all, :conditions => ["course_id NOT IN (?)", assigned_course_ids] )
+    end
+
     if (request.method == :post)
-      raise params.to_yaml
+      (params[:subjects] || []).each do |course, details|
+        course_id = Course.find_by_name(course).id
+        ClassRoomCourse.create({
+            :class_room_id => params[:class_room_id],
+            :course_id => course_id
+          })
+      end
+      flash[:notice] = "You have successfuly assigned_courses"
+      redirect_to :action => "assign_me_subjects", :class_room_id => params[:class_room_id] and return
     end
     render :layout => false
   end
