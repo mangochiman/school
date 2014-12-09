@@ -141,9 +141,36 @@ class ClassRoomController < ApplicationController
   end
   
   def edit_teacher
+    @class_rooms = ClassRoom.all
     render :layout => false
   end
 
+  def edit_my_subjects
+    @class_room = ClassRoom.find(params[:class_room_id])
+    @all_teachers = Teacher.all
+    @assigned_teachers = []
+
+    unless (@class_room.class_room_teachers.blank?)
+      @assigned_teachers = @class_room.class_room_teachers.collect{|c| c.teacher_id}
+      #@assigned_courses = Course.find(:all, :conditions => ["course_id IN (?)", assigned_course_ids] )
+    end
+    if (request.method == :post)
+      ActiveRecord::Base.transaction do
+        @class_room.class_room_courses.delete_all
+
+        (params[:teachers] || []).each do |teacher_id, details|
+          ClassRoomTeacher.create({
+              :class_room_id => params[:class_room_id],
+              :teacher_id => teacher_id
+            }) #To be continued later
+        end
+        flash[:notice] = "You have successfuly edited courses"
+        redirect_to :action => "edit_my_subjects", :class_room_id => params[:class_room_id] and return
+      end
+    end
+    render :layout => false
+  end
+  
   def create_class_rooms
     class_name = params[:class_name]
     year = params[:year]
