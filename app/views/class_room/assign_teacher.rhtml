@@ -16,18 +16,11 @@
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("bootstrap") %>
     <script>
-      function checkPreviousSelectedCourses(){
-        inputs = document.getElementsByTagName("input");
-        for (var i=0; i<=inputs.length - 1; i++){
-          if (inputs[i].type == 'checkbox'){
-              inputs[i].checked = false;
-          }
+
+        function assignTeachers(obj){
+          classRoomId = obj.getAttribute("class_room_id");
+          window.location = "/class_room/assign_me_teachers?class_room_id=" + classRoomId;
         }
-        
-        <% (@assigned_courses || []).each do |course| %>
-              document.getElementById("<%= course.id %>").checked = true;
-        <% end %>
-      }
         
     </script>
     <style>
@@ -78,7 +71,7 @@
     
     </style>
   </head>
-  <body onload="checkPreviousSelectedCourses();">
+  <body>
 
     <!-- TOP BAR -->
     <div id="top-bar">
@@ -190,36 +183,33 @@
                   <%= flash[:error] %>
                 </div>
               <% end %>
-              <form method="post" action="edit_my_subjects">
-              <table class="classes" style="">
+
+              <table class="classes">
 
                 <thead>
                   <tr>
-                    <th colspan="6" style=" padding: 1.25em 0 1.25em 1.25em;">Select courses</th>
+                    <th style="min-width:20%;">Class Name</th>
+                    <th>Year</th>
+                    <th>Grade</th>
+                    <th style="min-width:12%;">Action</th>
                   </tr>
                 </thead>
            
                 <tbody id="class_rooms">
-                  <% @all_courses.in_groups_of(3).each do |row| %>
-                    <tr>
-                        <% row.each do |subject| %>
-                            <% unless subject.blank? %>
-                                  <td><input type="checkbox" id="<%= subject.id %>" name="subjects[<%= subject.name.titlecase %>]"/></td>
-                                  <td style="border-left: none; text-align: left;"><%= subject.name.titlecase %></td>
-                              <% else %>
-                                  <td style="border-left: none;">&nbsp;</td>
-                                  <td style="border-left: none;">&nbsp;</td>
-                            <% end %>
-                        <% end %>
-                    </tr>
+                  <% @class_rooms.each do |class_room| %>
+                  <tr id="<%= class_room.id %>">
+                    <td><%= class_room.name%></td>
+                    <td><%=  class_room.year %></td>
+                    <td><%= class_room.grade %></td>
+                    <td>
+                      <a href="#" class_room_id="<%= class_room.id %>" onmousedown="assignTeachers(this)" class="button round blue image-right ic-add text-upper">Assign Teachers &nbsp;</a>
+                    </td>
+                  </tr>
                   <% end %>
                 </tbody>
                 
               </table>
-              <div class="stripe-separator"><!--  --></div>
-                <%= hidden_field_tag("class_room_id", params[:class_room_id]) %>
-                <input type="submit" value="Submit" class="round blue ic-right-arrow" />
-              </form>
+
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->

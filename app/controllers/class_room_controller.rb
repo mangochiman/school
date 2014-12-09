@@ -73,7 +73,7 @@ class ClassRoomController < ApplicationController
               :course_id => course_id
             })
       end
-      flash[:notice] = "You have successfuly assigned_courses"
+      flash[:notice] = "You have successfuly assigned courses"
       redirect_to :action => "assign_me_subjects", :class_room_id => params[:class_room_id] and return
     end
     render :layout => false
@@ -93,14 +93,53 @@ class ClassRoomController < ApplicationController
       @assigned_courses = @class_room.class_room_courses.collect{|c| c.course}
       #@assigned_courses = Course.find(:all, :conditions => ["course_id IN (?)", assigned_course_ids] )
     end
-    
+    if (request.method == :post)
+      ActiveRecord::Base.transaction do
+        @class_room.class_room_courses.delete_all
+
+        (params[:subjects] || []).each do |course, details|
+          course_id = Course.find_by_name(course).id
+          ClassRoomCourse.create({
+              :class_room_id => params[:class_room_id],
+              :course_id => course_id
+            })
+        end
+        flash[:notice] = "You have successfuly edited courses"
+        redirect_to :action => "edit_my_subjects", :class_room_id => params[:class_room_id] and return
+      end
+    end
     render :layout => false
   end
   
   def assign_teacher
+    @class_rooms = ClassRoom.all
     render :layout => false
   end
 
+  def assign_me_teachers
+    @class_room = ClassRoom.find(params[:class_room_id])
+    @teachers = Teacher.all
+
+    unless (@class_room.class_room_teachers.blank?)
+      assigned_teacher_ids = @class_room.class_room_teachers.collect{|t| t.teacher_id}
+      @teachers = Teacher.find(:all, :conditions => ["teacher_id NOT IN (?)", assigned_teacher_ids] )
+    end
+    
+    if (request.method == :post)
+
+      (params[:teachers] || []).each do |teacher_id, details|
+          ClassRoomTeacher.create({
+              :class_room_id => params[:class_room_id],
+              :teacher_id => teacher_id
+            })
+      end
+      
+      flash[:notice] = "You have successfuly assigned teachers"
+      redirect_to :action => "assign_me_teachers", :class_room_id => params[:class_room_id] and return
+    end
+    render :layout => false
+  end
+  
   def edit_teacher
     render :layout => false
   end

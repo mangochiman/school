@@ -16,17 +16,31 @@
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("bootstrap") %>
     <script>
-      function checkPreviousSelectedCourses(){
+      function selectAll(){
+        selectAllInput = document.getElementById('table-select-all');
+        if (selectAllInput.checked){
+          selectAllInput.checked = true;
+        }
+        else {
+          selectAllInput.checked = false
+        }
         inputs = document.getElementsByTagName("input");
         for (var i=0; i<=inputs.length - 1; i++){
+          if (inputs[i] == selectAllInput) continue;
           if (inputs[i].type == 'checkbox'){
+            if (inputs[i].checked){
               inputs[i].checked = false;
+            }
+            else{
+              inputs[i].checked = true;
+            }
           }
         }
-        
-        <% (@assigned_courses || []).each do |course| %>
-              document.getElementById("<%= course.id %>").checked = true;
-        <% end %>
+      }
+      
+      function assignSubjects(obj){
+        classRoomId = obj.getAttribute("class_room_id");
+        window.location = "/class_room/assign_me_subjects?class_room_id=" + classRoomId;
       }
         
     </script>
@@ -78,7 +92,7 @@
     
     </style>
   </head>
-  <body onload="checkPreviousSelectedCourses();">
+  <body>
 
     <!-- TOP BAR -->
     <div id="top-bar">
@@ -180,6 +194,9 @@
 
 
             <div class="content-module-main">
+              <div class="information-box round">
+                Showing only teachers that are not assigned to this class
+              </div>
               <% if flash[:notice] %>
                 <div class="confirmation-box round">
                   <%= flash[:notice] %>
@@ -190,22 +207,23 @@
                   <%= flash[:error] %>
                 </div>
               <% end %>
-              <form method="post" action="edit_my_subjects">
+              <form method="post" action="assign_me_teachers">
               <table class="classes" style="">
 
                 <thead>
                   <tr>
-                    <th colspan="6" style=" padding: 1.25em 0 1.25em 1.25em;">Select courses</th>
+                    <th><input type="checkbox" id="table-select-all" onclick="selectAll();"/></th>
+                    <th colspan="5" style=" padding: 1.25em 0 1.25em 1.25em;">Select teachers</th>
                   </tr>
                 </thead>
            
                 <tbody id="class_rooms">
-                  <% @all_courses.in_groups_of(3).each do |row| %>
+                  <% @teachers.in_groups_of(3).each do |row| %>
                     <tr>
-                        <% row.each do |subject| %>
-                            <% unless subject.blank? %>
-                                  <td><input type="checkbox" id="<%= subject.id %>" name="subjects[<%= subject.name.titlecase %>]"/></td>
-                                  <td style="border-left: none; text-align: left;"><%= subject.name.titlecase %></td>
+                        <% row.each do |teacher| %>
+                            <% unless teacher.blank? %>
+                                  <td><input type="checkbox" id="<%= teacher.id %>" name="teachers[<%= teacher.id   %>]"/></td>
+                                  <td style="border-left: none; text-align: left;"><%= teacher.fname.capitalize.to_s + ' ' + teacher.lname.to_s %></td>
                               <% else %>
                                   <td style="border-left: none;">&nbsp;</td>
                                   <td style="border-left: none;">&nbsp;</td>
