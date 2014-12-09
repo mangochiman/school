@@ -26,6 +26,7 @@
             p.innerHTML = "";
             var input = document.createElement(ele)
             input.name = name
+            input.className = "round full-width-input"
             input.id = name
             p.appendChild(input)
 
@@ -40,6 +41,28 @@
                }
             }
 
+          }
+
+          function addLogo(name, id, ele){
+             var p = __$(id)
+            p.innerHTML = "";
+            var input = document.createElement('input')
+            input.name = 'logos'
+            input.className = "round full-width-input"
+            input.id = 'logos'
+            input.setAttribute("type", "file")
+            p.appendChild(input)
+
+            ele.className = "table-actions-button ic-table-reload";
+            ele.onclick = function (){
+              this.className = 'table-actions-button ic-table-edit';
+              p.innerHTML = document.getElementById('logos').value
+               attribute = p.innerHTML;
+               writeProperty("logo", attribute)
+               this.onclick = function (){
+                 addLogo('input', id,  ele)
+               }
+            }
           }
 
           function writeProperty(name, value){
@@ -86,7 +109,7 @@
             display:table-cell;
           }
 
-           .text, .input, .edit{
+           .text, .edit{
             padding: 0;
             text-align: center;
             width: 7em;
@@ -216,7 +239,7 @@
 
                                                             </div>
                                                             <div class="edit">
-                                                            <a class="table-actions-button ic-table-edit" href="#" onclick="addElement('input', 'logo', 'logo', this);"></a>
+                                                            <a class="table-actions-button ic-table-edit" href="#" onclick="addLogo('input', 'logo', this);"></a>
                                                             </div>
                                                     </div>
 
