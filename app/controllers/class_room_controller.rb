@@ -52,9 +52,19 @@ class ClassRoomController < ApplicationController
   end
   
   def assign_subjects
+    @class_rooms = ClassRoom.all
     render :layout => false
   end
 
+  def assign_me_subjects
+    @class_room = ClassRoom.find(params[:class_room_id])
+    @courses = Course.all
+    if (request.method == :post)
+      raise params.to_yaml
+    end
+    render :layout => false
+  end
+  
   def edit_subjects
     render :layout => false
   end
