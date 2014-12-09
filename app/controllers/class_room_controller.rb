@@ -67,11 +67,11 @@ class ClassRoomController < ApplicationController
 
     if (request.method == :post)
       (params[:subjects] || []).each do |course, details|
-        course_id = Course.find_by_name(course).id
-        ClassRoomCourse.create({
-            :class_room_id => params[:class_room_id],
-            :course_id => course_id
-          })
+          course_id = Course.find_by_name(course).id
+          ClassRoomCourse.create({
+              :class_room_id => params[:class_room_id],
+              :course_id => course_id
+            })
       end
       flash[:notice] = "You have successfuly assigned_courses"
       redirect_to :action => "assign_me_subjects", :class_room_id => params[:class_room_id] and return
@@ -80,9 +80,23 @@ class ClassRoomController < ApplicationController
   end
   
   def edit_subjects
+    @class_rooms = ClassRoom.all
     render :layout => false
   end
-
+  
+  def edit_my_subjects
+    @class_room = ClassRoom.find(params[:class_room_id])
+    @all_courses = Course.all
+    @assigned_courses = []
+    
+    unless (@class_room.class_room_courses.blank?)
+      @assigned_courses = @class_room.class_room_courses.collect{|c| c.course}
+      #@assigned_courses = Course.find(:all, :conditions => ["course_id IN (?)", assigned_course_ids] )
+    end
+    
+    render :layout => false
+  end
+  
   def assign_teacher
     render :layout => false
   end

@@ -16,32 +16,11 @@
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("bootstrap") %>
     <script>
-      function selectAll(){
-        selectAllInput = document.getElementById('table-select-all');
-        if (selectAllInput.checked){
-          selectAllInput.checked = true;
+
+        function editSubjects(obj){
+          classRoomId = obj.getAttribute("class_room_id");
+          window.location = "/class_room/edit_my_subjects?class_room_id=" + classRoomId;
         }
-        else {
-          selectAllInput.checked = false
-        }
-        inputs = document.getElementsByTagName("input");
-        for (var i=0; i<=inputs.length - 1; i++){
-          if (inputs[i] == selectAllInput) continue;
-          if (inputs[i].type == 'checkbox'){
-            if (inputs[i].checked){
-              inputs[i].checked = false;
-            }
-            else{
-              inputs[i].checked = true;
-            }
-          }
-        }
-      }
-      
-      function assignSubjects(obj){
-        classRoomId = obj.getAttribute("class_room_id");
-        window.location = "/class_room/assign_me_subjects?class_room_id=" + classRoomId;
-      }
         
     </script>
     <style>
@@ -194,9 +173,6 @@
 
 
             <div class="content-module-main">
-              <div class="information-box round">
-                Showing only courses that are not assigned to this class
-              </div>
               <% if flash[:notice] %>
                 <div class="confirmation-box round">
                   <%= flash[:notice] %>
@@ -207,37 +183,33 @@
                   <%= flash[:error] %>
                 </div>
               <% end %>
-              <form method="post" action="assign_me_subjects">
-              <table class="classes" style="">
+
+              <table class="classes">
 
                 <thead>
                   <tr>
-                    <th><input type="checkbox" id="table-select-all" onclick="selectAll();"/></th>
-                    <th colspan="5" style=" padding: 1.25em 0 1.25em 1.25em;">Select courses</th>
+                    <th style="min-width:20%;">Class Name</th>
+                    <th>Year</th>
+                    <th>Grade</th>
+                    <th style="min-width:10.5%;">Action</th>
                   </tr>
                 </thead>
            
                 <tbody id="class_rooms">
-                  <% @courses.in_groups_of(3).each do |row| %>
-                    <tr>
-                        <% row.each do |subject| %>
-                            <% unless subject.blank? %>
-                                  <td><input type="checkbox" id="<%= subject.id %>" name="subjects[<%= subject.name.titlecase %>]"/></td>
-                                  <td style="border-left: none; text-align: left;"><%= subject.name.titlecase %></td>
-                              <% else %>
-                                  <td style="border-left: none;">&nbsp;</td>
-                                  <td style="border-left: none;">&nbsp;</td>
-                            <% end %>
-                        <% end %>
-                    </tr>
+                  <% @class_rooms.each do |class_room| %>
+                  <tr id="<%= class_room.id %>">
+                    <td><%= class_room.name%></td>
+                    <td><%=  class_room.year %></td>
+                    <td><%= class_room.grade %></td>
+                    <td>
+                      <a href="#" class_room_id="<%= class_room.id %>" onmousedown="editSubjects(this)" class="button round blue image-right ic-add text-upper">Edit Subjects &nbsp;</a>
+                    </td>
+                  </tr>
                   <% end %>
                 </tbody>
                 
               </table>
-              <div class="stripe-separator"><!--  --></div>
-                <%= hidden_field_tag("class_room_id", params[:class_room_id]) %>
-                <input type="submit" value="Submit" class="round blue ic-right-arrow" />
-              </form>
+
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->

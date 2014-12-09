@@ -16,31 +16,17 @@
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("bootstrap") %>
     <script>
-      function selectAll(){
-        selectAllInput = document.getElementById('table-select-all');
-        if (selectAllInput.checked){
-          selectAllInput.checked = true;
-        }
-        else {
-          selectAllInput.checked = false
-        }
+      function checkPreviousSelectedCourses(){
         inputs = document.getElementsByTagName("input");
         for (var i=0; i<=inputs.length - 1; i++){
-          if (inputs[i] == selectAllInput) continue;
           if (inputs[i].type == 'checkbox'){
-            if (inputs[i].checked){
               inputs[i].checked = false;
-            }
-            else{
-              inputs[i].checked = true;
-            }
           }
         }
-      }
-      
-      function assignSubjects(obj){
-        classRoomId = obj.getAttribute("class_room_id");
-        window.location = "/class_room/assign_me_subjects?class_room_id=" + classRoomId;
+        
+        <% (@assigned_courses || []).each do |course| %>
+              document.getElementById("<%= course.id %>").checked = true;
+        <% end %>
       }
         
     </script>
@@ -92,7 +78,7 @@
     
     </style>
   </head>
-  <body>
+  <body onload="checkPreviousSelectedCourses();">
 
     <!-- TOP BAR -->
     <div id="top-bar">
@@ -194,9 +180,6 @@
 
 
             <div class="content-module-main">
-              <div class="information-box round">
-                Showing only courses that are not assigned to this class
-              </div>
               <% if flash[:notice] %>
                 <div class="confirmation-box round">
                   <%= flash[:notice] %>
@@ -212,13 +195,12 @@
 
                 <thead>
                   <tr>
-                    <th><input type="checkbox" id="table-select-all" onclick="selectAll();"/></th>
-                    <th colspan="5" style=" padding: 1.25em 0 1.25em 1.25em;">Select courses</th>
+                    <th colspan="6" style=" padding: 1.25em 0 1.25em 1.25em;">Select courses</th>
                   </tr>
                 </thead>
            
                 <tbody id="class_rooms">
-                  <% @courses.in_groups_of(3).each do |row| %>
+                  <% @all_courses.in_groups_of(3).each do |row| %>
                     <tr>
                         <% row.each do |subject| %>
                             <% unless subject.blank? %>
