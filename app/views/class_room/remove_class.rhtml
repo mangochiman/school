@@ -15,7 +15,75 @@
     <%= javascript_include_tag("jquery.confirm") %>
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("bootstrap") %>
+    <script>
+      function selectAll(){
+        selectAllInput = document.getElementById('table-select-all');
+        if (selectAllInput.checked){
+          selectAllInput.checked = true;
+        }
+        else {
+          selectAllInput.checked = false
+        }
+        inputs = document.getElementsByTagName("input");
+        for (var i=0; i<=inputs.length - 1; i++){
+          if (inputs[i] == selectAllInput) continue;
+          if (inputs[i].type == 'checkbox'){
+            if (inputs[i].checked){
+              inputs[i].checked = false;
+            }
+            else{
+              inputs[i].checked = true;
+            }
+          }
+        }
+      }
 
+      function deleteClassRooms(){
+        inputs = document.getElementsByTagName("input");
+        classRoomIds = []
+        for (var i=0; i<=inputs.length - 1; i++){
+          if (inputs[i].type == 'checkbox'){
+            if (inputs[i].checked){
+              if (inputs[i].hasAttribute("class_room_id")){
+                classRoomId = inputs[i].getAttribute("class_room_id");
+                classRoomIds.push(classRoomId);
+              }
+            }
+          }
+        }
+        console.log(classRoomIds)
+        jQuery.ajax({
+          type: "POST",
+          url: "/class_room/delete_class_rooms",
+          data: "class_room_ids=" + classRoomIds,
+          success: function(){
+            for (var x=0; x<= classRoomIds.length - 1; x++){
+              id = classRoomIds[x];
+              element = document.getElementById(id);
+              element.parentNode.removeChild(element)
+            }
+          }
+
+      });
+      }
+      var currentClassRoomId = "";
+      function setCurrentClassRoomId(obj){
+        currentClassRoomId = obj.getAttribute("class_room_id");
+      }
+
+      function deleteSingleEntry(){
+        jQuery.ajax({
+          type: "POST",
+          url: "/class_room/delete_class_rooms",
+          data: "class_room_id=" + currentClassRoomId + "&mode=single_entry",
+          success: function(){
+              element = document.getElementById(currentClassRoomId);
+              element.parentNode.removeChild(element);
+          }
+
+      });
+      }
+    </script>
     <style>
       table{
         margin-left:15%;
@@ -142,11 +210,11 @@
           <ul>
             <li><a href="/class_room/add_class">Add class</a></li>
             <li><a href="/class_room/edit_class">Edit class</a></li>
-            <li><a href="/class_room/remove_classes">Void class</a></li>
+            <li><a href="/class_room/remove_class">Void class</a></li>
             <li><a href="/class_room/assign_subjects">Assign subjects</a></li>
             <li><a href="/class_room/edit_subjects">Edit subjects</a></li>
             <li><a href="/class_room/assign_teacher">Assign teacher</a></li>
-            <li><a href="/class_room/assign_teacher">Edit teacher</a></li>
+            <li><a href="/class_room/edit_teacher">Edit teacher</a></li>
             <li><a href="/class_room/view_classes">View classes</a></li>
           </ul>
 
@@ -181,7 +249,7 @@
 
                 <thead>
                   <tr>
-                    <th><input type="checkbox" id="table-select-all"/></th>
+                    <th><input type="checkbox" id="table-select-all" onclick="selectAll();"/></th>
                     <th style="min-width:20%;">Class Name</th>
                     <th>Year</th>
                     <th>Grade</th>
@@ -191,19 +259,19 @@
                 <tfoot>
                   <tr>
                     <td colspan="8" class="table-footer">
-                      <a href="#" class="button round blue image-right ic-delete text-upper confirm">Delete</a>
+                      <a href="#" class="button round blue image-right ic-delete text-upper delete-multiple">Delete</a>
                     </td>
                   </tr>
                 </tfoot>
                 <tbody id="class_rooms">
                   <% @class_rooms.each do |class_room| %>
-                  <tr>
-                    <td><input type="checkbox"/></td>
+                  <tr id="<%= class_room.id %>">
+                    <td><input type="checkbox" class_room_id="<%= class_room.id %>"/></td>
                     <td><%= class_room.name%></td>
                     <td><%=  class_room.year %></td>
                     <td><%= class_room.grade %></td>
                     <td>
-                      <a class="table-actions-button ic-table-delete confirm"></a>
+                      <a href="#" class_room_id="<%= class_room.id %>" onmousedown="setCurrentClassRoomId(this)" class="table-actions-button ic-table-delete confirm"></a>
                     </td>
                   </tr>
                   <% end %>
@@ -232,18 +300,31 @@
     </div> <!-- end footer -->
     <%= javascript_include_tag("bootstrap") %>
     <script>
-      $(".confirm").confirm({
-          title:"Delete confirmation",
-          text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
-          confirm: function(button) {
-            alert("You just confirmed.");
-          },
-          cancel: function(button) {
-            alert("You aborted the operation.");
-          },
-          confirmButton: "Yes I am",
-          cancelButton: "No"
-      });
+      $(".delete-multiple").confirm({
+            title:"Delete confirmation",
+            text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+            confirm: function(button) {
+              deleteClassRooms();
+            },
+            cancel: function(button) {
+              alert("You aborted the operation.");
+            },
+            confirmButton: "Yes I am",
+            cancelButton: "No"
+        });
+
+        $(".confirm").confirm({
+            title:"Delete confirmation",
+            text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+            confirm: function(button) {
+              deleteSingleEntry();
+            },
+            cancel: function(button) {
+
+            },
+            confirmButton: "Yes I am",
+            cancelButton: "No"
+        });
     </script>
   </body>
 </html>

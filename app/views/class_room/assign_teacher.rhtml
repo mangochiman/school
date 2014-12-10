@@ -11,9 +11,18 @@
 
     <%= javascript_include_tag("jquery") %>
     <%= javascript_include_tag("script") %>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("jquery.confirm") %>
     <%= stylesheet_link_tag("style") %>
-    <%= stylesheet_link_tag("metallic") %>
+    <%= stylesheet_link_tag("bootstrap") %>
+    <script>
 
+        function assignTeachers(obj){
+          classRoomId = obj.getAttribute("class_room_id");
+          window.location = "/class_room/assign_me_teachers?class_room_id=" + classRoomId;
+        }
+        
+    </script>
     <style>
       table{
         margin-left:15%;
@@ -38,6 +47,28 @@
       input[type="submit"] {
         margin-left: 37%;
       }
+      table th:first-child {
+        border-style: none none none !important;
+    }
+
+    .classes{
+        position: relative;
+        margin-left: 0%;
+        width: 100%;
+     }
+
+    .classes th, tbody{
+        text-align: center;
+    }
+
+    .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: #317eac;
+    }
+    
     </style>
   </head>
   <body>
@@ -152,24 +183,32 @@
                   <%= flash[:error] %>
                 </div>
               <% end %>
-              <form id="registration" action="/class_room/create_class_rooms">
-                <table>
+
+              <table class="classes">
+
+                <thead>
                   <tr>
-                    <td><label for="simple-input">Class Name</label></td>
-                    <td><input type="text" name="class_name" id="simple-input" class="round default-width-input" /></td>
+                    <th style="min-width:20%;">Class Name</th>
+                    <th>Year</th>
+                    <th>Grade</th>
+                    <th style="min-width:12%;">Action</th>
                   </tr>
-                  <tr>
-                    <td><label for="simple-input">Year</label></td>
-                    <td><input type="text" name="year" id="simple-input" class="round default-width-input" /></td>
+                </thead>
+           
+                <tbody id="class_rooms">
+                  <% @class_rooms.each do |class_room| %>
+                  <tr id="<%= class_room.id %>">
+                    <td><%= class_room.name%></td>
+                    <td><%=  class_room.year %></td>
+                    <td><%= class_room.grade %></td>
+                    <td>
+                      <a href="#" class_room_id="<%= class_room.id %>" onmousedown="assignTeachers(this)" class="button round blue image-right ic-add text-upper">Assign Teachers &nbsp;</a>
+                    </td>
                   </tr>
-                  <tr>
-                    <td><label for="simple-input">Grade</label></td>
-                    <td><input type="text" name="grade" id="simple-input" class="round default-width-input date-picker" /></td>
-                  </tr>
-                </table>
-                <div class="stripe-separator"><!--  --></div>
-                <input type="submit" value="Submit" class="round blue ic-right-arrow" />
-              </form>
+                  <% end %>
+                </tbody>
+                
+              </table>
 
             </div> <!-- end content-module-main -->
 
@@ -190,5 +229,6 @@
       <p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
 
     </div> <!-- end footer -->
+    
   </body>
 </html>

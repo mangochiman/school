@@ -11,9 +11,39 @@
 
     <%= javascript_include_tag("jquery") %>
     <%= javascript_include_tag("script") %>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("jquery.confirm") %>
     <%= stylesheet_link_tag("style") %>
-    <%= stylesheet_link_tag("metallic") %>
-
+    <%= stylesheet_link_tag("bootstrap") %>
+    <script>
+      function selectAll(){
+        selectAllInput = document.getElementById('table-select-all');
+        if (selectAllInput.checked){
+          selectAllInput.checked = true;
+        }
+        else {
+          selectAllInput.checked = false
+        }
+        inputs = document.getElementsByTagName("input");
+        for (var i=0; i<=inputs.length - 1; i++){
+          if (inputs[i] == selectAllInput) continue;
+          if (inputs[i].type == 'checkbox'){
+            if (inputs[i].checked){
+              inputs[i].checked = false;
+            }
+            else{
+              inputs[i].checked = true;
+            }
+          }
+        }
+      }
+      
+      function assignSubjects(obj){
+        classRoomId = obj.getAttribute("class_room_id");
+        window.location = "/class_room/assign_me_subjects?class_room_id=" + classRoomId;
+      }
+        
+    </script>
     <style>
       table{
         margin-left:15%;
@@ -38,6 +68,28 @@
       input[type="submit"] {
         margin-left: 37%;
       }
+      table th:first-child {
+        border-style: none none none !important;
+    }
+
+    .classes{
+        position: relative;
+        margin-left: 0%;
+        width: 100%;
+     }
+
+    .classes th, tbody{
+        text-align: center;
+    }
+
+    .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: #317eac;
+    }
+    
     </style>
   </head>
   <body>
@@ -142,6 +194,9 @@
 
 
             <div class="content-module-main">
+              <div class="information-box round">
+                Showing only courses that are not assigned to this class
+              </div>
               <% if flash[:notice] %>
                 <div class="confirmation-box round">
                   <%= flash[:notice] %>
@@ -152,25 +207,37 @@
                   <%= flash[:error] %>
                 </div>
               <% end %>
-              <form id="registration" action="/class_room/create_class_rooms">
-                <table>
+              <form method="post" action="assign_me_subjects">
+              <table class="classes" style="">
+
+                <thead>
                   <tr>
-                    <td><label for="simple-input">Class Name</label></td>
-                    <td><input type="text" name="class_name" id="simple-input" class="round default-width-input" /></td>
+                    <th><input type="checkbox" id="table-select-all" onclick="selectAll();"/></th>
+                    <th colspan="5" style=" padding: 1.25em 0 1.25em 1.25em;">Select courses</th>
                   </tr>
-                  <tr>
-                    <td><label for="simple-input">Year</label></td>
-                    <td><input type="text" name="year" id="simple-input" class="round default-width-input" /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="simple-input">Grade</label></td>
-                    <td><input type="text" name="grade" id="simple-input" class="round default-width-input date-picker" /></td>
-                  </tr>
-                </table>
-                <div class="stripe-separator"><!--  --></div>
+                </thead>
+           
+                <tbody id="class_rooms">
+                  <% @courses.in_groups_of(3).each do |row| %>
+                    <tr>
+                        <% row.each do |subject| %>
+                            <% unless subject.blank? %>
+                                  <td><input type="checkbox" id="<%= subject.id %>" name="subjects[<%= subject.name.titlecase %>]"/></td>
+                                  <td style="border-left: none; text-align: left;"><%= subject.name.titlecase %></td>
+                              <% else %>
+                                  <td style="border-left: none;">&nbsp;</td>
+                                  <td style="border-left: none;">&nbsp;</td>
+                            <% end %>
+                        <% end %>
+                    </tr>
+                  <% end %>
+                </tbody>
+                
+              </table>
+              <div class="stripe-separator"><!--  --></div>
+                <%= hidden_field_tag("class_room_id", params[:class_room_id]) %>
                 <input type="submit" value="Submit" class="round blue ic-right-arrow" />
               </form>
-
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->
@@ -190,5 +257,6 @@
       <p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
 
     </div> <!-- end footer -->
+    
   </body>
 </html>
