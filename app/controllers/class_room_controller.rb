@@ -145,27 +145,40 @@ class ClassRoomController < ApplicationController
     render :layout => false
   end
 
-  def edit_my_subjects
+  def edit_my_teachers
     @class_room = ClassRoom.find(params[:class_room_id])
     @all_teachers = Teacher.all
     @assigned_teachers = []
 
     unless (@class_room.class_room_teachers.blank?)
-      @assigned_teachers = @class_room.class_room_teachers.collect{|c| c.teacher_id}
+      @assigned_teachers = @class_room.class_room_teachers.collect{|c| c.teacher}
       #@assigned_courses = Course.find(:all, :conditions => ["course_id IN (?)", assigned_course_ids] )
     end
     if (request.method == :post)
       ActiveRecord::Base.transaction do
-        @class_room.class_room_courses.delete_all
-
+        #@class_room.class_room_courses.delete_all
+        assigned_teacher_ids = @assigned_teachers.map(&:teacher_id)
+        already_signed_teacher_ids = []
+        
         (params[:teachers] || []).each do |teacher_id, details|
+          if (assigned_teacher_ids.include?(teacher_id.to_i))
+            already_signed_teacher_ids << teacher_id.to_i
+            next
+          end
           ClassRoomTeacher.create({
               :class_room_id => params[:class_room_id],
               :teacher_id => teacher_id
-            }) #To be continued later
+          })        
         end
-        flash[:notice] = "You have successfuly edited courses"
-        redirect_to :action => "edit_my_subjects", :class_room_id => params[:class_room_id] and return
+        
+        ((assigned_teacher_ids - already_signed_teacher_ids) || []).each do |teacher_id|
+            class_room_teacher = @class_room.class_room_teachers.find(:last,
+                    :conditions => ["teacher_id =?", teacher_id])
+            class_room_teacher.delete
+        end
+      
+        flash[:notice] = "You have successfuly edited teachers"
+        redirect_to :action => "edit_my_teachers", :class_room_id => params[:class_room_id] and return
       end
     end
     render :layout => false
