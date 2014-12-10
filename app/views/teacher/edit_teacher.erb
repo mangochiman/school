@@ -1,6 +1,232 @@
-<%#
-# To change this template, choose Tools | Templates
-# and open the template in the editor.
-%>
+<!DOCTYPE html>
 
-<%= "edit_teacher" %>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>SimpleAdmin - Dashboard</title>
+    <!-- Optimize for mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!-- jQuery & JS files -->
+
+    <%= javascript_include_tag("jquery") %>
+    <%= javascript_include_tag("script") %>
+    <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("metallic") %>
+
+    <style>
+      table{
+        margin-left:15%;
+        width: 60%;
+      }
+      table td #simple-input, #password, #confirm{
+        float: right;
+      }
+
+      table label{
+       text-align: left;
+      }
+      #simple-input, #password, #confirm {
+        font-size: 10pt !important;
+      }
+
+    #registration input[type="text"], input[type="password"], textarea {
+        border: 1px solid #d9dbdd;
+        outline: medium none;
+        padding: 0.5em 0.225em;
+    }
+    input[type="submit"] {
+      margin-left: 37%;
+    }
+    </style>
+  </head>
+  <body >
+
+    <!-- TOP BAR -->
+    <div id="top-bar">
+
+      <div class="page-full-width cf">
+
+        <ul id="nav" class="fl">
+
+          <li class="v-sep"><a href="#" class="round button dark ic-left-arrow image-left">Go to website</a></li>
+          <li class="v-sep"><a href="#" class="round button dark menu-user image-left">Logged in as <strong>admin</strong></a>
+            <ul>
+              <li><a href="#">My Profile</a></li>
+              <li><a href="/admin/settings">Settings</a></li>
+              <li><a href="#">Change Password</a></li>
+              <li><a href="#">Log out</a></li>
+            </ul>
+          </li>
+
+          <li><a href="#" class="round button dark menu-email-special image-left">3 new messages</a></li>
+          <li><a href="#" class="round button dark menu-logoff image-left">Log out</a></li>
+
+        </ul> <!-- end nav -->
+
+
+        <form action="#" method="POST" id="search-form" class="fr">
+          <fieldset>
+            <input type="text" id="search-keyword" class="round button dark ic-search image-right" placeholder="Search..." />
+            <input type="hidden" value="SUBMIT" />
+          </fieldset>
+        </form>
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end top-bar -->
+
+
+
+    <!-- HEADER -->
+    <div id="header-with-tabs">
+
+      <div class="page-full-width cf">
+
+        <ul id="tabs" class="fl">
+          <li><a href="/admin/home" class="dashboard-tab">Dashboard</a></li>
+          <li><a href="/student/index" > Students</a></li>
+          <li><a href="/parent/index">Parents</a></li>
+          <li><a href="/teacher/index" class="active-tab">Teachers</a></li>
+          <li><a href="/admin/research">Research</a></li>
+          <li><a href="/examination/index">Exams</a></li>
+          <li><a href="/class_room/index">Classes</a></li>
+          <li><a href="/report/index">Reports</a></li>
+          <li><a href="/student/my_results">My Results</a></li>
+          <li><a href="/admin/time_table">Time Tables</a></li>
+        </ul> <!-- end tabs -->
+
+        <!-- Change this image to your own company's logo -->
+        <!-- The logo will automatically be resized to 30px height. -->
+        <a href="#" id="company-branding-small" class="fr"><img src="/images/company-logo.png" alt="Blue Hosting" /></a>
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end header -->
+
+
+
+    <!-- MAIN CONTENT -->
+    <div id="content">
+
+      <div class="page-full-width cf">
+
+        <div class="side-menu fl">
+
+          <h3>Task</h3>
+          <ul>
+            <li><a href="/teacher/add_teacher/">Add Teacher</a></li>
+            <li><a href="/teacher/edit_teacher/">Edit Teacher</a></li>
+            <li><a href="/teacher/assign_class/">Assign Class</a></li>
+            <li><a href="/teacher/assign_subjects">Assign Subjects</a></li>
+            <li><a href="/teacher/teacher_stats">Teacher Stats</a></li>
+            <li><a href="/teacher/filter_teachers">Filter Teachers By</a></li>
+          </ul>
+
+        </div> <!-- end side-menu -->
+
+        <div class="side-content fr">
+
+          <div class="content-module">
+
+            <div class="content-module-heading cf">
+
+              <h3 class="fl">Edit Teacher</h3>
+              <span class="fr expand-collapse-text">Click to collapse</span>
+              <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+            </div> <!-- end content-module-heading -->
+
+
+            <div class="content-module-main">
+              <% if flash[:notice] %>
+                  <div class="confirmation-box round">
+                    <%= flash[:notice] %>
+                  </div>
+                <% end %>
+                <% if flash[:error] %>
+                  <div class="error-box round">
+                      <%= flash[:error] %>
+                  </div>
+                <% end %>
+              <form id="registration" action="/teacher/edit_teacher" method="post">
+                <table>
+                  <tr>
+                    <td><label for="simple-input">First Name</label></td>
+                    <td><input type="text" name="fname" id="simple-input" class="round default-width-input" value="<%= @teacher.fname %>" /></td>
+                  </tr>
+                  <tr>
+                    <td><label for="simple-input">Last Name</label></td>
+                    <td><input type="text" name="lname" id="simple-input" class="round default-width-input" value="<%= @teacher.lname %>" /></td>
+                  </tr>
+                  <tr>
+                    <td><label for="simple-input">Gender</label></td>
+                    <td>
+                      <span style="margin-left:40%;"><input type="radio" value="Male" checked ="<%= @male %>" name="gender"/>Male</span>
+                      <span style="margin-left:10%;"><input type="radio" value="Female" checked ="<%= @female %>" name="gender"/>Female</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><label for="simple-input">E-mail</label></td>
+                    <td><input type="text" name="email"  id="simple-input" class="round default-width-input"  value="<%= @teacher.email %>" /></td>
+                  </tr>
+                  <tr>
+                    <td><label for="simple-input">Phone</label></td>
+                    <td><input type="text" name="phone" id="simple-input" class="round default-width-input"  value="<%= @teacher.phone %>" /></td>
+                  </tr>
+                  <tr>
+                    <td><label for="simple-input">Mobile</label></td>
+                    <td><input type="text" name="mobile" id="simple-input" class="round default-width-input"  value="<%= @teacher.mobile %>" /></td>
+                  </tr>
+                  <tr>
+                    <td><label for="simple-input">Date of Birth</label></td>
+                    <td><input type="text" name="dob" id="simple-input" class="round default-width-input date-picker"  value="<%= @teacher.dob %>" /></td>
+                  </tr>
+                  <tr>
+                    <td><label for="simple-input">Status</label></td>
+                    <td>
+                      <span style="margin-left:40%;"><input type="radio" value="Active"  name="status"/>Active</span>
+                      <span style="margin-left:10%;"><input type="radio" value="Inactive" name="status"/>Inactive</span>
+                    </td>
+                  </tr>
+                </table>
+                <input type="hidden" name="teacher_id"  value="<%= @teacher.id %>"/>
+                <div class="stripe-separator"><!--  --></div>
+                <input id="submit" type="submit" value="Submit" class="round blue ic-right-arrow" />
+              </form>
+
+            </div> <!-- end content-module-main -->
+
+          </div> <!-- end content-module -->
+
+        </div> <!-- end side-content -->
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end content -->
+
+
+
+    <!-- FOOTER -->
+    <div id="footer">
+
+      <p>&copy; Copyright 2012 <a href="#">BlueHosting, LLC</a>. All rights reserved.</p>
+      <p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
+
+    </div> <!-- end footer -->
+
+
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("zebra_datepicker") %>
+    <script>
+      $('.date-picker').Zebra_DatePicker({
+            view : 'years',
+            direction: ['<%=  (Date.today - 70.years).strftime("%Y-%m-%d") %>', '<%=  (Date.today - 12.years).strftime("%Y-%m-%d") %>']
+      });
+
+      function __$(id){
+        return document.getElementById(id)
+      }
+    </script>
+  </body>
+</html>
