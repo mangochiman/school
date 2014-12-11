@@ -11,6 +11,46 @@
     <%= javascript_include_tag("jquery") %>
     <%= javascript_include_tag("script") %>
     <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("metallic") %>
+    <style>
+      #exam_assignment input[type="text"], input[type="password"], textarea {
+        border: 1px solid #d9dbdd;
+        outline: medium none;
+        padding: 0.5em 0.225em;
+      }
+
+       #simple-input{
+        font-size: 10pt !important;
+        padding: 6px 12px;
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        display: block;
+        margin-left: 30%;
+        max-width: 200px;
+        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+      }
+
+      #class_room, #exam_type, #course{
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        color: #555;
+        display: block;
+        font-size: 14px;
+        height: 34px;
+        line-height: 1.42857;
+        padding: 6px 12px;
+        margin-left: 30%;
+        min-width: 208px;
+        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+      }
+      
+    </style>
   </head>
   <body>
 
@@ -112,113 +152,31 @@
 
             <div class="content-module-main">
 
-              <table>
-
-                <thead>
-
+              <form id="exam_assignment" method="POST" action="">
+                <table style="width:50%; margin-left: 20%;">
                   <tr>
-                    <th><input type="checkbox" id="table-select-all"></th>
-                    <th>Name</th>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>Actions</th>
+                    <td style="min-width:30%; text-align: left;"><span>Select Class</span></td>
+                    <td><span style=""><%= select_tag("class_room", options_for_select(@class_rooms))%></span></td>
                   </tr>
-
-                </thead>
-
-                <tfoot>
-
                   <tr>
-
-                    <td colspan="5" class="table-footer">
-
-                      <label for="table-select-actions">With selected:</label>
-
-                      <select id="table-select-actions">
-                        <option value="option1">Delete</option>
-                        <option value="option2">Export</option>
-                        <option value="option3">Archive</option>
-                      </select>
-
-                      <a href="#" class="round button blue text-upper small-button">Apply to selected</a>
-
-                    </td>
-
+                    <td style="text-align: left;"><span>Select Exam Type</span></td>
+                    <td><%= select_tag("exam_type", options_for_select(@exam_types))%></td>
                   </tr>
-
-                </tfoot>
-
-                <tbody>
-
                   <tr>
-                    <td><input type="checkbox"></td>
-                    <td>Adrian Purdila</td>
-                    <td>adipurdila</td>
-                    <td><a href="#">adipurdila@gmail.com</a></td>
-                    <td>
-                      <a href="#" class="table-actions-button ic-table-edit"></a>
-                      <a href="#" class="table-actions-button ic-table-delete"></a>
-                    </td>
+                    <td style="text-align: left;"><span>Select Course</span></td>
+                    <td><%= select_tag("course", options_for_select(@courses))%></td>
                   </tr>
-
                   <tr>
-                    <td><input type="checkbox"></td>
-                    <td>Adrian Purdila</td>
-                    <td>adipurdila</td>
-                    <td><a href="#">adipurdila@gmail.com</a></td>
-                    <td>
-                      <a href="#" class="table-actions-button ic-table-edit"></a>
-                      <a href="#" class="table-actions-button ic-table-delete"></a>
-                    </td>
+                    <td style="text-align: left;"><span>Exam Date</span></td>
+                    <td><input type="text" name="exam_date" id="simple-input" class="round default-width-input date-picker" /></td>
                   </tr>
-
-                  <tr>
-                    <td><input type="checkbox"></td>
-                    <td>Adrian Purdila</td>
-                    <td>adipurdila</td>
-                    <td><a href="#">adipurdila@gmail.com</a></td>
-                    <td>
-                      <a href="#" class="table-actions-button ic-table-edit"></a>
-                      <a href="#" class="table-actions-button ic-table-delete"></a>
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td><input type="checkbox"></td>
-                    <td>Adrian Purdila</td>
-                    <td>adipurdila</td>
-                    <td><a href="#">adipurdila@gmail.com</a></td>
-                    <td>
-                      <a href="#" class="table-actions-button ic-table-edit"></a>
-                      <a href="#" class="table-actions-button ic-table-delete"></a>
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td><input type="checkbox"></td>
-                    <td>Adrian Purdila</td>
-                    <td>adipurdila</td>
-                    <td><a href="#">adipurdila@gmail.com</a></td>
-                    <td>
-                      <a href="#" class="table-actions-button ic-table-edit"></a>
-                      <a href="#" class="table-actions-button ic-table-delete"></a>
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td><input type="checkbox"></td>
-                    <td>Adrian Purdila</td>
-                    <td>adipurdila</td>
-                    <td><a href="#">adipurdila@gmail.com</a></td>
-                    <td>
-                      <a href="#" class="table-actions-button ic-table-edit"></a>
-                      <a href="#" class="table-actions-button ic-table-delete"></a>
-                    </td>
-                  </tr>
-
-                </tbody>
-
-              </table>
+                  
+                </table>
+                
+                <div class="stripe-separator"><!--  --></div>
+                <input type="submit" value="Submit" class="round blue ic-right-arrow" style="margin-left: 20%;" />
+                
+              </form>
 
             </div> <!-- end content-module-main -->
 
@@ -245,6 +203,13 @@
       <p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
 
     </div> <!-- end footer -->
-
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("zebra_datepicker") %>
+    <script>
+      $('.date-picker').Zebra_DatePicker({
+            view : 'years',
+            direction: ['<%=  Date.today.strftime("%Y-%m-%d") %>', '<%=  (Date.today + 1.year).strftime("%Y-%m-%d") %>']
+      });
+    </script>
   </body>
 </html>

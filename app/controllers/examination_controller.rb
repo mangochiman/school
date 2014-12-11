@@ -46,6 +46,9 @@ class ExaminationController < ApplicationController
   end
   
   def assign_exam
+    @class_rooms = ClassRoom.all.collect{|c|[c.name, c.id]}
+    @exam_types = ExaminationType.all.collect{|e|[e.name, e.id]}
+    @courses = Course.all.collect{|c|[c.name, c.id]}
     render :layout => false
   end
 
