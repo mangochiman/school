@@ -14,7 +14,7 @@
 
     <script>
       function editTeacher(id){
-        //alert(id)
+        window.location = '/teacher/edit_teacher/' + id;
       }
     </script>
   </head>
@@ -162,13 +162,13 @@
                 <tbody>
                 <% (@teachers || []).each {|teacher| %>
                   <tr>
-                    <td><input type="checkbox"></td>
+                    <td><input type="checkbox" /></td>
                     <td><%= teacher.fname %></td>
                     <td><%= teacher.lname %></td>
                     <td><a href="#"><%= teacher.email %></a></td>
                     <td>
                       <a href="#" class="table-actions-button ic-table-edit" onmousedown="editTeacher(<%= teacher.id   %>)"></a>
-                      <a href="#" class="table-actions-button ic-table-delete"></a>
+                      <a href="#" class="table-actions-button ic-table-delete"  onmousedown="editTeacher(<%= teacher.id   %>)"></a>
                     </td>
                   </tr>
                   <% } %>
