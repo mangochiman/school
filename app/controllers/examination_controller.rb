@@ -71,5 +71,9 @@ class ExaminationController < ApplicationController
     
     render :text => "true" and return
   end
-  
+
+  def student_class_room
+    courses = Student.all.collect{|s|[s.id, s.fname + ' ' + s.lname]}.in_groups_of(3)
+    render :json => courses and return
+  end
 end

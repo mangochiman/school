@@ -12,7 +12,44 @@
     <%= javascript_include_tag("script") %>
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("metallic") %>
+    <script>
+      function loadClassCourses(obj){
+        jQuery.ajax({
+          type: "POST",
+          url: "/examination/student_class_room",
+          data: "class_room_id=" + obj.value,
+          success: function(result){
+            result = eval(result);
+            html = "<table style='width:500px; margin-left: 20%;'>";
+            for (var x=0; x<= (result.length - 1); x++){
+              html += "<tr>";
+              for(y=0; y<=(result[x].length - 1); y++){
+                studentData = (eval(result[x][y]))
+                if (studentData){
+                  studentId = studentData[0];
+                  console.log(studentId)
+                  student_name = studentData[1];
+                  html += "<td><span style='float:right'><input type='checkbox' name=students[" + studentId + "]/></span></td>";
+                  html += "<td style='text-align:left;'>" + student_name + "</td>";
+                }
+              }
+              html += "</tr>";
+            }
+            html+="</table>";
+            document.getElementById("class_courses").innerHTML = html;
+            console.log(html)
+          }
+
+      });
+      }
+    </script>
     <style>
+      #class_courses tbody td{
+        padding: 0.3em 0.1em 0.3em 0.3em;
+        border-bottom: 0px;
+        border-left: 0px;
+      }
+
       #exam_assignment input[type="text"], input[type="password"], textarea {
         border: 1px solid #d9dbdd;
         outline: medium none;
@@ -156,7 +193,7 @@
                 <table style="width:50%; margin-left: 20%;">
                   <tr>
                     <td style="min-width:30%; text-align: left;"><span>Select Class</span></td>
-                    <td><span style=""><%= select_tag("class_room", options_for_select(@class_rooms))%></span></td>
+                    <td><span style=""><%= select_tag("class_room", options_for_select(@class_rooms), {:onchange=>"loadClassCourses(this);"})%></span></td>
                   </tr>
                   <tr>
                     <td style="text-align: left;"><span>Select Exam Type</span></td>
@@ -172,7 +209,9 @@
                   </tr>
                   
                 </table>
-                
+                <div id="class_courses">
+
+                </div>
                 <div class="stripe-separator"><!--  --></div>
                 <input type="submit" value="Submit" class="round blue ic-right-arrow" style="margin-left: 20%;" />
                 
