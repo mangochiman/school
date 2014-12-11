@@ -20,7 +20,9 @@
           data: "class_room_id=" + obj.value,
           success: function(result){
             result = eval(result);
-            html = "<table style='width:500px; margin-left: 20%;'>";
+            html = "<div style='font-size: 0.75em; margin-left: 20%;'> Select Students </div><br />"
+            html += "<table style='width:500px; margin-left: 20%;'>";
+            html += "<tr style='background-color:white;'><td colspan='6' style='border-bottom:1px solid black;'><span style='margin-left:11%;'><input type='checkbox'>Select All</span></td></tr>"
             for (var x=0; x<= (result.length - 1); x++){
               html += "<tr>";
               for(y=0; y<=(result[x].length - 1); y++){
@@ -43,7 +45,7 @@
       });
       }
     </script>
-    <style>
+    <style>      
       #class_courses tbody td{
         padding: 0.3em 0.1em 0.3em 0.3em;
         border-bottom: 0px;
@@ -212,8 +214,9 @@
                 <div id="class_courses">
 
                 </div>
+                
                 <div class="stripe-separator"><!--  --></div>
-                <input type="submit" value="Submit" class="round blue ic-right-arrow" style="margin-left: 20%;" />
+                <input type="submit" value="Submit" class="round blue ic-right-arrow" style="" />
                 
               </form>
 
