@@ -10,7 +10,94 @@
     <!-- jQuery & JS files -->
     <%= javascript_include_tag("jquery") %>
     <%= javascript_include_tag("script") %>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("jquery.confirm") %>
     <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("bootstrap") %>
+    
+    <script>
+        function selectAll(){
+            selectAllInput = document.getElementById('table-select-all');
+            if (selectAllInput.checked){
+              selectAllInput.checked = true;
+            }
+            else {
+              selectAllInput.checked = false
+            }
+            inputs = document.getElementsByTagName("input");
+            for (var i=0; i<=inputs.length - 1; i++){
+              if (inputs[i] == selectAllInput) continue;
+              if (inputs[i].type == 'checkbox'){
+                if (inputs[i].checked){
+                  inputs[i].checked = false;
+                }
+                else{
+                  inputs[i].checked = true;
+                }
+              }
+            }
+         }
+
+      function deleteExamTypes(){
+        inputs = document.getElementsByTagName("input");
+        examTypeIDs = []
+        for (var i=0; i<=inputs.length - 1; i++){
+          if (inputs[i].type == 'checkbox'){
+            if (inputs[i].checked){
+              if (inputs[i].hasAttribute("exam_type_id")){
+                examTypeId = inputs[i].getAttribute("exam_type_id");
+                examTypeIDs.push(examTypeId);
+              }
+            }
+          }
+        }
+
+        jQuery.ajax({
+          type: "POST",
+          url: "/examination/delete_exam_types",
+          data: "exam_type_ids=" + examTypeIDs,
+          success: function(){
+            for (var x=0; x<= examTypeIDs.length - 1; x++){
+              id = examTypeIDs[x];
+              element = document.getElementById(id);
+              element.parentNode.removeChild(element)
+            }
+          }
+
+      });
+      }
+      var currentExamTypeId = "";
+      function setCurrentExamTypeId(obj){
+        currentExamTypeId = obj.getAttribute("exam_type_id");
+      }
+
+      function deleteSingleEntry(){
+        jQuery.ajax({
+          type: "POST",
+          url: "/examination/delete_exam_types",
+          data: "exam_type_id=" + currentExamTypeId + "&mode=single_entry",
+          success: function(){
+              element = document.getElementById(currentExamTypeId);
+              element.parentNode.removeChild(element);
+          }
+
+      });
+      }
+    </script>
+
+    <style>
+      .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: #317eac;
+      }
+    
+      table th:first-child {
+        border-style: none none none !important;
+      }
+    </style>
   </head>
   <body>
 
@@ -112,114 +199,51 @@
 
             <div class="content-module-main">
 
-              <table>
+              <% if flash[:notice] %>
+                  <div class="confirmation-box round">
+                    <%= flash[:notice] %>
+                  </div>
+                <% end %>
+                <% if flash[:error] %>
+                  <div class="error-box round">
+                      <%= flash[:error] %>
+                  </div>
+                <% end %>
+             <table>
 
                 <thead>
 
                   <tr>
-                    <th><input type="checkbox" id="table-select-all"></th>
-                    <th>Name</th>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>Actions</th>
+                    <th><input type="checkbox" id="table-select-all" onclick="selectAll();"/></th>
+                    <th style="min-width:35%;">Exam Type Name</th>
+                    <th style="min-width:35%;"><center>Date created</center></th>
+                    <th>Action</th>
                   </tr>
 
                 </thead>
-
+                
                 <tfoot>
-
                   <tr>
-
-                    <td colspan="5" class="table-footer">
-
-                      <label for="table-select-actions">With selected:</label>
-
-                      <select id="table-select-actions">
-                        <option value="option1">Delete</option>
-                        <option value="option2">Export</option>
-                        <option value="option3">Archive</option>
-                      </select>
-
-                      <a href="#" class="round button blue text-upper small-button">Apply to selected</a>
-
+                    <td colspan="3" class="table-footer">
+                      <a href="#" class="button round blue image-right ic-delete text-upper delete-multiple">Delete</a>
                     </td>
-
                   </tr>
-
                 </tfoot>
 
-                <tbody>
-
-                  <tr>
-                    <td><input type="checkbox"></td>
-                    <td>Adrian Purdila</td>
-                    <td>adipurdila</td>
-                    <td><a href="#">adipurdila@gmail.com</a></td>
+                <tbody id="exam_types">
+                  <% @exam_types.each do |exam_type| %>
+                  <tr id="<%= exam_type.id %>">
+                    <td><input type="checkbox" exam_type_id="<%= exam_type.id %>"/></td>
+                    <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%=  exam_type.name.capitalize %></td>
+                    <td><center><%= exam_type.created_at.to_date.strftime("%d-%b-%Y") %></center></td>
                     <td>
-                      <a href="#" class="table-actions-button ic-table-edit"></a>
-                      <a href="#" class="table-actions-button ic-table-delete"></a>
+                      <a exam_type_id="<%= exam_type.id %>" href="#" onmousedown="setCurrentExamTypeId(this)" class="table-actions-button ic-table-delete confirm"></a>
                     </td>
                   </tr>
-
-                  <tr>
-                    <td><input type="checkbox"></td>
-                    <td>Adrian Purdila</td>
-                    <td>adipurdila</td>
-                    <td><a href="#">adipurdila@gmail.com</a></td>
-                    <td>
-                      <a href="#" class="table-actions-button ic-table-edit"></a>
-                      <a href="#" class="table-actions-button ic-table-delete"></a>
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td><input type="checkbox"></td>
-                    <td>Adrian Purdila</td>
-                    <td>adipurdila</td>
-                    <td><a href="#">adipurdila@gmail.com</a></td>
-                    <td>
-                      <a href="#" class="table-actions-button ic-table-edit"></a>
-                      <a href="#" class="table-actions-button ic-table-delete"></a>
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td><input type="checkbox"></td>
-                    <td>Adrian Purdila</td>
-                    <td>adipurdila</td>
-                    <td><a href="#">adipurdila@gmail.com</a></td>
-                    <td>
-                      <a href="#" class="table-actions-button ic-table-edit"></a>
-                      <a href="#" class="table-actions-button ic-table-delete"></a>
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td><input type="checkbox"></td>
-                    <td>Adrian Purdila</td>
-                    <td>adipurdila</td>
-                    <td><a href="#">adipurdila@gmail.com</a></td>
-                    <td>
-                      <a href="#" class="table-actions-button ic-table-edit"></a>
-                      <a href="#" class="table-actions-button ic-table-delete"></a>
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td><input type="checkbox"></td>
-                    <td>Adrian Purdila</td>
-                    <td>adipurdila</td>
-                    <td><a href="#">adipurdila@gmail.com</a></td>
-                    <td>
-                      <a href="#" class="table-actions-button ic-table-edit"></a>
-                      <a href="#" class="table-actions-button ic-table-delete"></a>
-                    </td>
-                  </tr>
-
+                  <% end %>
                 </tbody>
 
               </table>
-
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->
@@ -245,6 +269,34 @@
       <p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
 
     </div> <!-- end footer -->
+    <%= javascript_include_tag("bootstrap") %>
+    <script>
 
+      $(".delete-multiple").confirm({
+            title:"Delete confirmation",
+            text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+            confirm: function(button) {
+              deleteExamTypes();
+            },
+            cancel: function(button) {
+              alert("You aborted the operation.");
+            },
+            confirmButton: "Yes I am",
+            cancelButton: "No"
+        });
+
+        $(".confirm").confirm({
+            title:"Delete confirmation",
+            text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+            confirm: function(button) {
+              deleteSingleEntry();
+            },
+            cancel: function(button) {
+
+            },
+            confirmButton: "Yes I am",
+            cancelButton: "No"
+        });
+    </script>
   </body>
 </html>

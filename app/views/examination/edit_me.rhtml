@@ -11,17 +11,16 @@
     <%= javascript_include_tag("jquery") %>
     <%= javascript_include_tag("script") %>
     <%= stylesheet_link_tag("style") %>
-    <script>
-      function editMe(obj){
-        examTypeID = obj.getAttribute("exam_type_id");
-        window.location = "/examination/edit_me?exam_type_id=" + examTypeID;
-      }
-    </script>
-
     <style>
-      table th:first-child {
-        border-style: none none none !important;
-    }
+      #exam_type input[type="text"], input[type="password"], textarea {
+        border: 1px solid #d9dbdd;
+        outline: medium none;
+        padding: 0.5em 0.225em;
+      }
+
+      #simple-input {
+        font-size: 10pt !important;
+      }
     </style>
   </head>
   <body>
@@ -134,34 +133,19 @@
                       <%= flash[:error] %>
                   </div>
                 <% end %>
-             <table>
-
-                <thead>
-
+              <form id="exam_type" action="/examination/edit_me" method="POST">
+                <table>
                   <tr>
-                    <th>#</th>
-                    <th style="min-width:35%;">Exam Type Name</th>
-                    <th style="min-width:35%;"><center>Date created</center></th>
-                    <th>Action</th>
+                    <td><label for="simple-input">Exam Name</label></td>
+                    <td><input type="text" name="exam_type" value="<%=  @exam_type.name %>" id="simple-input" class="round default-width-input" /></td>
                   </tr>
+                </table>
+                <div class="stripe-separator"><!--  --></div>
+                
+                <%= hidden_field_tag("exam_type_id", params[:exam_type_id]) %>
+                <input type="submit" value="Submit" class="round blue ic-right-arrow" />
+              </form>
 
-                </thead>
-
-                <tbody id="exam_types">
-                  <% count = 0 %>
-                  <% @exam_types.each do |exam_type| %>
-                  <tr>
-                    <td><b><%= count += 1 %></b></td>
-                    <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%=  exam_type.name.capitalize %></td>
-                    <td><center><%= exam_type.created_at.to_date.strftime("%d-%b-%Y") %></center></td>
-                    <td>
-                      <a exam_type_id="<%= exam_type.id %>" onclick="editMe(this)" href="#" class="table-actions-button ic-table-edit"></a>
-                    </td>
-                  </tr>
-                  <% end %>
-                </tbody>
-
-              </table>
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->
