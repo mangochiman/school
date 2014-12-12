@@ -34,7 +34,16 @@ class StudentController < ApplicationController
     student_id = params[:student_id]
     class_room_id = params[:class_room_id]
     unless student_id.blank?
-      
+      if (ClassRoomStudent.create({
+        :student_id => student_id,
+        :class_room_id => class_room_id
+      }))
+        flash[:notice] = "You have successfully assigned a class"
+        redirect_to :action => "assign_class"
+      else
+        flash[:error] = "Oops!!. Operation aborted"
+        redirect_to :action => "assign_me_class", :student_id => params[:student_id]
+      end
     end
   end
   
