@@ -21,10 +21,25 @@ class StudentController < ApplicationController
   end
 
   def assign_class
+    @students = Student.all
+    render :layout => false
+  end
+  
+  def assign_me_class
+    @class_rooms = ClassRoom.all
     render :layout => false
   end
 
+  def create_student_class_assignment
+    student_id = params[:student_id]
+    class_room_id = params[:class_room_id]
+    unless student_id.blank?
+      
+    end
+  end
+  
   def assign_subjects
+    @students = Student.all
     render :layout => false
   end
 
