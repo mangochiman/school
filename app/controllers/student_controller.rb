@@ -21,7 +21,10 @@ class StudentController < ApplicationController
   end
 
   def assign_class
-    @students = Student.all
+     student_ids_with_class_rooms = ClassRoomStudent.all.map(&:student_id)
+     @students = Student.find(:all, :conditions => ["student_id NOT IN (?)",
+                    student_ids_with_class_rooms]
+                )
     render :layout => false
   end
   
