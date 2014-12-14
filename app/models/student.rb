@@ -3,4 +3,5 @@ class Student < ActiveRecord::Base
 	set_primary_key :student_id
 
   has_one :class_room_student
+  has_many :student_courses
 end

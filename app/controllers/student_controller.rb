@@ -64,8 +64,13 @@ class StudentController < ApplicationController
 
     if (request.method == :post)
       (params[:subjects] || []).each do |subject_id, details|
-          
+          StudentCourse.create({
+            :student_id => params[:student_id],
+            :course_id => subject_id
+          })
       end
+      flash[:notice] = "You have successfully assigned courses"
+      redirect_to :action => "assign_optional_courses" and return
     end
     
     render :layout => false
