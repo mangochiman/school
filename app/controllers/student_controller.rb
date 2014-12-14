@@ -55,6 +55,22 @@ class StudentController < ApplicationController
     render :layout => false
   end
 
+  def assign_optional_courses
+    student = Student.find(params[:student_id])
+
+    @courses = student.class_room_student.class_room.class_room_courses.collect{|crc|
+      crc.course
+    }
+
+    if (request.method == :post)
+      (params[:subjects] || []).each do |subject_id, details|
+          
+      end
+    end
+    
+    render :layout => false
+  end
+  
   def assign_parent_guardian
     render :layout => false
   end
