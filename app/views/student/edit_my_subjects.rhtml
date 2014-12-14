@@ -12,6 +12,19 @@
     <%= javascript_include_tag("script") %>
     <%= stylesheet_link_tag("style") %>
     <script type="text/javascript">
+      function checkPreviousSelectedCourses(){
+        inputs = document.getElementsByTagName("input");
+        for (var i=0; i<=inputs.length - 1; i++){
+          if (inputs[i].type == 'checkbox'){
+              inputs[i].checked = false;
+          }
+        }
+        
+        <% (@current_student_courses || []).each do |course| %>
+              document.getElementById("<%= course.id %>").checked = true;
+        <% end %>
+      }
+
       function selectAll(){
         selectAllInput = document.getElementById('table-select-all');
         if (selectAllInput.checked){
@@ -140,7 +153,7 @@
     }
     </style>
   </head>
-  <body>
+  <body onload="checkPreviousSelectedCourses();">
 
     <!-- TOP BAR -->
     <div id="top-bar">
@@ -253,7 +266,7 @@
                   </div>
                 <% end %>
               
-              <form method="post" action="/student/assign_optional_courses">
+              <form method="post" action="/student/edit_my_subjects/">
               <table class="classes" style="">
 
                 <thead>

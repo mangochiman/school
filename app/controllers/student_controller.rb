@@ -57,11 +57,10 @@ class StudentController < ApplicationController
 
   def assign_optional_courses
     student = Student.find(params[:student_id])
-
     @courses = student.class_room_student.class_room.class_room_courses.collect{|crc|
       crc.course
     }
-
+    
     if (request.method == :post)
       (params[:subjects] || []).each do |subject_id, details|
           StudentCourse.create({
@@ -71,6 +70,49 @@ class StudentController < ApplicationController
       end
       flash[:notice] = "You have successfully assigned courses"
       redirect_to :action => "assign_optional_courses" and return
+    end
+    
+    render :layout => false
+  end
+
+  def edit_subjects
+    @students = Student.all
+    render :layout => false
+  end
+
+  def edit_my_subjects
+    student = Student.find(params[:student_id])
+    @current_student_courses = student.student_courses.collect{|sc|sc.course}
+    @courses = student.class_room_student.class_room.class_room_courses.collect{|crc|
+      crc.course
+    }
+
+    if (request.method == :post)
+      ActiveRecord::Base.transaction do
+        #@class_room.class_room_courses.delete_all
+        assigned_course_ids = @current_student_courses.map(&:course_id)
+        already_signed_course_ids = []
+
+        (params[:subjects] || []).each do |subject_id, details|
+          if (assigned_course_ids.include?(subject_id.to_i))
+            already_signed_course_ids << subject_id.to_i
+            next
+          end
+          StudentCourse.create({
+              :student_id => params[:student_id],
+              :course_id => subject_id
+          })
+        end
+
+        ((assigned_course_ids - already_signed_course_ids) || []).each do |course_id|
+          student_course = StudentCourse.find(:last, :conditions => ["student_id =? AND course_id =?",
+              params[:student_id], course_id])
+          student_course.delete
+        end
+
+        flash[:notice] = "You have successfuly edited subjects"
+        redirect_to :action => "edit_subjects" and return
+      end
     end
     
     render :layout => false

@@ -12,26 +12,10 @@
     <%= javascript_include_tag("script") %>
     <%= stylesheet_link_tag("style") %>
     <script type="text/javascript">
-      function selectAll(){
-        selectAllInput = document.getElementById('table-select-all');
-        if (selectAllInput.checked){
-          selectAllInput.checked = true;
-        }
-        else {
-          selectAllInput.checked = false
-        }
-        inputs = document.getElementsByTagName("input");
-        for (var i=0; i<=inputs.length - 1; i++){
-          if (inputs[i] == selectAllInput) continue;
-          if (inputs[i].type == 'checkbox'){
-            if (inputs[i].checked){
-              inputs[i].checked = false;
-            }
-            else{
-              inputs[i].checked = true;
-            }
-          }
-        }
+
+      function editOptionalCourses(obj){
+        studentId = obj.getAttribute("student_id");
+        window.location = "/student/edit_my_subjects?student_id=" + studentId;
       }
 
       function loadSearchResults(){
@@ -52,21 +36,24 @@
               lastName = results[student_id]["lname"];
               gender = results[student_id]["gender"];
               phone = results[student_id]["phone"];
+              if (phone == null){
+                phone = ""
+              }
               email = results[student_id]["email"];
               dob = results[student_id]["dob"];
               join_date = results[student_id]["join_date"];
               html+="<tr>";
-              html+="<td>" + firstName + ' ' + lastName +  "</td>";
+              html+="<td style='text-align:left; padding: 0.833em 0 0.833em 1.25em;'>" + firstName + ' ' + lastName +  "</td>";
               html+="<td><a href='#'>" + email +  "</a></td>";
               html+="<td>" + gender +  "</td>";
               html+="<td>" + dob +  "</td>";
               html+="<td>" + phone +  "</td>";
               html+="<td>" + join_date +  "</td>";
-              html+="<td><a student_id=" + student_id + " onclick='assignSubjects(this)' href='#' class='button round blue image-right ic-add text-upper'>Assign Subjects &nbsp;</a></td>";
+              html+="<td><a student_id=" + student_id + " onclick='editOptionalCourses(this)' href='#' class='table-actions-button ic-table-edit'></a></td>";
               html+="</tr>";
             }
 
-            tbody.innerHTML = html
+            tbody.innerHTML = html;
           }
 
       });
@@ -252,39 +239,66 @@
                       <%= flash[:error] %>
                   </div>
                 <% end %>
-              
-              <form method="post" action="/student/assign_optional_courses">
-              <table class="classes" style="">
+              <form id="search-student-form" action="#">
+                <fieldset>
+                  <legend>Search</legend>
+                  <div style="width:71%; margin-left:10%;">
+                    <table>
+                      <tr>
+                        <td style="width:10%;">First Name</td>
+                        <td style="width:10%;"><input type="text" id="fname_search"/></td>
+                        <td style="width:10%;">Last Name</td>
+                        <td style="width:10%;"><input type="text" id="lname_search"/></td>
+                        <td style="width:10%;">Gender</td>
+                        <td style="width:5%">
+                          <select id="dropdown-actions" class="gender_search">
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                          </select>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="6"><a onclick="loadSearchResults();" href="#" class="button round blue image-right ic-search text-upper">Search</a></td>
+                      </tr>
+                    </table>
+                  </div>
+                </fieldset>
+              </form>
+
+              <table>
 
                 <thead>
+
                   <tr>
-                    <th><input type="checkbox" id="table-select-all" onclick="selectAll();"/></th>
-                    <th colspan="5" style=" padding: 1.25em 0 1.25em 1.25em;">Select courses</th>
+                    <th style="min-width:15%;">Name</th>
+                    <th>Email</th>
+                    <th>Gender</th>
+                    <th>Date Of Birth</th>
+                    <th>Phone #</th>
+                    <th>Date of Join</th>
+                    <th style="min-width:12%;">Action</th>
                   </tr>
+
                 </thead>
 
-                <tbody id="class_rooms">
-                  <% @courses.in_groups_of(3).each do |row| %>
-                    <tr>
-                        <% row.each do |subject| %>
-                            <% unless subject.blank? %>
-                                  <td><input type="checkbox" id="<%= subject.id %>" name="subjects[<%= subject.id %>]"/></td>
-                                  <td style="border-left: none; text-align: left;"><%= subject.name.titlecase %></td>
-                              <% else %>
-                                  <td style="border-left: none;">&nbsp;</td>
-                                  <td style="border-left: none;">&nbsp;</td>
-                            <% end %>
-                        <% end %>
-                    </tr>
+                <tbody id="students">
+                  <% @students.each do |student| %>
+                  <tr>
+                    <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= student.fname.capitalize.to_s + ' ' + student.lname.capitalize.to_s %></td>
+                    <td><a href="#"><%=  student.email %></a></td>
+                    <td><%=  student.gender %></td>
+                    <td><%=  student.dob.to_date.strftime("%d-%b-%Y") %></td>
+                    <td><%=  student.phone %></td>
+                    <td><%=  student.created_at.strftime("%d-%b-%Y") %></td>
+                    <td>
+                      <a student_id="<%= student.id %>" onclick="editOptionalCourses(this)" href="#" class="table-actions-button ic-table-edit"></a>
+                    </td>
+                  </tr>
                   <% end %>
                 </tbody>
 
               </table>
-              <div class="stripe-separator"><!--  --></div>
-                <%= hidden_field_tag("student_id", params[:student_id]) %>
-                <input type="submit" value="Submit" class="round blue ic-right-arrow" />
-              </form>
-              
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->
