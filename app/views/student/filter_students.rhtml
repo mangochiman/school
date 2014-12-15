@@ -11,6 +11,45 @@
     <%= javascript_include_tag("jquery") %>
     <%= javascript_include_tag("script") %>
     <%= stylesheet_link_tag("style") %>
+    <script>
+      function loadSearchResults(){
+        classRoomId = document.getElementsByClassName('class_room_search')[0].value;
+        gender = document.getElementsByClassName('gender_search')[0].value;
+        jQuery.ajax({
+          type: "POST",
+          url: "/student/filter_students_by_params",
+          data: "class_room_id=" + classRoomId + "&gender=" + gender,
+          success: function(results){
+            results = eval("(" + results  + ")");
+            html = "";
+            tbody = document.getElementById("students");
+
+            for (var student_id in results){
+              firstName = results[student_id]["fname"];
+              lastName = results[student_id]["lname"];
+              gender = results[student_id]["gender"];
+              phone = results[student_id]["phone"];
+              email = results[student_id]["email"];
+              dob = results[student_id]["dob"];
+              join_date = results[student_id]["join_date"];
+              html+="<tr>";
+              html+="<td>" + firstName + ' ' + lastName +  "</td>";
+              html+="<td><a href='#'>" + email +  "</a></td>";
+              html+="<td>" + gender +  "</td>";
+              html+="<td>" + dob +  "</td>";
+              html+="<td>" + phone +  "</td>";
+              html+="<td>" + join_date +  "</td>";
+              html+="<td><a student_id=" + student_id + " onclick='editMe(this)' href='#' class='table-actions-button ic-table-edit'></a></td>";
+              html+="</tr>";
+            }
+
+            tbody.innerHTML = html
+          }
+
+      });
+
+  }
+    </script>
     <style>
       /*table{
         margin-left:15%;
@@ -215,11 +254,11 @@
                         <td style="width:10%;">Class</td>
                         <td style="width:5%">
                           <%= select_tag:class_name, options_for_select(@class_rooms), {
-                            :id => "dropdown-actions"} %>
+                            :id => "dropdown-actions", :class => "class_room_search"} %>
                         </td>
                         <td style="width:10%;">Gender</td>
                         <td style="width:5%">
-                          <select id="dropdown-actions">
+                          <select id="dropdown-actions" class="gender_search">
                             <option value="">Select Gender</option>
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>
@@ -227,7 +266,7 @@
                         </td>
                         <td style="">Date Enrolled</td>
                         <td>
-                          <select id="dropdown-actions">
+                          <select id="dropdown-actions" class="date_enrolled_search">
                             <option value="">Select Date Enrolled</option>
                             <option value="today">Today</option>
                             <option value="this_week">This Week</option>
@@ -240,7 +279,7 @@
                         </td>
                       </tr>
                       <tr>
-                        <td colspan="6"><a href="#" class="button round blue image-right ic-search text-upper">Filter</a></td>
+                        <td colspan="6"><a href="#" onclick="loadSearchResults();" class="button round blue image-right ic-search text-upper">Filter</a></td>
                       </tr>
                     </table>
                   </div>
@@ -263,7 +302,7 @@
 
                 </thead>
 
-                <tbody>
+                <tbody id="students">
                   <tr>
                     <td>Adrian Purdila</td>
                     <td><a href="#">adipurdila@gmail.com</a></td>
