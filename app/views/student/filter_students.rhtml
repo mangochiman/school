@@ -29,10 +29,13 @@
       function loadSearchResults(){
         classRoomId = document.getElementsByClassName('class_room_search')[0].value;
         gender = document.getElementsByClassName('gender_search')[0].value;
+        startDate = document.getElementsByClassName('start-date')[0].value;
+        endDate = document.getElementsByClassName('end-date')[0].value;
+        dateCategory = document.getElementsByClassName('date_enrolled_search')[0].value;
         jQuery.ajax({
           type: "POST",
           url: "/student/filter_students_by_params",
-          data: "class_room_id=" + classRoomId + "&gender=" + gender,
+          data: "class_room_id=" + classRoomId + "&gender=" + gender + "&date_category=" + dateCategory + "&start_date=" + startDate + "&end_date=" + endDate,
           success: function(results){
             results = eval("(" + results  + ")");
             html = "";
