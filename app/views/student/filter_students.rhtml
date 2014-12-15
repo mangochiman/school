@@ -11,7 +11,21 @@
     <%= javascript_include_tag("jquery") %>
     <%= javascript_include_tag("script") %>
     <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("metallic") %>
+    
     <script>
+      function showHideCustomDateInputs(value){
+        console.log(value);
+        if (value == 'custom_date'){
+          document.getElementsByClassName("custom-date-inputs")[0].style.display = "";
+        }
+        else{
+          document.getElementsByClassName("custom-date-inputs")[0].style.display = "none";
+          $('.start-date')[0].value = ''
+          $('.end-date')[0].value = ''
+        }
+      }
+
       function loadSearchResults(){
         classRoomId = document.getElementsByClassName('class_room_search')[0].value;
         gender = document.getElementsByClassName('gender_search')[0].value;
@@ -75,6 +89,19 @@
     input[type="submit"] {
       margin-left: 37%;
     }*/
+      .start-date, .end-date{
+        background-color: #fff;
+
+        border-radius: 4px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        height: 26px;
+        line-height: 1.42857;
+        margin-left: 30%;
+        
+        padding: 6px 12px;
+        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+        margin-left: 0%;
+      }
 
       #dropdown-actions{
         background-color: #fff;
@@ -266,7 +293,7 @@
                         </td>
                         <td style="">Date Enrolled</td>
                         <td>
-                          <select id="dropdown-actions" class="date_enrolled_search">
+                          <select id="dropdown-actions" class="date_enrolled_search" onchange="showHideCustomDateInputs(this.value)">
                             <option value="">Select Date Enrolled</option>
                             <option value="today">Today</option>
                             <option value="this_week">This Week</option>
@@ -274,9 +301,15 @@
                             <option value="last_month">Last Month</option>
                             <option value="this_year">This Year</option>
                             <option value="all_dates">All Dates</option>
-                            <option value="custom_date">Custom Date</option>
+                            <option value="custom_date" >Custom Date</option>
                           </select>
                         </td>
+                      </tr>
+                      <tr class="custom-date-inputs" style="display:none;">
+                        <td>Start Date</td>
+                        <td><input type="text"  id="simple-input" class="round default-width-input start-date date-picker" /></td>
+                        <td>End Date</td>
+                        <td><input type="text"  id="simple-input" class="round default-width-input end-date date-picker" /></td>
                       </tr>
                       <tr>
                         <td colspan="6"><a href="#" onclick="loadSearchResults();" class="button round blue image-right ic-search text-upper">Filter</a></td>
@@ -326,6 +359,21 @@
       <p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
 
     </div> <!-- end footer -->
+    
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("zebra_datepicker") %>
+    <script>
+      
+        $('.start-date').Zebra_DatePicker({
+              view : 'years',
+              direction: ['<%=  (Date.today - 10.years).strftime("%Y-%m-%d") %>', '<%=  (Date.today).strftime("%Y-%m-%d") %>']
+        });
 
+        $('.end-date').Zebra_DatePicker({
+              view : 'years',
+              direction: ['<%=  (Date.today - 10.years).strftime("%Y-%m-%d") %>', '<%=  (Date.today).strftime("%Y-%m-%d") %>']
+        });
+
+    </script>
   </body>
 </html>
