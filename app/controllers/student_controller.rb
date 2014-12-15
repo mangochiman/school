@@ -129,27 +129,22 @@ class StudentController < ApplicationController
   end
 
   def filter_students_by_params
-    class_room_id = params[:class_room_id]
+    class_room_id = ClassRoom.all.map(&:id)
     gender = params[:gender]
-    conditions = ""
+    gender = ["Male", "Female"]
+
     unless params[:class_room_id].blank?
-      multiple = true
-      conditions += "class_room_id = '%#{class_room_id}%'"
+      class_room_id = [params[:class_room_id]]
+    end
+    
+    unless  params[:gender].blank?
+     gender =  [params[:gender]]
     end
 
-    unless gender.blank?
-      conditions += ' AND ' if multiple
-      conditions += "gender = '#{gender}' "
-    end
-
-    unless conditions.blank?
-      students = ClassRoomStudent.find(:all, :conditions => ["class_room_id =?", class_room_id]).collect{|cr|
-        cr.student
-      }
-      students = Student.find_by_sql("SELECT * FROM student WHERE #{conditions}")
-    else
-      students = Student.all
-    end
+    students = ClassRoomStudent.find(:all, :joins => [:student],
+      :conditions => ["class_room_id IN (?) AND gender IN (?)", class_room_id, gender]).collect{|cr|
+      cr.student
+    }
 
     hash = {}
     students.each do |student|
@@ -163,6 +158,7 @@ class StudentController < ApplicationController
       hash[student_id]["dob"] = student.dob.to_date.strftime("%d-%b-%Y")
       hash[student_id]["join_date"] = student.created_at.to_date.strftime("%d-%b-%Y")
     end
+
     render :json => hash
   end
   
