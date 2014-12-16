@@ -125,6 +125,7 @@ class StudentController < ApplicationController
 
   def select_guardian
     @parents = Parent.all
+    render :layout => false
   end
   
   def filter_students

@@ -122,6 +122,14 @@
       table th:first-child {
         border-style: none none none !important;
     }
+    .green {
+      background-color: #458B00;
+      color: white;
+    }
+    .green:hover{
+      background-color: #556B2F;
+      color: white;
+    }
     </style>
   </head>
   <body>
@@ -239,7 +247,7 @@
               <form id="search-student-form" action="#">
                 <fieldset>
                   <legend>Search</legend>
-                  <div style="width:71%; margin-left:10%;">
+                  <div style="width:91%; margin-left:5%;">
                     <table>
                       <tr>
                         <td style="width:10%;">First Name</td>
@@ -254,9 +262,10 @@
                             <option value="Female">Female</option>
                           </select>
                         </td>
+                        <td><a onclick="newGuardian();" href="#" class="button round green image-right ic-add text-upper">New Guardian</a></td>
                       </tr>
-                      <tr>
-                        <td colspan="6"><a onclick="loadSearchResults();" href="#" class="button round blue image-right ic-search text-upper">Search</a></td>
+                      <tr>                        
+                        <td colspan="7"><a onclick="loadSearchResults();" href="#" class="button round blue image-right ic-search text-upper">Search</a></td>
                       </tr>
                     </table>
                   </div>
@@ -280,19 +289,7 @@
                 </thead>
 
                 <tbody id="students">
-                  <% @students.each do |student| %>
-                  <tr>
-                    <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= student.fname.capitalize.to_s + ' ' + student.lname.capitalize.to_s %></td>
-                    <td><a href="#"><%=  student.email %></a></td>
-                    <td><%=  student.gender %></td>
-                    <td><%=  student.dob.to_date.strftime("%d-%b-%Y") %></td>
-                    <td><%=  student.phone %></td>
-                    <td><%=  student.created_at.strftime("%d-%b-%Y") %></td>
-                    <td>
-                      <a student_id="<%= student.id %>" onclick="assignGuardian(this)" href="#" class="button round blue image-right ic-add text-upper">Assign Parent/Guardian &nbsp;</a>
-                    </td>
-                  </tr>
-                  <% end %>
+            
                 </tbody>
 
               </table>
