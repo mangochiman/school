@@ -119,6 +119,7 @@ class StudentController < ApplicationController
   end
   
   def assign_parent_guardian
+    @students = Student.all
     render :layout => false
   end
   
