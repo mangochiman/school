@@ -122,6 +122,10 @@ class StudentController < ApplicationController
     @students = Student.all
     render :layout => false
   end
+
+  def select_guardian
+    @parents = Parent.all
+  end
   
   def filter_students
     @class_rooms = [["---Select Class---", ""]]
