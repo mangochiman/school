@@ -37,7 +37,7 @@
           url: "/student/filter_students_by_params",
           data: "class_room_id=" + classRoomId + "&gender=" + gender + "&date_category=" + dateCategory + "&start_date=" + startDate + "&end_date=" + endDate,
           success: function(results){
-            results = eval("(" + results  + ")");
+            //results = eval("(" + results  + ")");
             html = "";
             tbody = document.getElementById("students");
 

@@ -132,6 +132,36 @@ class StudentController < ApplicationController
     class_room_id = ClassRoom.all.map(&:id)
     gender = params[:gender]
     gender = ["Male", "Female"]
+    start_date = params[:start_date].to_date rescue nil
+    end_date = params[:end_date].to_date rescue nil
+    date_category = params[:date_category]
+
+    if (date_category == 'today')
+      start_date = Date.today
+      end_date = Date.today
+    end
+
+    if (date_category == 'this_week')
+      start_date = Date.today.beginning_of_week #Monday
+      end_date = Date.today
+    end
+    
+    if (date_category == 'last_month')
+      start_date = Date.today.last_month.beginning_of_month
+      end_date = Date.today.last_month.end_of_month
+    end
+
+    if (date_category == 'this_year')
+      start_date = Date.today.beginning_of_year
+      end_date = Date.today
+    end
+
+    if (date_category == 'all_dates')
+      date_of_join_start = Student.find_by_sql("SELECT date_of_join FROM student ORDER BY DATE(date_of_join) ASC LIMIT 1").last.date_of_join
+      date_of_join_end = Student.find_by_sql("SELECT date_of_join FROM student ORDER BY DATE(date_of_join) DESC LIMIT 1").last.date_of_join
+      start_date = date_of_join_start.to_date rescue nil
+      end_date = date_of_join_end.to_date rescue nil
+    end
 
     unless params[:class_room_id].blank?
       class_room_id = [params[:class_room_id]]
@@ -141,10 +171,18 @@ class StudentController < ApplicationController
      gender =  [params[:gender]]
     end
 
-    students = ClassRoomStudent.find(:all, :joins => [:student],
-      :conditions => ["class_room_id IN (?) AND gender IN (?)", class_room_id, gender]).collect{|cr|
-      cr.student
-    }
+    unless (start_date.blank? && end_date.blank?)
+      students = ClassRoomStudent.find(:all, :joins => [:student],
+                  :conditions => ["class_room_id IN (?) AND gender IN (?) AND
+                   DATE(date_of_join) >= ? AND DATE(date_of_join) <= ?",
+                   class_room_id, gender, start_date, end_date]
+                 ).collect{|cr| cr.student }
+    else
+      students = ClassRoomStudent.find(:all, :joins => [:student],
+      :conditions => ["class_room_id IN (?) AND gender IN (?)", class_room_id, gender]
+        ).collect{|cr| cr.student}
+    end
+    
 
     hash = {}
     students.each do |student|
@@ -158,7 +196,7 @@ class StudentController < ApplicationController
       hash[student_id]["dob"] = student.dob.to_date.strftime("%d-%b-%Y")
       hash[student_id]["join_date"] = student.created_at.to_date.strftime("%d-%b-%Y")
     end
-
+    
     render :json => hash
   end
   
