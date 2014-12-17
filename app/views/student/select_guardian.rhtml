@@ -13,9 +13,9 @@
     <%= stylesheet_link_tag("style") %>
     <script type="text/javascript">
 
-      function assignGuardian(obj){
-        studentId = obj.getAttribute("student_id");
-        window.location = "/student/select_guardian?student_id=" + studentId;
+      function selectGuardian(obj){
+        parentId = obj.getAttribute("parent_id");
+        window.location = "/student/create_student_guardian?parent_id=" + parentId + "&student_id=<%= params[:student_id] %>";
       }
 
       function loadSearchResults(){
@@ -24,21 +24,21 @@
         gender = document.getElementsByClassName('gender_search')[0].value;
         jQuery.ajax({
           type: "POST",
-          url: "/student/search_students",
+          url: "/parent/search_parents",
           data: "first_name=" + firstName + "&last_name=" + lastName + "&gender=" + gender,
           success: function(results){
             results = eval("(" + results  + ")");
             html = "";
-            tbody = document.getElementById("students");
+            tbody = document.getElementById("parents");
 
-            for (var student_id in results){
-              firstName = results[student_id]["fname"];
-              lastName = results[student_id]["lname"];
-              gender = results[student_id]["gender"];
-              phone = results[student_id]["phone"];
-              email = results[student_id]["email"];
-              dob = results[student_id]["dob"];
-              join_date = results[student_id]["join_date"];
+            for (var parent_id in results){
+              firstName = results[parent_id]["fname"];
+              lastName = results[parent_id]["lname"];
+              gender = results[parent_id]["gender"];
+              phone = results[parent_id]["phone"];
+              email = results[parent_id]["email"];
+              dob = results[parent_id]["dob"];
+              join_date = results[parent_id]["join_date"];
               html+="<tr>";
               html+="<td style='text-align:left; padding: 0.833em 0 0.833em 1.25em;'>" + firstName + ' ' + lastName +  "</td>";
               html+="<td><a href='#'>" + email +  "</a></td>";
@@ -46,7 +46,7 @@
               html+="<td>" + dob +  "</td>";
               html+="<td>" + phone +  "</td>";
               html+="<td>" + join_date +  "</td>";
-              html+="<td><a student_id=" + student_id + " onclick='assignGuardian(this)' href='#' class='button round blue image-right ic-add text-upper'>Assign Parent/Guardian &nbsp;</a></td>";
+              html+="<td><a parent_id=" + parent_id + " onclick='selectGuardian(this)' href='#' class='button round blue image-right text-upper ic-right-arrow'>Select Guardian</a></td>";
               html+="</tr>";
             }
 
@@ -288,8 +288,20 @@
 
                 </thead>
 
-                <tbody id="students">
-            
+                <tbody id="parents">
+                  <% @parents.each do |parent| %>
+                  <tr>
+                    <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= parent.fname.capitalize.to_s + ' ' + parent.lname.capitalize.to_s %></td>
+                    <td><a href="#"><%=  parent.email %></a></td>
+                    <td><%=  parent.gender %></td>
+                    <td><%=  parent.dob.to_date.strftime("%d-%b-%Y") %></td>
+                    <td><%=  parent.phone %></td>
+                    <td><%=  parent.created_at.strftime("%d-%b-%Y") %></td>
+                    <td>
+                      <a parent_id="<%= parent.id %>" onclick="selectGuardian(this)" href="#" class="button round blue image-right text-upper ic-right-arrow">Select Guardian</a>
+                    </td>
+                  </tr>
+                  <% end %>
                 </tbody>
 
               </table>

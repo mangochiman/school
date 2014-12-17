@@ -127,6 +127,19 @@ class StudentController < ApplicationController
     @parents = Parent.all
     render :layout => false
   end
+
+  def create_student_guardian
+    if (StudentParent.create({
+        :student_id => params[:student_id],
+        :parent_id => params[:parent_id]
+      }))
+      flash[:notice] = "Operation successful"
+      redirect_to :action => "assign_parent_guardian" and return
+    else
+      flash[:error] = "Operation aborted. Check for errors and try again"
+      redirect_to :action => "select_guardian", :student_id => params[:student_id] and return
+    end
+  end
   
   def filter_students
     @class_rooms = [["---Select Class---", ""]]
