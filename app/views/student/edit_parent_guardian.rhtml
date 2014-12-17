@@ -13,9 +13,9 @@
     <%= stylesheet_link_tag("style") %>
     <script type="text/javascript">
 
-      function editOptionalCourses(obj){
+      function assignGuardian(obj){
         studentId = obj.getAttribute("student_id");
-        window.location = "/student/edit_my_subjects?student_id=" + studentId;
+        window.location = "/student/select_guardian?student_id=" + studentId;
       }
 
       function loadSearchResults(){
@@ -36,9 +36,6 @@
               lastName = results[student_id]["lname"];
               gender = results[student_id]["gender"];
               phone = results[student_id]["phone"];
-              if (phone == null){
-                phone = ""
-              }
               email = results[student_id]["email"];
               dob = results[student_id]["dob"];
               join_date = results[student_id]["join_date"];
@@ -49,11 +46,11 @@
               html+="<td>" + dob +  "</td>";
               html+="<td>" + phone +  "</td>";
               html+="<td>" + join_date +  "</td>";
-              html+="<td><a student_id=" + student_id + " onclick='editOptionalCourses(this)' href='#' class='table-actions-button ic-table-edit'></a></td>";
+              html+="<td><a student_id=" + student_id + " onclick='assignGuardian(this)' href='#' class='button round blue image-right ic-add text-upper'>Assign Parent/Guardian &nbsp;</a></td>";
               html+="</tr>";
             }
 
-            tbody.innerHTML = html;
+            tbody.innerHTML = html
           }
 
       });
@@ -278,7 +275,7 @@
                     <th>Date Of Birth</th>
                     <th>Phone #</th>
                     <th>Date of Join</th>
-                    <th style="min-width:12%;">Action</th>
+                    <th style="min-width:16%;">Action</th>
                   </tr>
 
                 </thead>
@@ -293,7 +290,7 @@
                     <td><%=  student.phone %></td>
                     <td><%=  student.created_at.strftime("%d-%b-%Y") %></td>
                     <td>
-                      <a student_id="<%= student.id %>" onclick="editOptionalCourses(this)" href="#" class="table-actions-button ic-table-edit"></a>
+                      <a student_id="<%= student.id %>" onclick="assignGuardian(this)" href="#" class="button round blue image-right ic-edit text-upper">Edit Parent/Guardian &nbsp;</a>
                     </td>
                   </tr>
                   <% end %>

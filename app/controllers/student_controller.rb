@@ -141,6 +141,11 @@ class StudentController < ApplicationController
     render :layout => false
   end
 
+  def edit_parent_guardian
+    @students = Student.find(:all, :joins => [:student_parent])
+    render :layout => false
+  end
+  
   def select_guardian
     @parents = Parent.all
     render :layout => false
