@@ -119,7 +119,8 @@ class StudentController < ApplicationController
   end
   
   def assign_parent_guardian
-    @students = Student.all
+    students_with_guardians_ids = StudentParent.find(:all).map(&:student_id)
+    @students = Student.find(:all, :conditions => ["student_id NOT IN (?)", students_with_guardians_ids])
     render :layout => false
   end
 

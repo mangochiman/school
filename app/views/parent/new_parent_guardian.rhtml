@@ -13,7 +13,19 @@
     <%= javascript_include_tag("script") %>
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("metallic") %>
+    <script>
+      function checkGender(){
+        <% unless params[:gender].blank?%>
+            <% if (params[:gender].upcase == "MALE") %>
+                document.getElementById('male').checked = true
+            <%  end %>
 
+            <% if (params[:gender].upcase == "FEMALE") %>
+                document.getElementById('female').checked = true
+            <%  end %>
+        <% end %>
+      }
+    </script>
     <style>
       table{
         margin-left:15%;
@@ -40,7 +52,7 @@
     }
     </style>
   </head>
-  <body>
+  <body onload="checkGender();">
 
     <!-- TOP BAR -->
     <div id="top-bar">
@@ -151,17 +163,17 @@
                 <table>
                   <tr>
                     <td><label for="simple-input">First Name</label></td>
-                    <td><input type="text" name="first_name" id="simple-input" class="round default-width-input" /></td>
+                    <td><input type="text" name="first_name" value="<%= params[:first_name] %>" id="simple-input" class="round default-width-input" /></td>
                   </tr>
                   <tr>
                     <td><label for="simple-input">Last Name</label></td>
-                    <td><input type="text" name="last_name" id="simple-input" class="round default-width-input" /></td>
+                    <td><input type="text" name="last_name" value="<%= params[:last_name] %>" id="simple-input" class="round default-width-input" /></td>
                   </tr>
                   <tr>
                     <td><label for="simple-input">Gender</label></td>
                     <td>
-                      <span style="margin-left:40%;"><input type="radio" value="Male" name="gender"/>Male</span>
-                      <span style="margin-left:10%;"><input type="radio" value="Female" name="gender"/>Female</span>
+                      <span style="margin-left:40%;"><input type="radio" value="Male" name="gender" id="male"/>Male</span>
+                      <span style="margin-left:10%;"><input type="radio" value="Female" name="gender" id="female"/>Female</span>
                     </td>
                   </tr>
                   <tr>
@@ -186,6 +198,11 @@
                   </tr>
                 </table>
                 <div class="stripe-separator"><!--  --></div>
+
+                <% unless params[:student_id].blank? %>
+                    <%= hidden_field_tag("student_id", params[:student_id]) %>
+                <% end %>
+                
                 <input type="submit" value="Submit" class="round blue ic-right-arrow" />
               </form>
 
