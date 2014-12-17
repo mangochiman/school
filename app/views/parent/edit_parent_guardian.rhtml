@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>parent Section</title>
+    <!-- Optimize for mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!-- jQuery & JS files -->
+    <%= javascript_include_tag("jquery") %>
+    <%= javascript_include_tag("script") %>
+    <%= stylesheet_link_tag("style") %>
+    <script type="text/javascript">
+
+      function editMe(obj){
+        parentId = obj.getAttribute("parent_id");
+        window.location = "/parent/edit_me?parent_id=" + parentId;
+      }
+
+      function loadSearchResults(){
+        firstName = document.getElementById('fname_search').value;
+        lastName = document.getElementById('lname_search').value;
+        gender = document.getElementsByClassName('gender_search')[0].value;
+        jQuery.ajax({
+          type: "POST",
+          url: "/parent/search_parents",
+          data: "first_name=" + firstName + "&last_name=" + lastName + "&gender=" + gender,
+          success: function(results){
+            results = eval("(" + results  + ")");
+            html = "";
+            tbody = document.getElementById("parents");
+
+            for (var parent_id in results){
+              firstName = results[parent_id]["fname"];
+              lastName = results[parent_id]["lname"];
+              gender = results[parent_id]["gender"];
+              phone = results[parent_id]["phone"];
+              email = results[parent_id]["email"];
+              dob = results[parent_id]["dob"];
+              join_date = results[parent_id]["join_date"];
+              html+="<tr>";
+              html+="<td style='text-align:left; padding: 0.833em 0 0.833em 1.25em;'>" + firstName + ' ' + lastName +  "</td>";
+              html+="<td><a href='#'>" + email +  "</a></td>";
+              html+="<td>" + gender +  "</td>";
+              html+="<td>" + dob +  "</td>";
+              html+="<td>" + phone +  "</td>";
+              html+="<td>" + join_date +  "</td>";
+              html+="<td><a parent_id=" + parent_id + " onclick='editMe(this)' href='#' class='table-actions-button ic-table-edit'></a></td>";
+              html+="</tr>";
+            }
+
+            tbody.innerHTML = html
+          }
+
+      });
+
+  }
+    </script>
+    <style>
+      /*table{
+        margin-left:15%;
+        width: 60%;
+      }
+      table td #simple-input{
+        float: right;
+      }
+
+      table label{
+       text-align: left;
+      }
+      #simple-input{
+        font-size: 10pt !important;
+      }
+
+    form input[type="text"], input[type="password"], textarea {
+        border: 1px solid #d9dbdd;
+        outline: medium none;
+        padding: 0.5em 0.225em;
+    }
+
+    input[type="submit"] {
+      margin-left: 37%;
+    }*/
+
+
+      #search-parent-form fieldset {
+        border: 1px solid gray;
+        float: left;
+        margin-bottom: 15px;
+        padding: 5px;
+        width: 98.7%;
+      }
+      #search-parent-form legend {
+        color: #abda0f;
+        font-size: 14px;
+        font-weight: 100;
+        margin-left: 14px;
+        padding: 2px;
+      }
+      #search-parent-form fieldset input {
+        color: #505050;
+        float: left;
+        margin-right: 5px;
+        width: 140px;
+        padding: 3px;
+        font-size: 14px;
+      }
+
+      .search_table{
+        display: table;
+      }
+
+      .search_row{
+        display: table-row;
+      }
+
+      .search_td{
+        display: table-cell;
+      }
+
+      table th:first-child {
+        border-style: none none none !important;
+    }
+    </style>
+  </head>
+  <body>
+
+    <!-- TOP BAR -->
+    <div id="top-bar">
+
+      <div class="page-full-width cf">
+
+        <ul id="nav" class="fl">
+
+          <li class="v-sep"><a href="#" class="round button dark ic-left-arrow image-left">Go to website</a></li>
+          <li class="v-sep"><a href="#" class="round button dark menu-user image-left">Logged in as <strong>admin</strong></a>
+            <ul>
+              <li><a href="#">My Profile</a></li>
+              <li><a href="/admin/settings">Settings</a></li>
+              <li><a href="#">Change Password</a></li>
+              <li><a href="#">Log out</a></li>
+            </ul>
+          </li>
+
+          <li><a href="#" class="round button dark menu-email-special image-left">3 new messages</a></li>
+          <li><a href="#" class="round button dark menu-logoff image-left">Log out</a></li>
+
+        </ul> <!-- end nav -->
+
+
+        <form action="#" method="POST" id="search-form" class="fr">
+          <fieldset>
+            <input type="text" id="search-keyword" class="round button dark ic-search image-right" placeholder="Search..." />
+            <input type="hidden" value="SUBMIT" />
+          </fieldset>
+        </form>
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end top-bar -->
+
+
+
+    <!-- HEADER -->
+    <div id="header-with-tabs">
+
+      <div class="page-full-width cf">
+
+        <ul id="tabs" class="fl">
+          <li><a href="/admin/home" class="dashboard-tab">Dashboard</a></li>
+          <li><a href="/student/index" class="active-tab"> Students</a></li>
+          <li><a href="/parent/index">Parents</a></li>
+          <li><a href="/teacher/index">Teachers</a></li>
+          <li><a href="/admin/research">Research</a></li>
+          <li><a href="/examination/index">Exams</a></li>
+          <li><a href="/class_room/index">Classes</a></li>
+          <li><a href="/course/index">Courses</a></li>
+          <li><a href="/report/index">Reports</a></li>
+          <li><a href="/student/my_results">My Results</a></li>
+          <li><a href="/admin/time_table">Time Tables</a></li>
+        </ul> <!-- end tabs -->
+
+        <!-- Change this image to your own company's logo -->
+        <!-- The logo will automatically be resized to 30px height. -->
+        <a href="#" id="company-branding-small" class="fr"><img src="/images/company-logo.png" alt="Blue Hosting" /></a>
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end header -->
+
+
+
+    <!-- MAIN CONTENT -->
+    <div id="content">
+
+      <div class="page-full-width cf">
+
+        <div class="side-menu fl">
+
+          <h3>Task</h3>
+          <ul>
+            <li><a href="/parent/new_parent_guardian">New Guardian</a></li>
+            <li><a href="/parent/edit_parent_guardian">Edit Guardian</a></li>
+            <li><a href="/parent/void_parent_guardian">Void Guardian</a></li>
+          </ul>
+
+        </div> <!-- end side-menu -->
+
+        <div class="side-content fr">
+
+          <div class="content-module">
+
+            <div class="content-module-heading cf">
+
+              <h3 class="fl">Edit Parent/Guardian details</h3>
+              <span class="fr expand-collapse-text">Click to collapse</span>
+              <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+            </div> <!-- end content-module-heading -->
+
+
+            <div class="content-module-main">
+              <% if flash[:notice] %>
+                  <div class="confirmation-box round">
+                    <%= flash[:notice] %>
+                  </div>
+                <% end %>
+                <% if flash[:error] %>
+                  <div class="error-box round">
+                      <%= flash[:error] %>
+                  </div>
+                <% end %>
+              <form id="search-parent-form" action="#">
+                <fieldset>
+                  <legend>Search</legend>
+                  <div style="width:71%; margin-left:10%;">
+                    <table>
+                      <tr>
+                        <td style="width:10%;">First Name</td>
+                        <td style="width:10%;"><input type="text" id="fname_search"/></td>
+                        <td style="width:10%;">Last Name</td>
+                        <td style="width:10%;"><input type="text" id="lname_search"/></td>
+                        <td style="width:10%;">Gender</td>
+                        <td style="width:5%">
+                          <select id="dropdown-actions" class="gender_search">
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                          </select>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="6"><a onclick="loadSearchResults();" href="#" class="button round blue image-right ic-search text-upper">Search</a></td>
+                      </tr>
+                    </table>
+                  </div>
+                </fieldset>
+              </form>
+
+              <table>
+
+                <thead>
+
+                  <tr>
+                    <th style="min-width:15%;">Name</th>
+                    <th>Email</th>
+                    <th>Gender</th>
+                    <th>Date Of Birth</th>
+                    <th>Phone #</th>
+                    <th>Date of Join</th>
+                    <th>Action</th>
+                  </tr>
+
+                </thead>
+
+                <tbody id="parents">
+                  <% @parents.each do |parent| %>
+                  <tr>
+                    <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= parent.fname.capitalize.to_s + ' ' + parent.lname.capitalize.to_s %></td>
+                    <td><a href="#"><%=  parent.email %></a></td>
+                    <td><%=  parent.gender %></td>
+                    <td><%=  parent.dob.to_date.strftime("%d-%b-%Y") %></td>
+                    <td><%=  parent.phone %></td>
+                    <td><%=  parent.created_at.strftime("%d-%b-%Y") %></td>
+                    <td>
+                      <a parent_id="<%= parent.id %>" onclick="editMe(this)" href="#" class="table-actions-button ic-table-edit"></a>
+                    </td>
+                  </tr>
+                  <% end %>
+                </tbody>
+
+              </table>
+            </div> <!-- end content-module-main -->
+
+          </div> <!-- end content-module -->
+
+        </div> <!-- end side-content -->
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end content -->
+
+
+
+    <!-- FOOTER -->
+    <div id="footer">
+
+      <p>&copy; Copyright 2012 <a href="#">BlueHosting, LLC</a>. All rights reserved.</p>
+      <p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
+
+    </div> <!-- end footer -->
+
+  </body>
+</html>
