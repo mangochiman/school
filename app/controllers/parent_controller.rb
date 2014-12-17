@@ -35,9 +35,25 @@ class ParentController < ApplicationController
   end
 
   def void_parent_guardian
+    @parents = Parent.all
     render :layout => false
   end
 
+  def delete_parents
+    if (params[:mode] == 'single_entry')
+      parent = Parent.find(params[:parent_id])
+      parent.delete
+      render :text => "true" and return
+    end
+
+    parent_ids = params[:parent_ids].split(",")
+    (parent_ids || []).each do |parent_id|
+        parent = Parent.find(parent_id)
+        parent.delete
+    end
+    render :text => "true" and return
+  end
+  
   def create
     first_name = params[:first_name]
     last_name = params[:last_name]
