@@ -15,14 +15,22 @@
 
       function selectGuardian(obj){
         parentId = obj.getAttribute("parent_id");
-        window.location = "/student/create_student_guardian?parent_id=" + parentId + "&student_id=<%= params[:student_id] %>";
-      }
+        <% unless (params[:mode] == 'guardian_edit')%>
+          window.location = "/student/create_student_guardian?parent_id=" + parentId + "&student_id=<%= params[:student_id] %>";
+        <% else %>
+          window.location = "/student/create_student_guardian?parent_id=" + parentId + "&student_id=<%= params[:student_id] %>&mode=guardian_edit";
+        <% end %>
+    }
 
       function newGuardian(){
         fname = document.getElementById('fname_search').value;
         lname =  document.getElementById('lname_search').value;
         gender = document.getElementsByClassName('gender_search')[0].value;
-        window.location = "/parent/new_parent_guardian?student_id=<%= params[:student_id] %>&first_name=" + fname + "&last_name=" + lname + "&gender=" + gender;
+        <% unless (params[:mode] == 'guardian_edit')%>
+          window.location = "/parent/new_parent_guardian?student_id=<%= params[:student_id] %>&first_name=" + fname + "&last_name=" + lname + "&gender=" + gender;
+        <% else %>
+          window.location = "/parent/new_parent_guardian?student_id=<%= params[:student_id] %>&first_name=" + fname + "&last_name=" + lname + "&gender=" + gender + "&mode=guardian_edit";
+        <% end %>
       }
       
       function loadSearchResults(){

@@ -38,7 +38,7 @@ class StudentController < ApplicationController
   end
   
   def assign_class
-     student_ids_with_class_rooms = ClassRoomStudent.all.map(&:student_id)
+     student_ids_with_class_rooms = ClassRoomStudent.all.map(&:student_id).join(', ')
      @students = Student.find(:all, :conditions => ["student_id NOT IN (?)",
                     student_ids_with_class_rooms]
                 )
@@ -136,11 +136,17 @@ class StudentController < ApplicationController
   end
   
   def assign_parent_guardian
-    students_with_guardians_ids = StudentParent.find(:all).map(&:student_id)
+    students_with_guardians_ids = StudentParent.find(:all).map(&:student_id).join(', ')
     @students = Student.find(:all, :conditions => ["student_id NOT IN (?)", students_with_guardians_ids])
     render :layout => false
   end
 
+  def delete_student_guardian
+    my_guardian = StudentParent.find(:last, :conditions => ["student_id =?", params[:student_id]])
+    my_guardian.delete
+    render :text => "success" and return
+  end
+  
   def edit_parent_guardian
     @students = Student.find(:all, :joins => [:student_parent])
     render :layout => false
