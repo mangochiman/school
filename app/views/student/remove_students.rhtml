@@ -3,12 +3,11 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Student Section</title>
+    <title>SimpleAdmin - Dashboard</title>
     <!-- Optimize for mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <!-- jQuery & JS files -->
-    <script type='text/javascript' src='/javascripts/jquery.js'></script>
     <%= javascript_include_tag("jquery") %>
     <%= javascript_include_tag("script") %>
     <%= javascript_include_tag("jquery-1.9.1.min") %>
@@ -16,48 +15,83 @@
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("bootstrap") %>
 
+    <script>
+        function selectAll(){
+            selectAllInput = document.getElementById('table-select-all');
+            if (selectAllInput.checked){
+              selectAllInput.checked = true;
+            }
+            else {
+              selectAllInput.checked = false
+            }
+            inputs = document.getElementsByTagName("input");
+            for (var i=0; i<=inputs.length - 1; i++){
+              if (inputs[i] == selectAllInput) continue;
+              if (inputs[i].type == 'checkbox'){
+                if (inputs[i].checked){
+                  inputs[i].checked = false;
+                }
+                else{
+                  inputs[i].checked = true;
+                }
+              }
+            }
+         }
+
+      function deletestudents(){
+        inputs = document.getElementsByTagName("input");
+        studentIDs = []
+        for (var i=0; i<=inputs.length - 1; i++){
+          if (inputs[i].type == 'checkbox'){
+            if (inputs[i].checked){
+              if (inputs[i].hasAttribute("student_id")){
+                studentID = inputs[i].getAttribute("student_id");
+                studentIDs.push(studentID);
+              }
+            }
+          }
+        }
+
+        jQuery.ajax({
+          type: "POST",
+          url: "/student/delete_students",
+          data: "student_ids=" + studentIDs,
+          success: function(){
+            for (var x=0; x<= studentIDs.length - 1; x++){
+              id = studentIDs[x];
+              element = document.getElementById(id);
+              element.parentNode.removeChild(element)
+            }
+          }
+
+      });
+      }
+      var currentStudentID = "";
+      function setcurrentStudentID(obj){
+        currentStudentID = obj.getAttribute("student_id");
+      }
+
+      function deleteSingleEntry(){
+        jQuery.ajax({
+          type: "POST",
+          url: "/student/delete_students",
+          data: "student_id=" + currentStudentID + "&mode=single_entry",
+          success: function(){
+              element = document.getElementById(currentStudentID);
+              element.parentNode.removeChild(element);
+          }
+
+      });
+      }
+    </script>
+
     <style>
-    .modal-title {
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      font-weight: 500;
-      line-height: 1.1;
-      font-size: 1.2em;
-      color: #317eac;
-    }
-    
-      #search-student-form fieldset {
-        border: 1px solid gray;
-        float: left;
-        margin-bottom: 15px;
-        padding: 5px;
-        width: 98.7%;
-      }
-      #search-student-form legend {
-        color: #abda0f;
-        font-size: 14px;
-        font-weight: 100;
-        margin-left: 14px;
-        padding: 2px;
-      }
-      #search-student-form fieldset input {
-        color: #505050;
-        float: left;
-        margin-right: 5px;
-        width: 140px;
-        padding: 3px;
-        font-size: 14px;
-      }
-
-      .search_table{
-        display: table;
-      }
-
-      .search_row{
-        display: table-row;
-      }
-
-      .search_td{
-        display: table-cell;
+      .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: #317eac;
       }
 
       table th:first-child {
@@ -110,8 +144,8 @@
 
         <ul id="tabs" class="fl">
           <li><a href="/admin/home" class="dashboard-tab">Dashboard</a></li>
-          <li><a href="/student/index" class="active-tab"> Students</a></li>
-          <li><a href="/parent/index">Parents</a></li>
+          <li><a href="/student/index" class="active-tab">Students</a></li>
+          <li><a href="/student/index">Parents</a></li>
           <li><a href="/teacher/index">Teachers</a></li>
           <li><a href="/admin/research">Research</a></li>
           <li><a href="/examination/index">Exams</a></li>
@@ -159,7 +193,7 @@
 
             <div class="content-module-heading cf">
 
-              <h3 class="fl">Void students</h3>
+              <h3 class="fl">Table design</h3>
               <span class="fr expand-collapse-text">Click to collapse</span>
               <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -167,6 +201,7 @@
 
 
             <div class="content-module-main">
+
               <% if flash[:notice] %>
                   <div class="confirmation-box round">
                     <%= flash[:notice] %>
@@ -177,40 +212,12 @@
                       <%= flash[:error] %>
                   </div>
                 <% end %>
-
-              <form id="search-student-form" action="#">
-                <fieldset>
-                  <legend>Search</legend>
-                  <div style="width:71%; margin-left:10%;">
-                    <table>
-                      <tr>
-                        <td style="width:10%;">First Name</td>
-                        <td style="width:10%;"><input type="text"/></td>
-                        <td style="width:10%;">Last Name</td>
-                        <td style="width:10%;"><input type="text"/></td>
-                        <td style="width:10%;">Gender</td>
-                        <td style="width:5%">
-                          <select id="dropdown-actions">
-                            <option value="">Select Gender</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                          </select>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td colspan="6"><a href="#" class="button round blue image-right ic-search text-upper">Search</a></td>
-                      </tr>
-                    </table>
-                  </div>
-                </fieldset>
-              </form>
-
-              <table>
+             <table>
 
                 <thead>
 
                   <tr>
-                    <th><input type="checkbox" id="table-select-all"/></th>
+                    <th><input type="checkbox" id="table-select-all" onclick="selectAll();"/></th>
                     <th style="min-width:15%;">Name</th>
                     <th>Email</th>
                     <th>Gender</th>
@@ -224,31 +231,39 @@
 
                 <tfoot>
                   <tr>
-                    <td colspan="8" class="table-footer">
-                      <a href="#" class="button round blue image-right ic-delete text-upper confirm">Delete</a>
+                    <td colspan="3" class="table-footer">
+                      <a href="#" class="button round blue image-right ic-delete text-upper delete-multiple">Delete</a>
                     </td>
                   </tr>
                 </tfoot>
-                
-                <tbody>
-                  <tr>
-                    <td><input type="checkbox"/></td>
-                    <td>Adrian Purdila</td>
-                    <td><a href="#">adipurdila@gmail.com</a></td>
-                    <td>Male</td>
-                    <td>01-Jan-2010</td>
-                    <td>099xxxxxx</td>
-                    <td>15-Jan-2014</td>
+
+                <tbody id="students">
+                  <% @students.each do |student| %>
+                  <tr id="<%= student.id %>">
+                    <td><input type="checkbox" student_id="<%= student.id %>"/></td>
+                    <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= student.fname.capitalize.to_s + ' ' + student.lname.capitalize.to_s %></td>
+                    <td><a href="#"><%=  student.email %></a></td>
+                    <td><%=  student.gender %></td>
+                    <td><%=  student.dob.to_date.strftime("%d-%b-%Y") %></td>
+                    <td><%=  student.phone %></td>
+                    <td><%=  student.created_at.strftime("%d-%b-%Y") %></td>
                     <td>
-                      <a href="#" class="table-actions-button ic-table-delete confirm"></a>
+                      <a student_id="<%= student.id %>" href="#" onmousedown="setcurrentStudentID(this)" class="table-actions-button ic-table-delete confirm"></a>
                     </td>
                   </tr>
+                  <% end %>
                 </tbody>
 
               </table>
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->
+
+
+
+
+
+
 
         </div> <!-- end side-content -->
 
@@ -265,21 +280,34 @@
       <p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
 
     </div> <!-- end footer -->
-     
     <%= javascript_include_tag("bootstrap") %>
     <script>
-      $(".confirm").confirm({
-          title:"Delete confirmation",
-          text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
-          confirm: function(button) {
-            alert("You just confirmed.");
-          },
-          cancel: function(button) {
-            alert("You aborted the operation.");
-          },
-          confirmButton: "Yes I am",
-          cancelButton: "No"
-      });
+
+      $(".delete-multiple").confirm({
+            title:"Delete confirmation",
+            text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+            confirm: function(button) {
+              deletestudents();
+            },
+            cancel: function(button) {
+              alert("You aborted the operation.");
+            },
+            confirmButton: "Yes I am",
+            cancelButton: "No"
+        });
+
+        $(".confirm").confirm({
+            title:"Delete confirmation",
+            text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+            confirm: function(button) {
+              deleteSingleEntry();
+            },
+            cancel: function(button) {
+
+            },
+            confirmButton: "Yes I am",
+            cancelButton: "No"
+        });
     </script>
   </body>
 </html>

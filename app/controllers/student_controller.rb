@@ -17,9 +17,26 @@ class StudentController < ApplicationController
   end
 
   def remove_students
+    @students = Student.all
     render :layout => false
   end
 
+  def delete_students
+    if (params[:mode] == 'single_entry')
+      student = Student.find(params[:student_id])
+      student.delete
+      render :text => "true" and return
+    end
+
+    student_ids = params[:student_ids].split(",")
+    (student_ids || []).each do |student_id|
+        student = Student.find(student_id)
+        student.delete
+    end
+    
+    render :text => "true" and return
+  end
+  
   def assign_class
      student_ids_with_class_rooms = ClassRoomStudent.all.map(&:student_id)
      @students = Student.find(:all, :conditions => ["student_id NOT IN (?)",
