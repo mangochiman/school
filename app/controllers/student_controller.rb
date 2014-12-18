@@ -158,6 +158,21 @@ class StudentController < ApplicationController
   end
 
   def create_student_guardian
+    if (params[:mode] == 'guardian_edit')
+      ActiveRecord::Base.transaction do
+        student_parent = StudentParent.find(:last, :conditions => ["student_id =?",
+            params[:student_id]])
+        student_parent.delete
+        
+        StudentParent.create({
+          :student_id => params[:student_id],
+          :parent_id => params[:parent_id]
+        })
+      end
+      flash[:notice] = "Operation successful"
+      redirect_to :action => "select_guardian", :student_id => params[:student_id], :mode => params[:mode] and return
+    end
+
     if (StudentParent.create({
         :student_id => params[:student_id],
         :parent_id => params[:parent_id]
@@ -168,6 +183,7 @@ class StudentController < ApplicationController
       flash[:error] = "Operation aborted. Check for errors and try again"
       redirect_to :action => "select_guardian", :student_id => params[:student_id] and return
     end
+    
   end
   
   def filter_students

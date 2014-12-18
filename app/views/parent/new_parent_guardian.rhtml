@@ -202,6 +202,10 @@
                 <% unless params[:student_id].blank? %>
                     <%= hidden_field_tag("student_id", params[:student_id]) %>
                 <% end %>
+
+                <% unless params[:mode].blank? %>
+                    <%= hidden_field_tag("mode", params[:mode]) %>
+                <% end %>
                 
                 <input type="submit" value="Submit" class="round blue ic-right-arrow" />
               </form>
