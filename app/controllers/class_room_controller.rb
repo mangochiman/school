@@ -200,5 +200,19 @@ class ClassRoomController < ApplicationController
       render :action => "add_class" and return
     end
   end
-  
+
+  def render_courses
+    class_room_id = params[:class_room_id]
+    class_room_courses = ClassRoom.find(class_room_id).class_room_courses
+    class_name = ClassRoom.find(class_room_id).name
+    course_names = {}
+
+    (class_room_courses || []).each do |crc|
+      course_names[class_name] = [] if course_names[class_name].blank?
+      course_names[class_name] << crc.course.name
+    end
+
+    render :json => course_names.first and return
+  end
+
 end
