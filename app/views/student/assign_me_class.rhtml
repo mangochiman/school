@@ -83,7 +83,22 @@
       margin-left: 37%;
     }*/
 
+    .label {
+      border-radius: 1.5em;
+      color: #fff;
+      display: inline;
+      background-color: #5bc0de;
+      font-weight: bold;
+      line-height: 1;
+      padding-left: 20%;
+      padding-right: 20%;
+      padding-top:2%;
+      padding-bottom:2%;
+      text-align: center;
+      vertical-align: baseline;
+      white-space: nowrap;
 
+}
       #search-student-form fieldset {
         border: 1px solid gray;
         float: left;
@@ -205,6 +220,7 @@
             <li><a href="/student/remove_students/">Void Student</a></li>
             <li><a href="/student/assign_class/">Assign Class</a></li>
             <li><a href="/student/assign_subjects">Assign Subjects</a></li>
+            <li><a href="/student/edit_subjects">Edit Subjects</a></li>
             <li><a href="/student/assign_parent_guardian">Assign Parent/Guardian</a></li>
             <li><a href="/student/filter_students">Filter Students By</a></li>
           </ul>
@@ -243,6 +259,7 @@
                     <th style="min-width:20%;">Class Name</th>
                     <th>Year</th>
                     <th>Grade</th>
+                    <th style="max-width:5px;">Total Students</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -253,6 +270,7 @@
                     <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= class_room.name%></td>
                     <td><%=  class_room.year %></td>
                     <td><%= class_room.grade %></td>
+                    <td><span class="label" style="margin-left:20%;"><%= class_room.class_room_students.count %></span></td>
                     <td>
                       <a class_room_id="<%= class_room.id %>" onclick="assignMeClass(this)" href="#" class="button round blue image-right ic-add text-upper">Select</a>
                     </td>

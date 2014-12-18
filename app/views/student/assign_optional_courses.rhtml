@@ -11,33 +11,39 @@
     <%= javascript_include_tag("jquery") %>
     <%= javascript_include_tag("script") %>
     <%= stylesheet_link_tag("style") %>
-    <%= stylesheet_link_tag("metallic") %>
-    
-    <script>
-      function showHideCustomDateInputs(value){
-        console.log(value);
-        if (value == 'custom_date'){
-          document.getElementsByClassName("custom-date-inputs")[0].style.display = "";
+    <script type="text/javascript">
+      function selectAll(){
+        selectAllInput = document.getElementById('table-select-all');
+        if (selectAllInput.checked){
+          selectAllInput.checked = true;
         }
-        else{
-          document.getElementsByClassName("custom-date-inputs")[0].style.display = "none";
-          $('.start-date')[0].value = ''
-          $('.end-date')[0].value = ''
+        else {
+          selectAllInput.checked = false
+        }
+        inputs = document.getElementsByTagName("input");
+        for (var i=0; i<=inputs.length - 1; i++){
+          if (inputs[i] == selectAllInput) continue;
+          if (inputs[i].type == 'checkbox'){
+            if (inputs[i].checked){
+              inputs[i].checked = false;
+            }
+            else{
+              inputs[i].checked = true;
+            }
+          }
         }
       }
 
       function loadSearchResults(){
-        classRoomId = document.getElementsByClassName('class_room_search')[0].value;
+        firstName = document.getElementById('fname_search').value;
+        lastName = document.getElementById('lname_search').value;
         gender = document.getElementsByClassName('gender_search')[0].value;
-        startDate = document.getElementsByClassName('start-date')[0].value;
-        endDate = document.getElementsByClassName('end-date')[0].value;
-        dateCategory = document.getElementsByClassName('date_enrolled_search')[0].value;
         jQuery.ajax({
           type: "POST",
-          url: "/student/filter_students_by_params",
-          data: "class_room_id=" + classRoomId + "&gender=" + gender + "&date_category=" + dateCategory + "&start_date=" + startDate + "&end_date=" + endDate,
+          url: "/student/search_students",
+          data: "first_name=" + firstName + "&last_name=" + lastName + "&gender=" + gender,
           success: function(results){
-            //results = eval("(" + results  + ")");
+            results = eval("(" + results  + ")");
             html = "";
             tbody = document.getElementById("students");
 
@@ -56,7 +62,7 @@
               html+="<td>" + dob +  "</td>";
               html+="<td>" + phone +  "</td>";
               html+="<td>" + join_date +  "</td>";
-              html+="<td><a student_id=" + student_id + " onclick='editMe(this)' href='#' class='table-actions-button ic-table-edit'></a></td>";
+              html+="<td><a student_id=" + student_id + " onclick='assignSubjects(this)' href='#' class='button round blue image-right ic-add text-upper'>Assign Subjects &nbsp;</a></td>";
               html+="</tr>";
             }
 
@@ -92,36 +98,7 @@
     input[type="submit"] {
       margin-left: 37%;
     }*/
-      .start-date, .end-date{
-        background-color: #fff;
 
-        border-radius: 4px;
-        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
-        height: 26px;
-        line-height: 1.42857;
-        margin-left: 30%;
-        
-        padding: 6px 12px;
-        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
-        margin-left: 0%;
-      }
-
-      #dropdown-actions{
-        background-color: #fff;
-        background-image: none;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
-        color: #555;
-        font-size: 14px;
-        height: 34px;
-        line-height: 1.42857;
-        margin-left: 30%;
-        min-width: 108px;
-        padding: 6px 12px;
-        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
-        margin-left: 0%;
-      }
 
       #search-student-form fieldset {
         border: 1px solid gray;
@@ -257,7 +234,7 @@
 
             <div class="content-module-heading cf">
 
-              <h3 class="fl">Class assignment</h3>
+              <h3 class="fl">Edit student details</h3>
               <span class="fr expand-collapse-text">Click to collapse</span>
               <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -275,74 +252,39 @@
                       <%= flash[:error] %>
                   </div>
                 <% end %>
-              <form id="search-student-form" action="#">
-                <fieldset>
-                  <legend>Filter</legend>
-                  <div style="width:78%; margin-left:10%;">
-                    <table>
-                      <tr>
-                        <td style="width:10%;">Class</td>
-                        <td style="width:5%">
-                          <%= select_tag:class_name, options_for_select(@class_rooms), {
-                            :id => "dropdown-actions", :class => "class_room_search"} %>
-                        </td>
-                        <td style="width:10%;">Gender</td>
-                        <td style="width:5%">
-                          <select id="dropdown-actions" class="gender_search">
-                            <option value="">Select Gender</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                          </select>
-                        </td>
-                        <td style="">Date Enrolled</td>
-                        <td>
-                          <select id="dropdown-actions" class="date_enrolled_search" onchange="showHideCustomDateInputs(this.value)">
-                            <option value="">Select Date Enrolled</option>
-                            <option value="today">Today</option>
-                            <option value="this_week">This Week</option>
-                            <option value="this_month">This Month</option>
-                            <option value="last_month">Last Month</option>
-                            <option value="this_year">This Year</option>
-                            <option value="all_dates">All Dates</option>
-                            <option value="custom_date" >Custom Date</option>
-                          </select>
-                        </td>
-                      </tr>
-                      <tr class="custom-date-inputs" style="display:none;">
-                        <td>Start Date</td>
-                        <td><input type="text"  id="simple-input" class="round default-width-input start-date date-picker" /></td>
-                        <td>End Date</td>
-                        <td><input type="text"  id="simple-input" class="round default-width-input end-date date-picker" /></td>
-                      </tr>
-                      <tr>
-                        <td colspan="6"><a href="#" onclick="loadSearchResults();" class="button round blue image-right ic-search text-upper">Filter</a></td>
-                      </tr>
-                    </table>
-                  </div>
-                </fieldset>
-              </form>
-
-              <table>
+              
+              <form method="post" action="/student/assign_optional_courses">
+              <table class="classes" style="">
 
                 <thead>
-
                   <tr>
-                    <th style="min-width:15%;">Name</th>
-                    <th>Email</th>
-                    <th>Gender</th>
-                    <th>Date Of Birth</th>
-                    <th>Phone #</th>
-                    <th>Date of Join</th>
-                    <th>Action</th>
+                    <th><input type="checkbox" id="table-select-all" onclick="selectAll();"/></th>
+                    <th colspan="5" style=" padding: 1.25em 0 1.25em 1.25em;">Select courses</th>
                   </tr>
-
                 </thead>
 
-                <tbody id="students">
-                  
+                <tbody id="class_rooms">
+                  <% @courses.in_groups_of(3).each do |row| %>
+                    <tr>
+                        <% row.each do |subject| %>
+                            <% unless subject.blank? %>
+                                  <td><input type="checkbox" id="<%= subject.id %>" name="subjects[<%= subject.id %>]"/></td>
+                                  <td style="border-left: none; text-align: left;"><%= subject.name.titlecase %></td>
+                              <% else %>
+                                  <td style="border-left: none;">&nbsp;</td>
+                                  <td style="border-left: none;">&nbsp;</td>
+                            <% end %>
+                        <% end %>
+                    </tr>
+                  <% end %>
                 </tbody>
 
               </table>
+              <div class="stripe-separator"><!--  --></div>
+                <%= hidden_field_tag("student_id", params[:student_id]) %>
+                <input type="submit" value="Submit" class="round blue ic-right-arrow" />
+              </form>
+              
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->
@@ -362,21 +304,6 @@
       <p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
 
     </div> <!-- end footer -->
-    
-    <%= javascript_include_tag("jquery-1.9.1.min") %>
-    <%= javascript_include_tag("zebra_datepicker") %>
-    <script>
-      
-        $('.start-date').Zebra_DatePicker({
-              view : 'years',
-              direction: ['<%=  (Date.today - 10.years).strftime("%Y-%m-%d") %>', '<%=  (Date.today).strftime("%Y-%m-%d") %>']
-        });
 
-        $('.end-date').Zebra_DatePicker({
-              view : 'years',
-              direction: ['<%=  (Date.today - 10.years).strftime("%Y-%m-%d") %>', '<%=  (Date.today).strftime("%Y-%m-%d") %>']
-        });
-
-    </script>
   </body>
 </html>

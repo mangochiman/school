@@ -4,4 +4,5 @@ class ClassRoom < ActiveRecord::Base
 
   has_many :class_room_courses
   has_many :class_room_teachers
+  has_many :class_room_students
 end

@@ -8,9 +8,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <!-- jQuery & JS files -->
+
     <%= javascript_include_tag("jquery") %>
     <%= javascript_include_tag("script") %>
     <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("metallic") %>
+
+    <style>
+      table{
+        margin-left:15%;
+        width: 60%;
+      }
+      table td #simple-input{
+        float: right;
+      }
+
+      table label{
+       text-align: left;
+      }
+      #simple-input{
+        font-size: 10pt !important;
+      }
+
+    #registration input[type="text"], input[type="password"], textarea {
+        border: 1px solid #d9dbdd;
+        outline: medium none;
+        padding: 0.5em 0.225em;
+    }
+    input[type="submit"] {
+      margin-left: 37%;
+    }
+    </style>
   </head>
   <body>
 
@@ -57,7 +85,7 @@
 
         <ul id="tabs" class="fl">
           <li><a href="/admin/home" class="dashboard-tab">Dashboard</a></li>
-          <li><a href="/student/index">Students</a></li>
+          <li><a href="/student/index"> Students</a></li>
           <li><a href="/parent/index" class="active-tab">Parents</a></li>
           <li><a href="/teacher/index">Teachers</a></li>
           <li><a href="/admin/research">Research</a></li>
@@ -101,7 +129,7 @@
 
             <div class="content-module-heading cf">
 
-              <h3 class="fl">Table design</h3>
+              <h3 class="fl">Parent/Guardian Registration</h3>
               <span class="fr expand-collapse-text">Click to collapse</span>
               <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -109,124 +137,61 @@
 
 
             <div class="content-module-main">
-
-              <table>
-
-                <thead>
-
+              <% if flash[:notice] %>
+                  <div class="confirmation-box round">
+                    <%= flash[:notice] %>
+                  </div>
+                <% end %>
+                <% if flash[:error] %>
+                  <div class="error-box round">
+                      <%= flash[:error] %>
+                  </div>
+                <% end %>
+              <form id="registration" action="/parent/create">
+                <table>
                   <tr>
-                    <th><input type="checkbox" id="table-select-all"></th>
-                    <th>Name</th>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>Actions</th>
+                    <td><label for="simple-input">First Name</label></td>
+                    <td><input type="text" name="first_name" id="simple-input" class="round default-width-input" /></td>
                   </tr>
-
-                </thead>
-
-                <tfoot>
-
                   <tr>
-
-                    <td colspan="5" class="table-footer">
-
-                      <label for="table-select-actions">With selected:</label>
-
-                      <select id="table-select-actions">
-                        <option value="option1">Delete</option>
-                        <option value="option2">Export</option>
-                        <option value="option3">Archive</option>
-                      </select>
-
-                      <a href="#" class="round button blue text-upper small-button">Apply to selected</a>
-
-                    </td>
-
+                    <td><label for="simple-input">Last Name</label></td>
+                    <td><input type="text" name="last_name" id="simple-input" class="round default-width-input" /></td>
                   </tr>
-
-                </tfoot>
-
-                <tbody>
-
                   <tr>
-                    <td><input type="checkbox"></td>
-                    <td>Adrian Purdila</td>
-                    <td>adipurdila</td>
-                    <td><a href="#">adipurdila@gmail.com</a></td>
+                    <td><label for="simple-input">Gender</label></td>
                     <td>
-                      <a href="#" class="table-actions-button ic-table-edit"></a>
-                      <a href="#" class="table-actions-button ic-table-delete"></a>
+                      <span style="margin-left:40%;"><input type="radio" value="Male" name="gender"/>Male</span>
+                      <span style="margin-left:10%;"><input type="radio" value="Female" name="gender"/>Female</span>
                     </td>
                   </tr>
-
                   <tr>
-                    <td><input type="checkbox"></td>
-                    <td>Adrian Purdila</td>
-                    <td>adipurdila</td>
-                    <td><a href="#">adipurdila@gmail.com</a></td>
-                    <td>
-                      <a href="#" class="table-actions-button ic-table-edit"></a>
-                      <a href="#" class="table-actions-button ic-table-delete"></a>
-                    </td>
+                    <td><label for="simple-input">E-mail</label></td>
+                    <td><input type="text" name="email"  id="simple-input" class="round default-width-input" /></td>
                   </tr>
-
                   <tr>
-                    <td><input type="checkbox"></td>
-                    <td>Adrian Purdila</td>
-                    <td>adipurdila</td>
-                    <td><a href="#">adipurdila@gmail.com</a></td>
-                    <td>
-                      <a href="#" class="table-actions-button ic-table-edit"></a>
-                      <a href="#" class="table-actions-button ic-table-delete"></a>
-                    </td>
+                    <td><label for="simple-input">Phone</label></td>
+                    <td><input type="text" name="phone" id="simple-input" class="round default-width-input" /></td>
                   </tr>
-
                   <tr>
-                    <td><input type="checkbox"></td>
-                    <td>Adrian Purdila</td>
-                    <td>adipurdila</td>
-                    <td><a href="#">adipurdila@gmail.com</a></td>
-                    <td>
-                      <a href="#" class="table-actions-button ic-table-edit"></a>
-                      <a href="#" class="table-actions-button ic-table-delete"></a>
-                    </td>
+                    <td><label for="simple-input">Password</label></td>
+                    <td><input type="password" name="password" id="simple-input" class="round default-width-input" /></td>
                   </tr>
-
                   <tr>
-                    <td><input type="checkbox"></td>
-                    <td>Adrian Purdila</td>
-                    <td>adipurdila</td>
-                    <td><a href="#">adipurdila@gmail.com</a></td>
-                    <td>
-                      <a href="#" class="table-actions-button ic-table-edit"></a>
-                      <a href="#" class="table-actions-button ic-table-delete"></a>
-                    </td>
+                    <td><label for="simple-input">Re-type password</label></td>
+                    <td><input type="password" name="password_confirm" id="simple-input" class="round default-width-input" /></td>
                   </tr>
-
                   <tr>
-                    <td><input type="checkbox"></td>
-                    <td>Adrian Purdila</td>
-                    <td>adipurdila</td>
-                    <td><a href="#">adipurdila@gmail.com</a></td>
-                    <td>
-                      <a href="#" class="table-actions-button ic-table-edit"></a>
-                      <a href="#" class="table-actions-button ic-table-delete"></a>
-                    </td>
+                    <td><label for="simple-input">Date of Birth</label></td>
+                    <td><input type="text" name="dob" id="simple-input" class="round default-width-input date-picker" /></td>
                   </tr>
-
-                </tbody>
-
-              </table>
+                </table>
+                <div class="stripe-separator"><!--  --></div>
+                <input type="submit" value="Submit" class="round blue ic-right-arrow" />
+              </form>
 
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->
-
-
-
-
-
-
 
         </div> <!-- end side-content -->
 
@@ -244,5 +209,14 @@
 
     </div> <!-- end footer -->
 
+
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("zebra_datepicker") %>
+    <script>
+      $('.date-picker').Zebra_DatePicker({
+            view : 'years',
+            direction: ['<%=  (Date.today - 30.years).strftime("%Y-%m-%d") %>', '<%=  (Date.today - 12.years).strftime("%Y-%m-%d") %>']
+      });
+    </script>
   </body>
 </html>

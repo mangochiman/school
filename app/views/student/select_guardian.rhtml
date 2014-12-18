@@ -11,52 +11,42 @@
     <%= javascript_include_tag("jquery") %>
     <%= javascript_include_tag("script") %>
     <%= stylesheet_link_tag("style") %>
-    <%= stylesheet_link_tag("metallic") %>
-    
-    <script>
-      function showHideCustomDateInputs(value){
-        console.log(value);
-        if (value == 'custom_date'){
-          document.getElementsByClassName("custom-date-inputs")[0].style.display = "";
-        }
-        else{
-          document.getElementsByClassName("custom-date-inputs")[0].style.display = "none";
-          $('.start-date')[0].value = ''
-          $('.end-date')[0].value = ''
-        }
+    <script type="text/javascript">
+
+      function selectGuardian(obj){
+        parentId = obj.getAttribute("parent_id");
+        window.location = "/student/create_student_guardian?parent_id=" + parentId + "&student_id=<%= params[:student_id] %>";
       }
 
       function loadSearchResults(){
-        classRoomId = document.getElementsByClassName('class_room_search')[0].value;
+        firstName = document.getElementById('fname_search').value;
+        lastName = document.getElementById('lname_search').value;
         gender = document.getElementsByClassName('gender_search')[0].value;
-        startDate = document.getElementsByClassName('start-date')[0].value;
-        endDate = document.getElementsByClassName('end-date')[0].value;
-        dateCategory = document.getElementsByClassName('date_enrolled_search')[0].value;
         jQuery.ajax({
           type: "POST",
-          url: "/student/filter_students_by_params",
-          data: "class_room_id=" + classRoomId + "&gender=" + gender + "&date_category=" + dateCategory + "&start_date=" + startDate + "&end_date=" + endDate,
+          url: "/parent/search_parents",
+          data: "first_name=" + firstName + "&last_name=" + lastName + "&gender=" + gender,
           success: function(results){
-            //results = eval("(" + results  + ")");
+            results = eval("(" + results  + ")");
             html = "";
-            tbody = document.getElementById("students");
+            tbody = document.getElementById("parents");
 
-            for (var student_id in results){
-              firstName = results[student_id]["fname"];
-              lastName = results[student_id]["lname"];
-              gender = results[student_id]["gender"];
-              phone = results[student_id]["phone"];
-              email = results[student_id]["email"];
-              dob = results[student_id]["dob"];
-              join_date = results[student_id]["join_date"];
+            for (var parent_id in results){
+              firstName = results[parent_id]["fname"];
+              lastName = results[parent_id]["lname"];
+              gender = results[parent_id]["gender"];
+              phone = results[parent_id]["phone"];
+              email = results[parent_id]["email"];
+              dob = results[parent_id]["dob"];
+              join_date = results[parent_id]["join_date"];
               html+="<tr>";
-              html+="<td>" + firstName + ' ' + lastName +  "</td>";
+              html+="<td style='text-align:left; padding: 0.833em 0 0.833em 1.25em;'>" + firstName + ' ' + lastName +  "</td>";
               html+="<td><a href='#'>" + email +  "</a></td>";
               html+="<td>" + gender +  "</td>";
               html+="<td>" + dob +  "</td>";
               html+="<td>" + phone +  "</td>";
               html+="<td>" + join_date +  "</td>";
-              html+="<td><a student_id=" + student_id + " onclick='editMe(this)' href='#' class='table-actions-button ic-table-edit'></a></td>";
+              html+="<td><a parent_id=" + parent_id + " onclick='selectGuardian(this)' href='#' class='button round blue image-right text-upper ic-right-arrow'>Select Guardian</a></td>";
               html+="</tr>";
             }
 
@@ -92,36 +82,7 @@
     input[type="submit"] {
       margin-left: 37%;
     }*/
-      .start-date, .end-date{
-        background-color: #fff;
 
-        border-radius: 4px;
-        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
-        height: 26px;
-        line-height: 1.42857;
-        margin-left: 30%;
-        
-        padding: 6px 12px;
-        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
-        margin-left: 0%;
-      }
-
-      #dropdown-actions{
-        background-color: #fff;
-        background-image: none;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
-        color: #555;
-        font-size: 14px;
-        height: 34px;
-        line-height: 1.42857;
-        margin-left: 30%;
-        min-width: 108px;
-        padding: 6px 12px;
-        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
-        margin-left: 0%;
-      }
 
       #search-student-form fieldset {
         border: 1px solid gray;
@@ -160,6 +121,14 @@
 
       table th:first-child {
         border-style: none none none !important;
+    }
+    .green {
+      background-color: #458B00;
+      color: white;
+    }
+    .green:hover{
+      background-color: #556B2F;
+      color: white;
     }
     </style>
   </head>
@@ -257,7 +226,7 @@
 
             <div class="content-module-heading cf">
 
-              <h3 class="fl">Class assignment</h3>
+              <h3 class="fl">Edit student details</h3>
               <span class="fr expand-collapse-text">Click to collapse</span>
               <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -277,15 +246,14 @@
                 <% end %>
               <form id="search-student-form" action="#">
                 <fieldset>
-                  <legend>Filter</legend>
-                  <div style="width:78%; margin-left:10%;">
+                  <legend>Search</legend>
+                  <div style="width:91%; margin-left:5%;">
                     <table>
                       <tr>
-                        <td style="width:10%;">Class</td>
-                        <td style="width:5%">
-                          <%= select_tag:class_name, options_for_select(@class_rooms), {
-                            :id => "dropdown-actions", :class => "class_room_search"} %>
-                        </td>
+                        <td style="width:10%;">First Name</td>
+                        <td style="width:10%;"><input type="text" id="fname_search"/></td>
+                        <td style="width:10%;">Last Name</td>
+                        <td style="width:10%;"><input type="text" id="lname_search"/></td>
                         <td style="width:10%;">Gender</td>
                         <td style="width:5%">
                           <select id="dropdown-actions" class="gender_search">
@@ -294,28 +262,10 @@
                             <option value="Female">Female</option>
                           </select>
                         </td>
-                        <td style="">Date Enrolled</td>
-                        <td>
-                          <select id="dropdown-actions" class="date_enrolled_search" onchange="showHideCustomDateInputs(this.value)">
-                            <option value="">Select Date Enrolled</option>
-                            <option value="today">Today</option>
-                            <option value="this_week">This Week</option>
-                            <option value="this_month">This Month</option>
-                            <option value="last_month">Last Month</option>
-                            <option value="this_year">This Year</option>
-                            <option value="all_dates">All Dates</option>
-                            <option value="custom_date" >Custom Date</option>
-                          </select>
-                        </td>
+                        <td><a onclick="newGuardian();" href="#" class="button round green image-right ic-add text-upper">New Guardian</a></td>
                       </tr>
-                      <tr class="custom-date-inputs" style="display:none;">
-                        <td>Start Date</td>
-                        <td><input type="text"  id="simple-input" class="round default-width-input start-date date-picker" /></td>
-                        <td>End Date</td>
-                        <td><input type="text"  id="simple-input" class="round default-width-input end-date date-picker" /></td>
-                      </tr>
-                      <tr>
-                        <td colspan="6"><a href="#" onclick="loadSearchResults();" class="button round blue image-right ic-search text-upper">Filter</a></td>
+                      <tr>                        
+                        <td colspan="7"><a onclick="loadSearchResults();" href="#" class="button round blue image-right ic-search text-upper">Search</a></td>
                       </tr>
                     </table>
                   </div>
@@ -333,13 +283,25 @@
                     <th>Date Of Birth</th>
                     <th>Phone #</th>
                     <th>Date of Join</th>
-                    <th>Action</th>
+                    <th style="min-width:16%;">Action</th>
                   </tr>
 
                 </thead>
 
-                <tbody id="students">
-                  
+                <tbody id="parents">
+                  <% @parents.each do |parent| %>
+                  <tr>
+                    <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= parent.fname.capitalize.to_s + ' ' + parent.lname.capitalize.to_s %></td>
+                    <td><a href="#"><%=  parent.email %></a></td>
+                    <td><%=  parent.gender %></td>
+                    <td><%=  parent.dob.to_date.strftime("%d-%b-%Y") %></td>
+                    <td><%=  parent.phone %></td>
+                    <td><%=  parent.created_at.strftime("%d-%b-%Y") %></td>
+                    <td>
+                      <a parent_id="<%= parent.id %>" onclick="selectGuardian(this)" href="#" class="button round blue image-right text-upper ic-right-arrow">Select Guardian</a>
+                    </td>
+                  </tr>
+                  <% end %>
                 </tbody>
 
               </table>
@@ -362,21 +324,6 @@
       <p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
 
     </div> <!-- end footer -->
-    
-    <%= javascript_include_tag("jquery-1.9.1.min") %>
-    <%= javascript_include_tag("zebra_datepicker") %>
-    <script>
-      
-        $('.start-date').Zebra_DatePicker({
-              view : 'years',
-              direction: ['<%=  (Date.today - 10.years).strftime("%Y-%m-%d") %>', '<%=  (Date.today).strftime("%Y-%m-%d") %>']
-        });
 
-        $('.end-date').Zebra_DatePicker({
-              view : 'years',
-              direction: ['<%=  (Date.today - 10.years).strftime("%Y-%m-%d") %>', '<%=  (Date.today).strftime("%Y-%m-%d") %>']
-        });
-
-    </script>
   </body>
 </html>

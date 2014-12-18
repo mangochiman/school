@@ -21,7 +21,10 @@ class StudentController < ApplicationController
   end
 
   def assign_class
-    @students = Student.all
+     student_ids_with_class_rooms = ClassRoomStudent.all.map(&:student_id)
+     @students = Student.find(:all, :conditions => ["student_id NOT IN (?)",
+                    student_ids_with_class_rooms]
+                )
     render :layout => false
   end
   
@@ -52,14 +55,170 @@ class StudentController < ApplicationController
     render :layout => false
   end
 
-  def assign_parent_guardian
-    render :layout => false
-  end
-  
-  def filter_students
+  def assign_optional_courses
+    student = Student.find(params[:student_id])
+    @courses = student.class_room_student.class_room.class_room_courses.collect{|crc|
+      crc.course
+    }
+    
+    if (request.method == :post)
+      (params[:subjects] || []).each do |subject_id, details|
+          StudentCourse.create({
+            :student_id => params[:student_id],
+            :course_id => subject_id
+          })
+      end
+      flash[:notice] = "You have successfully assigned courses"
+      redirect_to :action => "assign_optional_courses" and return
+    end
+    
     render :layout => false
   end
 
+  def edit_subjects
+    @students = Student.all
+    render :layout => false
+  end
+
+  def edit_my_subjects
+    student = Student.find(params[:student_id])
+    @current_student_courses = student.student_courses.collect{|sc|sc.course}
+    @courses = student.class_room_student.class_room.class_room_courses.collect{|crc|
+      crc.course
+    }
+
+    if (request.method == :post)
+      ActiveRecord::Base.transaction do
+        #@class_room.class_room_courses.delete_all
+        assigned_course_ids = @current_student_courses.map(&:course_id)
+        already_signed_course_ids = []
+
+        (params[:subjects] || []).each do |subject_id, details|
+          if (assigned_course_ids.include?(subject_id.to_i))
+            already_signed_course_ids << subject_id.to_i
+            next
+          end
+          StudentCourse.create({
+              :student_id => params[:student_id],
+              :course_id => subject_id
+          })
+        end
+
+        ((assigned_course_ids - already_signed_course_ids) || []).each do |course_id|
+          student_course = StudentCourse.find(:last, :conditions => ["student_id =? AND course_id =?",
+              params[:student_id], course_id])
+          student_course.delete
+        end
+
+        flash[:notice] = "You have successfuly edited subjects"
+        redirect_to :action => "edit_subjects" and return
+      end
+    end
+    
+    render :layout => false
+  end
+  
+  def assign_parent_guardian
+    @students = Student.all
+    render :layout => false
+  end
+
+  def select_guardian
+    @parents = Parent.all
+    render :layout => false
+  end
+
+  def create_student_guardian
+    if (StudentParent.create({
+        :student_id => params[:student_id],
+        :parent_id => params[:parent_id]
+      }))
+      flash[:notice] = "Operation successful"
+      redirect_to :action => "assign_parent_guardian" and return
+    else
+      flash[:error] = "Operation aborted. Check for errors and try again"
+      redirect_to :action => "select_guardian", :student_id => params[:student_id] and return
+    end
+  end
+  
+  def filter_students
+    @class_rooms = [["---Select Class---", ""]]
+    @class_rooms += ClassRoom.find(:all).collect{|c|[c.name, c.id]}
+    render :layout => false
+  end
+
+  def filter_students_by_params
+    class_room_id = ClassRoom.all.map(&:id)
+    gender = params[:gender]
+    gender = ["Male", "Female"]
+    start_date = params[:start_date].to_date rescue nil
+    end_date = params[:end_date].to_date rescue nil
+    date_category = params[:date_category]
+
+    if (date_category == 'today')
+      start_date = Date.today
+      end_date = Date.today
+    end
+
+    if (date_category == 'this_week')
+      start_date = Date.today.beginning_of_week #Monday
+      end_date = Date.today
+    end
+    
+    if (date_category == 'last_month')
+      start_date = Date.today.last_month.beginning_of_month
+      end_date = Date.today.last_month.end_of_month
+    end
+
+    if (date_category == 'this_year')
+      start_date = Date.today.beginning_of_year
+      end_date = Date.today
+    end
+
+    if (date_category == 'all_dates')
+      date_of_join_start = Student.find_by_sql("SELECT date_of_join FROM student ORDER BY DATE(date_of_join) ASC LIMIT 1").last.date_of_join
+      date_of_join_end = Student.find_by_sql("SELECT date_of_join FROM student ORDER BY DATE(date_of_join) DESC LIMIT 1").last.date_of_join
+      start_date = date_of_join_start.to_date rescue nil
+      end_date = date_of_join_end.to_date rescue nil
+    end
+
+    unless params[:class_room_id].blank?
+      class_room_id = [params[:class_room_id]]
+    end
+    
+    unless  params[:gender].blank?
+     gender =  [params[:gender]]
+    end
+
+    unless (start_date.blank? && end_date.blank?)
+      students = ClassRoomStudent.find(:all, :joins => [:student],
+                  :conditions => ["class_room_id IN (?) AND gender IN (?) AND
+                   DATE(date_of_join) >= ? AND DATE(date_of_join) <= ?",
+                   class_room_id, gender, start_date, end_date]
+                 ).collect{|cr| cr.student }
+    else
+      students = ClassRoomStudent.find(:all, :joins => [:student],
+      :conditions => ["class_room_id IN (?) AND gender IN (?)", class_room_id, gender]
+        ).collect{|cr| cr.student}
+    end
+    
+
+    hash = {}
+    students.each do |student|
+      student_id = student.id.to_s
+      hash[student_id] = {}
+      hash[student_id]["fname"] = student.fname.to_s
+      hash[student_id]["lname"] = student.lname.to_s
+      hash[student_id]["phone"] = student.phone
+      hash[student_id]["email"] = student.email
+      hash[student_id]["gender"] = student.gender
+      hash[student_id]["dob"] = student.dob.to_date.strftime("%d-%b-%Y")
+      hash[student_id]["join_date"] = student.created_at.to_date.strftime("%d-%b-%Y")
+    end
+    
+    render :json => hash
+  end
+  
   def search_students
     first_name = params[:first_name]
     last_name = params[:last_name]
