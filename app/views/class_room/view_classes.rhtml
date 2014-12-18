@@ -64,7 +64,7 @@
         function updatePopup(){
           modalBody = $('.modal-body')[0];
           if (modalBody){
-            $('.modal-title')[0].innerHTML = htmlHeader;
+              $('.modal-title')[0].innerHTML = htmlHeader;
             modalBody.innerHTML = html; //TO DO: Hacking the pop-up. Improve this to be picking dynamic variable on the fly
           }
         }
@@ -273,10 +273,10 @@
                       <span class_room_id="<%= class_room.id %>" class="label view-courses" onmousedown="setcurrentClassRoomID(this);" style="margin-left:0%;"><%= class_room.class_room_courses.count %></span>
                     </td>
                     <td>
-                      <span class_room_id="<%= class_room.id %>" class="label view-students" onmousedown="setcurrentClassRoomID(this);" style="margin-left:0%;"><%= class_room.class_room_students.count %></span>
+                      <span class_room_id="<%= class_room.id %>" class="label view-students" onmousedown="displayStudents(this);" style="margin-left:0%;"><%= class_room.class_room_students.count %></span>
                     </td>
                     <td>
-                      <span class_room_id="<%= class_room.id %>" class="label view-teachers" onmousedown="setcurrentClassRoomID(this);" style="margin-left:0%;"><%= class_room.class_room_teachers.count %></span>
+                      <span class_room_id="<%= class_room.id %>" class="label view-teachers" onmousedown="displayTeachers(this);" style="margin-left:0%;"><%= class_room.class_room_teachers.count %></span>
                     </td>
                   </tr>
                   <% end %>
@@ -317,6 +317,37 @@
             confirmButton: "Done"
         });
 
+        $(".view-students").confirm({
+            title:"Form 1",
+            text:"Your data goes here",
+            confirm: function(button) {
+            },
+            cancel: function(button) {
+            },
+            confirmButton: "Done"
+        });
+
+        $(".view-teachers").confirm({
+            title:"Form 1",
+            text:"Your data goes here",
+            confirm: function(button) {
+            },
+            cancel: function(button) {
+            },
+            confirmButton: "Done"
+        });
+
+        function testOne(){
+          confirm({
+            title:"Form 1",
+            text:"Your data goes here",
+            confirm: function(button) {
+            },
+            cancel: function(button) {
+            },
+            confirmButton: "Done"
+        })
+        }
         function hideCancelButton(){
           if ($("button.cancel")[0]){
             $("button.cancel")[0].style.display='none';

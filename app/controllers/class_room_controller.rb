@@ -220,4 +220,38 @@ class ClassRoomController < ApplicationController
     render :json => course_names.first and return
   end
 
+  def render_students
+    class_room_id = params[:class_room_id]
+    class_room_students = ClassRoom.find(class_room_id).class_room_students
+    class_name = ClassRoom.find(class_room_id).name
+    student_data = {}
+    
+    (class_room_students || []).each do |crs|
+      student_name = crs.student.fname.to_s + ' ' + crs.student.lname.to_s
+      gender = crs.student.gender.first.capitalize.to_s
+      gender = '??' if gender.blank?
+      student_data[class_name] = [] if student_data[class_name].blank?
+      student_data[student_data] << student_name + ' (' + gender + ')'.to_s
+    end
+    
+    render :json => student_data.first and return
+  end
+
+  def render_teachers
+    class_room_id = params[:class_room_id]
+    class_room_teachers = ClassRoom.find(class_room_id).class_room_teachers
+    class_name = ClassRoom.find(class_room_id).name
+    teacher_data = {}
+    
+    (class_room_teachers || []).each do |crt|
+      teacher_name = crt.teacher.fname.to_s + ' ' + crt.teacher.lname.to_s
+      gender = crt.teacher.gender.first.capitalize.to_s
+      gender = '??' if gender.blank?
+      teacher_data[class_name] = [] if teacher_data[class_name].blank?
+      teacher_data[class_name] << teacher_name + ' (' + gender + ')'.to_s
+    end
+    
+    render :json => teacher_data.first and return
+  end
+
 end
