@@ -38,7 +38,10 @@ class StudentController < ApplicationController
   end
   
   def assign_class
-     student_ids_with_class_rooms = ClassRoomStudent.all.map(&:student_id).join(', ')
+     student_ids_with_class_rooms = Student.find(:all,
+          :joins => [:class_room_student]).map(&:student_id)
+
+    student_ids_with_class_rooms = '' if student_ids_with_class_rooms.blank? #To handle mysql NOT IN when the data is array is blank
      @students = Student.find(:all, :conditions => ["student_id NOT IN (?)",
                     student_ids_with_class_rooms]
                 )
@@ -51,8 +54,18 @@ class StudentController < ApplicationController
   end
 
   def create_student_class_assignment
+
     student_id = params[:student_id]
     class_room_id = params[:class_room_id]
+
+    class_room_courses = ClassRoom.find(class_room_id).class_room_courses
+    (class_room_courses || []).each do |crc|
+      StudentCourse.create({
+        :student_id => student_id,
+        :course_id => crc.course_id
+      })
+    end #Enrolling student to courses available for a particular class
+
     unless student_id.blank?
       if (ClassRoomStudent.create({
         :student_id => student_id,
@@ -68,7 +81,7 @@ class StudentController < ApplicationController
   end
   
   def assign_subjects
-    @students = Student.all
+    @students = Student.find(:all, :joins => [:class_room_student])
     render :layout => false
   end
 
@@ -93,7 +106,7 @@ class StudentController < ApplicationController
   end
 
   def edit_subjects
-    @students = Student.all
+    @students = Student.find(:all, :joins => [:student_courses])
     render :layout => false
   end
 

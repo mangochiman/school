@@ -24,6 +24,23 @@
         
     </script>
     <style>
+      .label {
+          border-radius: 1.5em;
+          color: #fff;
+          display: inline;
+          background-color: #5bc0de;
+          font-size: 1.2em;
+          font-weight: bold;
+          line-height: 1;
+          padding-left: 20%;
+          padding-right: 20%;
+          padding-top:2%;
+          padding-bottom:2%;
+          text-align: center;
+          vertical-align: baseline;
+          white-space: nowrap;
+      }
+      
       table{
         margin-left:15%;
         width: 60%;
@@ -191,6 +208,7 @@
                     <th style="min-width:20%;">Class Name</th>
                     <th>Year</th>
                     <th>Grade</th>
+                    <th style="max-width:5px;">Total Subjects</th>
                     <th style="min-width:12%;">Action</th>
                   </tr>
                 </thead>
@@ -201,6 +219,7 @@
                     <td><%= class_room.name%></td>
                     <td><%=  class_room.year %></td>
                     <td><%= class_room.grade %></td>
+                    <td><span class="label" style="margin-left:0%;"><%= class_room.class_room_courses.count %></span></td>
                     <td>
                       <a href="#" class_room_id="<%= class_room.id %>" onmousedown="assignSubjects(this)" class="button round blue image-right ic-add text-upper">Assign Subjects &nbsp;</a>
                     </td>

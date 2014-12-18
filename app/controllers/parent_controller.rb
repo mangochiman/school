@@ -83,7 +83,7 @@ class ParentController < ApplicationController
           })
         end
         flash[:notice] = "Operation successful"
-        redirect_to :action => "select_guardian", :student_id => params[:student_id], :mode => params[:mode] and return
+        redirect_to :controller => "student", :action => "select_guardian", :student_id => params[:student_id], :mode => params[:mode] and return
       end
 
       if (params[:mode].blank?)
