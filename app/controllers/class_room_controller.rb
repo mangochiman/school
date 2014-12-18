@@ -201,6 +201,11 @@ class ClassRoomController < ApplicationController
     end
   end
 
+  def view_classes
+    @class_rooms = ClassRoom.all
+    render :layout => false
+  end
+  
   def render_courses
     class_room_id = params[:class_room_id]
     class_room_courses = ClassRoom.find(class_room_id).class_room_courses

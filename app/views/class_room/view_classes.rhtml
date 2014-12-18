@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>SimpleAdmin - Dashboard</title>
+    <!-- Optimize for mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!-- jQuery & JS files -->
+
+    <%= javascript_include_tag("jquery") %>
+    <%= javascript_include_tag("script") %>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("jquery.confirm") %>
+    <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("bootstrap") %>
+    <script>
+
+        function assignSubjects(obj){
+          classRoomId = obj.getAttribute("class_room_id");
+          window.location = "/class_room/assign_me_subjects?class_room_id=" + classRoomId;
+        }
+
+        var currentClassRoomID = "";
+        html = "";
+        htmlHeader = ""
+        function setcurrentClassRoomID(obj){
+          currentClassRoomID = obj.getAttribute("class_room_id");
+          loadClassRoomCourses()
+        }
+        
+        function loadClassRoomCourses(){
+          if (currentClassRoomID != ''){
+            jQuery.ajax({
+            type: "POST",
+            url: "/class_room/render_courses",
+            data: "class_room_id=" + currentClassRoomID,
+            success: function(results){
+              table = "<table>";
+              table+="<tr>";
+              table+="<th>#</th>";
+              table+="<th>Course Name</th>";
+              table+="</tr>";
+              var pos = 0
+              htmlHeader = results[0];
+              results = eval(results[1]);
+              for (var i=0; i<=results.length - 1; i++){
+                courseName = results[i];
+                table+="<tr style='background-color:white;'>";
+                table+="<td>" + (pos = pos + 1) + "</td>";
+                table+="<td style='text-align:left;'>" + courseName + "</td>";
+                table+="</tr>";
+              }
+
+              table += "</table>";
+              html = table;
+              currentClassRoomID = ""
+            }});
+          }
+        }
+        window.setInterval("loadClassRoomCourses();", 300);
+
+        function updatePopup(){
+          modalBody = $('.modal-body')[0];
+          if (modalBody){
+            $('.modal-title')[0].innerHTML = htmlHeader;
+            modalBody.innerHTML = html; //TO DO: Hacking the pop-up. Improve this to be picking dynamic variable on the fly
+          }
+        }
+        window.setInterval("updatePopup();", 300);
+        
+    </script>
+    <style>
+      .label {
+          border-radius: 1.5em;
+          color: #fff;
+          display: inline;
+          background-color: #5bc0de;
+          font-size: 1.2em;
+          font-weight: bold;
+          line-height: 1;
+          padding-left: 20%;
+          padding-right: 20%;
+          padding-top:2%;
+          padding-bottom:2%;
+          text-align: center;
+          vertical-align: baseline;
+          white-space: nowrap;
+          cursor: pointer;
+      }
+      
+      table{
+        margin-left:15%;
+        width: 60%;
+      }
+      table td #simple-input{
+        float: right;
+      }
+
+      table label{
+        text-align: left;
+      }
+      #simple-input{
+        font-size: 10pt !important;
+      }
+
+      #registration input[type="text"], input[type="password"], textarea {
+        border: 1px solid #d9dbdd;
+        outline: medium none;
+        padding: 0.5em 0.225em;
+      }
+      input[type="submit"] {
+        margin-left: 37%;
+      }
+      table th:first-child {
+        border-style: none none none !important;
+    }
+
+    .classes{
+        position: relative;
+        margin-left: 0%;
+        width: 100%;
+     }
+
+    .classes th, tbody{
+        text-align: center;
+    }
+
+    .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: #317eac;
+    }
+    
+    </style>
+  </head>
+  <body>
+
+    <!-- TOP BAR -->
+    <div id="top-bar">
+
+      <div class="page-full-width cf">
+
+        <ul id="nav" class="fl">
+
+          <li class="v-sep"><a href="#" class="round button dark ic-left-arrow image-left">Go to website</a></li>
+          <li class="v-sep"><a href="#" class="round button dark menu-user image-left">Logged in as <strong>admin</strong></a>
+            <ul>
+              <li><a href="#">My Profile</a></li>
+              <li><a href="/admin/settings">Settings</a></li>
+              <li><a href="#">Change Password</a></li>
+              <li><a href="#">Log out</a></li>
+            </ul>
+          </li>
+
+          <li><a href="#" class="round button dark menu-email-special image-left">3 new messages</a></li>
+          <li><a href="#" class="round button dark menu-logoff image-left">Log out</a></li>
+
+        </ul> <!-- end nav -->
+
+
+        <form action="#" method="POST" id="search-form" class="fr">
+          <fieldset>
+            <input type="text" id="search-keyword" class="round button dark ic-search image-right" placeholder="Search..." />
+            <input type="hidden" value="SUBMIT" />
+          </fieldset>
+        </form>
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end top-bar -->
+
+
+
+    <!-- HEADER -->
+    <div id="header-with-tabs">
+
+      <div class="page-full-width cf">
+
+        <ul id="tabs" class="fl">
+          <li><a href="/admin/home" class="dashboard-tab">Dashboard</a></li>
+          <li><a href="/student/index"> Students</a></li>
+          <li><a href="/parent/index">Parents</a></li>
+          <li><a href="/teacher/index">Teachers</a></li>
+          <li><a href="/admin/research">Research</a></li>
+          <li><a href="/examination/index">Exams</a></li>
+          <li><a href="/class_room/index" class="active-tab">Classes</a></li>
+          <li><a href="/course/index">Courses</a></li>
+          <li><a href="/report/index">Reports</a></li>
+          <li><a href="/student/my_results">My Results</a></li>
+          <li><a href="/admin/time_table">Time Tables</a></li>
+        </ul> <!-- end tabs -->
+
+        <!-- Change this image to your own company's logo -->
+        <!-- The logo will automatically be resized to 30px height. -->
+        <a href="#" id="company-branding-small" class="fr"><img src="/images/company-logo.png" alt="Blue Hosting" /></a>
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end header -->
+
+
+
+    <!-- MAIN CONTENT -->
+    <div id="content">
+
+      <div class="page-full-width cf">
+
+        <div class="side-menu fl">
+
+          <h3>Task</h3>
+          <ul>
+            <li><a href="/class_room/add_class">Add class</a></li>
+            <li><a href="/class_room/edit_class">Edit class</a></li>
+            <li><a href="/class_room/remove_class">Void class</a></li>
+            <li><a href="/class_room/assign_subjects">Assign subjects</a></li>
+            <li><a href="/class_room/edit_subjects">Edit subjects</a></li>
+            <li><a href="/class_room/assign_teacher">Assign teacher</a></li>
+            <li><a href="/class_room/edit_teacher">Edit teacher</a></li>
+            <li><a href="/class_room/view_classes">View classes</a></li>
+          </ul>
+
+        </div> <!-- end side-menu -->
+
+        <div class="side-content fr">
+
+          <div class="content-module">
+
+            <div class="content-module-heading cf">
+
+              <h3 class="fl">Student Registration</h3>
+              <span class="fr expand-collapse-text">Click to collapse</span>
+              <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+            </div> <!-- end content-module-heading -->
+
+
+            <div class="content-module-main">
+              <% if flash[:notice] %>
+                <div class="confirmation-box round">
+                  <%= flash[:notice] %>
+                </div>
+              <% end %>
+              <% if flash[:error] %>
+                <div class="error-box round">
+                  <%= flash[:error] %>
+                </div>
+              <% end %>
+
+              <table class="classes">
+
+                <thead>
+                  <tr>
+                    <th style="min-width:20%;">Class Name</th>
+                    <th>Year</th>
+                    <th>Grade</th>
+                    <th style="max-width:5px;">Total Subjects</th>
+                    <th style="min-width:12%;">Total Students</th>
+                    <th style="min-width:12%;">Total Teachers</th>
+                  </tr>
+                </thead>
+           
+                <tbody id="class_rooms">
+                  <% @class_rooms.each do |class_room| %>
+                  <tr id="<%= class_room.id %>">
+                    <td><%= class_room.name%></td>
+                    <td><%=  class_room.year %></td>
+                    <td><%= class_room.grade %></td>
+                    <td>
+                      <span class_room_id="<%= class_room.id %>" class="label view-courses" onmousedown="setcurrentClassRoomID(this);" style="margin-left:0%;"><%= class_room.class_room_courses.count %></span>
+                    </td>
+                    <td>
+                      <span class_room_id="<%= class_room.id %>" class="label view-students" onmousedown="setcurrentClassRoomID(this);" style="margin-left:0%;"><%= class_room.class_room_students.count %></span>
+                    </td>
+                    <td>
+                      <span class_room_id="<%= class_room.id %>" class="label view-teachers" onmousedown="setcurrentClassRoomID(this);" style="margin-left:0%;"><%= class_room.class_room_teachers.count %></span>
+                    </td>
+                  </tr>
+                  <% end %>
+                </tbody>
+                
+              </table>
+
+            </div> <!-- end content-module-main -->
+
+          </div> <!-- end content-module -->
+
+        </div> <!-- end side-content -->
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end content -->
+
+
+
+    <!-- FOOTER -->
+    <div id="footer">
+
+      <p>&copy; Copyright 2012 <a href="#">BlueHosting, LLC</a>. All rights reserved.</p>
+      <p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
+
+    </div> <!-- end footer -->
+    <%= javascript_include_tag("bootstrap") %>
+
+    <script>
+
+        $(".view-courses").confirm({
+            title:"Form 1",
+            text:html,
+            confirm: function(button) {
+            },
+            cancel: function(button) {
+            },
+            confirmButton: "Done"
+        });
+
+        function hideCancelButton(){
+          if ($("button.cancel")[0]){
+            $("button.cancel")[0].style.display='none';
+          }
+        }
+        window.setInterval("hideCancelButton();", 300);
+    </script>
+  </body>
+</html>
