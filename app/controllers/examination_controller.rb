@@ -70,7 +70,7 @@ class ExaminationController < ApplicationController
       exam.start_date = exam_date.to_date
       exam.save!
       
-      params[:students].each do |student_id, details|
+      (params[:students] || []).each do |student_id, details|
         exam_attendee = ExamAttendee.new
         exam_attendee.exam_id = exam.id
         exam_attendee.student_id = student_id
@@ -87,6 +87,27 @@ class ExaminationController < ApplicationController
     render :layout => false
   end
 
+  def void_exam
+    @exams = Examination.all
+    render :layout => false
+  end
+
+  def delete_exams
+    if (params[:mode] == 'single_entry')
+      exam = Examination.find(params[:exam_id])
+      exam.delete
+      render :text => "true" and return
+    end
+
+    exam_ids = params[:exam_ids].split(",")
+    (exam_ids || []).each do |exam_id|
+        exam_id = Examination.find(exam_id)
+        exam_id.delete
+    end
+
+    render :text => "true" and return
+  end
+  
   def delete_exam_types
     if (params[:mode] == 'single_entry')
       exam_type = ExaminationType.find(params[:exam_type_id])
