@@ -39,6 +39,26 @@ class ExaminationController < ApplicationController
 
     render :layout => false
   end
+
+  def exam_edit
+    exam = Examination.find(params[:exam_id])
+    @exam_date = exam.start_date.to_date.strftime("%Y-%m-%d")
+    @class_rooms = [["---Select Class---", ""]]
+    @class_rooms += ClassRoom.all.collect{|c|[c.name, c.id]}
+    @selected_class_room = [exam.class_room.name, exam.class_room.id]
+
+
+    @exam_types = [["---Select Exam Type---", ""]]
+    @exam_types += ExaminationType.all.collect{|e|[e.name, e.id]}
+    @selected_exam_type = [exam.examination_type.name, exam.examination_type.id]
+
+    @courses = [["---Select Course---", ""]]
+    @selected_course = [exam.course.name, exam.course.id]
+    courses = exam.class_room.class_room_courses.collect{|c|c.course}
+    @courses += courses.collect{|c|[c.name, c.id]}
+
+    render :layout => false
+  end
   
   def void_exam_type
     @exam_types = ExaminationType.all

@@ -15,6 +15,11 @@
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("bootstrap") %>
     <script>
+      function editMe(obj){
+        examID = obj.getAttribute("exam_id");
+        window.location = "/examination/exam_edit?exam_id=" + examID;
+      }
+      
       function loadExamStudents(obj){
             jQuery.ajax({
             type: "POST",
@@ -53,6 +58,10 @@
         }
     </script>
     <style>
+      table th:first-child {
+        border-style: none none none !important;
+      }
+      
       .modal-title {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         font-weight: 500;
