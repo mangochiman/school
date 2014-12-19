@@ -46,9 +46,14 @@ class ExaminationController < ApplicationController
   end
   
   def assign_exam
-    @class_rooms = ClassRoom.all.collect{|c|[c.name, c.id]}
-    @exam_types = ExaminationType.all.collect{|e|[e.name, e.id]}
-    @courses = Course.all.collect{|c|[c.name, c.id]}
+    @class_rooms = [["---Select Class---", ""]]
+    @class_rooms += ClassRoom.all.collect{|c|[c.name, c.id]}
+
+    @exam_types = [["---Select Exam Type---", ""]]
+    @exam_types += ExaminationType.all.collect{|e|[e.name, e.id]}
+    
+    @courses = [["---Select Course---", ""]]
+    @courses += Course.all.collect{|c|[c.name, c.id]}
     render :layout => false
   end
 
@@ -82,9 +87,10 @@ class ExaminationController < ApplicationController
 
   def class_room_courses
     class_room = ClassRoom.find(params[:class_room_id])
+    options = [["", "---Select Course---"]]
     courses = class_room.class_room_courses.collect{|crc| crc.course}.compact
-    courses = (courses || []).collect{|c|[c.id, c.name]}
-    render :json => courses and return
+    options += (courses || []).collect{|c|[c.id, c.name]}
+    render :json => options and return
   end
   
 end

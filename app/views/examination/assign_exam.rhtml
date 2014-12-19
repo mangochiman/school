@@ -29,7 +29,6 @@
                 studentData = (eval(result[x][y]))
                 if (studentData){
                   studentId = studentData[0];
-                  console.log(studentId)
                   student_name = studentData[1];
                   html += "<td><span style='float:right'><input type='checkbox' name=students[" + studentId + "]/></span></td>";
                   html += "<td style='text-align:left;'>" + student_name + "</td>";
@@ -39,12 +38,46 @@
             }
             html+="</table>";
             document.getElementById("class_courses").innerHTML = html;
+            loadClassCourses(obj.value);
+          }
+
+      });
+      }
+
+     function loadClassCourses(classRoomId){
+        jQuery.ajax({
+          type: "POST",
+          url: "/examination/class_room_courses",
+          data: "class_room_id=" + classRoomId,
+          success: function(result){
+            result = eval(result);
+            options = "";
+            for (var x=0; x<= (result.length - 1); x++){
+              courseData = (eval(result[x]))
+              courseId = courseData[0];
+              courseName = courseData[1];
+              options += "<option value=" + courseId + ">" + courseName + "</option>";
+            }
+            console.log(options);
+            document.getElementById("course").innerHTML = options;
           }
 
       });
       }
     </script>
-    <style>      
+    <style>
+      #course option{
+        padding-left: 40px;
+      }
+
+      #exam_type option{
+        padding-left: 30px;
+      }
+
+      #class_room option{
+        padding-left: 40px;
+      }
+      
       #class_courses tbody td{
         padding: 0.3em 0.1em 0.3em 0.3em;
         border-bottom: 0px;
