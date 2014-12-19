@@ -59,6 +59,29 @@ class ExaminationController < ApplicationController
 
     render :layout => false
   end
+
+  def update_exams
+    exam_id = params[:exam_id]
+    class_room_id = params[:class_room]
+    exam_type = params[:exam_type]
+    course_id = params[:course]
+    exam_date = params[:exam_date]
+    exam = Examination.find(exam_id)
+    
+    ActiveRecord::Base.transaction do
+      exam.update_attributes({
+        :class_room_id => class_room_id,
+        :exam_type_id => exam_type,
+        :course_id => course_id,
+        :start_date => exam_date
+      })
+
+      #Update exam attendees here
+   end
+   
+   flash[:notice] = "Operation successful"
+   redirect_to :controller => "examination", :action => "edit_exam_assignment" and return
+  end
   
   def void_exam_type
     @exam_types = ExaminationType.all
