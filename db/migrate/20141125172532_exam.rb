@@ -1,6 +1,7 @@
 class Exam < ActiveRecord::Migration
   def self.up
     create_table :exam, :primary_key => :exam_id do |t|
+      t.integer :class_room_id
       t.integer :exam_type_id
       t.integer :course_id
       t.string :name

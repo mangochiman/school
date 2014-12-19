@@ -30,7 +30,7 @@
                 if (studentData){
                   studentId = studentData[0];
                   student_name = studentData[1];
-                  html += "<td><span style='float:right'><input type='checkbox' name=students[" + studentId + "]/></span></td>";
+                  html += "<td><span style='float:right'><input type='checkbox' name=students[" + studentId + "] /></span></td>";
                   html += "<td style='text-align:left;'>" + student_name + "</td>";
                 }
               }
@@ -222,8 +222,17 @@
 
 
             <div class="content-module-main">
-
-              <form id="exam_assignment" method="POST" action="">
+              <% if flash[:notice] %>
+                  <div class="confirmation-box round">
+                    <%= flash[:notice] %>
+                  </div>
+                <% end %>
+                <% if flash[:error] %>
+                  <div class="error-box round">
+                      <%= flash[:error] %>
+                  </div>
+                <% end %>
+              <form id="exam_assignment" method="POST" action="/examination/create_exam_assignment">
                 <table style="width:50%; margin-left: 20%;">
                   <tr>
                     <td style="min-width:30%; text-align: left;"><span>Select Class</span></td>
