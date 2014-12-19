@@ -254,7 +254,27 @@
                   
                 </table>
                 <div id="class_courses">
-
+                  <script>
+                    result = eval('(' + '<%= @students.to_json %>' + ')')
+                    html = "<div style='font-size: 0.75em; margin-left: 20%;'> Select Students </div><br />"
+                    html += "<table style='width:500px; margin-left: 20%;'>";
+                    html += "<tr style='background-color:white;'><td colspan='6' style='border-bottom:1px solid black;'><span style='margin-left:11%;'><input type='checkbox'>Select All</span></td></tr>"
+                    for (var x=0; x<= (result.length - 1); x++){
+                      html += "<tr>";
+                      for(y=0; y<=(result[x].length - 1); y++){
+                        studentData = (eval(result[x][y]))
+                        if (studentData){
+                          studentId = studentData[0];
+                          student_name = studentData[1];
+                          html += "<td><span style='float:right'><input type='checkbox' name=students[" + studentId + "] /></span></td>";
+                          html += "<td style='text-align:left;'>" + student_name + "</td>";
+                        }
+                      }
+                      html += "</tr>";
+                    }
+                    html+="</table>";
+                    document.getElementById("class_courses").innerHTML = html;
+                  </script>
                 </div>
                 
                 <div class="stripe-separator"><!--  --></div>
