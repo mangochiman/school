@@ -72,8 +72,19 @@ class ExaminationController < ApplicationController
     render :text => "true" and return
   end
 
-  def student_class_room
-    courses = Student.all.collect{|s|[s.id, s.fname + ' ' + s.lname]}.in_groups_of(3)
+  def class_room_students
+    class_room = ClassRoom.find(params[:class_room_id])
+    students = class_room.class_room_students.collect{|crs|crs.student}.compact
+
+    students = (students || []).collect{|s|[s.id, s.fname + ' ' + s.lname]}.in_groups_of(3)
+    render :json => students and return
+  end
+
+  def class_room_courses
+    class_room = ClassRoom.find(params[:class_room_id])
+    courses = class_room.class_room_courses.collect{|crc| crc.course}.compact
+    courses = (courses || []).collect{|c|[c.id, c.name]}
     render :json => courses and return
   end
+  
 end
