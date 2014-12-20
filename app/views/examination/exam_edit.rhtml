@@ -13,6 +13,26 @@
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("metallic") %>
     <script>
+      function selectAll(){
+        selectAllInput = document.getElementById('table-select-all');
+        inputs = document.getElementsByTagName("input");
+        if (selectAllInput.checked){
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+                inputs[i].checked = true;
+            }
+          }
+         }
+         else{
+           for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+                inputs[i].checked = false;
+            }
+          }
+         }
+      }
 
       function checkExamAttendees(){
         <% @exam_attendees.each do |exam_attend_id| %>
@@ -30,7 +50,7 @@
             result = eval(result);
             html = "<div style='font-size: 0.75em; margin-left: 20%;'> Select Students </div><br />"
             html += "<table style='width:500px; margin-left: 20%;'>";
-            html += "<tr style='background-color:white;'><td colspan='6' style='border-bottom:1px solid black;'><span style='margin-left:11%;'><input type='checkbox'>Select All</span></td></tr>"
+            html += "<tr style='background-color:white;'><td colspan='6' style='border-bottom:1px solid black;'><span style='margin-left:11%;'><input type='checkbox' id='table-select-all' onclick='selectAll();'>Select All</span></td></tr>"
             for (var x=0; x<= (result.length - 1); x++){
               html += "<tr>";
               for(y=0; y<=(result[x].length - 1); y++){

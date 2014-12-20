@@ -16,25 +16,24 @@
     <%= stylesheet_link_tag("bootstrap") %>
     <script>
       function selectAll(){
-            selectAllInput = document.getElementById('table-select-all');
-            if (selectAllInput.checked){
-              selectAllInput.checked = true;
+        selectAllInput = document.getElementById('table-select-all');
+        inputs = document.getElementsByTagName("input");
+        if (selectAllInput.checked){
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+                inputs[i].checked = true;
             }
-            else {
-              selectAllInput.checked = false
+          }
+         }
+         else{
+           for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+                inputs[i].checked = false;
             }
-            inputs = document.getElementsByTagName("input");
-            for (var i=0; i<=inputs.length - 1; i++){
-              if (inputs[i] == selectAllInput) continue;
-              if (inputs[i].type == 'checkbox'){
-                if (inputs[i].checked){
-                  inputs[i].checked = false;
-                }
-                else{
-                  inputs[i].checked = true;
-                }
-              }
-            }
+          }
+         }
       }
 
       function deleteSingleEntry(obj){
