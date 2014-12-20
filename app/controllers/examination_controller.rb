@@ -46,11 +46,8 @@ class ExaminationController < ApplicationController
     @class_rooms = [["---Select Class---", ""]]
     @class_rooms += ClassRoom.all.collect{|c|[c.name, c.id]}
     @selected_class_room = [exam.class_room.name, exam.class_room.id]
-    @students = exam.class_room.class_room_students.collect{|crs|
-      next if crs.student.blank?
-                  [crs.student.id, crs.student.fname + ' ' + crs.student.lname]
-                }.in_groups_of(3)
-                
+    @class_room_id = exam.class_room.id
+    @exam_attendees = exam.students.map(&:id)
     @exam_types = [["---Select Exam Type---", ""]]
     @exam_types += ExaminationType.all.collect{|e|[e.name, e.id]}
     @selected_exam_type = [exam.examination_type.name, exam.examination_type.id]

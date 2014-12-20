@@ -13,6 +13,14 @@
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("metallic") %>
     <script>
+
+      function checkExamAttendees(){
+        <% @exam_attendees.each do |exam_attend_id| %>
+            examAttendCheckBox = document.getElementById("<%= exam_attend_id %>");
+            if (examAttendCheckBox) examAttendCheckBox.checked = true;
+        <% end %>
+      }
+      
       function loadClassStudents(obj){
         jQuery.ajax({
           type: "POST",
@@ -30,7 +38,7 @@
                 if (studentData){
                   studentId = studentData[0];
                   student_name = studentData[1];
-                  html += "<td><span style='float:right'><input type='checkbox' name=students[" + studentId + "] /></span></td>";
+                  html += "<td><span style='float:right'><input id=" + studentId + " type='checkbox' name=students[" + studentId + "] /></span></td>";
                   html += "<td style='text-align:left;'>" + student_name + "</td>";
                 }
               }
@@ -39,6 +47,7 @@
             html+="</table>";
             document.getElementById("class_courses").innerHTML = html;
             loadClassCourses(obj.value);
+            checkExamAttendees();
           }
 
       });
@@ -58,7 +67,6 @@
               courseName = courseData[1];
               options += "<option value=" + courseId + ">" + courseName + "</option>";
             }
-            console.log(options);
             document.getElementById("course").innerHTML = options;
           }
 
@@ -255,25 +263,9 @@
                 </table>
                 <div id="class_courses">
                   <script>
-                    result = eval('(' + '<%= @students.to_json %>' + ')')
-                    html = "<div style='font-size: 0.75em; margin-left: 20%;'> Select Students </div><br />"
-                    html += "<table style='width:500px; margin-left: 20%;'>";
-                    html += "<tr style='background-color:white;'><td colspan='6' style='border-bottom:1px solid black;'><span style='margin-left:11%;'><input type='checkbox'>Select All</span></td></tr>"
-                    for (var x=0; x<= (result.length - 1); x++){
-                      html += "<tr>";
-                      for(y=0; y<=(result[x].length - 1); y++){
-                        studentData = (eval(result[x][y]))
-                        if (studentData){
-                          studentId = studentData[0];
-                          student_name = studentData[1];
-                          html += "<td><span style='float:right'><input type='checkbox' name=students[" + studentId + "] /></span></td>";
-                          html += "<td style='text-align:left;'>" + student_name + "</td>";
-                        }
-                      }
-                      html += "</tr>";
-                    }
-                    html+="</table>";
-                    document.getElementById("class_courses").innerHTML = html;
+                    classRoomID = '<%= @class_room_id %> '
+                    obj = {'value':classRoomID}
+                    loadClassStudents(obj);
                   </script>
                 </div>
                 
