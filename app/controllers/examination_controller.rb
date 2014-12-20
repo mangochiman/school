@@ -53,7 +53,7 @@ class ExaminationController < ApplicationController
     @selected_exam_type = [exam.examination_type.name, exam.examination_type.id]
 
     @courses = [["---Select Course---", ""]]
-    @selected_course = [exam.course.name, exam.course.id]
+    @selected_course = [(exam.course.name rescue nil), (exam.course.id rescue nil)]
     courses = exam.class_room.class_room_courses.collect{|crc|crc.course}
     @courses += courses.collect{|c|[c.name, c.id]}
 
@@ -67,7 +67,7 @@ class ExaminationController < ApplicationController
     course_id = params[:course]
     exam_date = params[:exam_date]
     exam = Examination.find(exam_id)
-    
+
     ActiveRecord::Base.transaction do
       exam.update_attributes({
         :class_room_id => class_room_id,
@@ -76,7 +76,17 @@ class ExaminationController < ApplicationController
         :start_date => exam_date
       })
 
-      #Update exam attendees here
+
+      exam.exam_attendees.each do |exam_attend|
+        exam_attend.delete
+      end
+      
+      (params[:students] || []).each do |student_id, details|
+        exam_attendee = ExamAttendee.new
+        exam_attendee.exam_id = exam_id
+        exam_attendee.student_id = student_id
+        exam_attendee.save!
+      end
    end
    
    flash[:notice] = "Operation successful"

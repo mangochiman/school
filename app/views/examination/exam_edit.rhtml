@@ -74,6 +74,10 @@
       }
 
      function loadClassCourses(classRoomId){
+        selectedCourse = eval('<%= @selected_course.to_json %>');
+        selectedCourseName = selectedCourse[0];
+        selectedCourseID = selectedCourse[1];
+        console.log(selectedCourse)
         jQuery.ajax({
           type: "POST",
           url: "/examination/class_room_courses",
@@ -85,6 +89,10 @@
               courseData = (eval(result[x]))
               courseId = courseData[0];
               courseName = courseData[1];
+              if (parseInt(courseId) == parseInt(selectedCourseID)){
+                options += "<option value=" + courseId + " selected=" + courseName + ">" + courseName + "</option>";
+                continue;
+              }
               options += "<option value=" + courseId + ">" + courseName + "</option>";
             }
             document.getElementById("course").innerHTML = options;
