@@ -209,5 +209,24 @@ class ExaminationController < ApplicationController
 
     render :json => student_data.first and return
   end
+
+  def capture_exam_results
+    @exams = Examination.all
+    @class_rooms = [["---Select Class---", ""]]
+    @class_rooms += ClassRoom.all.collect{|cr|[cr.name, cr.id]}
+    @courses = [["---Select Course---", ""]]
+    @courses += Course.all.collect{|c|[c.name, c.id]}
+    @exam_types = [["---Select Exam Type---", ""]]
+    @exam_types += ExaminationType.all.collect{|et|[et.name, et.id]}
+    render :layout => false
+  end
+
+  def edit_exam_results
+    render :layout => false
+  end
+
+  def void_exam_results
+    render :layout => false
+  end
   
 end
