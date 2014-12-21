@@ -221,6 +221,21 @@ class ExaminationController < ApplicationController
     render :layout => false
   end
 
+  def exam_result_entry
+    @exam = Examination.find(params[:exam_id])
+    @students = @exam.students
+    render :layout => false
+  end
+
+  def create_exam_result
+    raise params.to_yaml
+    exam = Examination.find(params[:exam_id])
+    exam_course = exam.course_id
+    (params[:students] || []).each do |student_id, result|
+      
+    end
+  end
+  
   def edit_exam_results
     render :layout => false
   end
