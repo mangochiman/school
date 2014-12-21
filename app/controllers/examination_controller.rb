@@ -228,12 +228,19 @@ class ExaminationController < ApplicationController
   end
 
   def create_exam_result
-    raise params.to_yaml
-    exam = Examination.find(params[:exam_id])
-    exam_course = exam.course_id
-    (params[:students] || []).each do |student_id, result|
-      
+    ActiveRecord::Base.transaction do
+      (params[:students] || []).each do |student_id, result|
+        next if result.blank?
+        ExaminationResult.create({
+          :exam_id => params[:exam_id],
+          :student_id => student_id,
+          :marks => result.to_i
+        })
+      end
     end
+    
+    flash[:notice] = "Operation successful"
+    redirect_to :controller => "examination", :action => "capture_exam_results" and return
   end
   
   def edit_exam_results
