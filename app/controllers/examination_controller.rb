@@ -211,7 +211,9 @@ class ExaminationController < ApplicationController
   end
 
   def capture_exam_results
-    @exams = Examination.all
+    exam_with_results_ids = ExaminationResult.find(:all).map(&:exam_id)
+    exam_with_results_ids = '' if exam_with_results_ids.blank?
+    @exams = Examination.find(:all, :conditions => ["exam_id NOT IN (?)", exam_with_results_ids])
     @class_rooms = [["---Select Class---", ""]]
     @class_rooms += ClassRoom.all.collect{|cr|[cr.name, cr.id]}
     @courses = [["---Select Course---", ""]]
@@ -221,6 +223,46 @@ class ExaminationController < ApplicationController
     render :layout => false
   end
 
+  def edit_exam_results
+    exam_with_results_ids = ExaminationResult.find(:all).map(&:exam_id)
+    @exams = Examination.find(:all, :conditions => ["exam_id IN (?)", exam_with_results_ids])
+    @class_rooms = [["---Select Class---", ""]]
+    @class_rooms += ClassRoom.all.collect{|cr|[cr.name, cr.id]}
+    @courses = [["---Select Course---", ""]]
+    @courses += Course.all.collect{|c|[c.name, c.id]}
+    @exam_types = [["---Select Exam Type---", ""]]
+    @exam_types += ExaminationType.all.collect{|et|[et.name, et.id]}
+    render :layout => false
+  end
+
+  def edit_exam_result_entry
+    @exam = Examination.find(params[:exam_id])
+    @students = @exam.students
+    
+    if (request.method == :post)
+      ActiveRecord::Base.transaction do
+        
+        @exam.examination_results.each do |result|
+          result.delete
+        end
+        
+        (params[:students] || []).each do |student_id, result|
+          next if result.blank?
+          ExaminationResult.create({
+            :exam_id => params[:exam_id],
+            :student_id => student_id,
+            :marks => result.to_i
+          })       
+        end
+      end
+
+      flash[:notice] = "Operation successful"
+      redirect_to :controller => "examination", :action => "edit_exam_results" and return
+    end
+
+    render :layout => false
+  end
+  
   def exam_result_entry
     @exam = Examination.find(params[:exam_id])
     @students = @exam.students
@@ -241,10 +283,6 @@ class ExaminationController < ApplicationController
     
     flash[:notice] = "Operation successful"
     redirect_to :controller => "examination", :action => "capture_exam_results" and return
-  end
-  
-  def edit_exam_results
-    render :layout => false
   end
 
   def void_exam_results
