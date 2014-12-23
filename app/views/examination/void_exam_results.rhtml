@@ -73,6 +73,43 @@
             }});
         }
 
+        function loadExamResults(obj){
+          jQuery.ajax({
+            type: "POST",
+            url: "/examination/render_exam_results",
+            data: "exam_id=" + obj.getAttribute("exam_id"),
+            success: function(results){
+              table = "<table>";
+              table+="<tr>";
+              table+="<th>Student Name</th>";
+              table+="<th>Marks</th>";
+              table+="</tr>";
+              className = results[0]
+              results = results[1];
+              for (var i=0; i<=results.length - 1; i++){
+                studentName = results[i];
+                console.log(studentName)
+                table+="<tr style='background-color:white;'>";
+                table+="<td style='text-align:left;'>" + results[i].name + "</td>";
+                table+="<td style='text-align:center;'>" + results[i].marks + "</td>";
+                table+="</tr>";
+              }
+
+              table += "</table>";
+              students = table;
+
+              jQuery.confirm({
+                title:className,
+                text:students,
+                confirm: function(button) {
+                },
+                cancel: function(button) {
+                },
+                confirmButton: "Done"
+              });
+            }});
+        }
+        
         function deleteSingleEntry(obj){
         examID = obj.getAttribute('exam_id')
         jQuery.confirm({
@@ -176,20 +213,19 @@
         padding: 2px;
 
         -moz-border-bottom-colors: none;
-    -moz-border-left-colors: none;
-    -moz-border-right-colors: none;
-    -moz-border-top-colors: none;
-    border-color: none;
-    border-image: none;
-    border-style: none;
-    border-width: 0;
+        -moz-border-left-colors: none;
+        -moz-border-right-colors: none;
+        -moz-border-top-colors: none;
+        border-color: none;
+        border-image: none;
+        border-style: none;
+        border-width: 0;
 
-    margin-bottom: 0px;
-    padding: 0;
-    width: auto;
-
-
+        margin-bottom: 0px;
+        padding: 0;
+        width: auto;
       }
+      
       #search-student-form fieldset input {
         color: #505050;
         float: left;
@@ -311,7 +347,7 @@
             <li><a href="/examination/assign_exam">Assign Exam</a></li>
             <li><a href="/examination/edit_exam_assignment">Edit Exam Assignment</a></li>
             <li><a href="/examination/void_exam">Void Exam</a></li>
-             <li><a href="/examination/capture_exam_results">Capture Exam Results</a></li>
+            <li><a href="/examination/capture_exam_results">Capture Exam Results</a></li>
             <li><a href="/examination/edit_exam_results">Edit Exam Results</a></li>
             <li><a href="/examination/void_exam_results">Void Exam Results</a></li>
           </ul>
@@ -382,7 +418,8 @@
                     <th>Exam Type</th>
                     <th>Course</th>
                     <th>Exam Date</th>
-                    <th style="max-width:50px;">Exam Attendees</th>
+                    <th style="max-width:10%;">Exam Attendees</th>
+                    <th style="max-width:5%;">Exam Results</th>
                     <th style="min-width:100px;">Action</th>
                   </tr>
 
@@ -407,6 +444,11 @@
                     <td>
                       <span exam_id="<%= exam.id %>" class="label" onmousedown="loadExamStudents(this);" style="margin-left:20%;">
                           <%=  exam.students.count %>
+                      </span>
+                    </td>
+                    <td>
+                      <span exam_id="<%= exam.id %>" class="label" onmousedown="loadExamResults(this);" style="margin-left:10%;">
+                          View
                       </span>
                     </td>
                     <td>

@@ -210,6 +210,27 @@ class ExaminationController < ApplicationController
     render :json => student_data.first and return
   end
 
+  def render_exam_results
+    exam_id = params[:exam_id]
+    exam_results = Examination.find(exam_id).examination_results
+    class_name = Examination.find(exam_id).class_room.name
+    student_data = {}
+    student_data[class_name] = []
+
+    (exam_results || []).each do |er|
+        student_name = (er.student.fname.to_s + ' ' + er.student.lname.to_s)
+        gender = er.student.gender.first.capitalize.to_s
+        gender = '??' if gender.blank?
+
+        student_data[class_name] << ({
+                                      :name => student_name + ' (' + gender + ')'.to_s,
+                                      :marks => er.marks
+                                    })
+    end
+
+    render :json => student_data.first and return
+  end
+
   def capture_exam_results
     exam_with_results_ids = ExaminationResult.find(:all).map(&:exam_id)
     exam_with_results_ids = '' if exam_with_results_ids.blank?
