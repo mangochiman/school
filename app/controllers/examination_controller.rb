@@ -286,7 +286,42 @@ class ExaminationController < ApplicationController
   end
 
   def void_exam_results
+    exam_with_results_ids = ExaminationResult.find(:all).map(&:exam_id)
+    @exams = Examination.find(:all, :conditions => ["exam_id IN (?)", exam_with_results_ids])
+    @class_rooms = [["---Select Class---", ""]]
+    @class_rooms += ClassRoom.all.collect{|cr|[cr.name, cr.id]}
+    @courses = [["---Select Course---", ""]]
+    @courses += Course.all.collect{|c|[c.name, c.id]}
+    @exam_types = [["---Select Exam Type---", ""]]
+    @exam_types += ExaminationType.all.collect{|et|[et.name, et.id]}
     render :layout => false
+  end
+
+  def delete_exam_results
+    if (params[:mode] == 'single_entry')
+      exam = Examination.find(params[:exam_id])
+      exam_results = exam.examination_results
+
+      (exam_results || []).each do |er|
+        examination_result = ExaminationResult.find(er.id)
+        examination_result.delete
+      end
+
+      render :text => "true" and return
+    end
+
+    exam_ids = params[:exam_ids].split(",")
+    
+    (exam_ids || []).each do |exam_id|
+        exam_id = Examination.find(exam_id)
+        exam_results = exam.examination_results
+        (exam_results || []).each do |er|
+          examination_result = ExaminationResult.find(er.id)
+          examination_result.delete
+        end
+    end
+
+    render :text => "true" and return
   end
   
 end
