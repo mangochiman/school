@@ -332,9 +332,9 @@ class ExaminationController < ApplicationController
     end
 
     exam_ids = params[:exam_ids].split(",")
-    
+
     (exam_ids || []).each do |exam_id|
-        exam_id = Examination.find(exam_id)
+        exam = Examination.find(exam_id)
         exam_results = exam.examination_results
         (exam_results || []).each do |er|
           examination_result = ExaminationResult.find(er.id)
