@@ -13,6 +13,34 @@
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("metallic") %>
     <script>
+      function selectAll(){
+        selectAllInput = document.getElementById('table-select-all');
+        inputs = document.getElementsByTagName("input");
+        if (selectAllInput.checked){
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+                inputs[i].checked = true;
+            }
+          }
+         }
+         else{
+           for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+                inputs[i].checked = false;
+            }
+          }
+         }
+      }
+
+      function checkExamAttendees(){
+        <% @exam_attendees.each do |exam_attend_id| %>
+            examAttendCheckBox = document.getElementById("<%= exam_attend_id %>");
+            if (examAttendCheckBox) examAttendCheckBox.checked = true;
+        <% end %>
+      }
+      
       function loadClassStudents(obj){
         jQuery.ajax({
           type: "POST",
@@ -22,7 +50,7 @@
             result = eval(result);
             html = "<div style='font-size: 0.75em; margin-left: 20%;'> Select Students </div><br />"
             html += "<table style='width:500px; margin-left: 20%;'>";
-            html += "<tr style='background-color:white;'><td colspan='6' style='border-bottom:1px solid black;'><span style='margin-left:11%;'><input type='checkbox'>Select All</span></td></tr>"
+            html += "<tr style='background-color:white;'><td colspan='6' style='border-bottom:1px solid black;'><span style='margin-left:11%;'><input type='checkbox' id='table-select-all' onclick='selectAll();'>Select All</span></td></tr>"
             for (var x=0; x<= (result.length - 1); x++){
               html += "<tr>";
               for(y=0; y<=(result[x].length - 1); y++){
@@ -30,7 +58,7 @@
                 if (studentData){
                   studentId = studentData[0];
                   student_name = studentData[1];
-                  html += "<td><span style='float:right'><input type='checkbox' name=students[" + studentId + "] /></span></td>";
+                  html += "<td><span style='float:right'><input id=" + studentId + " type='checkbox' name=students[" + studentId + "] /></span></td>";
                   html += "<td style='text-align:left;'>" + student_name + "</td>";
                 }
               }
@@ -39,12 +67,17 @@
             html+="</table>";
             document.getElementById("class_courses").innerHTML = html;
             loadClassCourses(obj.value);
+            checkExamAttendees();
           }
 
       });
       }
 
      function loadClassCourses(classRoomId){
+        selectedCourse = eval('<%= @selected_course.to_json %>');
+        selectedCourseName = selectedCourse[0];
+        selectedCourseID = selectedCourse[1];
+        console.log(selectedCourse)
         jQuery.ajax({
           type: "POST",
           url: "/examination/class_room_courses",
@@ -56,9 +89,12 @@
               courseData = (eval(result[x]))
               courseId = courseData[0];
               courseName = courseData[1];
+              if (parseInt(courseId) == parseInt(selectedCourseID)){
+                options += "<option value=" + courseId + " selected=" + courseName + ">" + courseName + "</option>";
+                continue;
+              }
               options += "<option value=" + courseId + ">" + courseName + "</option>";
             }
-            console.log(options);
             document.getElementById("course").innerHTML = options;
           }
 
@@ -205,7 +241,7 @@
             <li><a href="/examination/assign_exam">Assign Exam</a></li>
             <li><a href="/examination/edit_exam_assignment">Edit Exam Assignment</a></li>
             <li><a href="/examination/void_exam">Void Exam</a></li>
-             <li><a href="/examination/capture_exam_results">Capture Exam Results</a></li>
+            <li><a href="/examination/capture_exam_results">Capture Exam Results</a></li>
             <li><a href="/examination/edit_exam_results">Edit Exam Results</a></li>
             <li><a href="/examination/void_exam_results">Void Exam Results</a></li>
           </ul>
@@ -236,31 +272,36 @@
                       <%= flash[:error] %>
                   </div>
                 <% end %>
-              <form id="exam_assignment" method="POST" action="/examination/create_exam_assignment">
+              <form id="exam_assignment" method="POST" action="/examination/update_exams">
                 <table style="width:50%; margin-left: 20%;">
                   <tr>
                     <td style="min-width:30%; text-align: left;"><span>Select Class</span></td>
-                    <td><span style=""><%= select_tag("class_room", options_for_select(@class_rooms), {:onchange=>"loadClassStudents(this);"})%></span></td>
+                    <td><span style=""><%= select_tag("class_room", options_for_select(@class_rooms, @selected_class_room), {:onchange=>"loadClassStudents(this);"})%></span></td>
                   </tr>
                   <tr>
                     <td style="text-align: left;"><span>Select Exam Type</span></td>
-                    <td><%= select_tag("exam_type", options_for_select(@exam_types))%></td>
+                    <td><%= select_tag("exam_type", options_for_select(@exam_types, @selected_exam_type))%></td>
                   </tr>
                   <tr>
                     <td style="text-align: left;"><span>Select Course</span></td>
-                    <td><%= select_tag("course", options_for_select(@courses))%></td>
+                    <td><%= select_tag("course", options_for_select(@courses, @selected_course))%></td>
                   </tr>
                   <tr>
                     <td style="text-align: left;"><span>Exam Date</span></td>
-                    <td><input type="text" name="exam_date" id="simple-input" class="round default-width-input date-picker" /></td>
+                    <td><input type="text" name="exam_date" id="simple-input" value="<%= @exam_date %>"class="round default-width-input date-picker" /></td>
                   </tr>
                   
                 </table>
                 <div id="class_courses">
-
+                  <script>
+                    classRoomID = '<%= @class_room_id %> '
+                    obj = {'value':classRoomID}
+                    loadClassStudents(obj);
+                  </script>
                 </div>
                 
                 <div class="stripe-separator"><!--  --></div>
+                <%= hidden_field_tag("exam_id", params[:exam_id]) %>
                 <input type="submit" value="Submit" class="round blue ic-right-arrow" style="" />
                 
               </form>

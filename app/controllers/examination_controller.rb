@@ -39,6 +39,59 @@ class ExaminationController < ApplicationController
 
     render :layout => false
   end
+
+  def exam_edit
+    exam = Examination.find(params[:exam_id])
+    @exam_date = exam.start_date.to_date.strftime("%Y-%m-%d")
+    @class_rooms = [["---Select Class---", ""]]
+    @class_rooms += ClassRoom.all.collect{|c|[c.name, c.id]}
+    @selected_class_room = [exam.class_room.name, exam.class_room.id]
+    @class_room_id = exam.class_room.id
+    @exam_attendees = exam.students.map(&:id)
+    @exam_types = [["---Select Exam Type---", ""]]
+    @exam_types += ExaminationType.all.collect{|e|[e.name, e.id]}
+    @selected_exam_type = [exam.examination_type.name, exam.examination_type.id]
+
+    @courses = [["---Select Course---", ""]]
+    @selected_course = [(exam.course.name rescue nil), (exam.course.id rescue nil)]
+    courses = exam.class_room.class_room_courses.collect{|crc|crc.course}
+    @courses += courses.collect{|c|[c.name, c.id]}
+
+    render :layout => false
+  end
+
+  def update_exams
+    exam_id = params[:exam_id]
+    class_room_id = params[:class_room]
+    exam_type = params[:exam_type]
+    course_id = params[:course]
+    exam_date = params[:exam_date]
+    exam = Examination.find(exam_id)
+
+    ActiveRecord::Base.transaction do
+      exam.update_attributes({
+        :class_room_id => class_room_id,
+        :exam_type_id => exam_type,
+        :course_id => course_id,
+        :start_date => exam_date
+      })
+
+
+      exam.exam_attendees.each do |exam_attend|
+        exam_attend.delete
+      end
+      
+      (params[:students] || []).each do |student_id, details|
+        exam_attendee = ExamAttendee.new
+        exam_attendee.exam_id = exam_id
+        exam_attendee.student_id = student_id
+        exam_attendee.save!
+      end
+   end
+   
+   flash[:notice] = "Operation successful"
+   redirect_to :controller => "examination", :action => "edit_exam_assignment" and return
+  end
   
   def void_exam_type
     @exam_types = ExaminationType.all
@@ -46,16 +99,68 @@ class ExaminationController < ApplicationController
   end
   
   def assign_exam
-    @class_rooms = ClassRoom.all.collect{|c|[c.name, c.id]}
-    @exam_types = ExaminationType.all.collect{|e|[e.name, e.id]}
-    @courses = Course.all.collect{|c|[c.name, c.id]}
+    @class_rooms = [["---Select Class---", ""]]
+    @class_rooms += ClassRoom.all.collect{|c|[c.name, c.id]}
+
+    @exam_types = [["---Select Exam Type---", ""]]
+    @exam_types += ExaminationType.all.collect{|e|[e.name, e.id]}
+    
+    @courses = [["---Select Course---", ""]]
+    @courses += Course.all.collect{|c|[c.name, c.id]}
     render :layout => false
   end
 
+  def create_exam_assignment
+    class_room_id = params[:class_room] #Add class_room_id field in an exam table
+    exam_type = params[:exam_type]
+    course_id = params[:course]
+    exam_date = params[:exam_date]
+    ActiveRecord::Base.transaction do
+      exam = Examination.new
+      exam.class_room_id = class_room_id
+      exam.exam_type_id = exam_type
+      exam.course_id = course_id
+      exam.start_date = exam_date.to_date
+      exam.save!
+      
+      (params[:students] || []).each do |student_id, details|
+        exam_attendee = ExamAttendee.new
+        exam_attendee.exam_id = exam.id
+        exam_attendee.student_id = student_id
+        exam_attendee.save!
+      end
+
+    end
+    flash[:notice] = "Operation successful"
+    redirect_to :controller => "examination", :action => "assign_exam"
+  end
+  
   def edit_exam_assignment
+    @exams = Examination.all
     render :layout => false
   end
 
+  def void_exam
+    @exams = Examination.all
+    render :layout => false
+  end
+
+  def delete_exams
+    if (params[:mode] == 'single_entry')
+      exam = Examination.find(params[:exam_id])
+      exam.delete
+      render :text => "true" and return
+    end
+
+    exam_ids = params[:exam_ids].split(",")
+    (exam_ids || []).each do |exam_id|
+        exam_id = Examination.find(exam_id)
+        exam_id.delete
+    end
+
+    render :text => "true" and return
+  end
+  
   def delete_exam_types
     if (params[:mode] == 'single_entry')
       exam_type = ExaminationType.find(params[:exam_type_id])
@@ -72,8 +177,172 @@ class ExaminationController < ApplicationController
     render :text => "true" and return
   end
 
-  def student_class_room
-    courses = Student.all.collect{|s|[s.id, s.fname + ' ' + s.lname]}.in_groups_of(3)
-    render :json => courses and return
+  def class_room_students
+    class_room = ClassRoom.find(params[:class_room_id])
+    students = class_room.class_room_students.collect{|crs|crs.student}.compact
+
+    students = (students || []).collect{|s|[s.id, s.fname + ' ' + s.lname]}.in_groups_of(3)
+    render :json => students and return
   end
+
+  def class_room_courses
+    class_room = ClassRoom.find(params[:class_room_id])
+    options = [["", "---Select Course---"]]
+    courses = class_room.class_room_courses.collect{|crc| crc.course}.compact
+    options += (courses || []).collect{|c|[c.id, c.name]}
+    render :json => options and return
+  end
+
+  def render_students
+    exam_id = params[:exam_id]
+    exam_attendees = Examination.find(exam_id).students
+    class_name = Examination.find(exam_id).class_room.name
+    student_data = {}
+    
+    (exam_attendees || []).each do |et|
+      student_name = (et.fname.to_s + ' ' + et.lname.to_s)
+      gender = et.gender.first.capitalize.to_s
+      gender = '??' if gender.blank?
+      student_data[class_name] = [] if student_data[class_name].blank?
+      student_data[class_name] << student_name + ' (' + gender + ')'.to_s
+    end
+
+    render :json => student_data.first and return
+  end
+
+  def render_exam_results
+    exam_id = params[:exam_id]
+    exam_results = Examination.find(exam_id).examination_results
+    class_name = Examination.find(exam_id).class_room.name
+    student_data = {}
+    student_data[class_name] = []
+
+    (exam_results || []).each do |er|
+        student_name = (er.student.fname.to_s + ' ' + er.student.lname.to_s)
+        gender = er.student.gender.first.capitalize.to_s
+        gender = '??' if gender.blank?
+
+        student_data[class_name] << ({
+                                      :name => student_name + ' (' + gender + ')'.to_s,
+                                      :marks => er.marks
+                                    })
+    end
+
+    render :json => student_data.first and return
+  end
+
+  def capture_exam_results
+    exam_with_results_ids = ExaminationResult.find(:all).map(&:exam_id)
+    exam_with_results_ids = '' if exam_with_results_ids.blank?
+    @exams = Examination.find(:all, :conditions => ["exam_id NOT IN (?)", exam_with_results_ids])
+    @class_rooms = [["---Select Class---", ""]]
+    @class_rooms += ClassRoom.all.collect{|cr|[cr.name, cr.id]}
+    @courses = [["---Select Course---", ""]]
+    @courses += Course.all.collect{|c|[c.name, c.id]}
+    @exam_types = [["---Select Exam Type---", ""]]
+    @exam_types += ExaminationType.all.collect{|et|[et.name, et.id]}
+    render :layout => false
+  end
+
+  def edit_exam_results
+    exam_with_results_ids = ExaminationResult.find(:all).map(&:exam_id)
+    @exams = Examination.find(:all, :conditions => ["exam_id IN (?)", exam_with_results_ids])
+    @class_rooms = [["---Select Class---", ""]]
+    @class_rooms += ClassRoom.all.collect{|cr|[cr.name, cr.id]}
+    @courses = [["---Select Course---", ""]]
+    @courses += Course.all.collect{|c|[c.name, c.id]}
+    @exam_types = [["---Select Exam Type---", ""]]
+    @exam_types += ExaminationType.all.collect{|et|[et.name, et.id]}
+    render :layout => false
+  end
+
+  def edit_exam_result_entry
+    @exam = Examination.find(params[:exam_id])
+    @students = @exam.students
+    
+    if (request.method == :post)
+      ActiveRecord::Base.transaction do
+        
+        @exam.examination_results.each do |result|
+          result.delete
+        end
+        
+        (params[:students] || []).each do |student_id, result|
+          next if result.blank?
+          ExaminationResult.create({
+            :exam_id => params[:exam_id],
+            :student_id => student_id,
+            :marks => result.to_i
+          })       
+        end
+      end
+
+      flash[:notice] = "Operation successful"
+      redirect_to :controller => "examination", :action => "edit_exam_results" and return
+    end
+
+    render :layout => false
+  end
+  
+  def exam_result_entry
+    @exam = Examination.find(params[:exam_id])
+    @students = @exam.students
+    render :layout => false
+  end
+
+  def create_exam_result
+    ActiveRecord::Base.transaction do
+      (params[:students] || []).each do |student_id, result|
+        next if result.blank?
+        ExaminationResult.create({
+          :exam_id => params[:exam_id],
+          :student_id => student_id,
+          :marks => result.to_i
+        })
+      end
+    end
+    
+    flash[:notice] = "Operation successful"
+    redirect_to :controller => "examination", :action => "capture_exam_results" and return
+  end
+
+  def void_exam_results
+    exam_with_results_ids = ExaminationResult.find(:all).map(&:exam_id)
+    @exams = Examination.find(:all, :conditions => ["exam_id IN (?)", exam_with_results_ids])
+    @class_rooms = [["---Select Class---", ""]]
+    @class_rooms += ClassRoom.all.collect{|cr|[cr.name, cr.id]}
+    @courses = [["---Select Course---", ""]]
+    @courses += Course.all.collect{|c|[c.name, c.id]}
+    @exam_types = [["---Select Exam Type---", ""]]
+    @exam_types += ExaminationType.all.collect{|et|[et.name, et.id]}
+    render :layout => false
+  end
+
+  def delete_exam_results
+    if (params[:mode] == 'single_entry')
+      exam = Examination.find(params[:exam_id])
+      exam_results = exam.examination_results
+
+      (exam_results || []).each do |er|
+        examination_result = ExaminationResult.find(er.id)
+        examination_result.delete
+      end
+
+      render :text => "true" and return
+    end
+
+    exam_ids = params[:exam_ids].split(",")
+
+    (exam_ids || []).each do |exam_id|
+        exam = Examination.find(exam_id)
+        exam_results = exam.examination_results
+        (exam_results || []).each do |er|
+          examination_result = ExaminationResult.find(er.id)
+          examination_result.delete
+        end
+    end
+
+    render :text => "true" and return
+  end
+  
 end

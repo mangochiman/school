@@ -15,49 +15,98 @@
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("bootstrap") %>
     <script>
-      function editMe(obj){
-        examID = obj.getAttribute("exam_id");
-        window.location = "/examination/exam_edit?exam_id=" + examID;
-      }
-      
-      function loadExamStudents(obj){
-            jQuery.ajax({
-            type: "POST",
-            url: "/examination/render_students",
-            data: "exam_id=" + obj.getAttribute("exam_id"),
-            success: function(results){
-              table = "<table>";
-              table+="<tr>";
-              table+="<th>#</th>";
-              table+="<th>Student Name</th>";
-              table+="</tr>";
-              var pos = 0
-              className = results[0]
-              results = results[1];
-              for (var i=0; i<=results.length - 1; i++){
-                studentName = results[i];
-                table+="<tr style='background-color:white;'>";
-                table+="<td>" + (pos = pos + 1) + "</td>";
-                table+="<td style='text-align:left;'>" + studentName + "</td>";
-                table+="</tr>";
-              }
-
-              table += "</table>";
-              students = table;
-
-              jQuery.confirm({
-                title:className,
-                text:students,
-                confirm: function(button) {
-                },
-                cancel: function(button) {
-                },
-                confirmButton: "Done"
-              });
-            }});
-        }
     </script>
     <style>
+      #results_entry #exams input{
+        padding: 3px 3px 5px 3px;
+        width: 55%;
+        margin-top: 3%;
+      }
+      
+      .results{
+        background-color: #fff;
+        border: 1px solid #ccc;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        transition: border 0.2s linear 0s, box-shadow 0.2s linear 0s;
+        border-radius: 4px;
+        color: green;
+        text-align: center;
+        display: inline-block;
+        font-size: 14px;
+        height: 20px;
+        line-height: 20px;
+        margin-bottom: 10px;
+        padding: 4px 6px;
+      }
+      
+      .results:focus{
+        border-color: rgba(82, 168, 236, 0.8);
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(82, 168, 236, 0.6);
+        outline: 0 none;
+      }
+
+      #filter td{
+        border: none;
+      }
+      
+      #dropdown-actions{
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        color: #555;
+        font-size: 14px;
+        height: 34px;
+        line-height: 1.42857;
+        margin-left: 30%;
+        min-width: 108px;
+        padding: 6px 12px;
+        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+        margin-left: 0%;
+      }
+
+      #dropdown-actions option{
+        padding-left: 20px;
+      }
+
+      #search-student-form fieldset {
+        border: 1px solid gray;
+        float: left;
+        margin-bottom: 15px;
+        padding: 5px;
+        width: 98.7%;
+      }
+      #search-student-form legend {
+        color: #abda0f;
+        font-size: 14px;
+        font-weight: 100;
+        margin-left: 14px;
+        padding: 2px;
+
+        -moz-border-bottom-colors: none;
+        -moz-border-left-colors: none;
+        -moz-border-right-colors: none;
+        -moz-border-top-colors: none;
+        border-color: none;
+        border-image: none;
+        border-style: none;
+        border-width: 0;
+        margin-bottom: 0px;
+        padding: 0;
+        width: auto;
+
+
+      }
+      #search-student-form fieldset input {
+        color: #505050;
+        float: left;
+        margin-right: 5px;
+        width: 140px;
+        padding: 3px;
+        font-size: 14px;
+      }
+      
       table th:first-child {
         border-style: none none none !important;
       }
@@ -201,41 +250,43 @@
                       <%= flash[:error] %>
                   </div>
                 <% end %>
+          <form id="results_entry" action="/examination/edit_exam_result_entry" method="post">
               <table>
 
                 <thead>
 
                   <tr>
-                    <th style="min-width:15%;">Class</th>
-                    <th>Exam Type</th>
+                    <th style="min-width:15%;">Name</th>
+                    <th>Email</th>
+                    <th>Gender</th>
                     <th>Course</th>
                     <th>Exam Date</th>
-                    <th style="max-width:40px;">Exam Attendees</th>
-                    <th>Action</th>
+                    <th style="min-width:20%;">Marks (out of 100)</th>
                   </tr>
 
                 </thead>
 
                 <tbody id="exams">
-                  <% @exams.each do |exam| %>
+                  <% @students.each do |student| %>
+                  <% exam_result = @exam.examination_results.find_by_student_id(student.id) %>
                   <tr>
-                    <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= exam.class_room.name %></td>
-                    <td><%=  exam.examination_type.name.titleize %></td>
-                    <td><%=  exam.course.name rescue nil %></td>
-                    <td><%=  exam.start_date.to_date.strftime("%d/%b/%Y")%></td>
+                    <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= student.fname.capitalize.to_s + ' ' + student.lname.capitalize.to_s %></td>
+                    <td><a href="#"><%=  student.email %></a></td>
+                    <td><%=  student.gender %></td>
+                    <td><%=  @exam.course.name %></td>
+                    <td><%=  @exam.start_date.to_date.strftime("%d-%b-%Y") %></td>
                     <td>
-                      <span exam_id="<%= exam.id %>" class="label" onmousedown="loadExamStudents(this);" style="margin-left:20%;">
-                          <%=  exam.students.count %>
-                      </span>
-                    </td>
-                    <td>
-                      <a exam_id="<%= exam.id %>" onclick="editMe(this)" href="#" class="table-actions-button ic-table-edit"></a>
+                      <input type="text" value="<%= exam_result.marks.to_i rescue ''%>" name="students[<%= student.id %>]" class="results" />
                     </td>
                   </tr>
                   <% end %>
                 </tbody>
 
               </table>
+              <div class="stripe-separator"><!--  --></div>
+              <%= hidden_field_tag("exam_id", params[:exam_id]) %>
+              <input type="submit" value="Submit" class="round blue ic-right-arrow" />
+            </form>
 
             </div> <!-- end content-module-main -->
 

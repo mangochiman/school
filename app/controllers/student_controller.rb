@@ -17,11 +17,31 @@ class StudentController < ApplicationController
   end
 
   def remove_students
+    @students = Student.all
     render :layout => false
   end
 
+  def delete_students
+    if (params[:mode] == 'single_entry')
+      student = Student.find(params[:student_id])
+      student.delete
+      render :text => "true" and return
+    end
+
+    student_ids = params[:student_ids].split(",")
+    (student_ids || []).each do |student_id|
+        student = Student.find(student_id)
+        student.delete
+    end
+    
+    render :text => "true" and return
+  end
+  
   def assign_class
-     student_ids_with_class_rooms = ClassRoomStudent.all.map(&:student_id)
+     student_ids_with_class_rooms = Student.find(:all,
+          :joins => [:class_room_student]).map(&:student_id)
+
+    student_ids_with_class_rooms = '' if student_ids_with_class_rooms.blank? #To handle mysql NOT IN when the data is array is blank
      @students = Student.find(:all, :conditions => ["student_id NOT IN (?)",
                     student_ids_with_class_rooms]
                 )
@@ -34,8 +54,18 @@ class StudentController < ApplicationController
   end
 
   def create_student_class_assignment
+
     student_id = params[:student_id]
     class_room_id = params[:class_room_id]
+
+    class_room_courses = ClassRoom.find(class_room_id).class_room_courses
+    (class_room_courses || []).each do |crc|
+      StudentCourse.create({
+        :student_id => student_id,
+        :course_id => crc.course_id
+      })
+    end #Enrolling student to courses available for a particular class
+
     unless student_id.blank?
       if (ClassRoomStudent.create({
         :student_id => student_id,
@@ -51,7 +81,7 @@ class StudentController < ApplicationController
   end
   
   def assign_subjects
-    @students = Student.all
+    @students = Student.find(:all, :joins => [:class_room_student])
     render :layout => false
   end
 
@@ -76,7 +106,7 @@ class StudentController < ApplicationController
   end
 
   def edit_subjects
-    @students = Student.all
+    @students = Student.find(:all, :joins => [:student_courses])
     render :layout => false
   end
 
@@ -119,16 +149,43 @@ class StudentController < ApplicationController
   end
   
   def assign_parent_guardian
-    @students = Student.all
+    students_with_guardians_ids = StudentParent.find(:all).map(&:student_id).join(', ')
+    @students = Student.find(:all, :conditions => ["student_id NOT IN (?)", students_with_guardians_ids])
     render :layout => false
   end
 
+  def delete_student_guardian
+    my_guardian = StudentParent.find(:last, :conditions => ["student_id =?", params[:student_id]])
+    my_guardian.delete
+    render :text => "success" and return
+  end
+  
+  def edit_parent_guardian
+    @students = Student.find(:all, :joins => [:student_parent])
+    render :layout => false
+  end
+  
   def select_guardian
     @parents = Parent.all
     render :layout => false
   end
 
   def create_student_guardian
+    if (params[:mode] == 'guardian_edit')
+      ActiveRecord::Base.transaction do
+        student_parent = StudentParent.find(:last, :conditions => ["student_id =?",
+            params[:student_id]])
+        student_parent.delete
+        
+        StudentParent.create({
+          :student_id => params[:student_id],
+          :parent_id => params[:parent_id]
+        })
+      end
+      flash[:notice] = "Operation successful"
+      redirect_to :action => "select_guardian", :student_id => params[:student_id], :mode => params[:mode] and return
+    end
+
     if (StudentParent.create({
         :student_id => params[:student_id],
         :parent_id => params[:parent_id]
@@ -139,6 +196,7 @@ class StudentController < ApplicationController
       flash[:error] = "Operation aborted. Check for errors and try again"
       redirect_to :action => "select_guardian", :student_id => params[:student_id] and return
     end
+    
   end
   
   def filter_students

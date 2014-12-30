@@ -61,6 +61,7 @@ class ParentController < ApplicationController
     email = params[:email]
     phone = params[:phone]
     date_of_birth = params[:dob].to_date
+
     if (Parent.create({
         :fname => first_name,
         :lname => last_name,
@@ -69,8 +70,40 @@ class ParentController < ApplicationController
         :phone => phone,
         :dob => date_of_birth
       }))
+
+      if (params[:mode] == 'guardian_edit')
+        ActiveRecord::Base.transaction do
+          student_parent = StudentParent.find(:last, :conditions => ["student_id =?",
+              params[:student_id]])
+          student_parent.delete
+
+          StudentParent.create({
+            :student_id => params[:student_id],
+            :parent_id => Parent.last.id
+          })
+        end
+        flash[:notice] = "Operation successful"
+        redirect_to :controller => "student", :action => "select_guardian", :student_id => params[:student_id], :mode => params[:mode] and return
+      end
+
+      if (params[:mode].blank?)
+        unless params[:student_id].blank?
+          if (StudentParent.create({
+                :student_id => params[:student_id],
+                :parent_id => Parent.last.id
+              }))
+            flash[:notice] = "Operation successful"
+            redirect_to :controller => "student" ,:action => "assign_parent_guardian"
+          else
+            flash[:error] = "Unable to save. Check for errors and try again"
+            redirect_to :controller => "parent", :action => "new_parent_guardian", :first_name => params[:first_name],
+              :last_name => params[:last_name], :gender => params[:gender] and return
+          end
+        end
+      end
+
       flash[:notice] = "Operation successful"
-      redirect_to :controller => "parent", :action => "new_parent_guardian"
+      redirect_to :controller => "parent", :action => "new_parent_guardian" and return #creating a parent without a student ID
     else
       flash[:error] = "Unable to save. Check for errors and try again"
       render :controller => "parent", :action => "new_parent_guardian"

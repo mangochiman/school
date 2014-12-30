@@ -15,9 +15,9 @@
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("bootstrap") %>
     <script>
-      function editMe(obj){
+      function enterExamResult(obj){
         examID = obj.getAttribute("exam_id");
-        window.location = "/examination/exam_edit?exam_id=" + examID;
+        window.location = "/examination/exam_result_entry?exam_id=" + examID;
       }
       
       function loadExamStudents(obj){
@@ -58,6 +58,69 @@
         }
     </script>
     <style>
+      #filter td{
+        border: none;
+      }
+      
+      #dropdown-actions{
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        color: #555;
+        font-size: 14px;
+        height: 34px;
+        line-height: 1.42857;
+        margin-left: 30%;
+        min-width: 108px;
+        padding: 6px 12px;
+        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+        margin-left: 0%;
+      }
+
+      #dropdown-actions option{
+        padding-left: 20px;
+      }
+
+      #search-student-form fieldset {
+        border: 1px solid gray;
+        float: left;
+        margin-bottom: 15px;
+        padding: 5px;
+        width: 98.7%;
+      }
+      #search-student-form legend {
+        color: #abda0f;
+        font-size: 14px;
+        font-weight: 100;
+        margin-left: 14px;
+        padding: 2px;
+
+        -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: none;
+    border-image: none;
+    border-style: none;
+    border-width: 0;
+
+    margin-bottom: 0px;
+    padding: 0;
+    width: auto;
+
+
+      }
+      #search-student-form fieldset input {
+        color: #505050;
+        float: left;
+        margin-right: 5px;
+        width: 140px;
+        padding: 3px;
+        font-size: 14px;
+      }
+      
       table th:first-child {
         border-style: none none none !important;
       }
@@ -201,6 +264,35 @@
                       <%= flash[:error] %>
                   </div>
                 <% end %>
+            <form id="search-student-form" action="#">
+              <fieldset>
+                  <legend>Filter</legend>
+                  <div style="">
+                    <table id="filter">
+                      <tr>
+                        <td style="text-align:right;">Class</td>
+                        <td style="">
+                          <%= select_tag:class_name, options_for_select(@class_rooms), {
+                            :id => "dropdown-actions", :class => "class_room_search"} %>
+                        </td>
+                        <td style="text-align:right;">Select Course</td>
+                        <td style="">
+                          <%= select_tag:class_name, options_for_select(@courses), {
+                            :id => "dropdown-actions", :class => "class_room_search"} %>
+                        </td>
+                        <td style="text-align:right;">Select Exam Type</td>
+                        <td>
+                          <%= select_tag:class_name, options_for_select(@exam_types), {
+                            :id => "dropdown-actions", :class => "class_room_search"} %>
+                        </td>
+                        <td>
+                          <a href="#" onclick="loadSearchResults();" class="button round blue image-right ic-search text-upper">Filter</a>
+                        </td>
+                      </tr>            
+                    </table>
+                  </div>
+                </fieldset>
+            </form>
               <table>
 
                 <thead>
@@ -211,7 +303,7 @@
                     <th>Course</th>
                     <th>Exam Date</th>
                     <th style="max-width:40px;">Exam Attendees</th>
-                    <th>Action</th>
+                    <th style="min-width:100px;">Action</th>
                   </tr>
 
                 </thead>
@@ -229,7 +321,7 @@
                       </span>
                     </td>
                     <td>
-                      <a exam_id="<%= exam.id %>" onclick="editMe(this)" href="#" class="table-actions-button ic-table-edit"></a>
+                      <a exam_id="<%= exam.id %>" onclick="enterExamResult(this)" href="#" class="button round blue image-right ic-add text-upper">Enter Results</a>
                     </td>
                   </tr>
                   <% end %>

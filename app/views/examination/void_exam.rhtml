@@ -15,9 +15,79 @@
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("bootstrap") %>
     <script>
-      function editMe(obj){
-        examID = obj.getAttribute("exam_id");
-        window.location = "/examination/exam_edit?exam_id=" + examID;
+      function selectAll(){
+        selectAllInput = document.getElementById('table-select-all');
+        inputs = document.getElementsByTagName("input");
+        if (selectAllInput.checked){
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+                inputs[i].checked = true;
+            }
+          }
+         }
+         else{
+           for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+                inputs[i].checked = false;
+            }
+          }
+         }
+      }
+
+      function deleteSingleEntry(obj){
+        examID = obj.getAttribute('exam_id')
+        jQuery.confirm({
+          title:"Delete confirmation",
+          text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+          confirm: function(button) {
+            jQuery.ajax({
+            type: "POST",
+            url: "/examination/delete_exams",
+            data: "exam_id=" + examID + "&mode=single_entry",
+            success: function(){
+              element = document.getElementById(examID);
+              element.parentNode.removeChild(element);
+            }
+
+            });
+          },
+          cancel: function(button) {
+            
+          },
+          confirmButton: "Yes I am",
+          cancelButton: "No"
+       });
+      }
+      
+      function deleteExams(){
+        inputs = document.getElementsByTagName("input");
+        examIDs = []
+        for (var i=0; i<=inputs.length - 1; i++){
+          if (inputs[i].type == 'checkbox'){
+            if (inputs[i].checked){
+              if (inputs[i].hasAttribute("exam_id")){
+                examID = inputs[i].getAttribute("exam_id");
+                examIDs.push(examID);
+              }
+            }
+          }
+        }
+
+        jQuery.ajax({
+          type: "POST",
+          url: "/examination/delete_exams",
+          data: "exam_ids=" + examIDs,
+          success: function(){
+            for (var x=0; x<= examIDs.length - 1; x++){
+              id = examIDs[x];
+              element = document.getElementById(id);
+              element.parentNode.removeChild(element);
+            }
+          }
+
+        });
       }
       
       function loadExamStudents(obj){
@@ -54,14 +124,13 @@
                 },
                 confirmButton: "Done"
               });
+              if ($("button.cancel")[0]){
+                $("button.cancel")[0].style.display='none';
+              }
             }});
         }
     </script>
     <style>
-      table th:first-child {
-        border-style: none none none !important;
-      }
-      
       .modal-title {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         font-weight: 500;
@@ -86,6 +155,11 @@
           white-space: nowrap;
           cursor: pointer;
       }
+
+      table th:first-child {
+        border-style: none none none !important;
+      }
+
     </style>
   </head>
   <body>
@@ -170,7 +244,7 @@
             <li><a href="/examination/assign_exam">Assign Exam</a></li>
             <li><a href="/examination/edit_exam_assignment">Edit Exam Assignment</a></li>
             <li><a href="/examination/void_exam">Void Exam</a></li>
-             <li><a href="/examination/capture_exam_results">Capture Exam Results</a></li>
+            <li><a href="/examination/capture_exam_results">Capture Exam Results</a></li>
             <li><a href="/examination/edit_exam_results">Edit Exam Results</a></li>
             <li><a href="/examination/void_exam_results">Void Exam Results</a></li>
           </ul>
@@ -191,37 +265,38 @@
 
 
             <div class="content-module-main">
-               <% if flash[:notice] %>
-                  <div class="confirmation-box round">
-                    <%= flash[:notice] %>
-                  </div>
-                <% end %>
-                <% if flash[:error] %>
-                  <div class="error-box round">
-                      <%= flash[:error] %>
-                  </div>
-                <% end %>
+
               <table>
 
                 <thead>
 
                   <tr>
+                    <th><input type="checkbox" id="table-select-all" onclick="selectAll();"/></th>
                     <th style="min-width:15%;">Class</th>
                     <th>Exam Type</th>
                     <th>Course</th>
                     <th>Exam Date</th>
-                    <th style="max-width:40px;">Exam Attendees</th>
+                    <th style="max-width:3%;">Exam Attendees</th>
                     <th>Action</th>
                   </tr>
 
                 </thead>
 
+                <tfoot>
+                  <tr>
+                    <td colspan="5" class="table-footer">
+                      <a href="#" class="button round blue image-right ic-delete text-upper delete-multiple">Delete</a>
+                    </td>
+                  </tr>
+                </tfoot>
+                
                 <tbody id="exams">
                   <% @exams.each do |exam| %>
-                  <tr>
+                  <tr id="<%= exam.id %>">
+                    <td><input type="checkbox" exam_id="<%= exam.id %>"/></td>
                     <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= exam.class_room.name %></td>
                     <td><%=  exam.examination_type.name.titleize %></td>
-                    <td><%=  exam.course.name rescue nil %></td>
+                    <td><%=  exam.course.name %></td>
                     <td><%=  exam.start_date.to_date.strftime("%d/%b/%Y")%></td>
                     <td>
                       <span exam_id="<%= exam.id %>" class="label" onmousedown="loadExamStudents(this);" style="margin-left:20%;">
@@ -229,7 +304,7 @@
                       </span>
                     </td>
                     <td>
-                      <a exam_id="<%= exam.id %>" onclick="editMe(this)" href="#" class="table-actions-button ic-table-edit"></a>
+                      <a exam_id="<%= exam.id %>" onmousedown="deleteSingleEntry(this)" href="#" class="table-actions-button ic-table-delete"></a>
                     </td>
                   </tr>
                   <% end %>
@@ -259,14 +334,19 @@
   <%= javascript_include_tag("bootstrap") %>
 
     <script>
+        $(".delete-multiple").confirm({
+            title:"Delete confirmation",
+            text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+            confirm: function(button) {
+              deleteExams();
+            },
+            cancel: function(button) {
+              
+            },
+            confirmButton: "Yes I am",
+            cancelButton: "No"
+        });
 
-
-        function hideCancelButton(){
-          if ($("button.cancel")[0]){
-            $("button.cancel")[0].style.display='none';
-          }
-        }
-        window.setInterval("hideCancelButton();", 300);
     </script>
   </body>
 </html>

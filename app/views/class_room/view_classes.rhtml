@@ -30,12 +30,11 @@
           loadClassRoomCourses()
         }
         
-        function loadClassRoomCourses(){
-          if (currentClassRoomID != ''){
+        function loadClassRoomCourses(obj){
             jQuery.ajax({
             type: "POST",
             url: "/class_room/render_courses",
-            data: "class_room_id=" + currentClassRoomID,
+            data: "class_room_id=" + obj.getAttribute("class_room_id"),
             success: function(results){
               table = "<table>";
               table+="<tr>";
@@ -43,7 +42,7 @@
               table+="<th>Course Name</th>";
               table+="</tr>";
               var pos = 0
-              htmlHeader = results[0];
+              className = results[0];
               results = eval(results[1]);
               for (var i=0; i<=results.length - 1; i++){
                 courseName = results[i];
@@ -54,21 +53,93 @@
               }
 
               table += "</table>";
-              html = table;
-              currentClassRoomID = ""
-            }});
-          }
-        }
-        window.setInterval("loadClassRoomCourses();", 300);
+              courses = table;
 
-        function updatePopup(){
-          modalBody = $('.modal-body')[0];
-          if (modalBody){
-            $('.modal-title')[0].innerHTML = htmlHeader;
-            modalBody.innerHTML = html; //TO DO: Hacking the pop-up. Improve this to be picking dynamic variable on the fly
-          }
+              jQuery.confirm({
+                title:className,
+                text:courses,
+                confirm: function(button) {
+                },
+                cancel: function(button) {
+                },
+                confirmButton: "Done"
+              });
+            }});
+        };
+
+        function loadClassRoomStudents(obj){
+            jQuery.ajax({
+            type: "POST",
+            url: "/class_room/render_students",
+            data: "class_room_id=" + obj.getAttribute("class_room_id"),
+            success: function(results){
+              table = "<table>";
+              table+="<tr>";
+              table+="<th>#</th>";
+              table+="<th>Student Name</th>";
+              table+="</tr>";
+              var pos = 0
+              className = results[0]
+              results = results[1];
+              for (var i=0; i<=results.length - 1; i++){
+                studentName = results[i];
+                table+="<tr style='background-color:white;'>";
+                table+="<td>" + (pos = pos + 1) + "</td>";
+                table+="<td style='text-align:left;'>" + studentName + "</td>";
+                table+="</tr>";
+              }
+
+              table += "</table>";
+              students = table;
+
+              jQuery.confirm({
+                title:className,
+                text:students,
+                confirm: function(button) {
+                },
+                cancel: function(button) {
+                },
+                confirmButton: "Done"
+              });
+            }});
         }
-        window.setInterval("updatePopup();", 300);
+
+       function loadClassRoomTeachers(obj){
+            jQuery.ajax({
+            type: "POST",
+            url: "/class_room/render_teachers",
+            data: "class_room_id=" + obj.getAttribute("class_room_id"),
+            success: function(results){
+              table = "<table>";
+              table+="<tr>";
+              table+="<th>#</th>";
+              table+="<th>Teacher's Name</th>";
+              table+="</tr>";
+              var pos = 0
+              className = results[0]
+              results = results[1];
+              for (var i=0; i<=results.length - 1; i++){
+                teacherName = results[i];
+                table+="<tr style='background-color:white;'>";
+                table+="<td>" + (pos = pos + 1) + "</td>";
+                table+="<td style='text-align:left;'>" + teacherName + "</td>";
+                table+="</tr>";
+              }
+
+              table += "</table>";
+              teachers = table;
+
+              jQuery.confirm({
+                title:className,
+                text:teachers,
+                confirm: function(button) {
+                },
+                cancel: function(button) {
+                },
+                confirmButton: "Done"
+              });
+            }});
+        }
         
     </script>
     <style>
@@ -258,7 +329,8 @@
                     <th>Year</th>
                     <th>Grade</th>
                     <th style="max-width:5px;">Total Subjects</th>
-                    <th style="min-width:12%;">Action</th>
+                    <th style="min-width:12%;">Total Students</th>
+                    <th style="min-width:12%;">Total Teachers</th>
                   </tr>
                 </thead>
            
@@ -268,9 +340,14 @@
                     <td><%= class_room.name%></td>
                     <td><%=  class_room.year %></td>
                     <td><%= class_room.grade %></td>
-                    <td><span class_room_id="<%= class_room.id %>" class="label view-courses" onmousedown="setcurrentClassRoomID(this);" style="margin-left:0%;"><%= class_room.class_room_courses.count %></span></td>
                     <td>
-                      <a href="#" class_room_id="<%= class_room.id %>" onmousedown="assignSubjects(this)" class="button round blue image-right ic-add text-upper">Assign Subjects &nbsp;</a>
+                      <span class_room_id="<%= class_room.id %>" class="label view-courses" onmousedown="loadClassRoomCourses(this);" style="margin-left:0%;"><%= class_room.class_room_courses.count %></span>
+                    </td>
+                    <td>
+                      <span class_room_id="<%= class_room.id %>" class="label view-students" onmousedown="loadClassRoomStudents(this)" style="margin-left:0%;"><%= class_room.class_room_students.count %></span>
+                    </td>
+                    <td>
+                      <span class_room_id="<%= class_room.id %>" class="label view-teachers" onmousedown="loadClassRoomTeachers(this);" style="margin-left:0%;"><%= class_room.class_room_teachers.count %></span>
                     </td>
                   </tr>
                   <% end %>
@@ -301,16 +378,7 @@
 
     <script>
 
-        $(".view-courses").confirm({
-            title:"Form 1",
-            text:html,
-            confirm: function(button) {
-            },
-            cancel: function(button) {
-            },
-            confirmButton: "Done"
-        });
-
+ 
         function hideCancelButton(){
           if ($("button.cancel")[0]){
             $("button.cancel")[0].style.display='none';

@@ -10,27 +10,33 @@
     <!-- jQuery & JS files -->
     <%= javascript_include_tag("jquery") %>
     <%= javascript_include_tag("script") %>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("jquery.confirm") %>
     <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("bootstrap") %>
+    
     <script type="text/javascript">
+      var currentStudentID = "";
+      
+      function setcurrentStudentID(obj){
+        currentStudentID = obj.getAttribute("student_id");
+      }
 
-      function selectGuardian(obj){
-        parentId = obj.getAttribute("parent_id");
-        <% unless (params[:mode] == 'guardian_edit')%>
-          window.location = "/student/create_student_guardian?parent_id=" + parentId + "&student_id=<%= params[:student_id] %>";
-        <% else %>
-          window.location = "/student/create_student_guardian?parent_id=" + parentId + "&student_id=<%= params[:student_id] %>&mode=guardian_edit";
-        <% end %>
-    }
+      function editGuardian(obj){
+        studentId = obj.getAttribute("student_id");
+        window.location = "/student/select_guardian?student_id=" + studentId + '&mode=guardian_edit';
+      }
 
-      function newGuardian(){
-        fname = document.getElementById('fname_search').value;
-        lname =  document.getElementById('lname_search').value;
-        gender = document.getElementsByClassName('gender_search')[0].value;
-        <% unless (params[:mode] == 'guardian_edit')%>
-          window.location = "/parent/new_parent_guardian?student_id=<%= params[:student_id] %>&first_name=" + fname + "&last_name=" + lname + "&gender=" + gender;
-        <% else %>
-          window.location = "/parent/new_parent_guardian?student_id=<%= params[:student_id] %>&first_name=" + fname + "&last_name=" + lname + "&gender=" + gender + "&mode=guardian_edit";
-        <% end %>
+      function deleteStudentGuardian(){
+        jQuery.ajax({
+          type: "POST",
+          url: "/student/delete_student_guardian",
+          data: "student_id=" + currentStudentID,
+          success: function(results){
+            element = document.getElementById(currentStudentID);
+            element.parentNode.removeChild(element);
+          }
+        })
       }
       
       function loadSearchResults(){
@@ -39,29 +45,32 @@
         gender = document.getElementsByClassName('gender_search')[0].value;
         jQuery.ajax({
           type: "POST",
-          url: "/parent/search_parents",
+          url: "/student/search_students",
           data: "first_name=" + firstName + "&last_name=" + lastName + "&gender=" + gender,
           success: function(results){
-            results = eval("(" + results  + ")");
+            //results = eval("(" + results  + ")");
             html = "";
-            tbody = document.getElementById("parents");
+            tbody = document.getElementById("students");
 
-            for (var parent_id in results){
-              firstName = results[parent_id]["fname"];
-              lastName = results[parent_id]["lname"];
-              gender = results[parent_id]["gender"];
-              phone = results[parent_id]["phone"];
-              email = results[parent_id]["email"];
-              dob = results[parent_id]["dob"];
-              join_date = results[parent_id]["join_date"];
-              html+="<tr>";
+            for (var student_id in results){
+              firstName = results[student_id]["fname"];
+              lastName = results[student_id]["lname"];
+              gender = results[student_id]["gender"];
+              phone = results[student_id]["phone"];
+              email = results[student_id]["email"];
+              dob = results[student_id]["dob"];
+              join_date = results[student_id]["join_date"];
+              html+="<tr id=" + student_id+ ">";
               html+="<td style='text-align:left; padding: 0.833em 0 0.833em 1.25em;'>" + firstName + ' ' + lastName +  "</td>";
               html+="<td><a href='#'>" + email +  "</a></td>";
               html+="<td>" + gender +  "</td>";
               html+="<td>" + dob +  "</td>";
               html+="<td>" + phone +  "</td>";
               html+="<td>" + join_date +  "</td>";
-              html+="<td><a parent_id=" + parent_id + " onclick='selectGuardian(this)' href='#' class='button round blue image-right text-upper ic-right-arrow'>Select Guardian</a></td>";
+              html+="<td>"
+              html+= "<a student_id=" + student_id + " onclick='editGuardian(this)' href='#' class='table-actions-button ic-table-edit' style='float:left; margin-left:30%;'></a>"
+              html+= "<a student_id=" + student_id + " onclick='setcurrentStudentID(this);' href='#' class='table-actions-button ic-table-delete confirm'></a>"
+              html+="</td>";
               html+="</tr>";
             }
 
@@ -98,7 +107,14 @@
       margin-left: 37%;
     }*/
 
-
+     .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: #317eac;
+      }
+      
       #search-student-form fieldset {
         border: 1px solid gray;
         float: left;
@@ -112,6 +128,26 @@
         font-weight: 100;
         margin-left: 14px;
         padding: 2px;
+
+        color: #abda0f;
+        font-size: 14px;
+        font-weight: 100;
+        margin-left: 14px;
+        padding: 2px;
+
+        -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: none;
+    border-image: none;
+    border-style: none;
+    border-width: 0;
+
+    margin-bottom: 0px;
+    padding: 0;
+    width: auto;
+
       }
       #search-student-form fieldset input {
         color: #505050;
@@ -136,14 +172,6 @@
 
       table th:first-child {
         border-style: none none none !important;
-    }
-    .green {
-      background-color: #458B00;
-      color: white;
-    }
-    .green:hover{
-      background-color: #556B2F;
-      color: white;
     }
     </style>
   </head>
@@ -263,7 +291,7 @@
               <form id="search-student-form" action="#">
                 <fieldset>
                   <legend>Search</legend>
-                  <div style="width:91%; margin-left:5%;">
+                  <div style="width:71%; margin-left:10%;">
                     <table>
                       <tr>
                         <td style="width:10%;">First Name</td>
@@ -278,10 +306,9 @@
                             <option value="Female">Female</option>
                           </select>
                         </td>
-                        <td><a onclick="newGuardian();" href="#" class="button round green image-right ic-add text-upper">New Guardian</a></td>
                       </tr>
-                      <tr>                        
-                        <td colspan="7"><a onclick="loadSearchResults();" href="#" class="button round blue image-right ic-search text-upper">Search</a></td>
+                      <tr>
+                        <td colspan="6"><a onclick="loadSearchResults();" href="#" class="button round blue image-right ic-search text-upper">Search</a></td>
                       </tr>
                     </table>
                   </div>
@@ -304,17 +331,18 @@
 
                 </thead>
 
-                <tbody id="parents">
-                  <% @parents.each do |parent| %>
-                  <tr>
-                    <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= parent.fname.capitalize.to_s + ' ' + parent.lname.capitalize.to_s %></td>
-                    <td><a href="#"><%=  parent.email %></a></td>
-                    <td><%=  parent.gender %></td>
-                    <td><%=  parent.dob.to_date.strftime("%d-%b-%Y") %></td>
-                    <td><%=  parent.phone %></td>
-                    <td><%=  parent.created_at.strftime("%d-%b-%Y") %></td>
+                <tbody id="students">
+                  <% @students.each do |student| %>
+                  <tr id="<%= student.id %>">
+                    <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= student.fname.capitalize.to_s + ' ' + student.lname.capitalize.to_s %></td>
+                    <td><a href="#"><%=  student.email %></a></td>
+                    <td><%=  student.gender %></td>
+                    <td><%=  student.dob.to_date.strftime("%d-%b-%Y") %></td>
+                    <td><%=  student.phone %></td>
+                    <td><%=  student.created_at.strftime("%d-%b-%Y") %></td>
                     <td>
-                      <a parent_id="<%= parent.id %>" onclick="selectGuardian(this)" href="#" class="button round blue image-right text-upper ic-right-arrow">Select Guardian</a>
+                      <a student_id="<%= student.id %>" onclick="editGuardian(this)" href="#" class="table-actions-button ic-table-edit" style="float:left; margin-left:30%;"></a>
+                      <a student_id="<%= student.id %>" onclick="setcurrentStudentID(this)" href="#" class="table-actions-button ic-table-delete confirm"></a>
                     </td>
                   </tr>
                   <% end %>
@@ -341,5 +369,20 @@
 
     </div> <!-- end footer -->
 
+    <%= javascript_include_tag("bootstrap") %>
+    <script>
+      $(".confirm").confirm({
+          title:"Delete Parent/Guardian confirmation",
+          text:"This will remove the guardian of the selected student. Are you really really sure?",
+          confirm: function(button) {
+            deleteStudentGuardian();
+          },
+          cancel: function(button) {
+
+          },
+          confirmButton: "Yes I am",
+          cancelButton: "No"
+      });
+    </script>
   </body>
 </html>
