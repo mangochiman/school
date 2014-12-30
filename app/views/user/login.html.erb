@@ -9,7 +9,11 @@
 	<%= javascript_include_tag("script") %>
         <%= stylesheet_link_tag("style") %>
 	<!-- Optimize for mobile devices -->
-	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>  
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+        <script>
+         
+        </script>
 </head>
 <body>
 
@@ -33,7 +37,7 @@
 	
 			<div id="login-intro" class="fl">
 			
-				<h1>Login to <%= @settings["name"].humanize  %></h1>
+				<h1>Login to <%= @settings["name"].humanize rescue ""  %></h1>
 				<h5>Enter your credentials below</h5>
 			
 			</div> <!-- login-intro -->
@@ -51,23 +55,23 @@
 	<!-- MAIN CONTENT -->
 	<div id="content">
 	
-		<form action="#" method="POST" id="login-form">
+		<form action="/admin/home" method="POST" id="login-form">
 		
 			<fieldset>
 
 				<p>
 					<label for="login-username">username</label>
-					<input type="text" id="login-username" class="round full-width-input" autofocus />
+					<input name="username" type="text" id="login-username" class="round full-width-input" autofocus />
 				</p>
 
 				<p>
 					<label for="login-password">password</label>
-					<input type="password" id="login-password" class="round full-width-input" />
+					<input name="plain_password" type="password" id="login-password" class="round full-width-input" />
 				</p>
 				
 				<p>I've <a href="#">forgotten my password</a>.</p>
 				
-				<a href="/admin/home" class="button round blue image-right ic-right-arrow">LOG IN</a>
+                                <input  type="submit" class="button round blue image-right ic-right-arrow" value="LOG IN"/>
 
 			</fieldset>
 
