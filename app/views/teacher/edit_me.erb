@@ -14,15 +14,53 @@
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("metallic") %>
 
+    <script type="text/javascript">
+      function checkGender(){
+        <% unless @teacher.gender.blank?%>
+            <% if (@teacher.gender.upcase == "MALE") %>
+                document.getElementById('male').checked = true
+            <%  end %>
+
+            <% if (@teacher.gender.upcase == "FEMALE") %>
+                document.getElementById('female').checked = true
+            <%  end %>
+        <% end %>
+      }
+    </script>
+    
     <style>
+      #search-teacher-form fieldset {
+        border: 1px solid gray;
+        float: left;
+        margin-bottom: 15px;
+        padding: 5px;
+        width: 98.7%;
+      }
+      #search-teacher-form legend {
+        color: #abda0f;
+        font-size: 14px;
+        font-weight: 100;
+        margin-left: 14px;
+        padding: 2px;
+      }
+      #search-teacher-form fieldset input {
+        color: #505050;
+        float: left;
+        margin-right: 5px;
+        width: 140px;
+        padding: 3px;
+        font-size: 14px;
+      }
+      
       table{
         margin-left:15%;
         width: 60%;
       }
-      table td #simple-input, #password, #confirm{
+      
+      table td #simple-input{
         float: right;
       }
-
+      
       table label{
        text-align: left;
       }
@@ -38,9 +76,12 @@
     input[type="submit"] {
       margin-left: 37%;
     }
+    table th:first-child {
+        border-style: none none none !important;
+    }
     </style>
   </head>
-  <body onLoad="checkPassword()">
+  <body onload="checkGender();">
 
     <!-- TOP BAR -->
     <div id="top-bar">
@@ -91,7 +132,6 @@
           <li><a href="/admin/research">Research</a></li>
           <li><a href="/examination/index">Exams</a></li>
           <li><a href="/class_room/index">Classes</a></li>
-          <li><a href="/course/index">Courses</a></li>
           <li><a href="/report/index">Reports</a></li>
           <li><a href="/student/my_results">My Results</a></li>
           <li><a href="/admin/time_table">Time Tables</a></li>
@@ -132,7 +172,7 @@
 
             <div class="content-module-heading cf">
 
-              <h3 class="fl">Teacher Employment</h3>
+              <h3 class="fl">Edit Teacher</h3>
               <span class="fr expand-collapse-text">Click to collapse</span>
               <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -150,46 +190,48 @@
                       <%= flash[:error] %>
                   </div>
                 <% end %>
-              <form id="registration" action="/teacher/create">
+              
+                <form id="registration" method="POST" action="/teacher/edit_me">
                 <table>
                   <tr>
                     <td><label for="simple-input">First Name</label></td>
-                    <td><input type="text" name="first_name" id="simple-input" class="round default-width-input" /></td>
+                    <td><input type="text" name="first_name" id="simple-input" class="round default-width-input" value="<%=  @teacher.fname %>"/></td>
                   </tr>
                   <tr>
                     <td><label for="simple-input">Last Name</label></td>
-                    <td><input type="text" name="last_name" id="simple-input" class="round default-width-input" /></td>
+                    <td><input type="text" name="last_name" id="simple-input" class="round default-width-input" value="<%=  @teacher.lname %>"/></td>
                   </tr>
                   <tr>
                     <td><label for="simple-input">Gender</label></td>
                     <td>
-                      <span style="margin-left:40%;"><input type="radio" value="Male" name="gender"/>Male</span>
-                      <span style="margin-left:10%;"><input type="radio" value="Female" name="gender"/>Female</span>
+                      <span style="margin-left:40%;"><input type="radio" value="Male" name="gender" id="male"/>Male</span>
+                      <span style="margin-left:10%;"><input type="radio" value="Female" name="gender" id="female"/>Female</span>
                     </td>
                   </tr>
                   <tr>
                     <td><label for="simple-input">E-mail</label></td>
-                    <td><input type="text" name="email"  id="simple-input" class="round default-width-input" /></td>
+                    <td><input type="text" name="email"  id="simple-input" class="round default-width-input" value="<%=  @teacher.email %>"/></td>
                   </tr>
                   <tr>
                     <td><label for="simple-input">Phone</label></td>
-                    <td><input type="text" name="phone" id="simple-input" class="round default-width-input" /></td>
+                    <td><input type="text" name="phone" id="simple-input" class="round default-width-input" value="<%=  @teacher.phone %>"/></td>
                   </tr>
                   <tr>
-                    <td><label for="password">Password</label></td>
-                    <td><input type="password" name="password" id="password" class="round default-width-input" /></td>
+                    <td><label for="simple-input">Password</label></td>
+                    <td><input type="password" name="password" id="simple-input" class="round default-width-input" /></td>
                   </tr>
                   <tr>
-                    <td><label for="confirm">Re-type password</label></td>
-                    <td><input type="password" name="password_confirm" id="confirm" class="round default-width-input" /></td>
+                    <td><label for="simple-input">Re-type password</label></td>
+                    <td><input type="password" name="password_confirm" id="simple-input" class="round default-width-input" /></td>
                   </tr>
                   <tr>
                     <td><label for="simple-input">Date of Birth</label></td>
-                    <td><input type="text" name="dob" id="simple-input" class="round default-width-input date-picker" /></td>
+                    <td><input type="text" name="dob" id="simple-input" class="round default-width-input date-picker" value="<%=  @teacher.dob %>"/></td>
                   </tr>
                 </table>
                 <div class="stripe-separator"><!--  --></div>
-                <input id="submit" type="submit" value="Submit" class="round blue ic-right-arrow" />
+                <input type="hidden" name="teacher_id" value="<%= params[:teacher_id] %>" />
+                <input type="submit" value="Submit" class="round blue ic-right-arrow" />
               </form>
 
             </div> <!-- end content-module-main -->
@@ -218,23 +260,8 @@
     <script>
       $('.date-picker').Zebra_DatePicker({
             view : 'years',
-            direction: ['<%=  (Date.today - 70.years).strftime("%Y-%m-%d") %>', '<%=  (Date.today - 12.years).strftime("%Y-%m-%d") %>']
+            direction: ['<%=  (Date.today - 30.years).strftime("%Y-%m-%d") %>', '<%=  (Date.today - 12.years).strftime("%Y-%m-%d") %>']
       });
-
-      function __$(id){
-        return document.getElementById(id)
-      }
-      function checkPassword(){
-        /*var pass = __$("password").value;
-        var confirm = __$("confirm").value;
-        if ((confirm != pass) || (pass.length < 1)){
-          __$("submit").style.display = "none"
-        }
-        else{
-          __$("submit").style.display = "inline"
-        }
-        setTimeout('checkPassword()', 100);*/
-      }
     </script>
   </body>
 </html>

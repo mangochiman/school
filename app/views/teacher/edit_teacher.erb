@@ -14,11 +14,78 @@
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("metallic") %>
 
-    <style>
-      table{
-        margin-left:15%;
-        width: 60%;
+    <script type="text/javascript">
+
+      function editMe(obj){
+        teacherId = obj.getAttribute("teacher_id");
+        window.location = "/teacher/edit_me?teacher_id=" + teacherId;
       }
+
+      function loadSearchResults(){
+        firstName = document.getElementById('fname_search').value;
+        lastName = document.getElementById('lname_search').value;
+        gender = document.getElementsByClassName('gender_search')[0].value;
+        jQuery.ajax({
+          type: "POST",
+          url: "/teacher/search_teachers",
+          data: "first_name=" + firstName + "&last_name=" + lastName + "&gender=" + gender,
+          success: function(results){
+            //results = eval("(" + results  + ")");
+            html = "";
+            tbody = document.getElementById("teachers");
+
+            for (var teacher_id in results){
+              firstName = results[teacher_id]["fname"];
+              lastName = results[teacher_id]["lname"];
+              gender = results[teacher_id]["gender"];
+              phone = results[teacher_id]["phone"];
+              email = results[teacher_id]["email"];
+              dob = results[teacher_id]["dob"];
+              join_date = results[teacher_id]["join_date"];
+              html+="<tr>";
+              html+="<td style='text-align:left; padding: 0.833em 0 0.833em 1.25em;'>" + firstName + ' ' + lastName +  "</td>";
+              html+="<td><a href='#'>" + email +  "</a></td>";
+              html+="<td>" + gender +  "</td>";
+              html+="<td>" + dob +  "</td>";
+              html+="<td>" + phone +  "</td>";
+              html+="<td>" + join_date +  "</td>";
+              html+="<td><a teacher_id=" + teacher_id + " onclick='editMe(this)' href='#' class='table-actions-button ic-table-edit'></a></td>";
+              html+="</tr>";
+            }
+
+            tbody.innerHTML = html
+          }
+
+      });
+
+  }
+    </script>
+    
+    <style>
+      #search-teacher-form fieldset {
+        border: 1px solid gray;
+        float: left;
+        margin-bottom: 15px;
+        padding: 5px;
+        width: 98.7%;
+      }
+      #search-teacher-form legend {
+        color: #abda0f;
+        font-size: 14px;
+        font-weight: 100;
+        margin-left: 14px;
+        padding: 2px;
+      }
+      #search-teacher-form fieldset input {
+        color: #505050;
+        float: left;
+        margin-right: 5px;
+        width: 140px;
+        padding: 3px;
+        font-size: 14px;
+      }
+      
+   
       table td #simple-input, #password, #confirm{
         float: right;
       }
@@ -37,6 +104,9 @@
     }
     input[type="submit"] {
       margin-left: 37%;
+    }
+    table th:first-child {
+        border-style: none none none !important;
     }
     </style>
   </head>
@@ -149,51 +219,66 @@
                       <%= flash[:error] %>
                   </div>
                 <% end %>
-              <form id="registration" action="/teacher/edit_teacher" method="post">
-                <table>
-                  <tr>
-                    <td><label for="simple-input">First Name</label></td>
-                    <td><input type="text" name="fname" id="simple-input" class="round default-width-input" value="<%= @teacher.fname %>" /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="simple-input">Last Name</label></td>
-                    <td><input type="text" name="lname" id="simple-input" class="round default-width-input" value="<%= @teacher.lname %>" /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="simple-input">Gender</label></td>
-                    <td>
-                      <span style="margin-left:40%;"><input type="radio" value="Male" checked ="<%= @male %>" name="gender"/>Male</span>
-                      <span style="margin-left:10%;"><input type="radio" value="Female" checked ="<%= @female %>" name="gender"/>Female</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><label for="simple-input">E-mail</label></td>
-                    <td><input type="text" name="email"  id="simple-input" class="round default-width-input"  value="<%= @teacher.email %>" /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="simple-input">Phone</label></td>
-                    <td><input type="text" name="phone" id="simple-input" class="round default-width-input"  value="<%= @teacher.phone %>" /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="simple-input">Mobile</label></td>
-                    <td><input type="text" name="mobile" id="simple-input" class="round default-width-input"  value="<%= @teacher.mobile %>" /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="simple-input">Date of Birth</label></td>
-                    <td><input type="text" name="dob" id="simple-input" class="round default-width-input date-picker"  value="<%= @teacher.dob %>" /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="simple-input">Status</label></td>
-                    <td>
-                      <span style="margin-left:40%;"><input type="radio" value="Active"  name="status"/>Active</span>
-                      <span style="margin-left:10%;"><input type="radio" value="Inactive" name="status"/>Inactive</span>
-                    </td>
-                  </tr>
-                </table>
-                <input type="hidden" name="teacher_id"  value="<%= @teacher.id %>"/>
-                <div class="stripe-separator"><!--  --></div>
-                <input id="submit" type="submit" value="Submit" class="round blue ic-right-arrow" />
+
+              <form id="search-teacher-form" action="#">
+                <fieldset>
+                  <legend>Search</legend>
+                  <div style="width:71%; margin-left:10%;">
+                    <table>
+                      <tr>
+                        <td style="width:10%;">First Name</td>
+                        <td style="width:10%;"><input type="text" id="fname_search"/></td>
+                        <td style="width:10%;">Last Name</td>
+                        <td style="width:10%;"><input type="text" id="lname_search"/></td>
+                        <td style="width:10%;">Gender</td>
+                        <td style="width:5%">
+                          <select id="dropdown-actions" class="gender_search">
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                          </select>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="6"><a onclick="loadSearchResults();" href="#" class="button round blue image-right ic-search text-upper">Search</a></td>
+                      </tr>
+                    </table>
+                  </div>
+                </fieldset>
               </form>
+              <table>
+
+                <thead>
+
+                  <tr>
+                    <th style="min-width:15%;">Name</th>
+                    <th>Email</th>
+                    <th>Gender</th>
+                    <th>Date Of Birth</th>
+                    <th>Phone #</th>
+                    <th>Date of Join</th>
+                    <th>Action</th>
+                  </tr>
+
+                </thead>
+
+                <tbody id="teachers">
+                  <% @teachers.each do |teacher| %>
+                  <tr>
+                    <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= teacher.fname.capitalize.to_s + ' ' + teacher.lname.capitalize.to_s %></td>
+                    <td><a href="#"><%=  teacher.email %></a></td>
+                    <td><%=  teacher.gender %></td>
+                    <td><%=  teacher.dob.to_date.strftime("%d-%b-%Y") %></td>
+                    <td><%=  teacher.phone %></td>
+                    <td><%=  teacher.created_at.strftime("%d-%b-%Y") %></td>
+                    <td>
+                      <a teacher_id="<%= teacher.id %>" onclick="editMe(this)" href="#" class="table-actions-button ic-table-edit"></a>
+                    </td>
+                  </tr>
+                  <% end %>
+                </tbody>
+
+              </table>
 
             </div> <!-- end content-module-main -->
 
