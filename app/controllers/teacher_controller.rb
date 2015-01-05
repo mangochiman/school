@@ -20,6 +20,19 @@ class TeacherController < ApplicationController
     @class_rooms = ClassRoom.find(:all, :conditions => ["class_room_id NOT IN (?)", my_class_room_ids])
     render :layout => false
   end
+
+  def assign_me_subjects_menu
+    teacher_id = params[:teacher_id]
+    @my_class_rooms = ClassRoomTeacher.find(:all, :conditions => ["teacher_id =?",
+        teacher_id]).collect{|crt|crt.class_room}
+    render :layout => false
+  end
+
+  def assign_edit_my_subjects
+    teacher_id = params[:teacher_id]
+    class_room_id = params[:class_room_id]
+    @courses = ClassRoom.find(class_room_id).class_room_courses.collect{|crc|crc.course}
+  end
   
   def teacher_stats
      render :layout => false
@@ -41,6 +54,7 @@ class TeacherController < ApplicationController
   end
   
   def assign_subjects
+     @teachers = Teacher.all
      render :layout => false
   end
 
