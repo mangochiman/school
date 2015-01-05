@@ -21,6 +21,19 @@
         classRoomId = obj.getAttribute("class_room_id");
         window.location = "/teacher/assign_edit_my_subjects?teacher_id= " + teacherID + "&class_room_id=" + classRoomId;
       }
+
+      function checkPreviousSelectedCourses(){
+        inputs = document.getElementsByTagName("input");
+        for (var i=0; i<=inputs.length - 1; i++){
+          if (inputs[i].type == 'checkbox'){
+              inputs[i].checked = false;
+          }
+        }
+
+        <% (@current_teacher_class_room_courses || []).each do |course| %>
+              document.getElementById("<%= course.id %>").checked = true;
+        <% end %>
+      }
       
       function selectAll(){
         selectAllInput = document.getElementById('table-select-all');
@@ -109,7 +122,7 @@
 }
     </style>
   </head>
-  <body >
+  <body onload="checkPreviousSelectedCourses();">
 
     <!-- TOP BAR -->
     <div id="top-bar">

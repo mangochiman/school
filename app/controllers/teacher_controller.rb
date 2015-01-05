@@ -31,12 +31,36 @@ class TeacherController < ApplicationController
   def assign_edit_my_subjects
     teacher_id = params[:teacher_id]
     class_room_id = params[:class_room_id]
+
+    @current_teacher_class_room_courses = TeacherClassRoomCourse.find(:all,
+        :conditions => ["teacher_id =? AND class_room_id =?",teacher_id, class_room_id]
+      ).collect{|i|i.course }
+      
     @courses = ClassRoom.find(class_room_id).class_room_courses.collect{|crc|crc.course}
     render :layout => false
   end
 
   def assign_optional_courses
+    teacher_id = params[:teacher_id]
+    class_room_id = params[:class_room_id]
+    ActiveRecord::Base.transaction do
+      current_teacher_class_room_courses = TeacherClassRoomCourse.find(:all,
+        :conditions => ["teacher_id =? AND class_room_id =?",teacher_id, class_room_id])
 
+      (current_teacher_class_room_courses || []).each do |ctcrc|
+          ctcrc.delete
+      end
+      
+      (params[:subjects] || []).each do |subject_id, details|
+            TeacherClassRoomCourse.create({
+              :teacher_id => teacher_id,
+              :class_room_id => class_room_id,
+              :course_id => subject_id
+            })
+      end
+    end
+    flash[:notice] = "Operation successful"
+    redirect_to :action => "assign_subjects" and return
   end
   
   def teacher_stats
