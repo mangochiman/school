@@ -9,13 +9,37 @@ class TeacherController < ApplicationController
   end
 
   def assign_class
-     render :layout => false
+    @teachers = Teacher.all
+    render :layout => false
   end
 
+  def assign_me_class
+    my_class_room_ids = ClassRoomTeacher.find(:all, :conditions => ["teacher_id =?",
+        params[:teacher_id]]).map(&:class_room_id)
+    my_class_room_ids = '' if my_class_room_ids.blank?
+    @class_rooms = ClassRoom.find(:all, :conditions => ["class_room_id NOT IN (?)", my_class_room_ids])
+    render :layout => false
+  end
+  
   def teacher_stats
      render :layout => false
   end
 
+  def create_teacher_class_assignment
+    teacher_id = params[:teacher_id]
+    class_room_id = params[:class_room_id]
+    if (ClassRoomTeacher.create({
+        :teacher_id => teacher_id,
+        :class_room_id => class_room_id
+      }))
+        flash[:notice] = "You have successfully assigned a class"
+        redirect_to :action => "assign_class" and return
+      else
+        flash[:error] = "Oops!!. Operation aborted"
+        redirect_to :action => "assign_me_class", :teacher_id => params[:teacher_id] and return
+      end
+  end
+  
   def assign_subjects
      render :layout => false
   end

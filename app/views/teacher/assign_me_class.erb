@@ -16,9 +16,10 @@
 
     <script type="text/javascript">
 
-      function assignClass(obj){
-        teacherId = obj.getAttribute("teacher_id");
-        window.location = "/teacher/assign_me_class?teacher_id=" + teacherId;
+      function assignMeClass(obj){
+        teacherID = '<%= params[:teacher_id] %>';
+        classRoomId = obj.getAttribute("class_room_id");
+        window.location = "/teacher/create_teacher_class_assignment?teacher_id= " + teacherID + "&class_room_id=" + classRoomId;
       }
 
       function loadSearchResults(){
@@ -108,6 +109,22 @@
     table th:first-child {
         border-style: none none none !important;
     }
+    .label {
+      border-radius: 1.5em;
+      color: #fff;
+      display: inline;
+      background-color: #5bc0de;
+      font-weight: bold;
+      line-height: 1;
+      padding-left: 20%;
+      padding-right: 20%;
+      padding-top:2%;
+      padding-bottom:2%;
+      text-align: center;
+      vertical-align: baseline;
+      white-space: nowrap;
+
+}
     </style>
   </head>
   <body >
@@ -220,59 +237,29 @@
                   </div>
                 <% end %>
 
-              <form id="search-teacher-form" action="#">
-                <fieldset>
-                  <legend>Search</legend>
-                  <div style="width:71%; margin-left:10%;">
-                    <table>
-                      <tr>
-                        <td style="width:10%;">First Name</td>
-                        <td style="width:10%;"><input type="text" id="fname_search"/></td>
-                        <td style="width:10%;">Last Name</td>
-                        <td style="width:10%;"><input type="text" id="lname_search"/></td>
-                        <td style="width:10%;">Gender</td>
-                        <td style="width:5%">
-                          <select id="dropdown-actions" class="gender_search">
-                            <option value="">Select Gender</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                          </select>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td colspan="6"><a onclick="loadSearchResults();" href="#" class="button round blue image-right ic-search text-upper">Search</a></td>
-                      </tr>
-                    </table>
-                  </div>
-                </fieldset>
-              </form>
-              <table>
+              <table class="classes">
 
                 <thead>
-
                   <tr>
-                    <th style="min-width:15%;">Name</th>
-                    <th>Email</th>
-                    <th>Gender</th>
-                    <th>Date Of Birth</th>
-                    <th>Phone #</th>
-                    <th>Date of Join</th>
-                    <th style="min-width:10%;">Action</th>
+                    <th style="min-width:20%;">Class Name</th>
+                    <th>Year</th>
+                    <th>Grade</th>
+                    <th style="max-width:10px;">Total Students</th>
+                    <th style="max-width:10px;">Total Teachers</th>
+                    <th>Action</th>
                   </tr>
-
                 </thead>
 
-                <tbody id="teachers">
-                  <% @teachers.each do |teacher| %>
+                <tbody id="class_rooms">
+                  <% @class_rooms.each do |class_room| %>
                   <tr>
-                    <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= teacher.fname.capitalize.to_s + ' ' + teacher.lname.capitalize.to_s %></td>
-                    <td><a href="#"><%=  teacher.email %></a></td>
-                    <td><%=  teacher.gender %></td>
-                    <td><%=  teacher.dob.to_date.strftime("%d-%b-%Y") %></td>
-                    <td><%=  teacher.phone %></td>
-                    <td><%=  teacher.created_at.strftime("%d-%b-%Y") %></td>
+                    <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= class_room.name%></td>
+                    <td><%=  class_room.year %></td>
+                    <td><%= class_room.grade %></td>
+                    <td><span class="label" style="margin-left:20%;"><%= class_room.class_room_students.count %></span></td>
+                    <td><span class="label" style="margin-left:20%;"><%= class_room.class_room_teachers.count %></span></td>
                     <td>
-                      <a teacher_id="<%= teacher.id %>" onclick="assignClass(this)" href="#" class="button round blue image-right ic-add text-upper">Assign Class &nbsp;</a>                      
+                      <a class_room_id="<%= class_room.id %>" onclick="assignMeClass(this)" href="#" class="button round blue image-right ic-add text-upper">Select</a>
                     </td>
                   </tr>
                   <% end %>
