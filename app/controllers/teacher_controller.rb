@@ -32,6 +32,11 @@ class TeacherController < ApplicationController
     teacher_id = params[:teacher_id]
     class_room_id = params[:class_room_id]
     @courses = ClassRoom.find(class_room_id).class_room_courses.collect{|crc|crc.course}
+    render :layout => false
+  end
+
+  def assign_optional_courses
+
   end
   
   def teacher_stats
