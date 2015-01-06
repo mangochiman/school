@@ -15,26 +15,6 @@
     <%= stylesheet_link_tag("metallic") %>
 
     <script type="text/javascript">
-
-      function assignEditMySubjects(obj){
-        teacherID = '<%= params[:teacher_id] %>';
-        classRoomId = obj.getAttribute("class_room_id");
-        window.location = "/teacher/assign_edit_my_subjects?teacher_id= " + teacherID + "&class_room_id=" + classRoomId;
-      }
-
-      function checkPreviousSelectedCourses(){
-        inputs = document.getElementsByTagName("input");
-        for (var i=0; i<=inputs.length - 1; i++){
-          if (inputs[i].type == 'checkbox'){
-              inputs[i].checked = false;
-          }
-        }
-
-        <% (@current_teacher_class_room_courses || []).each do |course| %>
-              document.getElementById("<%= course.id %>").checked = true;
-        <% end %>
-      }
-      
       function selectAll(){
         selectAllInput = document.getElementById('table-select-all');
         inputs = document.getElementsByTagName("input");
@@ -122,7 +102,7 @@
 }
     </style>
   </head>
-  <body onload="checkPreviousSelectedCourses();">
+  <body >
 
     <!-- TOP BAR -->
     <div id="top-bar">
@@ -233,38 +213,45 @@
                   </div>
                 <% end %>
 
-              <form method="post" action="/teacher/assign_optional_courses">
-              <table class="classes" style="">
+              <table class="classes">
 
                 <thead>
                   <tr>
                     <th><input type="checkbox" id="table-select-all" onclick="selectAll();"/></th>
-                    <th colspan="5" style=" padding: 1.25em 0 1.25em 1.25em;">Select courses</th>
+                    <th style="min-width:20%;">Class Name</th>
+                    <th>Year</th>
+                    <th>Grade</th>
+                    <th style="max-width:10px;">Total Students</th>
+                    <th style="max-width:10px;">Total Teachers</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
 
+                <tfoot>
+                  <tr>
+                    <td colspan="3" class="table-footer">
+                      <a href="#" class="button round blue image-right ic-delete text-upper delete-multiple">Delete</a>
+                    </td>
+                  </tr>
+                </tfoot>
+                
                 <tbody id="class_rooms">
-                  <% @courses.in_groups_of(3).each do |row| %>
-                    <tr>
-                        <% row.each do |subject| %>
-                            <% unless subject.blank? %>
-                                  <td><input type="checkbox" id="<%= subject.id %>" name="subjects[<%= subject.id %>]"/></td>
-                                  <td style="border-left: none; text-align: left;"><%= subject.name.titlecase %></td>
-                              <% else %>
-                                  <td style="border-left: none;">&nbsp;</td>
-                                  <td style="border-left: none;">&nbsp;</td>
-                            <% end %>
-                        <% end %>
-                    </tr>
+                  <% @my_class_rooms.each do |class_room| %>
+                  <tr id="<%= class_room.id %>">
+                    <td><input type="checkbox" exam_type_id="<%= class_room.id %>"/></td>
+                    <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= class_room.name%></td>
+                    <td><%=  class_room.year %></td>
+                    <td><%= class_room.grade %></td>
+                    <td><span class="label" style="margin-left:20%;"><%= class_room.class_room_students.count %></span></td>
+                    <td><span class="label" style="margin-left:20%;"><%= class_room.class_room_teachers.count %></span></td>
+                    <td>
+                      <a class_room_id="<%= class_room.id %>" onclick="" href="#" class="table-actions-button ic-table-delete confirm"></a>
+                    </td>
+                  </tr>
                   <% end %>
                 </tbody>
 
               </table>
-              <div class="stripe-separator"><!--  --></div>
-                <%= hidden_field_tag("teacher_id", params[:teacher_id]) %>
-                <%= hidden_field_tag("class_room_id", params[:class_room_id]) %>
-                <input type="submit" value="Submit" class="round blue ic-right-arrow" />
-              </form>
 
             </div> <!-- end content-module-main -->
 
@@ -290,14 +277,7 @@
     <%= javascript_include_tag("jquery-1.9.1.min") %>
     <%= javascript_include_tag("zebra_datepicker") %>
     <script>
-      $('.date-picker').Zebra_DatePicker({
-            view : 'years',
-            direction: ['<%=  (Date.today - 70.years).strftime("%Y-%m-%d") %>', '<%=  (Date.today - 12.years).strftime("%Y-%m-%d") %>']
-      });
 
-      function __$(id){
-        return document.getElementById(id)
-      }
     </script>
   </body>
 </html>

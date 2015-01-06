@@ -13,6 +13,18 @@ class TeacherController < ApplicationController
     render :layout => false
   end
 
+  def remove_class
+    @teachers = Teacher.all
+    render :layout => false
+  end
+
+  def remove_my_classes
+    teacher_id = params[:teacher_id]
+    @my_class_rooms = ClassRoomTeacher.find(:all, :conditions => ["teacher_id =?",
+                  teacher_id]).collect{|crt|crt.class_room}
+    render :layout => false
+  end
+  
   def assign_me_class
     my_class_room_ids = ClassRoomTeacher.find(:all, :conditions => ["teacher_id =?",
         params[:teacher_id]]).map(&:class_room_id)
