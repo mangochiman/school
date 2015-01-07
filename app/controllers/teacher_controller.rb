@@ -22,6 +22,45 @@ class TeacherController < ApplicationController
     teacher_id = params[:teacher_id]
     @my_class_rooms = ClassRoomTeacher.find(:all, :conditions => ["teacher_id =?",
                   teacher_id]).collect{|crt|crt.class_room}
+              
+    if (request.method == :post)
+      if (params[:mode] == 'single_entry')
+        class_room_teacher = ClassRoomTeacher.find(:last, :conditions => ["teacher_id =? AND
+            class_room_id =?", params[:teacher_id], params[:class_room_id]])
+
+        ActiveRecord::Base.transaction do
+          teacher_class_room_courses = TeacherClassRoomCourse.find(:all, :conditions => ["teacher_id =? AND
+              class_room_id =?", params[:teacher_id], params[:class_room_id]])
+          
+          (teacher_class_room_courses || []).each do |tcrc|
+            tcrc.delete #Deleting courses associated with this teacher for a particular class
+          end
+
+          class_room_teacher.delete
+        end
+        
+        render :text => "true" and return
+      end
+
+      class_room_ids = params[:class_room_ids].split(",")
+      
+      (class_room_ids || []).each do |class_room_id|
+        class_room_teacher = ClassRoomTeacher.find(:last, :conditions => ["teacher_id =? AND
+            class_room_id =?", params[:teacher_id], class_room_id])
+
+        teacher_class_room_courses = TeacherClassRoomCourse.find(:all, :conditions => ["teacher_id =? AND
+              class_room_id =?", params[:teacher_id], class_room_id])
+
+        (teacher_class_room_courses || []).each do |tcrc|
+          tcrc.delete #Deleting courses associated with this teacher for a particular class
+        end
+        
+        class_room_teacher.delete
+      end
+
+      render :text => "true" and return
+    end
+
     render :layout => false
   end
   

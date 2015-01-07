@@ -11,8 +11,10 @@
 
     <%= javascript_include_tag("jquery") %>
     <%= javascript_include_tag("script") %>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("jquery.confirm") %>
     <%= stylesheet_link_tag("style") %>
-    <%= stylesheet_link_tag("metallic") %>
+    <%= stylesheet_link_tag("bootstrap") %>
 
     <script type="text/javascript">
       function selectAll(){
@@ -35,9 +37,72 @@
           }
          }
       }
+
+   function deleteSingleEntry(obj){
+        classRoomID = obj.getAttribute('class_room_id')
+        jQuery.confirm({
+          title:"Delete confirmation",
+          text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+          confirm: function(button) {
+            jQuery.ajax({
+            type: "POST",
+            url: "/teacher/remove_my_classes",
+            data: "teacher_id=<%= params[:teacher_id] %>&class_room_id=" + classRoomID + "&mode=single_entry",
+            success: function(){
+              element = document.getElementById(classRoomID);
+              element.parentNode.removeChild(element);
+            }
+
+            });
+          },
+          cancel: function(button) {
+
+          },
+          confirmButton: "Yes I am",
+          cancelButton: "No"
+       });
+      }
+
+      function deleteClasses(){
+        inputs = document.getElementsByTagName("input");
+        classRoomIDs = []
+        for (var i=0; i<=inputs.length - 1; i++){
+          if (inputs[i].type == 'checkbox'){
+            if (inputs[i].checked){
+              if (inputs[i].hasAttribute("class_room_id")){
+                classRoomID = inputs[i].getAttribute("class_room_id");
+                classRoomIDs.push(classRoomID);
+              }
+            }
+          }
+        }
+
+        jQuery.ajax({
+          type: "POST",
+          url: "/teacher/remove_my_classes",
+          data: "teacher_id=<%= params[:teacher_id] %>&class_room_ids=" + classRoomIDs,
+          success: function(){
+            for (var x=0; x<= classRoomIDs.length - 1; x++){
+              id = classRoomIDs[x];
+              element = document.getElementById(id);
+              element.parentNode.removeChild(element);
+            }
+          }
+
+        });
+      }
+      
     </script>
 
     <style>
+      .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: #317eac;
+      }
+      
       #search-teacher-form fieldset {
         border: 1px solid gray;
         float: left;
@@ -90,6 +155,7 @@
       display: inline;
       background-color: #5bc0de;
       font-weight: bold;
+      font-size: 1.2em;
       line-height: 1;
       padding-left: 20%;
       padding-right: 20%;
@@ -238,14 +304,14 @@
                 <tbody id="class_rooms">
                   <% @my_class_rooms.each do |class_room| %>
                   <tr id="<%= class_room.id %>">
-                    <td><input type="checkbox" exam_type_id="<%= class_room.id %>"/></td>
+                    <td><input type="checkbox" class_room_id="<%= class_room.id %>"/></td>
                     <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= class_room.name%></td>
                     <td><%=  class_room.year %></td>
                     <td><%= class_room.grade %></td>
                     <td><span class="label" style="margin-left:20%;"><%= class_room.class_room_students.count %></span></td>
                     <td><span class="label" style="margin-left:20%;"><%= class_room.class_room_teachers.count %></span></td>
                     <td>
-                      <a class_room_id="<%= class_room.id %>" onclick="" href="#" class="table-actions-button ic-table-delete confirm"></a>
+                      <a class_room_id="<%= class_room.id %>" onmousedown="deleteSingleEntry(this)" href="#" class="table-actions-button ic-table-delete"></a>
                     </td>
                   </tr>
                   <% end %>
@@ -272,11 +338,20 @@
       <p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
 
     </div> <!-- end footer -->
-
-
-    <%= javascript_include_tag("jquery-1.9.1.min") %>
-    <%= javascript_include_tag("zebra_datepicker") %>
+    <%= javascript_include_tag("bootstrap") %>
     <script>
+        $(".delete-multiple").confirm({
+            title:"Delete confirmation",
+            text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+            confirm: function(button) {
+              deleteClasses();
+            },
+            cancel: function(button) {
+
+            },
+            confirmButton: "Yes I am",
+            cancelButton: "No"
+        });
 
     </script>
   </body>
