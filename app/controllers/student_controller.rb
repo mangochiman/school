@@ -1,6 +1,11 @@
 class StudentController < ApplicationController
   def index
-=begin
+    @class_rooms = ClassRoom.find(:all).map(&:name)
+
+    @totals = []
+    @males = []
+    @females = []
+
     class_rooms = ClassRoom.find(:all)
     hash = {}
 
@@ -13,6 +18,7 @@ class StudentController < ApplicationController
       total_females = 0
 
       class_room.class_room_students.each do |crs|
+        next if crs.student.blank?
         if (crs.student.gender.upcase == 'MALE')
           total_males += 1
         end
@@ -23,9 +29,15 @@ class StudentController < ApplicationController
       hash[class_room_id]["total_males"] = total_males
       hash[class_room_id]["total_females"] = total_females
     end
-    
-    @statistics = hash
-=end
+
+    @statistics = hash.sort_by{|key, value|key.to_i}
+
+    @statistics.each do |key, value|
+      @males << value["total_males"]
+      @females << value["total_females"]
+      @totals << value["total_students"]
+    end
+
     render :layout => false
   end
 
