@@ -1,5 +1,31 @@
 class StudentController < ApplicationController
   def index
+=begin
+    class_rooms = ClassRoom.find(:all)
+    hash = {}
+
+    (class_rooms || []).each do |class_room|
+      total_students = class_room.class_room_students.count
+      class_room_id = class_room.id
+      hash[class_room_id] = {}
+      hash[class_room_id]["total_students"] = total_students
+      total_males = 0
+      total_females = 0
+
+      class_room.class_room_students.each do |crs|
+        if (crs.student.gender.upcase == 'MALE')
+          total_males += 1
+        end
+        if (crs.student.gender.upcase == 'FEMALE')
+          total_females += 1
+        end
+      end
+      hash[class_room_id]["total_males"] = total_males
+      hash[class_room_id]["total_females"] = total_females
+    end
+    
+    @statistics = hash
+=end
     render :layout => false
   end
 
