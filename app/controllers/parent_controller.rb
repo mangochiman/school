@@ -1,5 +1,49 @@
 class ParentController < ApplicationController
   def index
+    @class_rooms = ClassRoom.find(:all).map(&:name)
+    class_rooms = ClassRoom.find(:all)
+    hash = {}
+    @total_guardians = []
+    @students_with_guardians = []
+    @students_without_guardians = []
+    
+    (class_rooms || []).each do |class_room|
+      class_room_id = class_room.id
+      hash[class_room_id] = {}
+      total_guardians = 0
+      
+      class_room.class_room_students.each do |crs|
+        next if crs.student.blank?
+        next if crs.student.student_parent.blank?
+        total_guardians += 1 #Counting available guardians per class
+      end
+
+      hash[class_room_id]["total_guardians"] = total_guardians
+      with_guardians = 0
+      without_guardians = 0
+
+      class_room.class_room_students.each do |crs|
+        next if crs.student.blank?
+        if crs.student.student_parent.blank?
+          without_guardians += 1
+        end
+        unless crs.student.student_parent.blank?
+          with_guardians += 1
+        end
+      end
+      
+      hash[class_room_id]["with_guardians"] = with_guardians
+      hash[class_room_id]["without_guardians"] = without_guardians
+    end
+
+    @statistics = hash.sort_by{|key, value|key.to_i}
+    
+    @statistics.each do |key, value|
+      @total_guardians << value["total_guardians"]
+      @students_with_guardians << value["with_guardians"]
+      @students_without_guardians << value["without_guardians"]
+    end
+    
     render :layout => false
   end
 
