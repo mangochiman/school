@@ -94,6 +94,32 @@
       }
       document.getElementById("course").innerHTML = options;
     }
+
+    function populateDropDowns(){
+      classRoom = document.getElementById("class_room");
+      examType = document.getElementById("exam_type");
+      classRoomOptions = classRoom.getElementsByTagName('option');
+      examTypeOptions = examType.getElementsByTagName('option');
+      firstExamClassRoomId = parseInt(<%= @first_exam_class_room %>);
+      firstExamTypeId = parseInt(<%= @first_exam_type %>);
+      
+      for (i=0; i<= classRoomOptions.length - 1; i++){
+        classRoomId = parseInt(classRoomOptions[i].getAttribute('value'));
+        if (classRoomId == firstExamClassRoomId){
+          classRoomOptions[i].setAttribute("selected", 'selected');
+          loadClassCourses(classRoomOptions[i])
+          console.log(classRoomOptions[i])
+        }
+      }
+
+      for (x=0; x<= examTypeOptions.length - 1; x++){
+        examTypeId = parseInt(examTypeOptions[x].getAttribute('value'));
+        if (examTypeId == firstExamTypeId){
+          examTypeOptions[x].setAttribute("selected", 'selected')
+          console.log(examTypeOptions[x])
+        }
+      }
+    }
     
     </script>
     <style>

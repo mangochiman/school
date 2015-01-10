@@ -8,7 +8,13 @@ class ExaminationController < ApplicationController
 
     @courses = [["---Select Course---", ""]]
     @courses += Course.all.collect{|c|[c.name, c.id]}
-    
+
+    first_exam = Examination.first
+    @first_exam_class_room = first_exam.class_room_id
+    @first_exam_type = first_exam.exam_type_id
+    @first_exam_year = first_exam.start_date.to_date.year
+
+
     start_year = (Date.today.year - 5)
     end_year = Date.today.year
     @years = (start_year..end_year).to_a.reverse
@@ -27,6 +33,10 @@ class ExaminationController < ApplicationController
     render :layout => false
   end
 
+  def plot_graph
+
+  end
+  
   def new_exam_type
     if (request.method == :post)
         if (ExaminationType.create({
