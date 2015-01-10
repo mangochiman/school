@@ -98,17 +98,24 @@
     function populateDropDowns(){
       classRoom = document.getElementById("class_room");
       examType = document.getElementById("exam_type");
+      course = document.getElementById("course");
+      year = document.getElementById("year");
+
       classRoomOptions = classRoom.getElementsByTagName('option');
       examTypeOptions = examType.getElementsByTagName('option');
+      courseOptions = course.getElementsByTagName('option');
+      yearOptions = year.getElementsByTagName('option');
+ 
       firstExamClassRoomId = parseInt(<%= @first_exam_class_room %>);
       firstExamTypeId = parseInt(<%= @first_exam_type %>);
-      
+      firstExamCourseId = parseInt(<%= @first_exam_course %>);
+      firstExamYear = parseInt(<%= @first_exam_year %>);
+
       for (i=0; i<= classRoomOptions.length - 1; i++){
         classRoomId = parseInt(classRoomOptions[i].getAttribute('value'));
         if (classRoomId == firstExamClassRoomId){
           classRoomOptions[i].setAttribute("selected", 'selected');
           loadClassCourses(classRoomOptions[i])
-          console.log(classRoomOptions[i])
         }
       }
 
@@ -116,7 +123,20 @@
         examTypeId = parseInt(examTypeOptions[x].getAttribute('value'));
         if (examTypeId == firstExamTypeId){
           examTypeOptions[x].setAttribute("selected", 'selected')
-          console.log(examTypeOptions[x])
+        }
+      }
+
+      for (y=0; y<= courseOptions.length - 1; y++){
+        courseId = parseInt(courseOptions[y].getAttribute('value'));
+        if (courseId == firstExamCourseId){
+          courseOptions[y].setAttribute("selected", 'selected')
+        }
+      }
+
+      for (z=0; z<= yearOptions.length - 1; z++){
+        yearId = parseInt(yearOptions[z].getAttribute('value'));
+        if (yearId == firstExamYear){
+          yearOptions[z].setAttribute("selected", 'selected')
         }
       }
     }

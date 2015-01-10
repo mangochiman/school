@@ -13,7 +13,7 @@ class ExaminationController < ApplicationController
     @first_exam_class_room = first_exam.class_room_id
     @first_exam_type = first_exam.exam_type_id
     @first_exam_year = first_exam.start_date.to_date.year
-
+    @first_exam_course = first_exam.course_id
 
     start_year = (Date.today.year - 5)
     end_year = Date.today.year
