@@ -8,7 +8,10 @@ class ExaminationController < ApplicationController
 
     @courses = [["---Select Course---", ""]]
     @courses += Course.all.collect{|c|[c.name, c.id]}
-
+    
+    start_year = (Date.today.year - 5)
+    end_year = Date.today.year
+    @years = (start_year..end_year).to_a.reverse
     class_rooms = ClassRoom.all
     hash = {}
     class_rooms.each do |class_room|

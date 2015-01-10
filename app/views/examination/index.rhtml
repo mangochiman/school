@@ -133,7 +133,21 @@
         min-width: 167px;
         transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
       }
-      
+
+      #year{
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        color: #555;
+        display: block;
+        font-size: 14px;
+        height: 34px;
+        line-height: 1.42857;
+        padding: 6px 12px;
+        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+      }
     </style>
   </head>
   <body>
@@ -245,15 +259,17 @@
                   <div style="margin-left:2%;">
                     <table>
                       <tr>
-                        <td style="width:5em; text-align: left;"><span>Select Class</span></td>
+                        <td style="width:3.5em; text-align: left;"><span>Class</span></td>
                         <td><%= select_tag("class_room", options_for_select(@class_rooms), {:onchange=>"loadClassCourses(this);"})%></td>
 
-                        <td style="text-align: left;"><span>Select Exam Type</span></td>
+                        <td style="text-align: left;"><span>Exam Type</span></td>
                         <td><%= select_tag("exam_type", options_for_select(@exam_types))%></td>
 
-                        <td style="text-align: left;"><span>Select Course</span></td>
+                        <td style="text-align: left;"><span>Course</span></td>
                         <td><%= select_tag("course", options_for_select(@courses))%></td>
 
+                        <td style="text-align: left;"><span>Year</span></td>
+                        <td><%= select_tag("year", options_for_select(@years))%></td>
                         <td><a onclick="loadSearchResults();" href="#" class="button round blue image-right ic-search text-upper">Search</a></td>
 
                       </tr>
