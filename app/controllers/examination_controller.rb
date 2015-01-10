@@ -1,5 +1,26 @@
 class ExaminationController < ApplicationController
   def index
+    @class_rooms = [["---Select Class---", ""]]
+    @class_rooms += ClassRoom.all.collect{|c|[c.name, c.id]}
+    
+    @exam_types = [["---Select Exam Type---", ""]]
+    @exam_types += ExaminationType.all.collect{|e|[e.name, e.id]}
+
+    @courses = [["---Select Course---", ""]]
+    @courses += Course.all.collect{|c|[c.name, c.id]}
+
+    class_rooms = ClassRoom.all
+    hash = {}
+    class_rooms.each do |class_room|
+      class_room_id = class_room.id
+      hash[class_room_id] = {}
+      class_room.class_room_courses.each do |crc|
+        course_id = crc.course_id
+        course_name = crc.course.name
+        hash[class_room_id][course_id] = course_name
+      end
+    end
+    @class_courses = hash.to_json
     render :layout => false
   end
 
