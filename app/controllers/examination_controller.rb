@@ -3,7 +3,7 @@ class ExaminationController < ApplicationController
     @class_rooms = [["---Select Class---", ""]]
     @class_rooms += ClassRoom.all.collect{|c|[c.name, c.id]}
     
-    @exam_types = [["---Select Exam Type---", ""]]
+    @exam_types = [["All", "All"]]
     @exam_types += ExaminationType.all.collect{|e|[e.name, e.id]}
 
     @courses = [["---Select Course---", ""]]
@@ -63,7 +63,10 @@ class ExaminationController < ApplicationController
 
   def plot_graph
     class_room_id = params[:class_room_id]
-    exam_type_id = params[:exam_type_id]
+    exam_type_ids = params[:exam_type_id]
+    if (params[:exam_type_id].upcase == 'ALL')
+      exam_type_ids = ExaminationType.all.map(&:id).join(', ')
+    end
     year = params[:year]
     course_id = params[:course_id]
 
@@ -72,9 +75,9 @@ class ExaminationController < ApplicationController
     @exams_with_results = []
     
     (1..12).to_a.each do |month_number|
-      course_exams = Examination.find(:all, :conditions => ["class_room_id =? AND exam_type_id =?
+      course_exams = Examination.find(:all, :conditions => ["class_room_id =? AND exam_type_id IN (#{exam_type_ids})
           AND course_id =? AND DATE_FORMAT(start_date, '%m') =? AND DATE_FORMAT(start_date, '%Y') =?",
-          class_room_id, exam_type_id, course_id,
+          class_room_id, course_id,
           month_number, year])
       
       without_results = 0
