@@ -15,6 +15,18 @@ class ExaminationController < ApplicationController
     @first_exam_year = first_exam.start_date.to_date.year
     @first_exam_course = first_exam.course_id
 
+    @exams_per_month = []
+
+    (1..12).to_a.each do |month_number|
+      course_exams = Examination.find(:all, :conditions => ["class_room_id =? AND exam_type_id =?
+          AND course_id =? AND DATE_FORMAT(start_date, '%m') =? AND DATE_FORMAT(start_date, '%Y') =?",
+          first_exam.class_room_id, first_exam.exam_type_id, first_exam.course_id,
+          month_number, first_exam.start_date.to_date.year])
+      
+      total_exams_per_month = course_exams.count
+      @exams_per_month << total_exams_per_month
+    end
+    
     start_year = (Date.today.year - 5)
     end_year = Date.today.year
     @years = (start_year..end_year).to_a.reverse
@@ -29,6 +41,7 @@ class ExaminationController < ApplicationController
         hash[class_room_id][course_id] = course_name
       end
     end
+    
     @class_courses = hash.to_json
     render :layout => false
   end
