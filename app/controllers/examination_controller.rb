@@ -16,15 +16,30 @@ class ExaminationController < ApplicationController
     @first_exam_course = first_exam.course_id
 
     @exams_per_month = []
+    @exam_without_results = []
+    @exam_with_results = []
 
     (1..12).to_a.each do |month_number|
       course_exams = Examination.find(:all, :conditions => ["class_room_id =? AND exam_type_id =?
           AND course_id =? AND DATE_FORMAT(start_date, '%m') =? AND DATE_FORMAT(start_date, '%Y') =?",
           first_exam.class_room_id, first_exam.exam_type_id, first_exam.course_id,
           month_number, first_exam.start_date.to_date.year])
-      
+      without_results = 0
+      with_results = 0
+      (course_exams || []).each do |course_exam|
+          if (course_exam.examination_results.blank?)
+            without_results += 1
+          end
+
+          unless (course_exam.examination_results.blank?)
+            with_results += 1
+          end        
+      end
+
       total_exams_per_month = course_exams.count
       @exams_per_month << total_exams_per_month
+      @exam_without_results << without_results
+      @exam_with_results << with_results
     end
     
     start_year = (Date.today.year - 5)
@@ -53,18 +68,37 @@ class ExaminationController < ApplicationController
     course_id = params[:course_id]
 
     @exams_per_month = []
-
+    @exams_without_results = []
+    @exams_with_results = []
+    
     (1..12).to_a.each do |month_number|
       course_exams = Examination.find(:all, :conditions => ["class_room_id =? AND exam_type_id =?
           AND course_id =? AND DATE_FORMAT(start_date, '%m') =? AND DATE_FORMAT(start_date, '%Y') =?",
           class_room_id, exam_type_id, course_id,
           month_number, year])
+      
+      without_results = 0
+      with_results = 0
+      (course_exams || []).each do |course_exam|
+          if (course_exam.examination_results.blank?)
+            without_results += 1
+          end
+
+          unless (course_exam.examination_results.blank?)
+            with_results += 1
+          end
+      end
 
       total_exams_per_month = course_exams.count
       @exams_per_month << total_exams_per_month
+      @exams_without_results << without_results
+      @exams_with_results << with_results
     end
-    
-    render :text => @exams_per_month.to_json and return
+    hash = {}
+    hash["exams_per_month"] = @exams_per_month
+    hash["exams_without_results"] = @exams_without_results
+    hash["exams_with_results"] = @exams_with_results
+    render :text => hash.to_json and return
   end
   
   def new_exam_type

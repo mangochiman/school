@@ -47,7 +47,7 @@
             yAxis: {
                 min: 0,
                 title: {
-                    text: 'Exams'
+                    text: 'Total'
                 }
             },
             tooltip: {
@@ -65,6 +65,16 @@
                 }
             },
             series: [
+              {
+                name: 'Exams With Results',
+                data: eval('<%= @exam_with_results.to_json %>')
+
+              },
+              {
+                name: 'Exams Without Results',
+                data: eval('<%= @exam_without_results.to_json %>')
+
+              },
               {
                 name: 'Total Exams',
                 data: eval('<%= @exams_per_month.to_json %>')
@@ -142,48 +152,61 @@
           url: "/examination/plot_graph",
           data: "class_room_id=" + classRoomId + "&exam_type_id=" + examTypeId + "&course_id=" + courseId + "&year=" + year,
           success: function(results){
-            console.log(results)
-                    $('#container').highcharts({
-            chart: {
-                type: 'column'
-            },
-            title: {
-                text: 'Exam Statistics'
-            },
-            subtitle: {
-                text: 'Based on the above parameters'
-            },
-            xAxis: {
-                categories: ['Jan', 'Feb', 'Mar', 'Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-            },
-            yAxis: {
-                min: 0,
+            results = eval('(' + results + ')')
+            examsPerMonth = results['exams_per_month'];
+            examsWithResults = results['exams_with_results'];
+            examsWithoutResults = results['exams_without_results'];
+            $('#container').highcharts({
+                chart: {
+                    type: 'column'
+                },
                 title: {
-                    text: 'Exams'
-                }
-            },
-            tooltip: {
-                headerFormat: '<span style="font-size:10px; font-weight:bold;">{point.key}</span><table>',
-                pointFormat: '<tr><td style="color:{series.color};text-align:left; padding:3px;">{series.name}: </td>' +
-                    '<td style="padding:0"><b>{point.y}</b></td></tr>',
-                footerFormat: '</table>',
-                shared: true,
-                useHTML: true
-            },
-            plotOptions: {
-                column: {
-                    pointPadding: 0.2,
-                    borderWidth: 0
-                }
-            },
-            series: [
-              {
-                name: 'Total Exams',
-                data: eval(results)
+                    text: 'Exam Statistics'
+                },
+                subtitle: {
+                    text: 'Based on the above parameters'
+                },
+                xAxis: {
+                    categories: ['Jan', 'Feb', 'Mar', 'Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: 'Total'
+                    }
+                },
+                tooltip: {
+                    headerFormat: '<span style="font-size:10px; font-weight:bold;">{point.key}</span><table>',
+                    pointFormat: '<tr><td style="color:{series.color};text-align:left; padding:3px;">{series.name}: </td>' +
+                        '<td style="padding:0"><b>{point.y}</b></td></tr>',
+                    footerFormat: '</table>',
+                    shared: true,
+                    useHTML: true
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
+                    }
+                },
+                series: [
+                  {
+                    name: 'Exams With Results',
+                    data: examsWithResults
 
-              }
-            ]
-        });
+                  },
+                  {
+                    name: 'Exams Without Results',
+                    data: examsWithoutResults
+
+                  },
+                  {
+                    name: 'Total Exams',
+                    data: examsPerMonth
+
+                  }
+                ]
+            });
 
           }
 
