@@ -130,7 +130,25 @@
         }
       }
     }
-    
+
+    function plotGraph(){
+        classRoomId = document.getElementById('class_room').value;
+        examTypeId = document.getElementById('exam_type').value;
+        courseId = document.getElementById('course').value;
+        year = document.getElementById('year').value;
+
+        jQuery.ajax({
+          type: "POST",
+          url: "/examination/plot_graph",
+          data: "class_room_id=" + classRoomId + "&exam_type_id=" + examTypeId + "&course_id=" + courseId + "&year=" + year,
+          success: function(results){
+            console.log(results)
+            //results = eval("(" + results  + ")");
+
+          }
+
+      });
+    }
     </script>
     <style>
       #filter-graph-form fieldset {

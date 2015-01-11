@@ -47,7 +47,24 @@ class ExaminationController < ApplicationController
   end
 
   def plot_graph
+    class_room_id = params[:class_room_id]
+    exam_type_id = params[:exam_type_id]
+    year = params[:year]
+    course_id = params[:course_id]
 
+    @exams_per_month = []
+
+    (1..12).to_a.each do |month_number|
+      course_exams = Examination.find(:all, :conditions => ["class_room_id =? AND exam_type_id =?
+          AND course_id =? AND DATE_FORMAT(start_date, '%m') =? AND DATE_FORMAT(start_date, '%Y') =?",
+          class_room_id, exam_type_id, course_id,
+          month_number, year])
+
+      total_exams_per_month = course_exams.count
+      @exams_per_month << total_exams_per_month
+    end
+    
+    render :text => @exams_per_month.to_json and return
   end
   
   def new_exam_type
