@@ -1,5 +1,14 @@
 class CourseController < ApplicationController
   def index
+    @class_rooms = ClassRoom.find(:all).map(&:name)
+    @class_room_courses = []
+
+    class_rooms = ClassRoom.find(:all)
+    (class_rooms || []).each do |class_room|
+      total_courses = class_room.class_room_courses.count
+      @class_room_courses << total_courses
+    end
+    
     render :layout => false
   end
 
