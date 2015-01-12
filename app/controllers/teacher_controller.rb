@@ -176,7 +176,13 @@ class TeacherController < ApplicationController
   end
 
   def filter_teachers
-     render :layout => false
+    @class_rooms = [["All", "All"]]
+    @class_rooms += ClassRoom.all.collect{|c|[c.name, c.id]}
+
+    @courses = [["All", "All"]]
+    @courses += Course.all.collect{|c|[c.name, c.id]}
+    @teachers = Teacher.all
+    render :layout => false
   end
 
   def edit_teacher

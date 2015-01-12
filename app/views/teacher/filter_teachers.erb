@@ -1,6 +1,248 @@
-<%#
-# To change this template, choose Tools | Templates
-# and open the template in the editor.
-%>
+<!DOCTYPE html>
 
-<%= "filter_teachers" %>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>SimpleAdmin - Dashboard</title>
+    <!-- Optimize for mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!-- jQuery & JS files -->
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("script") %>
+    <%= stylesheet_link_tag("style") %>
+
+    <script>
+      function editMe(obj){
+        teacherId = obj.getAttribute("teacher_id");
+        window.location = "/teacher/edit_me?teacher_id=" + teacherId;
+      }
+      
+      function searchTeachers(){
+        classRoom = document.getElementById("class_room");
+        examType = document.getElementById("exam_type");
+        course = document.getElementById("course");
+        year = document.getElementById("year");
+      }
+
+    </script>
+    <style>
+      #filter-form fieldset {
+        border: 1px solid gray;
+        padding: 0px;
+        width: 98.7%;
+      }
+      #filter-form legend {
+        color: #abda0f;
+        font-size: 14px;
+        font-weight: 100;
+        margin-left: 14px;
+        padding: 2px;
+      }
+      #filter-form fieldset input {
+        color: #505050;
+        float: left;
+        margin-right: 5px;
+        width: 140px;
+        padding: 3px;
+        font-size: 14px;
+      }
+
+     #class_room, #course, #gender{
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        color: #555;
+        display: block;
+        font-size: 14px;
+        height: 34px;
+        line-height: 1.42857;
+        padding: 6px 12px;
+        min-width: 167px;
+        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+      }
+
+      a{
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- TOP BAR -->
+    <div id="top-bar">
+
+      <div class="page-full-width cf">
+
+        <ul id="nav" class="fl">
+
+          <li class="v-sep"><a href="#" class="round button dark ic-left-arrow image-left">Go to website</a></li>
+          <li class="v-sep"><a href="#" class="round button dark menu-user image-left">Logged in as <strong>admin</strong></a>
+            <ul>
+              <li><a href="#">My Profile</a></li>
+              <li><a href="/admin/settings">Settings</a></li>
+              <li><a href="#">Change Password</a></li>
+              <li><a href="#">Log out</a></li>
+            </ul>
+          </li>
+
+          <li><a href="#" class="round button dark menu-email-special image-left">3 new messages</a></li>
+          <li><a href="#" class="round button dark menu-logoff image-left">Log out</a></li>
+
+        </ul> <!-- end nav -->
+
+
+        <form action="#" method="POST" id="search-form" class="fr">
+          <fieldset>
+            <input type="text" id="search-keyword" class="round button dark ic-search image-right" placeholder="Search..." />
+            <input type="hidden" value="SUBMIT" />
+          </fieldset>
+        </form>
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end top-bar -->
+
+
+
+    <!-- HEADER -->
+    <div id="header-with-tabs">
+
+      <div class="page-full-width cf">
+
+        <ul id="tabs" class="fl">
+          <li><a href="/admin/home" class="dashboard-tab">Dashboard</a></li>
+          <li><a href="/student/index" > Students</a></li>
+          <li><a href="/parent/index" >Parents</a></li>
+          <li><a href="/teacher/index" class="active-tab">Teachers</a></li>
+          <li><a href="/admin/research">Research</a></li>
+          <li><a href="/examination/index">Exams</a></li>
+          <li><a href="/class_room/index">Classes</a></li>
+          <li><a href="/course/index">Courses</a></li>
+          <li><a href="/report/index">Reports</a></li>
+          <li><a href="/student/my_results">My Results</a></li>
+          <li><a href="/admin/time_table">Time Tables</a></li>
+        </ul> <!-- end tabs -->
+
+        <!-- Change this image to your own company's logo -->
+        <!-- The logo will automatically be resized to 30px height. -->
+        <a href="#" id="company-branding-small" class="fr"><img src="/images/company-logo.png" alt="Blue Hosting" /></a>
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end header -->
+
+
+
+    <!-- MAIN CONTENT -->
+    <div id="content">
+
+      <div class="page-full-width cf">
+
+        <div class="side-menu fl">
+
+          <h3>Task</h3>
+          <ul>
+            <li><a href="/teacher/add_teacher/">Add Teacher</a></li>
+            <li><a href="/teacher/edit_teacher/">Edit Teacher</a></li>
+            <li><a href="/teacher/assign_class/">Assign Class</a></li>
+            <li><a href="/teacher/remove_class/">Remove Class</a></li>
+            <li><a href="/teacher/assign_subjects">Assign Subjects</a></li>
+            <li><a href="/teacher/teacher_stats">Teacher Stats</a></li>
+            <li><a href="/teacher/filter_teachers">Filter Teachers By</a></li>
+          </ul>
+
+        </div> <!-- end side-menu -->
+
+        <div class="side-content fr">
+
+          <div class="content-module">
+
+            <div class="content-module-heading cf">
+
+              <h3 class="fl">Table design</h3>
+              <span class="fr expand-collapse-text">Click to collapse</span>
+              <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+            </div> <!-- end content-module-heading -->
+
+
+            <div class="content-module-main">
+              <form id="filter-form" action="#">
+                <fieldset>
+                  <legend>Search</legend>
+                  <div style="margin-left:2%;">
+                    <table>
+                      <tr>
+                        <td style="width:5.5em; text-align: left;"><span>Select Class</span></td>
+                        <td><%= select_tag("class_room", options_for_select(@class_rooms), {:onchange=>"loadClassCourses(this);"})%></td>
+
+                        <td style="text-align: left;"><span>Select Course</span></td>
+                        <td><%= select_tag("course", options_for_select(@courses))%></td>
+
+                        <td style="text-align: left;"><span>Select Gender</span></td>
+                        <td><%= select_tag("gender", options_for_select(['All', 'Male', 'Female']))%></td>
+                        <td><a onclick="searchTeachers();" class="button round blue image-right ic-search text-upper">Plot</a></td>
+
+                      </tr>
+                    </table>
+                  </div>
+                </fieldset>
+              </form>
+              <table>
+
+                <thead>
+
+                  <tr>
+                    <th style="min-width:15%;">Name</th>
+                    <th>Email</th>
+                    <th>Gender</th>
+                    <th>Date Of Birth</th>
+                    <th>Phone #</th>
+                    <th>Date of Join</th>
+                    <th>Action</th>
+                  </tr>
+
+                </thead>
+
+                <tbody id="teachers">
+                  <% @teachers.each do |teacher| %>
+                  <tr>
+                    <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= teacher.fname.capitalize.to_s + ' ' + teacher.lname.capitalize.to_s %></td>
+                    <td><a href="#"><%=  teacher.email %></a></td>
+                    <td><%=  teacher.gender %></td>
+                    <td><%=  teacher.dob.to_date.strftime("%d-%b-%Y") %></td>
+                    <td><%=  teacher.phone %></td>
+                    <td><%=  teacher.created_at.strftime("%d-%b-%Y") %></td>
+                    <td>
+                      <a teacher_id="<%= teacher.id %>" onclick="editMe(this)" class="table-actions-button ic-table-edit"></a>
+                    </td>
+                  </tr>
+                  <% end %>
+                </tbody>
+
+              </table>
+            </div> <!-- end content-module-main -->
+
+          </div> <!-- end content-module -->
+
+        </div> <!-- end side-content -->
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end content -->
+
+
+
+    <!-- FOOTER -->
+    <div id="footer">
+
+      <p>&copy; Copyright 2012 <a href="#">BlueHosting, LLC</a>. All rights reserved.</p>
+      <p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
+
+    </div> <!-- end footer -->
+
+  </body>
+</html>
