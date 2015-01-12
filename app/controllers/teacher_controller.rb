@@ -182,6 +182,55 @@ class TeacherController < ApplicationController
     @courses = [["All", "All"]]
     @courses += Course.all.collect{|c|[c.name, c.id]}
     @teachers = Teacher.all
+    if (request.method == :post)
+      class_room_ids = params[:class_room]
+      if (params[:class_room].to_s.upcase == 'ALL')
+        class_room_ids = ClassRoom.all.map(&:id).join(', ')
+      end
+      
+      course_ids = params[:course]
+      if (params[:course].to_s.upcase == 'ALL')
+        course_ids = Course.all.map(&:id).join(', ')
+      end
+      
+      gender = params[:gender]
+      gender_conditions = ""
+      if (gender.to_s.upcase == 'ALL')
+        gender_conditions = "gender IN ('Male', 'Female')"
+      else
+        gender_conditions = "gender = '#{gender}'"
+      end
+      
+      teachers = []
+
+      if (params[:course].to_s.upcase == 'ALL')
+        teachers = ClassRoomTeacher.find_by_sql("SELECT * FROM class_room_teachers
+          INNER JOIN teacher USING(teacher_id) WHERE class_room_id IN (#{class_room_ids})
+          AND #{gender_conditions}
+        ").collect{|crt|crt.teacher}
+      else
+        teachers = TeacherClassRoomCourse.find_by_sql("SELECT * FROM teacher_class_room_course
+            INNER JOIN teacher USING(teacher_id) WHERE class_room_id IN (#{class_room_ids}) AND
+            course_id IN (#{course_ids})  AND #{gender_conditions}
+        ").collect{|tcrc|tcrc.teacher}
+      end
+
+      hash = {}
+      teachers.each do |teacher|
+        teacher_id = teacher.id.to_s
+        hash[teacher_id] = {}
+        hash[teacher_id]["fname"] = teacher.fname.to_s
+        hash[teacher_id]["lname"] = teacher.lname.to_s
+        hash[teacher_id]["phone"] = teacher.phone
+        hash[teacher_id]["email"] = teacher.email
+        hash[teacher_id]["gender"] = teacher.gender
+        hash[teacher_id]["dob"] = teacher.dob.to_date.strftime("%d-%b-%Y")
+        hash[teacher_id]["join_date"] = teacher.created_at.to_date.strftime("%d-%b-%Y")
+      end
+
+      render :text => hash.to_json and return
+    end
+    
     render :layout => false
   end
 

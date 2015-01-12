@@ -19,10 +19,41 @@
       }
       
       function searchTeachers(){
-        classRoom = document.getElementById("class_room");
-        examType = document.getElementById("exam_type");
-        course = document.getElementById("course");
-        year = document.getElementById("year");
+        classRoom = document.getElementById("class_room").value;
+        course = document.getElementById("course").value;
+        gender = document.getElementById("gender").value;
+        jQuery.ajax({
+          type: "POST",
+          url: "/teacher/filter_teachers",
+          data: "class_room=" + classRoom + "&course=" + course + "&gender=" + gender,
+          success: function(results){
+            results = eval("(" + results  + ")");
+            html = "";
+            tbody = document.getElementById("teachers");
+
+            for (var teacherID in results){
+              firstName = results[teacherID]["fname"];
+              lastName = results[teacherID]["lname"];
+              gender = results[teacherID]["gender"];
+              phone = results[teacherID]["phone"];
+              email = results[teacherID]["email"];
+              dob = results[teacherID]["dob"];
+              join_date = results[teacherID]["join_date"];
+              html+="<tr>";
+              html+="<td style='text-align:left; padding: 0.833em 0 0.833em 1.25em;'>" + firstName + ' ' + lastName +  "</td>";
+              html+="<td><a href='#'>" + email +  "</a></td>";
+              html+="<td>" + gender +  "</td>";
+              html+="<td>" + dob +  "</td>";
+              html+="<td>" + phone +  "</td>";
+              html+="<td>" + join_date +  "</td>";
+              html+="<td><a teacher_id=" + teacherID + " onclick='editMe(this)' href='#' class='table-actions-button ic-table-edit'></a></td>";
+              html+="</tr>";
+            }
+
+            tbody.innerHTML = html
+          }
+
+      });
       }
 
     </script>
@@ -67,6 +98,9 @@
       a{
         cursor: pointer;
       }
+    table th:first-child {
+        border-style: none none none !important;
+    }
     </style>
   </head>
   <body>
@@ -184,13 +218,13 @@
 
                         <td style="text-align: left;"><span>Select Gender</span></td>
                         <td><%= select_tag("gender", options_for_select(['All', 'Male', 'Female']))%></td>
-                        <td><a onclick="searchTeachers();" class="button round blue image-right ic-search text-upper">Plot</a></td>
+                        <td><a onclick="searchTeachers();" class="button round blue image-right ic-search text-upper">Filter</a></td>
 
                       </tr>
                     </table>
                   </div>
                 </fieldset>
-              </form>
+              </form><br />
               <table>
 
                 <thead>
