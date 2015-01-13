@@ -18,13 +18,12 @@
         window.location = "/parent/edit_me?parent_id=" + parentId;
       }
       
-      function searchParents(){
+      function searchGuardians(){
         classRoom = document.getElementById("class_room").value;
-        course = document.getElementById("course").value;
         gender = document.getElementById("gender").value;
         jQuery.ajax({
           type: "POST",
-          url: "/parent/filter_parents",
+          url: "/parent/filter_guardians",
           data: "class_room=" + classRoom + "&gender=" + gender,
           success: function(results){
             results = eval("(" + results  + ")");
@@ -212,7 +211,7 @@
 
                         <td style="text-align: left;"><span>Select Gender</span></td>
                         <td><%= select_tag("gender", options_for_select(['All', 'Male', 'Female']))%></td>
-                        <td><a onclick="searchTeachers();" class="button round blue image-right ic-search text-upper">Filter</a></td>
+                        <td><a onclick="searchGuardians();" class="button round blue image-right ic-search text-upper">Filter</a></td>
 
                       </tr>
                     </table>
