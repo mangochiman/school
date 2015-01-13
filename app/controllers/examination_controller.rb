@@ -10,10 +10,10 @@ class ExaminationController < ApplicationController
     @courses += Course.all.collect{|c|[c.name, c.id]}
 
     first_exam = Examination.first
-    @first_exam_class_room = first_exam.class_room_id
-    @first_exam_type = first_exam.exam_type_id
-    @first_exam_year = first_exam.start_date.to_date.year
-    @first_exam_course = first_exam.course_id
+    @first_exam_class_room = first_exam.class_room_id rescue nil
+    @first_exam_type = first_exam.exam_type_id rescue nil
+    @first_exam_year = first_exam.start_date.to_date.year rescue nil
+    @first_exam_course = first_exam.course_id rescue nil
 
     @exams_per_month = []
     @exam_without_results = []
