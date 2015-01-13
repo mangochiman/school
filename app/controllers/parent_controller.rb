@@ -97,6 +97,14 @@ class ParentController < ApplicationController
     end
     render :text => "true" and return
   end
+
+  def filter_guardians
+    @class_rooms = [["All", "All"]]
+    @class_rooms += ClassRoom.all.collect{|c|[c.name, c.id]}
+    
+    @parents = Parent.find(:all)
+    render :layout => false
+  end
   
   def create
     first_name = params[:first_name]

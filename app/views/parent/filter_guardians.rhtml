@@ -3,42 +3,42 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>parent Section</title>
+    <title>SimpleAdmin - Dashboard</title>
     <!-- Optimize for mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <!-- jQuery & JS files -->
-    <%= javascript_include_tag("jquery") %>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
     <%= javascript_include_tag("script") %>
     <%= stylesheet_link_tag("style") %>
-    <script type="text/javascript">
 
+    <script>
       function editMe(obj){
-        parentId = obj.getAttribute("parent_id");
+        parentId = obj.getAttribute("teacher_id");
         window.location = "/parent/edit_me?parent_id=" + parentId;
       }
-
-      function loadSearchResults(){
-        firstName = document.getElementById('fname_search').value;
-        lastName = document.getElementById('lname_search').value;
-        gender = document.getElementsByClassName('gender_search')[0].value;
+      
+      function searchParents(){
+        classRoom = document.getElementById("class_room").value;
+        course = document.getElementById("course").value;
+        gender = document.getElementById("gender").value;
         jQuery.ajax({
           type: "POST",
-          url: "/parent/search_parents",
-          data: "first_name=" + firstName + "&last_name=" + lastName + "&gender=" + gender,
+          url: "/parent/filter_parents",
+          data: "class_room=" + classRoom + "&gender=" + gender,
           success: function(results){
             results = eval("(" + results  + ")");
             html = "";
             tbody = document.getElementById("parents");
 
-            for (var parent_id in results){
-              firstName = results[parent_id]["fname"];
-              lastName = results[parent_id]["lname"];
-              gender = results[parent_id]["gender"];
-              phone = results[parent_id]["phone"];
-              email = results[parent_id]["email"];
-              dob = results[parent_id]["dob"];
-              join_date = results[parent_id]["join_date"];
+            for (var parentId in results){
+              firstName = results[parentId]["fname"];
+              lastName = results[parentId]["lname"];
+              gender = results[parentId]["gender"];
+              phone = results[parentId]["phone"];
+              email = results[parentId]["email"];
+              dob = results[parentId]["dob"];
+              join_date = results[parentId]["join_date"];
               html+="<tr>";
               html+="<td style='text-align:left; padding: 0.833em 0 0.833em 1.25em;'>" + firstName + ' ' + lastName +  "</td>";
               html+="<td><a href='#'>" + email +  "</a></td>";
@@ -46,7 +46,7 @@
               html+="<td>" + dob +  "</td>";
               html+="<td>" + phone +  "</td>";
               html+="<td>" + join_date +  "</td>";
-              html+="<td><a parent_id=" + parent_id + " onclick='editMe(this)' href='#' class='table-actions-button ic-table-edit'></a></td>";
+              html+="<td><a parent_id=" + parentId + " onclick='editMe(this)' href='#' class='table-actions-button ic-table-edit'></a></td>";
               html+="</tr>";
             }
 
@@ -54,51 +54,23 @@
           }
 
       });
+      }
 
-  }
     </script>
     <style>
-      /*table{
-        margin-left:15%;
-        width: 60%;
-      }
-      table td #simple-input{
-        float: right;
-      }
-
-      table label{
-       text-align: left;
-      }
-      #simple-input{
-        font-size: 10pt !important;
-      }
-
-    form input[type="text"], input[type="password"], textarea {
-        border: 1px solid #d9dbdd;
-        outline: medium none;
-        padding: 0.5em 0.225em;
-    }
-
-    input[type="submit"] {
-      margin-left: 37%;
-    }*/
-
-
-      #search-parent-form fieldset {
+      #filter-form fieldset {
         border: 1px solid gray;
-        float: left;
-        margin-bottom: 15px;
-        padding: 5px;
+        padding: 0px;
         width: 98.7%;
       }
-      #search-parent-form legend {
+      #filter-form legend {
         color: #abda0f;
         font-size: 14px;
         font-weight: 100;
         margin-left: 14px;
         padding: 2px;
       }
-      #search-parent-form fieldset input {
+      #filter-form fieldset input {
         color: #505050;
         float: left;
         margin-right: 5px;
@@ -107,19 +79,26 @@
         font-size: 14px;
       }
 
-      .search_table{
-        display: table;
+     #class_room, #gender{
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        color: #555;
+        display: block;
+        font-size: 14px;
+        height: 34px;
+        line-height: 1.42857;
+        padding: 6px 12px;
+        min-width: 167px;
+        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
       }
 
-      .search_row{
-        display: table-row;
+      a{
+        cursor: pointer;
       }
-
-      .search_td{
-        display: table-cell;
-      }
-
-      table th:first-child {
+    table th:first-child {
         border-style: none none none !important;
     }
     </style>
@@ -169,7 +148,7 @@
 
         <ul id="tabs" class="fl">
           <li><a href="/admin/home" class="dashboard-tab">Dashboard</a></li>
-          <li><a href="/student/index"> Students</a></li>
+          <li><a href="/student/index">Students</a></li>
           <li><a href="/parent/index" class="active-tab">Parents</a></li>
           <li><a href="/teacher/index">Teachers</a></li>
           <li><a href="/admin/research">Research</a></li>
@@ -214,7 +193,7 @@
 
             <div class="content-module-heading cf">
 
-              <h3 class="fl">Edit Parent/Guardian details</h3>
+              <h3 class="fl">Table design</h3>
               <span class="fr expand-collapse-text">Click to collapse</span>
               <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -222,43 +201,24 @@
 
 
             <div class="content-module-main">
-              <% if flash[:notice] %>
-                  <div class="confirmation-box round">
-                    <%= flash[:notice] %>
-                  </div>
-                <% end %>
-                <% if flash[:error] %>
-                  <div class="error-box round">
-                      <%= flash[:error] %>
-                  </div>
-                <% end %>
-              <form id="search-parent-form" action="#">
+              <form id="filter-form" action="#">
                 <fieldset>
                   <legend>Search</legend>
-                  <div style="width:71%; margin-left:10%;">
+                  <div style="margin-left:2%;">
                     <table>
                       <tr>
-                        <td style="width:10%;">First Name</td>
-                        <td style="width:10%;"><input type="text" id="fname_search"/></td>
-                        <td style="width:10%;">Last Name</td>
-                        <td style="width:10%;"><input type="text" id="lname_search"/></td>
-                        <td style="width:10%;">Gender</td>
-                        <td style="width:5%">
-                          <select id="dropdown-actions" class="gender_search">
-                            <option value="">Select Gender</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                          </select>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td colspan="6"><a onclick="loadSearchResults();" href="#" class="button round blue image-right ic-search text-upper">Search</a></td>
+                        <td style="width:5.5em; text-align: left;"><span>Select Class</span></td>
+                        <td><%= select_tag("class_room", options_for_select(@class_rooms), {:onchange=>"loadClassCourses(this);"})%></td>
+
+                        <td style="text-align: left;"><span>Select Gender</span></td>
+                        <td><%= select_tag("gender", options_for_select(['All', 'Male', 'Female']))%></td>
+                        <td><a onclick="searchTeachers();" class="button round blue image-right ic-search text-upper">Filter</a></td>
+
                       </tr>
                     </table>
                   </div>
                 </fieldset>
-              </form>
-
+              </form><br />
               <table>
 
                 <thead>
@@ -276,16 +236,16 @@
                 </thead>
 
                 <tbody id="parents">
-                  <% @parents.each do |parent| %>
+                  <% @parents.each do |teacher| %>
                   <tr>
-                    <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= parent.fname.capitalize.to_s + ' ' + parent.lname.capitalize.to_s %></td>
-                    <td><a href="#"><%=  parent.email %></a></td>
-                    <td><%=  parent.gender %></td>
-                    <td><%=  parent.dob.to_date.strftime("%d-%b-%Y") %></td>
-                    <td><%=  parent.phone %></td>
-                    <td><%=  parent.created_at.strftime("%d-%b-%Y") %></td>
+                    <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= teacher.fname.capitalize.to_s + ' ' + teacher.lname.capitalize.to_s %></td>
+                    <td><a href="#"><%=  teacher.email %></a></td>
+                    <td><%=  teacher.gender %></td>
+                    <td><%=  teacher.dob.to_date.strftime("%d-%b-%Y") %></td>
+                    <td><%=  teacher.phone %></td>
+                    <td><%=  teacher.created_at.strftime("%d-%b-%Y") %></td>
                     <td>
-                      <a parent_id="<%= parent.id %>" onclick="editMe(this)" href="#" class="table-actions-button ic-table-edit"></a>
+                      <a teacher_id="<%= teacher.id %>" onclick="editMe(this)" class="table-actions-button ic-table-edit"></a>
                     </td>
                   </tr>
                   <% end %>
