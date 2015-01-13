@@ -124,6 +124,7 @@ class StudentController < ApplicationController
   end
 
   def assign_optional_courses
+
     student = Student.find(params[:student_id])
     @courses = student.class_room_student.class_room.class_room_courses.collect{|crc|
       crc.course
@@ -137,7 +138,7 @@ class StudentController < ApplicationController
           })
       end
       flash[:notice] = "You have successfully assigned courses"
-      redirect_to :action => "assign_optional_courses" and return
+      redirect_to :action => "assign_optional_courses", :student_id => params[:student_id] and return
     end
     
     render :layout => false
