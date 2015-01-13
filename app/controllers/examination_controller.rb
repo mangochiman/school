@@ -22,8 +22,9 @@ class ExaminationController < ApplicationController
     (1..12).to_a.each do |month_number|
       course_exams = Examination.find(:all, :conditions => ["class_room_id =? AND exam_type_id =?
           AND course_id =? AND DATE_FORMAT(start_date, '%m') =? AND DATE_FORMAT(start_date, '%Y') =?",
-          first_exam.class_room_id, first_exam.exam_type_id, first_exam.course_id,
-          month_number, first_exam.start_date.to_date.year])
+          (first_exam.class_room_id rescue nil), (first_exam.exam_type_id rescue nil),
+          (first_exam.course_id rescue nil),
+          (month_number rescue nil), (first_exam.start_date.to_date.year rescue nil)])
       without_results = 0
       with_results = 0
       (course_exams || []).each do |course_exam|
