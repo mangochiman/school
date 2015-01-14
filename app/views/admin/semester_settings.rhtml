@@ -3,79 +3,19 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Student Section</title>
+    <title>SimpleAdmin - Dashboard</title>
     <!-- Optimize for mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <!-- jQuery & JS files -->
-
     <%= javascript_include_tag("jquery-1.9.1.min") %>
     <%= javascript_include_tag("highcharts") %>
     <%= javascript_include_tag("script") %>
-    
+
     <%= javascript_include_tag("exporting") %>
     <%= stylesheet_link_tag("style") %>
-
-    <script>
-      $(function () {
-        $('#container').highcharts({
-            chart: {
-                type: 'column'
-            },
-            title: {
-                text: 'Students Statistics'
-            },
-            subtitle: {
-                text: 'Distribution by Class'
-            },
-            xAxis: {
-                categories: eval('<%= @class_rooms.to_json %>')
-            },
-            yAxis: {
-                min: 0,
-                title: {
-                    text: 'Total Students'
-                }
-            },
-            tooltip: {
-                headerFormat: '<span style="font-size:10px; font-weight:bold;">{point.key}</span><table>',
-                pointFormat: '<tr><td style="color:{series.color};text-align:left; padding:3px;">{series.name}: </td>' +
-                    '<td style="padding:0"><b>{point.y}</b></td></tr>',
-                footerFormat: '</table>',
-                shared: true,
-                useHTML: true
-            },
-            plotOptions: {
-                column: {
-                    pointPadding: 0.2,
-                    borderWidth: 0
-                }
-            },
-            series: [
-
-              {
-                name: 'Males',
-                data: eval('<%= @males.to_json %>')
-
-              },
-              {
-                name: 'Females',
-                data: eval('<%= @females.to_json %>')
-
-              }, 
-              {
-                name: 'Total',
-                data: eval('<%= @totals.to_json %>')
-
-              }
-          ]
-        });
-    });
-    
-    </script>
   </head>
   <body>
-
     <!-- TOP BAR -->
     <div id="top-bar">
 
@@ -89,7 +29,7 @@
               <li><a href="#">My Profile</a></li>
               <li><a href="/admin/settings">Settings</a></li>
               <li><a href="#">Change Password</a></li>
-              <li><a href="#">Log out</a></li>
+              <li><a href="/user/login">Log out</a></li>
             </ul>
           </li>
 
@@ -119,7 +59,7 @@
 
         <ul id="tabs" class="fl">
           <li><a href="/admin/home" class="dashboard-tab">Dashboard</a></li>
-          <li><a href="/student/index" class="active-tab"> Students</a></li>
+          <li><a href="/student/index">Students</a></li>
           <li><a href="/parent/index">Parents</a></li>
           <li><a href="/teacher/index">Teachers</a></li>
           <li><a href="/admin/research">Research</a></li>
@@ -127,7 +67,7 @@
           <li><a href="/class_room/index">Classes</a></li>
           <li><a href="/course/index">Courses</a></li>
           <li><a href="/report/index">Reports</a></li>
-          <li><a href="/admin/semester_settings">Semester</a></li>
+          <li><a href="/admin/semester_settings" class="active-tab">Semester</a></li>
           <li><a href="/admin/time_table">Time Tables</a></li>
         </ul> <!-- end tabs -->
 
@@ -150,15 +90,9 @@
 
           <h3>Task</h3>
           <ul>
-            <li><a href="/student/add_student/">Add Student</a></li>
-            <li><a href="/student/edit_student/">Edit Student</a></li>
-            <li><a href="/student/remove_students/">Void Student</a></li>
-            <li><a href="/student/assign_class/">Assign Class</a></li>
-            <li><a href="/student/assign_subjects">Assign Subjects</a></li>
-            <li><a href="/student/edit_subjects">Edit Subjects</a></li>
-            <li><a href="/student/assign_parent_guardian">Assign Parent/Guardian</a></li>
-            <li><a href="/student/edit_parent_guardian">Edit Parent/Guardian</a></li>
-            <li><a href="/student/filter_students">Filter Students By</a></li>
+            <li><a href="/admin/set_total_semesters">Set Total Semesters</a></li>
+            <li><a href="/admin/set_current_semesters">Set Current Semester</a></li>
+            <li><a href="/admin/view_semesters">View Semesters</a></li>
           </ul>
 
         </div> <!-- end side-menu -->
@@ -169,7 +103,7 @@
 
             <div class="content-module-heading cf">
 
-              <h3 class="fl">Table design</h3>
+              <h3 class="fl">Set Semester Settings</h3>
               <span class="fr expand-collapse-text">Click to collapse</span>
               <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -182,8 +116,6 @@
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->
-
-           <!-- end content-module -->
 
         </div> <!-- end side-content -->
 
