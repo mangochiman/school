@@ -52,7 +52,7 @@ class AdminController < ApplicationController
      render :layout => false
   end
 
-  def set_current_semesters
+  def set_current_semester
     render :layout => false
   end
 

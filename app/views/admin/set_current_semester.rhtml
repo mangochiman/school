@@ -16,15 +16,19 @@
     <%= stylesheet_link_tag("style") %>
 
     <style>
-      #semester input[type="text"], input[type="password"], textarea {
-        border: 1px solid #d9dbdd;
-        outline: medium none;
-        padding: 0.5em 0.225em;
-      }
-
-      #simple-input {
-        font-size: 10pt !important;
-        width: 150px;
+      #semester{
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        color: #555;
+        font-size: 14px;
+        height: 34px;
+        line-height: 1.42857;
+        padding: 6px 12px;
+        min-width: 167px;
+        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
       }
     </style>
   </head>
@@ -134,16 +138,17 @@
                       <%= flash[:error] %>
                   </div>
                 <% end %>
-              <form id="semester" action="/admin/create_semester">
-                <table style="width:58%; margin-left: 20%;">
-                  <tr>
-                    <td style="width:10em"><label for="simple-input">Total Semesters</label></td>
-                    <td><input type="text" name="total_semesters" id="simple-input" class="round default-width-input" /></td>
-                  </tr>
-                </table>
-                <div class="stripe-separator"><!--  --></div>
-                <input type="submit" value="Submit" class="round blue ic-right-arrow" />
-              </form>
+                <form method="POST" action="/admin/set_current_semester">
+                    <table style="width:40%; margin-left: 20%;">
+                      <tr>
+                        <td style="text-align: left; width:7em;"><span>Current Semester</span></td>
+                        <td><%= select_tag("semester", options_for_select([1,2,3,4,5]))%></td>
+                      </tr>
+                    </table>
+                  <div class="stripe-separator"><!--  --></div>
+                  <input type="submit" value="Submit" class="round blue ic-right-arrow" />
+                </form>
+                
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->
