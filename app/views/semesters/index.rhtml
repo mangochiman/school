@@ -26,6 +26,25 @@
         font-size: 10pt !important;
         width: 150px;
       }
+
+      .label {
+          color: #fff;
+          display: inline;
+          background-color: #5bc0de;
+          font-size: 1.2em;
+          font-weight: bold;
+          line-height: 1;
+          padding-left: 20%;
+          padding-right: 20%;
+          padding-top:2%;
+          padding-bottom:2%;
+          text-align: center;
+          vertical-align: baseline;
+          white-space: nowrap;
+          cursor: pointer;
+          min-width: 100px;
+          float: right;
+      }
     </style>
   </head>
   <body>
@@ -103,7 +122,7 @@
 
           <h3>Task</h3>
           <ul>
-            <li><a href="/semesters/index">Set Total Semesters</a></li>
+            <li><a href="/semesters/semester_settings">Set Total Semesters</a></li>
             <li><a href="/semesters/set_current_semester">Set Current Semester</a></li>
             <li><a href="/semesters/view_semesters">View Semesters</a></li>
           </ul>
@@ -116,7 +135,7 @@
 
             <div class="content-module-heading cf">
 
-              <h3 class="fl">Set Semester Settings</h3>
+              <h3 class="fl">Current Semester Details</h3>
               <span class="fr expand-collapse-text">Click to collapse</span>
               <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -134,16 +153,41 @@
                       <%= flash[:error] %>
                   </div>
                 <% end %>
-              <form id="semester" action="/admin/create_semester">
-                <table style="width:58%; margin-left: 20%;">
+              <table style="width:40%; margin-left: 20%;">
                   <tr>
-                    <td style="width:10em"><label for="simple-input">Total Semesters</label></td>
-                    <td><input type="text" name="total_semesters" id="simple-input" class="round default-width-input" /></td>
+                    <td style="text-align: left; width:7em;"><span>Current Year</span></td>
+                    <td>
+                      <span class="label" style="margin-left:0%;"><%= @current_year %></span>
+                    </td>
                   </tr>
-                </table>
-                <div class="stripe-separator"><!--  --></div>
-                <input type="submit" value="Submit" class="round blue ic-right-arrow" />
-              </form>
+                  <tr>
+                    <td colspan="2">&nbsp;</td>
+                  </tr>
+                  <tr>
+                    <td style="text-align: left; width:7em;"><span>Current Semester</span></td>
+                    <td>
+                      <span class="label" style="margin-left:0%;"><%= @current_semester %></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">&nbsp;</td>
+                  </tr>
+                  <tr>
+                    <td style="text-align: left;"><span>Date Started</span></td>
+                    <td>
+                      <span class="label" style="margin-left:0%;"><%= @current_semester_start_date %></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">&nbsp;</td>
+                  </tr>
+                  <tr>
+                    <td style="text-align: left;"><span>End Date</span></td>
+                    <td>
+                      <span class="label" style="margin-left:0%;"><%= @current_semester_end_date %></span>
+                    </td>
+                  </tr>
+              </table>
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->
