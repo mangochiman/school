@@ -15,6 +15,22 @@
 
     <script>
       var classRoomHash = eval("(" + '<%= @class_room_hash.to_json %>' + ")");
+
+      function loadSemesterData(){
+        year = document.getElementById('year').value;
+
+        jQuery.ajax({
+          type: "POST",
+          url: "/semesters/load_semester_data",
+          data: "year=" + year,
+          success: function(results){
+            results = eval('(' + results + ')');
+            console.log(results);
+          }
+
+        });
+      }
+      
     </script>
     <style>
       .semester_row{
@@ -29,6 +45,20 @@
       .class_name_header, .males_header, .females_header, .total_header{
         font-weight: bold;
         text-transform: uppercase;
+      }
+      #year{
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        color: #555;
+        display: block;
+        font-size: 14px;
+        height: 34px;
+        line-height: 1.42857;
+        padding: 6px 12px;
+        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
       }
     </style>
   </head>
@@ -128,6 +158,12 @@
 
 
             <div class="content-module-main">
+              <table style="width:25%; float: right;">
+                <tr>
+                  <td style="font-size: 12pt; font-weight: bold;">Select Year</td>
+                  <td><%= select_tag("year", options_for_select(@years), {:onchange => "loadSemesterData();"})%></td>
+                </tr>
+              </table>
               <table>
                 <tbody>
                   <% @hash.sort_by{|k, v|k}.each do |semester_id, data| %>
