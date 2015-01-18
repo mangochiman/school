@@ -45,6 +45,48 @@ class SemestersController < ApplicationController
   end
 
   def view_semesters
+    semesters = Semester.find(:all)
+    @hash = {}
+    (semesters || []).each do |semester|
+      semester_id = semester.id
+      @hash[semester_id] = {}
+      class_room_students = ClassRoomStudent.find(:all, :conditions => ["semester_id =?", semester_id])
+      class_room_students.each do |crs|
+        next if crs.class_room.blank?
+        class_room_id = crs.class_room.id
+        @hash[semester_id][class_room_id] = {} if @hash[semester_id][class_room_id].blank?
+        total_students_per_class = ClassRoomStudent.find(:all, :conditions => ["semester_id =? AND class_room_id =?",
+          semester_id, class_room_id])
+      
+        total_males = 0
+        total_females = 0
+        (total_students_per_class || []).each do |crs|
+          next if crs.student.blank?
+          if (crs.student.gender.upcase == 'MALE')
+            total_males += 1
+          end
+          if (crs.student.gender.upcase == 'FEMALE')
+            total_females += 1
+          end
+        end
+        
+        @hash[semester_id][class_room_id]["total_students"] = total_students_per_class.count
+        @hash[semester_id][class_room_id]["males"] = total_males
+        @hash[semester_id][class_room_id]["females"] = total_females
+      end
+
+    end
+
+    males = []
+    females = []
+    @hash.sort_by{|k, v|k}.each do |semester_id, values|
+      values.each do |class_room_id, students|
+        males = students["males"]
+        females = students["males"]
+        total_students = students["males"]
+      end
+      
+    end
     render :layout => false
   end
 
