@@ -46,6 +46,12 @@ class SemestersController < ApplicationController
 
   def view_semesters
     semesters = Semester.find(:all)
+    @class_room_hash = {}
+    
+    (ClassRoom.all || []).each do |class_room|
+      @class_room_hash[class_room.id] = class_room.name
+    end
+
     @hash = {}
     (semesters || []).each do |semester|
       semester_id = semester.id
@@ -77,16 +83,6 @@ class SemestersController < ApplicationController
 
     end
 
-    males = []
-    females = []
-    @hash.sort_by{|k, v|k}.each do |semester_id, values|
-      values.each do |class_room_id, students|
-        males = students["males"]
-        females = students["males"]
-        total_students = students["males"]
-      end
-      
-    end
     render :layout => false
   end
 

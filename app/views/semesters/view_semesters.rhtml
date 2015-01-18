@@ -13,8 +13,23 @@
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("metallic") %>
 
+    <script>
+      var classRoomHash = eval("(" + '<%= @class_room_hash.to_json %>' + ")");
+    </script>
     <style>
-     
+      .semester_row{
+        background-color: lightskyblue;
+        border-left: 1px solid #747c8a;
+        font-weight: bold;
+        padding: 1.25em 0 1.25em 1.25em;
+        text-transform: uppercase;
+        font-size: 100%;
+        line-height: 3em;
+      }
+      .class_name_header, .males_header, .females_header, .total_header{
+        font-weight: bold;
+        text-transform: uppercase;
+      }
     </style>
   </head>
   <body>
@@ -113,7 +128,34 @@
 
 
             <div class="content-module-main">
-              
+              <table>
+                <tbody>
+                  <% @hash.sort_by{|k, v|k}.each do |semester_id, data| %>
+                  <tr>
+                    <td colspan="4" class="semester_row">Semester <%= semester_id %></td>
+                  </tr>
+                  <tr>
+                    <td class="class_name_header" style="min-width: 20%;">Class</td>
+                    <td class="males_header" style="text-align:center;">Males</td>
+                    <td class="females_header" style="text-align:center;">Females</td>
+                    <td class="total_header">Total</td>
+                  </tr>
+                  <%  @hash[semester_id].each do |class_room_id, students|%>
+                  <tr style="line-height:0.1em;">
+                    <%
+                      males = students["males"]
+                      females = students["males"]
+                      total_students = students["total_students"]
+                    %>
+                    <td><%= @class_room_hash[class_room_id] %></td>
+                    <td style="text-align:center;"><%= males %></td>
+                    <td style="text-align:center;"><%= females %></td>
+                    <td><%= total_students %></td>
+                  </tr>
+                  <% end %>
+                  <% end %>
+                </tbody>
+              </table>
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->
