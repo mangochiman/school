@@ -8,23 +8,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <!-- jQuery & JS files -->
-    <%= javascript_include_tag("jquery") %>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("highcharts") %>
     <%= javascript_include_tag("script") %>
+
+    <%= javascript_include_tag("exporting") %>
     <%= stylesheet_link_tag("style") %>
-    <style>
-      #course input[type="text"], input[type="password"], textarea {
-        border: 1px solid #d9dbdd;
-        outline: medium none;
-        padding: 0.5em 0.225em;
-      }
-      
-      #simple-input {
-        font-size: 10pt !important;
-      }
-    </style>
+
   </head>
   <body>
-
     <!-- TOP BAR -->
     <div id="top-bar">
 
@@ -38,7 +30,7 @@
               <li><a href="#">My Profile</a></li>
               <li><a href="/admin/settings">Settings</a></li>
               <li><a href="#">Change Password</a></li>
-              <li><a href="#">Log out</a></li>
+              <li><a href="/user/login">Log out</a></li>
             </ul>
           </li>
 
@@ -74,10 +66,10 @@
           <li><a href="/admin/research">Research</a></li>
           <li><a href="/examination/index">Exams</a></li>
           <li><a href="/class_room/index">Classes</a></li>
-          <li><a href="/course/index" class="active-tab">Courses</a></li>
+          <li><a href="/course/index">Courses</a></li>
           <li><a href="/report/index">Reports</a></li>
           <li><a href="/semesters/index">Semester</a></li>
-          <li><a href="/attendance/index">Daily Attendance</a></li>
+          <li><a href="/attendance/index" class="active-tab">Daily Attendance</a></li>
         </ul> <!-- end tabs -->
 
         <!-- Change this image to your own company's logo -->
@@ -99,10 +91,9 @@
 
           <h3>Task</h3>
           <ul>
-            <li><a href="/course/add_course">Add course</a></li>
-            <li><a href="/course/edit_course">Edit course</a></li>
-            <li><a href="/course/remove_course">Void course</a></li>
-            <li><a href="/course/view_courses">View courses</a></li>
+            <% @class_rooms.each do |class_room| %>
+                <li><a href="/attendance/class_room_register?class_room_id=<%= class_room.id %>"><%= class_room.name %></a></li>
+            <% end %>
           </ul>
 
         </div> <!-- end side-menu -->
@@ -113,7 +104,7 @@
 
             <div class="content-module-heading cf">
 
-              <h3 class="fl">Add course</h3>
+              <h3 class="fl">Daily Attendance</h3>
               <span class="fr expand-collapse-text">Click to collapse</span>
               <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -121,35 +112,10 @@
 
 
             <div class="content-module-main">
-
-              <% if flash[:notice] %>
-                  <div class="confirmation-box round">
-                    <%= flash[:notice] %>
-                  </div>
-                <% end %>
-                <% if flash[:error] %>
-                  <div class="error-box round">
-                      <%= flash[:error] %>
-                  </div>
-                <% end %>
-              <form id="course" method="POST" action="/course/edit_me">
-                <table>
-                  <tr>
-                    <td><label for="simple-input">Course Name</label></td>
-                    <td><input type="text" name="course_name" id="simple-input" class="round default-width-input" value="<%=@course.name%>"/></td>
-                  </tr>
-                </table>
-                <div class="stripe-separator"><!--  --></div>
-                <input type="hidden" name="course_id" value="<%= params[:course_id] %>" />
-                <input type="submit" value="Submit" class="round blue ic-right-arrow" />
-              </form>
-
+              
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->
-
-          
-          
 
         </div> <!-- end side-content -->
 
