@@ -112,7 +112,16 @@
 
 
             <div class="content-module-main">
-              
+              <% if flash[:notice] %>
+                  <div class="confirmation-box round">
+                    <%= flash[:notice] %>
+                  </div>
+                <% end %>
+                <% if flash[:error] %>
+                  <div class="error-box round">
+                      <%= flash[:error] %>
+                  </div>
+                <% end %>
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->

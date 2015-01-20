@@ -12,7 +12,47 @@
     <%= javascript_include_tag("script") %>
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("metallic") %>
-    
+
+    <script>
+      
+      function loadAttendanceData(){
+        attendanceDate = $('.date-picker')[0].value;
+        classRoomId = '<%= params[:class_room_id] %>';
+
+        jQuery.ajax({
+          type: "POST",
+          url: "/attendance/load_attendance_data",
+          data: "class_room_id=" + classRoomId + '&attendance_date=' + attendanceDate,
+          success: function(result){
+            result = eval('(' + result + ')');
+            inputs = document.getElementsByTagName('input');
+
+            for (var i=0; i<=inputs.length - 1; i++){
+              if (inputs[i].type == 'radio'){
+                inputs[i].checked = false;
+              }
+            }
+            
+            for (var studentId in result){
+              status = result[studentId];
+              if (status.trim() == "P"){
+                presentInput = document.getElementById('student_' + studentId + '_P');
+                presentInput.checked= true;
+              }
+
+              if (status.trim() == "A"){
+                absentInput = document.getElementById('student_' + studentId + '_A');
+                absentInput.checked= true;
+              }
+            }
+
+          }
+
+        });
+      }
+
+      //window.setInterval("loadAttendanceData();", 300)
+    </script>
     <style>
       table th:first-child {
         border-style: none none none !important;
@@ -115,11 +155,13 @@
 
 
             <div class="content-module-main">
-              <form action="#" method="POST">
+              <form action="/attendance/create_daily_attendance_register" method="POST">
                 <table style="width:38%; float: right;">
                   <tr>
                     <td style="text-align: left; width:8em; font-size: 14pt;"><span>Attendance Date</span></td>
-                    <td style="text-align:right; font-size: 14pt;"><input style="width: 200px; line-height: 0.2em; text-align: center;"type="text" name="attendance_date" value='<%=  Date.today.strftime("%Y-%m-%d") %>' id="simple-input" class="round default-width-input date-picker" /></td>
+                    <td style="text-align:right; font-size: 14pt;">
+                      <input style="width: 200px; line-height: 0.2em; text-align: center;"type="text" name="attendance_date" value='<%=  Date.today.strftime("%Y-%m-%d") %>' id="simple-input" class="round default-width-input date-picker" />
+                    </td>
                   </tr>
                 </table><br />
               <table>
@@ -141,13 +183,14 @@
                       <tr>
                         <td style="font-weight: bold;"><%= count %></td>
                         <td style="text-align:center;"><span><%= student_name %></span></td>
-                        <td style="text-align: center;"><input type="radio" name="radio_<%= student.id%>"/></td>
-                        <td><input type="radio" name="radio_<%= student.id%>"/></td>
+                        <td style="text-align: center;"><input type="radio" name="student_<%= student.id%>" value="P" id="student_<%= student.id %>_P"/></td>
+                        <td><input type="radio" name="student_<%= student.id%>" value="A" id="student_<%= student.id %>_A"/></td>
                       </tr>
                   <% end %>
                 </tbody>
               </table>
               <div class="stripe-separator"><!--  --></div>
+              <%= hidden_field_tag("class_room_id", params[:class_room_id]) %>
               <input type="submit" value="Submit" class="round blue ic-right-arrow" style="" />
 
               </form>
