@@ -57,6 +57,9 @@
       table th:first-child {
         border-style: none none none !important;
       }
+      a{
+        cursor: pointer;
+      }
     </style>
   </head>
   <body>
@@ -156,11 +159,14 @@
 
             <div class="content-module-main">
               <form action="/attendance/create_daily_attendance_register" method="POST">
-                <table style="width:38%; float: right;">
+                <table style="width:52%; float: right;">
                   <tr>
                     <td style="text-align: left; width:8em; font-size: 14pt;"><span>Attendance Date</span></td>
-                    <td style="text-align:right; font-size: 14pt;">
+                    <td style="text-align:center; font-size: 14pt;">
                       <input style="width: 200px; line-height: 0.2em; text-align: center;"type="text" name="attendance_date" value='<%=  Date.today.strftime("%Y-%m-%d") %>' id="simple-input" class="round default-width-input date-picker" />
+                    </td>
+                    <td>
+                      <a onclick="loadAttendanceData();" class="button round blue image-right ic-right-arrow text-upper">Show</a>
                     </td>
                   </tr>
                 </table><br />
