@@ -1,6 +1,6 @@
 class Attendance < ActiveRecord::Migration
   def self.up
-    create_table :attendance, :id => false do |t|
+    create_table :student_attendance, :primary_key => :attendance_id do |t|
       t.string :date
       t.integer :student_id
       t.string :status
@@ -10,6 +10,6 @@ class Attendance < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :attendance
+    drop_table :student_attendance
   end
 end
