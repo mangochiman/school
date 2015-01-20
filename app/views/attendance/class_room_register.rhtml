@@ -8,12 +8,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <!-- jQuery & JS files -->
-    <%= javascript_include_tag("jquery-1.9.1.min") %>
-    <%= javascript_include_tag("highcharts") %>
+    <%= javascript_include_tag("jquery") %>
     <%= javascript_include_tag("script") %>
-
-    <%= javascript_include_tag("exporting") %>
     <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("metallic") %>
+    
     <style>
       table th:first-child {
         border-style: none none none !important;
@@ -117,6 +116,12 @@
 
             <div class="content-module-main">
               <form action="#" method="POST">
+                <table style="width:38%; float: right;">
+                  <tr>
+                    <td style="text-align: left; width:8em; font-size: 14pt;"><span>Attendance Date</span></td>
+                    <td style="text-align:right; font-size: 14pt;"><input style="width: 200px; line-height: 0.2em; text-align: center;"type="text" name="attendance_date" value='<%=  Date.today.strftime("%Y-%m-%d") %>' id="simple-input" class="round default-width-input date-picker" /></td>
+                  </tr>
+                </table><br />
               <table>
                 <thead>
                   <tr>
@@ -166,5 +171,13 @@
 
     </div> <!-- end footer -->
 
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("zebra_datepicker") %>
+    <script>
+      $('.date-picker').Zebra_DatePicker({
+            view : 'years',
+            direction: ['<%=  (Date.today - 5.years).strftime("%Y-%m-%d") %>', '<%=  (Date.today).strftime("%Y-%m-%d") %>']
+      });
+    </script>
   </body>
 </html>
