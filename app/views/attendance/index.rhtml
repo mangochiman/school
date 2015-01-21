@@ -53,8 +53,12 @@
             },
             series: [
               {
-                name: 'Students Attendance',
+                name: 'Attendance',
                 data: eval('<%= @weekly_attendances.to_json %>')
+              },
+              {
+                name: 'Absenteeism',
+                data: eval('<%= @weekly_absenteeism.to_json %>')
               }
             ]
         });

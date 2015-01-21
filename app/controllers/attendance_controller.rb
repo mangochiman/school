@@ -14,17 +14,25 @@ class AttendanceController < ApplicationController
 
     (week_day_start..week_day_end).to_a.each do |date|
       date = date.to_s
-      students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_attendance sa ON
-        s.student_id = sa.student_id AND DATE(sa.date) = '#{date}'")
-      attendance_data[date] = students.count
+      available = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_attendance sa ON
+        s.student_id = sa.student_id AND DATE(sa.date) = '#{date}' and sa.status='P'")
+      attendance_data[date] = {}
+      
+      not_available = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_attendance sa ON
+        s.student_id = sa.student_id AND DATE(sa.date) = '#{date}' and sa.status='A'")
+
+      attendance_data[date]["P"] = available.count
+      attendance_data[date]["A"] = not_available.count
     end
     
     @weekly_dates = []
     @weekly_attendances = []
+    @weekly_absenteeism = []
     
-    attendance_data.sort_by{|date, count|date.to_date}.each do |key, value|
+    attendance_data.sort_by{|date, data|date.to_date}.each do |key, values|
       @weekly_dates << key.to_date.strftime("%d/%b")
-      @weekly_attendances << value
+      @weekly_attendances << values["P"]
+      @weekly_absenteeism << values["A"]
     end
 
     render :layout => false
