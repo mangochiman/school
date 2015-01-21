@@ -1,6 +1,32 @@
 class AttendanceController < ApplicationController
   def index
     @class_rooms = ClassRoom.find(:all)
+    week_day_start = Date.today.beginning_of_week #Monday
+    week_day_end = week_day_start + 4.days
+    
+    @week_day_start = week_day_start.strftime("%d-%b-%Y")
+    @week_day_end = week_day_end.strftime("%d-%b-%Y")
+    
+    attendance_data = {}
+    (week_day_start..week_day_end).to_a.each do |date|
+        attendance_data[date.to_date.to_s] = {}
+    end
+
+    (week_day_start..week_day_end).to_a.each do |date|
+      date = date.to_s
+      students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_attendance sa ON
+        s.student_id = sa.student_id AND DATE(sa.date) = '#{date}'")
+      attendance_data[date] = students.count
+    end
+    
+    @weekly_dates = []
+    @weekly_attendances = []
+    
+    attendance_data.sort_by{|date, count|date.to_date}.each do |key, value|
+      @weekly_dates << key.to_date.strftime("%d/%b")
+      @weekly_attendances << value
+    end
+
     render :layout => false
   end
 

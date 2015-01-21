@@ -15,6 +15,52 @@
     <%= javascript_include_tag("exporting") %>
     <%= stylesheet_link_tag("style") %>
 
+    <script>
+
+      $(function () {
+        $('#container').highcharts({
+            chart: {
+                type: 'line'
+            },
+            title: {
+                text: 'Weekly Students Attendance'
+            },
+            subtitle: {
+                text: '(<%= @week_day_start %> to <%= @week_day_end %>)'
+            },
+            xAxis: {
+                categories: eval('<%= @weekly_dates.to_json %>')
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Total'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px; font-weight:bold;">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};text-align:left; padding:3px;">{series.name}: </td>' +
+                    '<td style="padding:0"><b>{point.y}</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: [
+              {
+                name: 'Students Attendance',
+                data: eval('<%= @weekly_attendances.to_json %>')
+              }
+            ]
+        });
+    });
+
+    </script>
   </head>
   <body>
     <!-- TOP BAR -->
@@ -122,6 +168,9 @@
                       <%= flash[:error] %>
                   </div>
                 <% end %>
+              <div id="container">
+                
+              </div>
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->
