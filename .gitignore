@@ -5,6 +5,7 @@ config/database.yml
 config/settings.yml
 db/schema.rb
 log/
+tmp/
 *~
 nbproject
 Gemfile.lock
