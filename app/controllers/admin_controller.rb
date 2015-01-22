@@ -1,8 +1,112 @@
 class AdminController < ApplicationController
   def home
-    render :layout => "application"
+    render :layout => false
   end
 
+  def school_enrollment
+    render :layout => false
+  end
+
+  def students_statistics
+    start_year = Date.today.year - 5 #This needs to be reworked.
+    end_year = Date.today.year
+
+    enrollment_data = {}
+
+    (start_year..end_year).to_a.each do |year|
+      students = Student.find_by_sql("SELECT * FROM student WHERE DATE_FORMAT(date_created, '%Y') = #{year}")
+      enrollment_data[year] = {}
+      enrollment_data[year] = students.count
+    end
+
+    @dates = []
+    @enrollments = []
+
+    enrollment_data.sort_by{|year, count|year.to_i}.each do |key, total|
+      @dates << key
+      @enrollments << total
+    end
+    
+    render :layout => false
+  end
+
+  def teachers_statistics
+    render :layout => false
+  end
+  
+  def daily_attendance
+    week_day_start = Date.today.beginning_of_week #Monday
+    week_day_end = week_day_start + 4.days
+
+    @week_day_start = week_day_start.strftime("%d-%b-%Y")
+    @week_day_end = week_day_end.strftime("%d-%b-%Y")
+
+    attendance_data = {}
+
+    (week_day_start..week_day_end).to_a.each do |date|
+      date = date.to_s
+      available = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_attendance sa ON
+        s.student_id = sa.student_id AND DATE(sa.date) = '#{date}' and sa.status='P'")
+      attendance_data[date] = {}
+
+      not_available = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_attendance sa ON
+        s.student_id = sa.student_id AND DATE(sa.date) = '#{date}' and sa.status='A'")
+
+      attendance_data[date]["P"] = available.count
+      attendance_data[date]["A"] = not_available.count
+    end
+
+    @weekly_dates = []
+    @weekly_attendances = []
+    @weekly_absenteeism = []
+
+    attendance_data.sort_by{|date, data|date.to_date}.each do |key, values|
+      @weekly_dates << key.to_date.strftime("%d/%b")
+      @weekly_attendances << values["P"]
+      @weekly_absenteeism << values["A"]
+    end
+
+    render :layout => false
+  end
+
+  def load_daily_attendance
+    start_date = params[:start_date].to_date
+    end_date = params[:end_date].to_date
+
+    attendance_data = {}
+
+    (start_date..end_date).to_a.each do |date|
+      next if date.strftime("%A").match(/SATURDAY|SUNDAY/i) #Skip Saturdays and Sundays
+      date = date.to_s
+      attendance_data[date] = {}
+      available = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_attendance sa ON
+        s.student_id = sa.student_id AND DATE(sa.date) = '#{date}' and sa.status='P'")
+      
+      not_available = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_attendance sa ON
+        s.student_id = sa.student_id AND DATE(sa.date) = '#{date}' and sa.status='A'")
+
+      attendance_data[date]["P"] = available.count
+      attendance_data[date]["A"] = not_available.count
+    end
+
+    attendance_hash = {}
+    daily_dates = []
+    daily_attendances = []
+    daily_absenteeism = []
+
+    attendance_data.sort_by{|date, data|date.to_date}.each do |key, values|
+      daily_dates << key.to_date.strftime("%d/%b")
+      daily_attendances << values["P"]
+      daily_absenteeism << values["A"]
+    end
+    
+    attendance_hash["daily_dates"] = daily_dates
+    attendance_hash["daily_attendances"] = daily_attendances
+    attendance_hash["daily_absenteeism"] = daily_absenteeism
+    
+    render :text => attendance_hash.to_json and return
+  end
+  
   def page_full_width
      render :layout => false
   end
