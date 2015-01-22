@@ -14,9 +14,32 @@ class AdminController < ApplicationController
     enrollment_data = {}
 
     (start_year..end_year).to_a.each do |year|
-      students = Student.find_by_sql("SELECT * FROM student WHERE DATE_FORMAT(date_created, '%Y') = #{year}")
+      students = Student.find_by_sql("SELECT * FROM student WHERE DATE_FORMAT(created_at, '%Y') = #{year}")
       enrollment_data[year] = {}
       enrollment_data[year] = students.count
+    end
+
+    @years = []
+    @enrollments = []
+
+    enrollment_data.sort_by{|year, count|year.to_i}.each do |key, total|
+      @years << key
+      @enrollments << total
+    end
+    
+    render :layout => false
+  end
+
+  def teachers_statistics
+    start_year = Date.today.year - 5 #This needs to be reworked.
+    end_year = Date.today.year
+
+    enrollment_data = {}
+
+    (start_year..end_year).to_a.each do |year|
+      teachers = Teacher.find_by_sql("SELECT * FROM teacher WHERE DATE_FORMAT(created_at, '%Y') = #{year}")
+      enrollment_data[year] = {}
+      enrollment_data[year] = teachers.count
     end
 
     @dates = []
@@ -26,11 +49,7 @@ class AdminController < ApplicationController
       @dates << key
       @enrollments << total
     end
-    
-    render :layout => false
-  end
 
-  def teachers_statistics
     render :layout => false
   end
   

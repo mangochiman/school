@@ -8,9 +8,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <!-- jQuery & JS files -->
-    <%= javascript_include_tag("jquery") %>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("highcharts") %>
     <%= javascript_include_tag("script") %>
+
+    <%= javascript_include_tag("exporting") %>
     <%= stylesheet_link_tag("style") %>
+    
+    <script>
+      $(function () {
+        $('#container').highcharts({
+            chart: {
+                type: 'line'
+            },
+            title: {
+                text: 'Exam Statistics'
+            },
+            subtitle: {
+                text: 'Based on the above parameters'
+            },
+            xAxis: {
+                categories: eval('<%= @years.to_json %>')
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Students'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px; font-weight:bold;">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};text-align:left; padding:3px;">{series.name}: </td>' +
+                    '<td style="padding:0"><b>{point.y}</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: [
+              {
+                name: 'Years',
+                data: eval('<%= @enrollments.to_json %>')
+
+              }
+            ]
+        });
+    });
+    </script>
   </head>
   <body>
 
@@ -101,7 +150,7 @@
 
             <div class="content-module-heading cf">
 
-              <h3 class="fl">Enrollment By Gender</h3>
+              <h3 class="fl">Student Enrollment</h3>
               <span class="fr expand-collapse-text">Click to collapse</span>
               <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -109,7 +158,8 @@
 
 
             <div class="content-module-main">
-
+              <div id="container">
+              </div>
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->
