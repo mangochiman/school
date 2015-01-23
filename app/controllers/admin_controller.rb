@@ -95,8 +95,26 @@ class AdminController < ApplicationController
   end
 
   def load_daily_attendance_data
-    start_date = params[:start_date].to_date
-    end_date = params[:end_date].to_date
+    if (params[:period] == 'this_week')
+      start_date = Date.today.beginning_of_week
+      end_date = start_date + 4.days
+    end
+
+    if (params[:period] == 'this_month')
+      start_date = Date.today.beginning_of_month
+      end_date = Date.today
+    end
+
+    if (params[:period] == 'this_year')
+      start_date = Date.today.beginning_of_year
+      end_date = Date.today
+    end
+    
+    if (params[:period] == 'custom_date')
+      start_date = params[:start_date].to_date
+      end_date = params[:end_date].to_date
+    end
+    
 
     attendance_data = {}
 
