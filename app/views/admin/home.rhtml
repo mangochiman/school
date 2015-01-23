@@ -15,6 +15,8 @@
     <%= javascript_include_tag("exporting") %>
     <%= stylesheet_link_tag("style") %>
     <script type="text/javascript">
+      var males = parseInt('<%= @males %>');
+      var females = parseInt('<%= @females %>');
       $(function () {
         $('#container').highcharts({
           chart: {
@@ -24,6 +26,9 @@
           },
           title: {
             text: 'Students Enrollment By Gender'
+          },
+          subtitle: {
+            text: '<%= Date.today.year %>'
           },
           tooltip: {
             pointFormat: '{series.name}: <b>{point.percentage}%</b>',
@@ -47,10 +52,10 @@
               type: 'pie',
               name: 'Total',
               data: [
-                ['Males',   45],
+                ['Males',   males],
                 {
                   name: 'Females',
-                  y: 12,
+                  y: females,
                   sliced: true,
                   selected: true
                 }
@@ -59,8 +64,110 @@
         });
       });
 
+      function plotGraph(){
+        year = document.getElementById('year').value;
+        jQuery.ajax({
+          type: "POST",
+          url: "/admin/home",
+          data: "year=" + year,
+          success: function(results){
+            results = eval('(' + results + ')')
+            year = results['year'];
+            totalMales = results['males'];
+            totalFemales = results['females'];
 
+            $('#container').highcharts({
+              chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false
+              },
+              title: {
+                text: 'Students Enrollment By Gender'
+              },
+              subtitle: {
+                text: year
+              },
+              tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage}%</b>',
+                percentageDecimals: 1
+              },
+              plotOptions: {
+                pie: {
+                  allowPointSelect: true,
+                  cursor: 'pointer',
+                  dataLabels: {
+                    enabled: true,
+                    color: '#000000',
+                    connectorColor: '#000000',
+                    formatter: function() {
+                      return '<b>'+ this.point.name +'</b>: '+ this.percentage +' %';
+                    }
+                  }
+                }
+              },
+              series: [{
+                  type: 'pie',
+                  name: 'Total',
+                  data: [
+                    ['Males',   totalMales],
+                    {
+                      name: 'Females',
+                      y: totalFemales,
+                      sliced: true,
+                      selected: true
+                    }
+                  ]
+                }]
+            });
+          }
+
+        });
+      }
     </script>
+
+    <style>
+      #filter-graph-form fieldset {
+        border: 1px solid gray;
+        padding: 0px;
+        width: 98.7%;
+      }
+      #filter-graph-form legend {
+        color: #abda0f;
+        font-size: 14px;
+        font-weight: 100;
+        margin-left: 14px;
+        padding: 2px;
+      }
+      #filter-graph-form fieldset input {
+        color: #505050;
+        float: left;
+        margin-right: 5px;
+        width: 140px;
+        padding: 0px;
+        font-size: 14px;
+      }
+
+      #year{
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        color: #555;
+        display: block;
+        font-size: 14px;
+        height: 34px;
+        line-height: 1.42857;
+        padding: 6px 12px;
+        min-width: 167px;
+        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+      }
+
+      a{
+        cursor: pointer;
+      }
+    </style>
   </head>
   <body>
 
@@ -159,6 +266,25 @@
 
 
             <div class="content-module-main">
+              <form id="filter-graph-form" action="#">
+                <fieldset>
+                  <legend>Search</legend>
+                  <div style="margin-right:2%;">
+                    <table style="width:22%; float: right;">
+                      <tr style="background-color: white;">
+                        <td style="text-align: left; font-size: 1.2em; width: 10em;"><span>Year</span></td>
+                        <td><%= select_tag("year", options_for_select(@years),{:style=>'text-align:center'})%></td>
+                      </tr>
+                    </table><br />
+                    <div style=""><br />
+                      <span style="margin-left: 78.2%;">
+                        <a onclick="plotGraph();" class="button round blue image-right ic-refresh text-upper">Plot</a>
+                      </span>
+                    </div><br />
+
+                  </div>
+                </fieldset>
+              </form>
               <div id="container">
               </div>
             </div> <!-- end content-module-main -->
