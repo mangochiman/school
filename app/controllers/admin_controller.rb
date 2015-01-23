@@ -94,7 +94,7 @@ class AdminController < ApplicationController
     render :layout => false
   end
 
-  def load_daily_attendance
+  def load_daily_attendance_data
     start_date = params[:start_date].to_date
     end_date = params[:end_date].to_date
 
@@ -128,6 +128,8 @@ class AdminController < ApplicationController
     attendance_hash["daily_dates"] = daily_dates
     attendance_hash["daily_attendances"] = daily_attendances
     attendance_hash["daily_absenteeism"] = daily_absenteeism
+    attendance_hash["start_date"] = start_date.strftime("%d-%B-%Y")
+    attendance_hash["end_date"] = end_date.strftime("%d-%B-%Y")
     
     render :text => attendance_hash.to_json and return
   end

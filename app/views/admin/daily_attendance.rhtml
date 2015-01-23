@@ -76,6 +76,73 @@
           $('.end-date')[0].value = ''
         }
       }
+
+      function plotGraph(){
+        period = document.getElementById('period').value;
+        startDate = $('.start-date')[0].value;
+        endDate = $('.end-date')[0].value;
+
+        jQuery.ajax({
+          type: "POST",
+          url: "/admin/load_daily_attendance_data",
+          data: "period=" + period + "&start_date=" + startDate + "&end_date=" + endDate,
+          success: function(results){
+            results = eval('(' + results + ')')
+            dailyDates = results['daily_dates'];
+            dailyAttendances = results['daily_attendances'];
+            dailyAbsenteeism = results['daily_absenteeism'];
+            startDate = results['start_date'];
+            endDate = results['end_date'];
+            
+            $('#container').highcharts({
+              chart: {
+                type: 'line'
+              },
+              title: {
+                text: 'Daily Students Attendance'
+              },
+              subtitle: {
+                text: "(" + startDate +  " to " + endDate + ")"
+              },
+              xAxis: {
+                categories: dailyDates
+              },
+              yAxis: {
+                min: 0,
+                title: {
+                  text: 'Total'
+                }
+              },
+              tooltip: {
+                headerFormat: '<span style="font-size:10px; font-weight:bold;">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};text-align:left; padding:3px;">{series.name}: </td>' +
+                  '<td style="padding:0"><b>{point.y}</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+              },
+              plotOptions: {
+                column: {
+                  pointPadding: 0.2,
+                  borderWidth: 0
+                }
+              },
+              series: [
+                {
+                  name: 'Attendance',
+                  data: dailyAttendances
+                },
+                {
+                  name: 'Absenteeism',
+                  data: dailyAbsenteeism
+                }
+              ]
+            });
+
+          }
+
+        });
+      }
     </script>
     <style>
       #filter-graph-form fieldset {
@@ -99,7 +166,7 @@
         font-size: 14px;
       }
 
-     #period{
+      #period{
         background-color: #fff;
         background-image: none;
         border: 1px solid #ccc;
@@ -114,7 +181,7 @@
         min-width: 167px;
         transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
       }
-      
+
       .start-date, .end-date{
         background-color: #fff;
         background-image: none;
@@ -252,7 +319,7 @@
                         <a onclick="plotGraph();" class="button round blue image-right ic-refresh text-upper">Plot</a>
                       </span>
                     </div><br />
-   
+
                   </div>
                 </fieldset>
               </form>
@@ -280,15 +347,15 @@
     </div> <!-- end footer -->
     <%= javascript_include_tag("zebra_datepicker") %>
     <script>
-        $('.start-date').Zebra_DatePicker({
-              view : 'years',
-              direction: ['<%=  (Date.today - 10.years).strftime("%Y-%m-%d") %>', '<%=  (Date.today).strftime("%Y-%m-%d") %>']
-        });
+      $('.start-date').Zebra_DatePicker({
+        view : 'years',
+        direction: ['<%=  (Date.today - 10.years).strftime("%Y-%m-%d") %>', '<%=  (Date.today).strftime("%Y-%m-%d") %>']
+      });
 
-        $('.end-date').Zebra_DatePicker({
-              view : 'years',
-              direction: ['<%=  (Date.today - 10.years).strftime("%Y-%m-%d") %>', '<%=  (Date.today).strftime("%Y-%m-%d") %>']
-        });
+      $('.end-date').Zebra_DatePicker({
+        view : 'years',
+        direction: ['<%=  (Date.today - 10.years).strftime("%Y-%m-%d") %>', '<%=  (Date.today).strftime("%Y-%m-%d") %>']
+      });
     </script>
   </body>
 </html>
