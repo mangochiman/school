@@ -68,7 +68,7 @@
         year = document.getElementById('year').value;
         jQuery.ajax({
           type: "POST",
-          url: "/admin/home",
+          url: "/admin/load_enrollment_by_gender_data",
           data: "year=" + year,
           success: function(results){
             results = eval('(' + results + ')')
