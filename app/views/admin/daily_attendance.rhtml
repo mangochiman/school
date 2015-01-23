@@ -65,6 +65,17 @@
         });
       });
 
+      function showHideCustomDateInputs(value){
+        console.log(value);
+        if (value == 'custom_date'){
+          document.getElementsByClassName("custom-date-inputs")[0].style.display = "";
+        }
+        else{
+          document.getElementsByClassName("custom-date-inputs")[0].style.display = "none";
+          $('.start-date')[0].value = ''
+          $('.end-date')[0].value = ''
+        }
+      }
     </script>
     <style>
       #filter-graph-form fieldset {
@@ -84,7 +95,7 @@
         float: left;
         margin-right: 5px;
         width: 140px;
-        padding: 3px;
+        padding: 0px;
         font-size: 14px;
       }
 
@@ -99,6 +110,22 @@
         font-size: 14px;
         height: 34px;
         line-height: 1.42857;
+        padding: 6px 12px;
+        min-width: 167px;
+        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+      }
+      
+      .start-date, .end-date{
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        color: #555;
+        display: block;
+        font-size: 14px;
+        height: 34px;
+        line-height: 1.22857;
         padding: 6px 12px;
         min-width: 167px;
         transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
@@ -206,21 +233,23 @@
                 <fieldset>
                   <legend>Search</legend>
                   <div style="margin-right:2%;">
-                    <table style="width:60%; float: right;">
+                    <table style="width:90%; float: right;">
                       <tr style="background-color: white;">
-                        <td style="text-align: left; font-size: 1.5em;"><span>Period</span></td>
-                        <td><%= select_tag("period", options_for_select(@periods), :style=>'text-align:center')%></td>                        
-                      </tr>
-                      <tr class="custom-date-inputs" style="display:none;">
-                        <td style="text-align: left; font-size: 1.2em;">Start Date</td>
+                        <td style="text-align: left; font-size: 1.2em; width: 3em;"><span>Period</span></td>
+                        <td><%= select_tag("period", options_for_select(@periods),{:onchange => "showHideCustomDateInputs(this.value)", :style=>'text-align:center'})%></td>
+                        <td style="text-align: left; font-size: 1.2em; width: 5em;">Start Date</td>
                         <td><input type="text"  id="simple-input" class="round default-width-input start-date date-picker" /></td>
-                        <td style="text-align: left; font-size: 1.2em; width: 3.5em;">End Date</td>
-                        <td style="text-align:left;"><input type="text"  id="simple-input" class="round default-width-input end-date date-picker" /></td>
+                        <td style="text-align: left; font-size: 1.2em;;">End Date</td>
+                        <td style="text-align:left;"><input type="text"  id="simple-input" class="round default-width-input end-date date-picker" /></td>                     
                       </tr>
-                      <tr>
-                        <td colspan="4" style="text-align:left; background-color: white;"><a onclick="plotGraph();" class="button round blue image-right ic-refresh text-upper">Plot</a></td>
-                      </tr>
-                    </table>
+
+                    </table><br />
+                    <div style=""><br />
+                      <span style="margin-left: 10.2%;">
+                        <a onclick="plotGraph();" class="button round blue image-right ic-refresh text-upper">Plot</a>
+                      </span>
+                    </div><br />
+   
                   </div>
                 </fieldset>
               </form>
