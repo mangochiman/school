@@ -274,13 +274,9 @@
                       <tr style="background-color: white;">
                         <td style="text-align: left; font-size: 1.2em; width: 10em;"><span>Year</span></td>
                         <td><%= select_tag("year", options_for_select(@years),{:style=>'text-align:center'})%></td>
+                        <td><a onclick="plotGraph();" class="button round blue image-right ic-refresh text-upper">Plot</a></td>
                       </tr>
-                    </table><br />
-                    <div style=""><br />
-                      <span style="margin-left: 78.2%;">
-                        <a onclick="plotGraph();" class="button round blue image-right ic-refresh text-upper">Plot</a>
-                      </span>
-                    </div><br />
+                    </table>
 
                   </div>
                 </fieldset>

@@ -302,8 +302,8 @@
               <form id="filter-graph-form" action="#">
                 <fieldset>
                   <legend>Search</legend>
-                  <div style="margin-right:2%;">
-                    <table style="width:90%; float: right;">
+                  <div style="margin-right:4%;">
+                    <table style="width:95%; float: right;">
                       <tr style="background-color: white;">
                         <td style="text-align: left; font-size: 1.2em; width: 3em;"><span>Period</span></td>
                         <td><%= select_tag("period", options_for_select(@periods),{:onchange => "showHideCustomDateInputs(this.value)", :style=>'text-align:center'})%></td>
@@ -311,15 +311,10 @@
                         <td class="custom-date-inputs" style="display: none; "> <input style="text-align:center;" type="text"  id="simple-input" class="round default-width-input start-date date-picker" /></td>
                         <td class="custom-date-inputs" style="display: none; text-align: left; font-size: 1.2em;;">End Date</td>
                         <td class="custom-date-inputs" style="display: none; text-align:left;"><input style="text-align:center;" type="text"  id="simple-input" class="round default-width-input end-date date-picker" /></td>
+                        <td><a onclick="plotGraph();" class="button round blue image-right ic-refresh text-upper">Plot</a></td>
                       </tr>
 
-                    </table><br />
-                    <div style=""><br />
-                      <span style="margin-left: 10.2%;">
-                        <a onclick="plotGraph();" class="button round blue image-right ic-refresh text-upper">Plot</a>
-                      </span>
-                    </div><br />
-
+                    </table>
                   </div>
                 </fieldset>
               </form>
