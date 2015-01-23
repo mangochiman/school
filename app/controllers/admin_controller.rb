@@ -60,6 +60,12 @@ class AdminController < ApplicationController
     @week_day_start = week_day_start.strftime("%d-%b-%Y")
     @week_day_end = week_day_end.strftime("%d-%b-%Y")
 
+    @periods = [
+                  ['This Week','this_week'],
+                  ['This Month', 'this_month'],
+                  ['This Year', 'this_year'],
+                  ['Custom Date','custom_date']
+               ]
     attendance_data = {}
 
     (week_day_start..week_day_end).to_a.each do |date|

@@ -8,9 +8,102 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <!-- jQuery & JS files -->
-    <%= javascript_include_tag("jquery") %>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("highcharts") %>
     <%= javascript_include_tag("script") %>
+
+    <%= javascript_include_tag("exporting") %>
     <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("metallic") %>
+
+    <script>
+
+      $(function () {
+        $('#container').highcharts({
+          chart: {
+            type: 'line'
+          },
+          title: {
+            text: 'Weekly Students Attendance'
+          },
+          subtitle: {
+            text: '(<%= @week_day_start %> to <%= @week_day_end %>)'
+          },
+          xAxis: {
+            categories: eval('<%= @weekly_dates.to_json %>')
+          },
+          yAxis: {
+            min: 0,
+            title: {
+              text: 'Total'
+            }
+          },
+          tooltip: {
+            headerFormat: '<span style="font-size:10px; font-weight:bold;">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};text-align:left; padding:3px;">{series.name}: </td>' +
+              '<td style="padding:0"><b>{point.y}</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+          },
+          plotOptions: {
+            column: {
+              pointPadding: 0.2,
+              borderWidth: 0
+            }
+          },
+          series: [
+            {
+              name: 'Attendance',
+              data: eval('<%= @weekly_attendances.to_json %>')
+            },
+            {
+              name: 'Absenteeism',
+              data: eval('<%= @weekly_absenteeism.to_json %>')
+            }
+          ]
+        });
+      });
+
+    </script>
+    <style>
+      #filter-graph-form fieldset {
+        border: 1px solid gray;
+        padding: 0px;
+        width: 98.7%;
+      }
+      #filter-graph-form legend {
+        color: #abda0f;
+        font-size: 14px;
+        font-weight: 100;
+        margin-left: 14px;
+        padding: 2px;
+      }
+      #filter-graph-form fieldset input {
+        color: #505050;
+        float: left;
+        margin-right: 5px;
+        width: 140px;
+        padding: 3px;
+        font-size: 14px;
+      }
+
+     #period{
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        color: #555;
+        display: block;
+        font-size: 14px;
+        height: 34px;
+        line-height: 1.42857;
+        padding: 6px 12px;
+        min-width: 167px;
+        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+      }
+    </style>
   </head>
   <body>
 
@@ -101,7 +194,7 @@
 
             <div class="content-module-heading cf">
 
-              <h3 class="fl">Enrollment By Gender</h3>
+              <h3 class="fl">Daily Attendance</h3>
               <span class="fr expand-collapse-text">Click to collapse</span>
               <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -109,7 +202,30 @@
 
 
             <div class="content-module-main">
-
+              <form id="filter-graph-form" action="#">
+                <fieldset>
+                  <legend>Search</legend>
+                  <div style="margin-right:2%;">
+                    <table style="width:60%; float: right;">
+                      <tr style="background-color: white;">
+                        <td style="text-align: left; font-size: 1.5em;"><span>Period</span></td>
+                        <td><%= select_tag("period", options_for_select(@periods), :style=>'text-align:center')%></td>                        
+                      </tr>
+                      <tr class="custom-date-inputs" style="display:none;">
+                        <td style="text-align: left; font-size: 1.2em;">Start Date</td>
+                        <td><input type="text"  id="simple-input" class="round default-width-input start-date date-picker" /></td>
+                        <td style="text-align: left; font-size: 1.2em; width: 3.5em;">End Date</td>
+                        <td style="text-align:left;"><input type="text"  id="simple-input" class="round default-width-input end-date date-picker" /></td>
+                      </tr>
+                      <tr>
+                        <td colspan="4" style="text-align:left; background-color: white;"><a onclick="plotGraph();" class="button round blue image-right ic-refresh text-upper">Plot</a></td>
+                      </tr>
+                    </table>
+                  </div>
+                </fieldset>
+              </form>
+              <div id="container">
+              </div>
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->
@@ -130,6 +246,17 @@
       <p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
 
     </div> <!-- end footer -->
+    <%= javascript_include_tag("zebra_datepicker") %>
+    <script>
+        $('.start-date').Zebra_DatePicker({
+              view : 'years',
+              direction: ['<%=  (Date.today - 10.years).strftime("%Y-%m-%d") %>', '<%=  (Date.today).strftime("%Y-%m-%d") %>']
+        });
 
+        $('.end-date').Zebra_DatePicker({
+              view : 'years',
+              direction: ['<%=  (Date.today - 10.years).strftime("%Y-%m-%d") %>', '<%=  (Date.today).strftime("%Y-%m-%d") %>']
+        });
+    </script>
   </body>
 </html>
