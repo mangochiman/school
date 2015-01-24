@@ -65,6 +65,51 @@ class ReportController < ApplicationController
   def students_per_year_report
     start_year = Date.today.year - 5
     end_year = Date.today.year
+
+    if (request.method == :post)
+      hash = {}
+      unless (params[:year].match(/ALL/i))
+        students = Student.find_by_sql("SELECT * FROM student s INNER JOIN class_room_student crs ON
+          s.student_id = crs.student_id INNER JOIN class_room cr ON crs.class_room_id = cr.class_room_id
+          WHERE cr.year = #{params[:year]}")
+
+        hash[params[:year]] = {}
+        students.each do |student|
+          student_id  = student.id
+          student_name = student.fname.capitalize.to_s + ' ' + student.lname.capitalize.to_s
+          hash[params[:year]][student_id] = {}
+          hash[params[:year]][student_id]["name"] = student_name
+          hash[params[:year]][student_id]["dob"] = student.dob
+          hash[params[:year]][student_id]["email"] = student.email
+          hash[params[:year]][student_id]["gender"] = student.gender
+          hash[params[:year]][student_id]["class_room"] = student.name #class room name
+        end
+
+        render :text => hash.to_json and return
+      else
+        hash = {}
+        (start_year..end_year).to_a.each do |year|
+          hash[year] = {}
+          students = Student.find_by_sql("SELECT * FROM student s INNER JOIN class_room_student crs ON
+          s.student_id = crs.student_id INNER JOIN class_room cr ON crs.class_room_id = cr.class_room_id
+          WHERE cr.year = #{year}")
+
+          students.each do |student|
+            student_id  = student.id
+            student_name = student.fname.capitalize.to_s + ' ' + student.lname.capitalize.to_s
+            hash[year][student_id] = {}
+            hash[year][student_id]["name"] = student_name
+            hash[year][student_id]["dob"] = student.dob
+            hash[year][student_id]["email"] = student.email
+            hash[year][student_id]["gender"] = student.gender
+            hash[year][student_id]["class_room"] = student.name #class room name
+          end
+        end
+
+        render :text => hash.to_json and return
+      end
+    end
+
     @years = ["ALL"]
     @years += (start_year..end_year).to_a.reverse
     @semesters = ["ALL"]
