@@ -11,6 +11,28 @@
     <%= javascript_include_tag("jquery") %>
     <%= javascript_include_tag("script") %>
     <%= stylesheet_link_tag("style") %>
+
+    <style>
+      #class_room, #course, #year{
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        color: #555;
+        display: block;
+        font-size: 14px;
+        height: 34px;
+        line-height: 1.42857;
+        padding: 6px 12px;
+        min-width: 208px;
+        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+      }
+
+      a{
+        cursor: pointer;
+      }
+    </style>
   </head>
   <body>
 
@@ -119,25 +141,24 @@
 
               <div class="content-module-main">
 
-                <h1>This is an H1 heading</h1>
-                <p>Followed by a very short paragraph and a stripe content separator.</p>
-
+                <table>
+                  <tr>
+                    <td style="min-width:30%; text-align: left;"><span style="font-size:1.4em;">Class</span></td>
+                    <td><%= select_tag("class_room", options_for_select(@class_rooms), {:style => 'text-align:center'})%></td>
+                  </tr>
+                  <tr>
+                    <td style="min-width:30%; text-align: left;"><span style="font-size:1.4em;">Year</span></td>
+                    <td><%= select_tag("year", options_for_select(@years), {:style => 'text-align:center'})%></td>
+                  </tr>
+                  <tr>
+                    <td style="text-align: left;"><span style="font-size:1.4em;">Course</span></td>
+                    <td><%= select_tag("course", options_for_select(@courses), {:style => 'text-align:center'})%></td>
+                  </tr>
+                </table>
                 <div class="stripe-separator"><!-- --></div>
-
-                <h2>This is an H2 heading</h2>
-                <h3>This is an H3 heading</h3>
-                <h4>This is an H4 heading</h4>
-                <h5>This is an H5 heading</h5>
-
-                <div class="stripe-separator"><!-- --></div>
-
-                <p>The separator above has top and bottom margin set by default, so it will split the content accordingly without
-							any extra tweaks needed from you.</p>
-
-                <div class="stripe-separator"><!-- --></div>
-
-                <blockquote>This is a blockquote followed by a cite tag. And no matter how much text you put in this, it will automatically resize.</blockquote>
-                <cite>- John</cite>
+                <span style="margin-left:41%; position: relative;">
+                  <a class="button round blue image-right ic-right-arrow text-upper">Apply</a>
+                </span>
 
               </div> <!-- end content-module-main -->
 
