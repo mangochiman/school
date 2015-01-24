@@ -12,6 +12,51 @@
     <%= javascript_include_tag("script") %>
     <%= stylesheet_link_tag("style") %>
 
+    <script>
+      
+      function queryReportData(){
+        year = document.getElementById('year').value;
+        semesterID = document.getElementById('semester').value;
+        
+        jQuery.ajax({
+          type: "POST",
+          url: "/report/students_per_semester_report",
+          data: "year=" + year + "&semester_id=" + semesterID,
+          success: function(results){
+            html = "<table>";
+            html += "<thead>";
+            html += "<tr>";
+            html += "<th style='min-width:30%;'>Name</th><th>Email</th><th>Gender</th><th>Date of Birth</th><th>Class Room</th>";
+            html += "</tr>";
+            html += "</thead>";
+            results = eval('(' + results + ')');
+            html += "</tbody>";
+            for (var year in results){
+              for (var studentID in results[year]){
+                html += "<tr>";
+                studentName = results[year][studentID]["name"];
+                studentGender = results[year][studentID]["gender"];
+                studentEmail = results[year][studentID]["email"];
+                studentDOB = results[year][studentID]["dob"];
+                studentClassRoom = results[year][studentID]["class_room"];
+                html += "<td>" + studentName + "</td>";
+                html += "<td><a href='#'>" + studentEmail + "</a></td>";
+                html += "<td>" + studentGender + "</td>";
+                html += "<td>" + studentDOB + "</td>";
+                html += "<td>" + studentClassRoom + "</td>";
+                html += "</tr>";
+              }
+            }
+            html += "</tbody>";
+            html += "</table>";
+            reportData = document.getElementById('report_data');
+            reportData.innerHTML = html;
+          }
+
+        });
+      }
+
+    </script>
     <style>
       #year, #semester{
         background-color: #fff;
@@ -31,6 +76,9 @@
 
       a{
         cursor: pointer;
+      }
+      table th:first-child {
+        border-style: none none none !important;
       }
     </style>
   </head>
@@ -152,7 +200,7 @@
                 </table>
                 <div class="stripe-separator"><!-- --></div>
                 <span style="margin-left:41%; position: relative;">
-                  <a class="button round blue image-right ic-right-arrow text-upper">Apply</a>
+                  <a onclick="queryReportData();" class="button round blue image-right ic-right-arrow text-upper">Apply</a>
                 </span>
               </div> <!-- end content-module-main -->
             </div> <!-- end content-module -->
@@ -170,26 +218,28 @@
               </div> 
 
               <div class="content-module-main cf">
+                <div id="report_data">
 
+                </div>
               </div> 
 
             </div> 
 
           </div> <!-- end side-content -->
 
-      </div> <!-- end full-width -->
+        </div> <!-- end full-width -->
 
+      </div>
     </div>
 
 
+      <!-- FOOTER -->
+      <div id="footer">
 
-    <!-- FOOTER -->
-    <div id="footer">
+        <p>&copy; Copyright 2012 <a href="#">BlueHosting, LLC</a>. All rights reserved.</p>
+        <p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
 
-      <p>&copy; Copyright 2012 <a href="#">BlueHosting, LLC</a>. All rights reserved.</p>
-      <p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
-
-    </div> <!-- end footer -->
+      </div> <!-- end footer -->
 
   </body>
 </html>
