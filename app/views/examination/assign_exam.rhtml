@@ -41,10 +41,10 @@
             loadClassCourses(obj.value);
           }
 
-      });
+        });
       }
 
-     function loadClassCourses(classRoomId){
+      function loadClassCourses(classRoomId){
         jQuery.ajax({
           type: "POST",
           url: "/examination/class_room_courses",
@@ -62,7 +62,7 @@
             document.getElementById("course").innerHTML = options;
           }
 
-      });
+        });
       }
     </script>
     <style>
@@ -77,7 +77,7 @@
       #class_room option{
         padding-left: 40px;
       }
-      
+
       #class_courses tbody td{
         padding: 0.3em 0.1em 0.3em 0.3em;
         border-bottom: 0px;
@@ -90,7 +90,7 @@
         padding: 0.5em 0.225em;
       }
 
-       #simple-input{
+      #simple-input{
         font-size: 10pt !important;
         padding: 6px 12px;
         background-color: #fff;
@@ -120,7 +120,7 @@
         min-width: 208px;
         transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
       }
-      
+
     </style>
   </head>
   <body>
@@ -205,7 +205,7 @@
             <li><a href="/examination/assign_exam">Assign Exam</a></li>
             <li><a href="/examination/edit_exam_assignment">Edit Exam Assignment</a></li>
             <li><a href="/examination/void_exam">Void Exam</a></li>
-             <li><a href="/examination/capture_exam_results">Capture Exam Results</a></li>
+            <li><a href="/examination/capture_exam_results">Capture Exam Results</a></li>
             <li><a href="/examination/edit_exam_results">Edit Exam Results</a></li>
             <li><a href="/examination/void_exam_results">Void Exam Results</a></li>
           </ul>
@@ -227,15 +227,15 @@
 
             <div class="content-module-main">
               <% if flash[:notice] %>
-                  <div class="confirmation-box round">
-                    <%= flash[:notice] %>
-                  </div>
-                <% end %>
-                <% if flash[:error] %>
-                  <div class="error-box round">
-                      <%= flash[:error] %>
-                  </div>
-                <% end %>
+                <div class="confirmation-box round">
+                  <%= flash[:notice] %>
+                </div>
+              <% end %>
+              <% if flash[:error] %>
+                <div class="error-box round">
+                  <%= flash[:error] %>
+                </div>
+              <% end %>
               <form id="exam_assignment" method="POST" action="/examination/create_exam_assignment">
                 <table style="width:50%; margin-left: 20%;">
                   <tr>
@@ -254,26 +254,26 @@
                     <td style="text-align: left;"><span>Exam Date</span></td>
                     <td><input type="text" name="exam_date" id="simple-input" class="round default-width-input date-picker" /></td>
                   </tr>
-                  
+
                 </table>
                 <div id="class_courses">
 
                 </div>
-                
+
                 <div class="stripe-separator"><!--  --></div>
                 <input type="submit" value="Submit" class="round blue ic-right-arrow" style="" />
-                
+
               </form>
 
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->
 
-          
 
-          
 
-          
+
+
+
 
         </div> <!-- end side-content -->
 
@@ -294,8 +294,8 @@
     <%= javascript_include_tag("zebra_datepicker") %>
     <script>
       $('.date-picker').Zebra_DatePicker({
-            view : 'years',
-            direction: ['<%=  Date.today.strftime("%Y-%m-%d") %>', '<%=  (Date.today + 1.year).strftime("%Y-%m-%d") %>']
+        view : 'years',
+        direction: ['<%=  Date.today.strftime("%Y-%m-%d") %>', '<%=  (Date.today + 1.year).strftime("%Y-%m-%d") %>']
       });
     </script>
   </body>
