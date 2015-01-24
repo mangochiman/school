@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <!-- jQuery & JS files -->
-    <%= javascript_include_tag("jquery") %>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
     <%= javascript_include_tag("script") %>
     <%= stylesheet_link_tag("style") %>
 
@@ -32,6 +32,12 @@
             results = eval('(' + results + ')');
             html += "</tbody>";
             for (var year in results){
+              if (!jQuery.isEmptyObject(results[year])){
+                html += "<tr style='font-size:1.4em; background-color:#2069b4; color:white;'>";
+                html += "<td colspan='5'>" + year + "</td>";
+                html += "</tr>";
+              }
+              
               for (var studentID in results[year]){
                 html += "<tr>";
                 studentName = results[year][studentID]["name"];
