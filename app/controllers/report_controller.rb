@@ -72,6 +72,11 @@ class ReportController < ApplicationController
   end
 
   def subject_pass_rate_report
+    @class_rooms = ["All"]
+    @class_rooms += ClassRoom.all.collect{|cr|[cr.name, cr.class_room_id]}
+
+    @courses = ["All"]
+    @courses += Course.all.collect{|c|[c.name, c.course_id]}
     render :layout => false
   end
 
