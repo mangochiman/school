@@ -12,6 +12,45 @@
     <%= javascript_include_tag("script") %>
     <%= stylesheet_link_tag("style") %>
 
+    <script>
+
+      function queryReportData(){
+        year = document.getElementById('year').value;
+        jQuery.ajax({
+          type: "POST",
+          url: "/report/courses_report",
+          data: "year=" + year,
+          success: function(results){
+            html = "<table>";
+            html += "<thead>";
+            html += "<tr>";
+            html += "<th style='font-weight:bold;'>#</th><th style='text-align:center;'>Course Name</th><th style='min-width:30%;'>Date Created</th>";
+            html += "</tr>";
+            html += "</thead>";
+            results = eval('(' + results + ')');
+            html += "<tbody>";
+            count = 0
+            for (var courseId in results){
+              count = count + 1
+              courseName = results[courseId]["course_name"];
+              dateCreated = results[courseId]["date_created"];
+              html += "<tr>";
+              html += "<td style='font-weight:bold;'>" + count + "</td>";
+              html += "<td style='padding-left:25%;'>" + courseName + "</td>";
+              html += "<td>" + dateCreated + "</td>";
+              html += "</tr>";
+            }
+            html += "</tbody>";
+            html += "</table>";
+            reportData = document.getElementById('report_data');
+            reportData.innerHTML = html;
+          }
+
+        });
+      }
+
+    </script>
+
     <style>
       #year, #semester, #class_room{
         background-color: #fff;
@@ -31,6 +70,10 @@
 
       a{
         cursor: pointer;
+      }
+
+      table th:first-child {
+        border-style: none none none !important;
       }
     </style>
   </head>
@@ -149,7 +192,7 @@
                 </table>
                 <div class="stripe-separator"><!-- --></div>
                 <span style="margin-left:41%; position: relative;">
-                  <a class="button round blue image-right ic-right-arrow text-upper">Apply</a>
+                  <a onclick="queryReportData();" class="button round blue image-right ic-right-arrow text-upper">Apply</a>
                 </span>
 
 
@@ -173,7 +216,8 @@
 
 
               <div class="content-module-main cf">
-
+                <div id="report_data">
+                </div>
               </div> <!-- end content-module-main -->
 
             </div> <!-- end content-module -->

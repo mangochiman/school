@@ -32,7 +32,7 @@
             html += "</thead>";
             results = eval('(' + results + ')');
             console.log(results)
-            html += "</tbody>";
+            html += "<tbody>";
             for (var year in results){
               if (!jQuery.isEmptyObject(results[year])){
                 html += "<tr style='font-size:1.4em; background-color:#2069b4; color:white;'>";

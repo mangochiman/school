@@ -238,6 +238,25 @@ class ReportController < ApplicationController
   def courses_report
     start_year = Date.today.year - 5
     end_year = Date.today.year
+
+    if (request.method == :post)
+      year = params[:year]
+      if (year.match(/ALL/i))
+        year = (start_year..end_year).to_a.join(', ')
+      end
+      courses = Course.find_by_sql("SELECT * FROM course WHERE DATE_FORMAT(created_at, '%Y') IN (#{year})")
+      hash = {}
+
+      (courses || []).each do |course|
+        course_id = course.course_id
+        hash[course_id] = {}
+        hash[course_id]["course_name"] = course.name
+        hash[course_id]["date_created"] = course.created_at.strftime("%d-%b-%Y")
+      end
+      
+      render :text => hash.to_json and return
+    end
+    
     @years = ["ALL"]
     @years += (start_year..end_year).to_a.reverse
     @semesters = ["ALL"]
