@@ -149,7 +149,8 @@ class ReportController < ApplicationController
             hash[params[:year]][params[:class_room]][student_id]["gender"] = student.gender
             hash[params[:year]][params[:class_room]][student_id]["class_room"] = student.name #class room name
           end
-          render :text => hash.to_json and return
+          
+          hash[params[:year]].delete(params[:class_room]) if hash[params[:year]][params[:class_room]].blank?
         else
           hash[params[:year]] = {}
           class_room_ids = ClassRoom.all.map(&:id)
@@ -171,7 +172,7 @@ class ReportController < ApplicationController
               hash[params[:year]][class_id][student_id]["class_room"] = student.name #class room name
             end
 
-            render :text => hash.to_json and return
+            hash[params[:year]].delete(class_id) if hash[params[:year]][class_id].blank?
           end
         end
       else
@@ -195,7 +196,7 @@ class ReportController < ApplicationController
               hash[year][params[:class_room]][student_id]["gender"] = student.gender
               hash[year][params[:class_room]][student_id]["class_room"] = student.name #class room name
             end
-            render :text => hash.to_json and return
+            hash[year].delete(params[:class_room]) if hash[year][params[:class_room]].blank?
           else
             hash[year] = {}
             class_room_ids = ClassRoom.all.map(&:id)
@@ -216,14 +217,13 @@ class ReportController < ApplicationController
                 hash[year][class_id][student_id]["gender"] = student.gender
                 hash[year][class_id][student_id]["class_room"] = student.name #class room name
               end
-
-              render :text => hash.to_json and return
+              hash[year].delete(class_id) if hash[year][class_id].blank?
             end
           end
         end
-
-        render :text => hash.to_json and return
       end
+      
+      render :text => hash.to_json and return
     end
 
     @years = ["ALL"]

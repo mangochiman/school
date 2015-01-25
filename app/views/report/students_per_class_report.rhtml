@@ -8,9 +8,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <!-- jQuery & JS files -->
-    <%= javascript_include_tag("jquery") %>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
     <%= javascript_include_tag("script") %>
     <%= stylesheet_link_tag("style") %>
+
+    <script>
+
+      function queryReportData(){
+        classRoomID = document.getElementById('class_room').value;
+        semesterID = document.getElementById('semester').value;
+        year = document.getElementById('year').value;
+        
+        jQuery.ajax({
+          type: "POST",
+          url: "/report/students_per_class_report",
+          data: "class_room=" + classRoomID + "&semester=" + semesterID + "&year=" + year,
+          success: function(results){
+            html = "<table>";
+            html += "<thead>";
+            html += "<tr>";
+            html += "<th style='min-width:30%;'>Name</th><th>Email</th><th>Gender</th><th>Date of Birth</th><th>Class Room</th>";
+            html += "</tr>";
+            html += "</thead>";
+            results = eval('(' + results + ')');
+            console.log(results)
+            html += "</tbody>";
+            for (var year in results){
+              if (!jQuery.isEmptyObject(results[year])){
+                html += "<tr style='font-size:1.4em; background-color:#2069b4; color:white;'>";
+                html += "<td colspan='5'>" + year + "</td>";
+                html += "</tr>";
+              }
+
+              for (var classRoom in results[year]){
+                for (var studentID in results[year][classRoom]){
+                  html += "<tr>";
+                  studentName = results[year][classRoom][studentID]["name"];
+                  studentGender = results[year][classRoom][studentID]["gender"];
+                  studentEmail = results[year][classRoom][studentID]["email"];
+                  studentDOB = results[year][classRoom][studentID]["dob"];
+                  studentClassRoom = results[year][classRoom][studentID]["class_room"];
+                  html += "<td>" + studentName + "</td>";
+                  html += "<td><a href='#'>" + studentEmail + "</a></td>";
+                  html += "<td>" + studentGender + "</td>";
+                  html += "<td>" + studentDOB + "</td>";
+                  html += "<td>" + studentClassRoom + "</td>";
+                  html += "</tr>";
+                }
+              }
+            }
+            html += "</tbody>";
+            html += "</table>";
+            reportData = document.getElementById('report_data');
+            reportData.innerHTML = html;
+          }
+
+        });
+      }
+
+    </script>
 
     <style>
       #year, #semester, #class_room{
@@ -32,8 +88,12 @@
       a{
         cursor: pointer;
       }
+
+      table th:first-child {
+        border-style: none none none !important;
+      }
     </style>
-    
+
   </head>
   <body>
 
@@ -158,7 +218,7 @@
                 </table>
                 <div class="stripe-separator"><!-- --></div>
                 <span style="margin-left:41%; position: relative;">
-                  <a class="button round blue image-right ic-right-arrow text-upper">Apply</a>
+                  <a onclick="queryReportData();" class="button round blue image-right ic-right-arrow text-upper">Apply</a>
                 </span>
 
               </div> <!-- end content-module-main -->
@@ -181,7 +241,8 @@
 
 
               <div class="content-module-main cf">
-
+                <div id="report_data">
+                </div>
               </div> <!-- end content-module-main -->
 
             </div> <!-- end content-module -->
