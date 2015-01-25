@@ -120,6 +120,112 @@ class ReportController < ApplicationController
   def students_per_class_report
     start_year = Date.today.year - 5
     end_year = Date.today.year
+    
+    if (request.method == :post)
+      class_room_id = params[:class_room]
+      semester_id = params[:semester]
+      
+      if (semester_id.match(/ALL/i))
+        semester_id = Semester.all.collect{|s|s.id}.join(', ')
+      end
+      
+      hash = {}
+      unless (params[:year].match(/ALL/i))
+        unless (params[:class_room].match(/ALL/i))
+          students = Student.find_by_sql("SELECT * FROM student s INNER JOIN class_room_student crs ON
+            s.student_id = crs.student_id INNER JOIN class_room cr ON crs.class_room_id = cr.class_room_id
+            WHERE cr.year = #{params[:year]} AND crs.class_room_id=#{class_room_id} AND
+            crs.semester_id IN (#{semester_id})")
+
+          hash[params[:year]] = {}
+          hash[params[:year]][params[:class_room]] = {}
+          students.each do |student|
+            student_id  = student.id
+            student_name = student.fname.capitalize.to_s + ' ' + student.lname.capitalize.to_s
+            hash[params[:year]][params[:class_room]][student_id] = {}
+            hash[params[:year]][params[:class_room]][student_id]["name"] = student_name
+            hash[params[:year]][params[:class_room]][student_id]["dob"] = student.dob
+            hash[params[:year]][params[:class_room]][student_id]["email"] = student.email
+            hash[params[:year]][params[:class_room]][student_id]["gender"] = student.gender
+            hash[params[:year]][params[:class_room]][student_id]["class_room"] = student.name #class room name
+          end
+          render :text => hash.to_json and return
+        else
+          hash[params[:year]] = {}
+          class_room_ids = ClassRoom.all.map(&:id)
+          class_room_ids.each do |class_id|
+            hash[params[:year]][class_id] = {}
+            students = Student.find_by_sql("SELECT * FROM student s INNER JOIN class_room_student crs ON
+            s.student_id = crs.student_id INNER JOIN class_room cr ON crs.class_room_id = cr.class_room_id
+            WHERE cr.year = #{params[:year]} AND crs.class_room_id=#{class_id} AND
+            crs.semester_id IN (#{semester_id})")
+
+            students.each do |student|
+              student_id  = student.id
+              student_name = student.fname.capitalize.to_s + ' ' + student.lname.capitalize.to_s
+              hash[params[:year]][class_id][student_id] = {}
+              hash[params[:year]][class_id][student_id]["name"] = student_name
+              hash[params[:year]][class_id][student_id]["dob"] = student.dob
+              hash[params[:year]][class_id][student_id]["email"] = student.email
+              hash[params[:year]][class_id][student_id]["gender"] = student.gender
+              hash[params[:year]][class_id][student_id]["class_room"] = student.name #class room name
+            end
+
+            render :text => hash.to_json and return
+          end
+        end
+      else
+        hash = {}
+        (start_year..end_year).to_a.each do |year|
+          unless (params[:class_room].match(/ALL/i))
+            students = Student.find_by_sql("SELECT * FROM student s INNER JOIN class_room_student crs ON
+            s.student_id = crs.student_id INNER JOIN class_room cr ON crs.class_room_id = cr.class_room_id
+            WHERE cr.year = #{year} AND crs.class_room_id=#{class_room_id} AND
+            crs.semester_id IN (#{semester_id})")
+
+            hash[year] = {}
+            hash[year][params[:class_room]] = {}
+            students.each do |student|
+              student_id  = student.id
+              student_name = student.fname.capitalize.to_s + ' ' + student.lname.capitalize.to_s
+              hash[year][params[:class_room]][student_id] = {}
+              hash[year][params[:class_room]][student_id]["name"] = student_name
+              hash[year][params[:class_room]][student_id]["dob"] = student.dob
+              hash[year][params[:class_room]][student_id]["email"] = student.email
+              hash[year][params[:class_room]][student_id]["gender"] = student.gender
+              hash[year][params[:class_room]][student_id]["class_room"] = student.name #class room name
+            end
+            render :text => hash.to_json and return
+          else
+            hash[year] = {}
+            class_room_ids = ClassRoom.all.map(&:id)
+            class_room_ids.each do |class_id|
+              hash[year][class_id] = {}
+              students = Student.find_by_sql("SELECT * FROM student s INNER JOIN class_room_student crs ON
+              s.student_id = crs.student_id INNER JOIN class_room cr ON crs.class_room_id = cr.class_room_id
+              WHERE cr.year = #{year} AND crs.class_room_id=#{class_id} AND
+              crs.semester_id IN (#{semester_id})")
+
+              students.each do |student|
+                student_id  = student.id
+                student_name = student.fname.capitalize.to_s + ' ' + student.lname.capitalize.to_s
+                hash[year][class_id][student_id] = {}
+                hash[year][class_id][student_id]["name"] = student_name
+                hash[year][class_id][student_id]["dob"] = student.dob
+                hash[year][class_id][student_id]["email"] = student.email
+                hash[year][class_id][student_id]["gender"] = student.gender
+                hash[year][class_id][student_id]["class_room"] = student.name #class room name
+              end
+
+              render :text => hash.to_json and return
+            end
+          end
+        end
+
+        render :text => hash.to_json and return
+      end
+    end
+
     @years = ["ALL"]
     @years += (start_year..end_year).to_a.reverse
     @semesters = ["ALL"]
