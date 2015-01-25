@@ -414,6 +414,64 @@ class ReportController < ApplicationController
   end
 
   def teachers_per_subjects_report
+    if (request.method == :post)
+      hash = {}
+      class_rooms = ClassRoom.all
+      if (params[:teacher_id].match(/ALL/i))
+        teachers = Teacher.all
+        teachers.each do |teacher|
+          teacher_id = teacher.teacher_id
+          hash[teacher_id] = {}
+          class_rooms.each do |class_room|
+            class_room_id = class_room.class_room_id
+            hash[teacher_id][class_room_id] = {}
+            courses = []
+
+            teacher_class_courses = TeacherClassRoomCourse.find(:all, :conditions => ["teacher_id =? AND
+              class_room_id =?", teacher.teacher_id, class_room.class_room_id])
+
+            (teacher_class_courses || []).each do |tcc|
+              courses << tcc.course.name
+            end
+
+            count = 0
+            row_hash = {}
+            courses.in_groups_of(5).each do |group|
+              count = count + 1
+              row_hash[count] = group.compact
+            end
+
+            hash[teacher_id][class_room_id]["courses"] = row_hash unless courses.blank?
+            hash[teacher_id].delete(class_room_id) if hash[teacher_id][class_room_id].blank?
+          end
+        end
+      else
+        teacher_id = params[:teacher_id]
+        hash[teacher_id] = {}
+        class_rooms.each do |class_room|
+          class_room_id = class_room.class_room_id
+          hash[teacher_id][class_room_id] = {}
+          courses = []
+
+          teacher_class_courses = TeacherClassRoomCourse.find(:all, :conditions => ["teacher_id =? AND
+              class_room_id =?", teacher_id, class_room.class_room_id])
+
+          (teacher_class_courses || []).each do |tcc|
+            courses << tcc.course.name
+          end
+          count = 0
+          row_hash = {}
+          courses.in_groups_of(5).each do |group|
+            count = count + 1
+            row_hash[count] = group.compact
+          end
+
+          hash[teacher_id][class_room_id]["courses"] = row_hash unless courses.blank?
+          hash[teacher_id].delete(class_room_id) if hash[teacher_id][class_room_id].blank?
+        end
+      end
+      render :text => hash.to_json and return
+    end
     @teachers = ["All"]
     @teachers += Teacher.all.collect{|t|
       name = t.fname.to_s.capitalize + ' ' + t.lname.to_s.capitalize + ' (' + t.gender.first.capitalize + ')'
@@ -422,6 +480,18 @@ class ReportController < ApplicationController
 
     @courses = ["All"]
     @courses += Course.all.collect{|c|[c.name, c.course_id]}
+
+    @class_room_hash = {}
+    (ClassRoom.all || []).each do |class_room|
+      @class_room_hash[class_room.id] = class_room.name
+    end
+    
+    @teachers_hash = {}
+    Teacher.all.each do |t|
+      name = t.fname.to_s.capitalize + ' ' + t.lname.to_s.capitalize + ' (' + t.gender.first.capitalize + ')'
+      teacher_id = t.teacher_id
+      @teachers_hash[teacher_id] = name
+    end
     
     render :layout => false
   end

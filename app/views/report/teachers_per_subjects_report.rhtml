@@ -12,6 +12,54 @@
     <%= javascript_include_tag("script") %>
     <%= stylesheet_link_tag("style") %>
 
+    <script>
+      var teachersHash = eval('(' + '<%= @teachers_hash.to_json %>' + ')');
+      var classRoomHash = eval('(' + '<%= @class_room_hash.to_json %>' + ')');
+      
+      function queryReportData(){
+        teacherID = document.getElementById('teacher').value;
+        jQuery.ajax({
+          type: "POST",
+          url: "/report/teachers_per_subjects_report",
+          data: "teacher_id=" + teacherID,
+          success: function(results){
+            html = "<table>";
+            html += "<thead>";
+            html += "<tr>";
+            html += "<th colspan='5'>Teacher-Class-Course Info</th>";
+            html += "</tr>";
+            html += "</thead>";
+            results = eval('(' + results + ')');
+            html += "<tbody>";
+            for (var teacherId in results){
+              html += "<tr style='background-color:#2069b4; color:white; font-weight:bold;'>";
+              html += "<td colspan='5' style='text-align:left; padding-left:30px;'>" + teachersHash[teacherId] + "</td>";
+              html += "</tr>";
+              for (var classRoom in results[teacherId]){
+                html += "<tr style='background-color:gray;'>";
+                html += "<td colspan='5' style='color:white; font-weight:bold;'>" + classRoomHash[classRoom]+ "</td>";
+                html += "</tr>";
+                courseData = results[teacherId][classRoom]["courses"]
+                for (var key in courseData){
+                  html += "<tr>";
+                  courses = courseData[key];                 
+                  for (var i=0; i<=courses.length - 1; i++){
+                    html += "<td style='padding: 0.833em 0 0.833em 1.25em; min-width:6em;'>" + courses[i] + "</td>";
+                  }
+                  html += "</tr>";
+                }
+              }
+            }
+            html += "</tbody>";
+            html += "</table>";
+            reportData = document.getElementById('report_data');
+            reportData.innerHTML = html;
+          }
+
+        });
+      }
+
+    </script>
     <style>
       #teacher, #course{
         background-color: #fff;
@@ -32,8 +80,12 @@
       a{
         cursor: pointer;
       }
+
+     table th:last-child {
+        padding: 0.833em 0 0.833em 1.25em;
+      }
     </style>
-    
+
   </head>
   <body>
 
@@ -147,16 +199,16 @@
                     <td style="min-width:30%; text-align: left;"><span style="font-size:1.4em;">Teacher</span></td>
                     <td><%= select_tag("teacher", options_for_select(@teachers), {:style => 'text-align:center'})%></td>
                   </tr>
-                  <tr>
+                  <!--<tr>
                     <td style="min-width:30%; text-align: left;"><span style="font-size:1.4em;">Course</span></td>
                     <td><%= select_tag("course", options_for_select(@courses), {:style => 'text-align:center'})%></td>
-                  </tr>
+                  </tr>-->
                 </table>
 
                 <div class="stripe-separator"><!-- --></div>
-                
+
                 <span style="margin-left:41%; position: relative;">
-                  <a class="button round blue image-right ic-right-arrow text-upper">Apply</a>
+                  <a onclick="queryReportData();" class="button round blue image-right ic-right-arrow text-upper">Apply</a>
                 </span>
 
               </div> <!-- end content-module-main -->
@@ -179,7 +231,8 @@
 
 
               <div class="content-module-main cf">
-
+                <div id="report_data">
+                </div>
               </div> <!-- end content-module-main -->
 
             </div> <!-- end content-module -->
