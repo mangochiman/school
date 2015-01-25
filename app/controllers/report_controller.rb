@@ -393,6 +393,23 @@ class ReportController < ApplicationController
   end
 
   def teachers_report
+    if (request.method == :post)
+      start_date = params[:start_date]
+      end_date = params[:end_date]
+      teachers = Teacher.find(:all, :conditions => ["DATE(created_at) >= ? AND DATE(created_at) <= ?",
+          start_date.to_date, end_date.to_date])
+      hash = {}
+      (teachers || []).each do |teacher|
+        teacher_id = teacher.teacher_id
+        teacher_name = teacher.fname.capitalize.to_s + ' ' + teacher.lname.capitalize.to_s
+        hash[teacher_id] = {}
+        hash[teacher_id]["name"] = teacher_name
+        hash[teacher_id]["dob"] = teacher.dob
+        hash[teacher_id]["email"] = teacher.email
+        hash[teacher_id]["gender"] = teacher.gender
+      end
+      render :text => hash.to_json and return
+    end
     render :layout => false
   end
 

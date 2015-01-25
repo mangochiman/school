@@ -16,6 +16,50 @@
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("metallic") %>
 
+    <script>
+
+      function queryReportData(){
+        startDate = $('.start-date')[0].value;
+        endDate = $('.end-date')[0].value;
+
+        jQuery.ajax({
+          type: "POST",
+          url: "/report/teachers_report",
+          data: "start_date=" + startDate + "&end_date=" + endDate,
+          success: function(results){
+            html = "<table>";
+            html += "<thead>";
+            html += "<tr>";
+            html += "<th style='min-width:30%;'>Name</th><th>Email</th><th>Gender</th><th>Date of Birth</th>";
+            html += "</tr>";
+            html += "</thead>";
+            results = eval('(' + results + ')');
+            console.log(results)
+            html += "<tbody>";
+            for (var teacherID in results){
+              teacherName = results[teacherID]["name"];
+              teacherGender = results[teacherID]["gender"];
+              teacherEmail = results[teacherID]["email"];
+              teacherDOB = results[teacherID]["dob"];
+              html += "<tr>";
+              html += "<td style='text-align:left; padding-left:40px;'>" + teacherName + "</td>";
+              html += "<td><a href='#'>" + teacherEmail + "</a></td>";
+              html += "<td>" + teacherGender + "</td>";
+              html += "<td>" + teacherDOB + "</td>";
+              html += "</tr>";
+
+            }
+            html += "</tbody>";
+            html += "</table>";
+            reportData = document.getElementById('report_data');
+            reportData.innerHTML = html;
+          }
+
+        });
+      }
+
+    </script>
+
     <style>
       .start-date, .end-date{
         background-color: #fff;
@@ -32,8 +76,13 @@
         min-width: 167px;
         transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
       }
+
       a{
         cursor: pointer;
+      }
+
+      table th:first-child {
+        border-style: none none none !important;
       }
     </style>
   </head>
@@ -156,12 +205,12 @@
                     </td>
                   </tr>
                 </table>
-                
+
                 <div class="stripe-separator"><!-- --></div>
                 <span style="margin-left:41%; position: relative;">
-                  <a class="button round blue image-right ic-right-arrow text-upper">Apply</a>
+                  <a onclick="queryReportData();" class="button round blue image-right ic-right-arrow text-upper">Apply</a>
                 </span>
-                
+
               </div> <!-- end content-module-main -->
 
             </div> <!-- end content-module -->
@@ -182,7 +231,8 @@
 
 
               <div class="content-module-main cf">
-
+                <div id="report_data">
+                </div>
               </div> <!-- end content-module-main -->
 
             </div> <!-- end content-module -->
