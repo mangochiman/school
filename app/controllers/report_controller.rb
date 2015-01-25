@@ -385,6 +385,10 @@ class ReportController < ApplicationController
     @semesters += Semester.find(:all).collect{|s|[s.semester_number, s.semester_id]}
     @class_rooms = ["All"]
     @class_rooms += ClassRoom.all.collect{|cr|[cr.name, cr.class_room_id]}
+    @class_room_hash = {}
+    (ClassRoom.all || []).each do |class_room|
+      @class_room_hash[class_room.id] = class_room.name
+    end
     render :layout => false
   end
 

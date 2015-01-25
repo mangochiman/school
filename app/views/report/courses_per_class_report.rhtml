@@ -13,7 +13,7 @@
     <%= stylesheet_link_tag("style") %>
 
     <script>
-
+      var classRoomHash = eval('(' + '<%= @class_room_hash.to_json %>' + ')');
       function queryReportData(){
         classRoomID = document.getElementById('class_room').value;
         semesterID = document.getElementById('semester').value;
@@ -42,6 +42,10 @@
               }
 
               for (var classRoom in results[year]){
+                classRoomId = parseInt(classRoom);
+                html += "<tr style='font-size:1.2em; background-color:gray; color:white;'>";
+                html += "<td colspan='4' style='text-align:left; font-weight:bold; padding-left:10%;'>" + classRoomHash[classRoomId] + "</td>";
+                html += "</tr>";
                 for (var courseID in results[year][classRoom]){
                   html += "<tr>";
                   count = count + 1
