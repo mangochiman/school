@@ -281,7 +281,7 @@ class ReportController < ApplicationController
       hash = {}
       unless (params[:year].match(/ALL/i))
         unless (params[:class_room].match(/ALL/i))
-          courses = Course.find_by_sql("SELECT * FROM course c INNER JOIN class_room_course crc ON
+          courses = Course.find_by_sql("SELECT c.course_id, c.name, c.created_at FROM course c INNER JOIN class_room_course crc ON
             c.course_id = crc.course_id INNER JOIN class_room cr ON crc.class_room_id = cr.class_room_id
             INNER JOIN class_room_student crs ON crs.class_room_id=cr.class_room_id
             WHERE cr.year = #{params[:year]} AND crc.class_room_id=#{class_room_id} AND
@@ -290,7 +290,7 @@ class ReportController < ApplicationController
           hash[params[:year]] = {}
           hash[params[:year]][params[:class_room]] = {}
           courses.each do |course|
-            course_id  = course.id
+            course_id  = course.course_id
             course_name = course.name
             date_created = course.created_at.strftime("%d-%b-%Y")
             hash[params[:year]][params[:class_room]][course_id] = {}
@@ -305,14 +305,14 @@ class ReportController < ApplicationController
           class_room_ids.each do |class_id|
             hash[params[:year]][class_id] = {}
             
-            courses = Course.find_by_sql("SELECT * FROM course c INNER JOIN class_room_course crc ON
+            courses = Course.find_by_sql("SELECT c.course_id, c.name, c.created_at FROM course c INNER JOIN class_room_course crc ON
             c.course_id = crc.course_id INNER JOIN class_room cr ON crc.class_room_id = cr.
             INNER JOIN class_room_student crs ON crs.class_room_id=cr.class_room_id
             WHERE cr.year = #{params[:year]} AND crc.class_room_id=#{class_id} AND
             crs.semester_id IN (#{semester_id})")
 
             courses.each do |course|
-              course_id  = course.id
+              course_id  = course.course_id
               course_name = course.name
               date_created = course.created_at.strftime("%d-%b-%Y")
 
@@ -329,7 +329,7 @@ class ReportController < ApplicationController
         (start_year..end_year).to_a.each do |year|
           unless (params[:class_room].match(/ALL/i))
 
-            courses = Course.find_by_sql("SELECT * FROM course c INNER JOIN class_room_course crc ON
+            courses = Course.find_by_sql("SELECT c.course_id, c.name, c.created_at FROM course c INNER JOIN class_room_course crc ON
             c.course_id = crc.course_id INNER JOIN class_room cr ON crc.class_room_id = cr.class_room_id
             INNER JOIN class_room_student crs ON crs.class_room_id=cr.class_room_id
             WHERE cr.year = #{year} AND crc.class_room_id=#{class_room_id} AND
@@ -339,7 +339,7 @@ class ReportController < ApplicationController
             hash[year][params[:class_room]] = {}
             courses.each do |course|
 
-              course_id  = course.id
+              course_id  = course.course_id
               course_name = course.name
               date_created = course.created_at.strftime("%d-%b-%Y")
 
@@ -353,7 +353,7 @@ class ReportController < ApplicationController
             class_room_ids = ClassRoom.all.map(&:id)
             class_room_ids.each do |class_id|
               hash[year][class_id] = {}
-              courses = Course.find_by_sql("SELECT * FROM course c INNER JOIN class_room_course crc ON
+              courses = Course.find_by_sql("SELECT c.course_id, c.name, c.created_at FROM course c INNER JOIN class_room_course crc ON
               c.course_id = crc.course_id INNER JOIN class_room cr ON crc.class_room_id = cr.class_room_id
               INNER JOIN class_room_student crs ON crs.class_room_id=cr.class_room_id
               WHERE cr.year = #{year} AND crc.class_room_id=#{class_id} AND
@@ -361,7 +361,7 @@ class ReportController < ApplicationController
 
               courses.each do |course|
 
-                course_id  = course.id
+                course_id  = course.course_id
                 course_name = course.name
                 date_created = course.created_at.strftime("%d-%b-%Y")
 
