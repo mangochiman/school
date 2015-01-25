@@ -283,6 +283,7 @@ class ReportController < ApplicationController
         unless (params[:class_room].match(/ALL/i))
           courses = Course.find_by_sql("SELECT * FROM course c INNER JOIN class_room_course crc ON
             c.course_id = crc.course_id INNER JOIN class_room cr ON crc.class_room_id = cr.class_room_id
+            INNER JOIN class_room_student crs ON crs.class_room_id=cr.class_room_id
             WHERE cr.year = #{params[:year]} AND crc.class_room_id=#{class_room_id} AND
             crs.semester_id IN (#{semester_id})")
 
@@ -305,7 +306,8 @@ class ReportController < ApplicationController
             hash[params[:year]][class_id] = {}
             
             courses = Course.find_by_sql("SELECT * FROM course c INNER JOIN class_room_course crc ON
-            c.course_id = crc.course_id INNER JOIN class_room cr ON crc.class_room_id = cr.class_room_id
+            c.course_id = crc.course_id INNER JOIN class_room cr ON crc.class_room_id = cr.
+            INNER JOIN class_room_student crs ON crs.class_room_id=cr.class_room_id
             WHERE cr.year = #{params[:year]} AND crc.class_room_id=#{class_id} AND
             crs.semester_id IN (#{semester_id})")
 
@@ -329,6 +331,7 @@ class ReportController < ApplicationController
 
             courses = Course.find_by_sql("SELECT * FROM course c INNER JOIN class_room_course crc ON
             c.course_id = crc.course_id INNER JOIN class_room cr ON crc.class_room_id = cr.class_room_id
+            INNER JOIN class_room_student crs ON crs.class_room_id=cr.class_room_id
             WHERE cr.year = #{year} AND crc.class_room_id=#{class_room_id} AND
             crs.semester_id IN (#{semester_id})")
             
@@ -352,6 +355,7 @@ class ReportController < ApplicationController
               hash[year][class_id] = {}
               courses = Course.find_by_sql("SELECT * FROM course c INNER JOIN class_room_course crc ON
               c.course_id = crc.course_id INNER JOIN class_room cr ON crc.class_room_id = cr.class_room_id
+              INNER JOIN class_room_student crs ON crs.class_room_id=cr.class_room_id
               WHERE cr.year = #{year} AND crc.class_room_id=#{class_id} AND
               crs.semester_id IN (#{semester_id})")
 
