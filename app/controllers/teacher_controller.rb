@@ -58,7 +58,7 @@ class TeacherController < ApplicationController
   def remove_my_classes
     teacher_id = params[:teacher_id]
     @my_class_rooms = ClassRoomTeacher.find(:all, :conditions => ["teacher_id =?",
-                  teacher_id]).collect{|crt|crt.class_room}
+        teacher_id]).collect{|crt|crt.class_room}
               
     if (request.method == :post)
       if (params[:mode] == 'single_entry')
@@ -121,8 +121,8 @@ class TeacherController < ApplicationController
     class_room_id = params[:class_room_id]
 
     @current_teacher_class_room_courses = TeacherClassRoomCourse.find(:all,
-        :conditions => ["teacher_id =? AND class_room_id =?",teacher_id, class_room_id]
-      ).collect{|i|i.course }
+      :conditions => ["teacher_id =? AND class_room_id =?",teacher_id, class_room_id]
+    ).collect{|i|i.course }
       
     @courses = ClassRoom.find(class_room_id).class_room_courses.collect{|crc|crc.course}
     render :layout => false
@@ -136,15 +136,15 @@ class TeacherController < ApplicationController
         :conditions => ["teacher_id =? AND class_room_id =?",teacher_id, class_room_id])
 
       (current_teacher_class_room_courses || []).each do |ctcrc|
-          ctcrc.delete
+        ctcrc.delete
       end
       
       (params[:subjects] || []).each do |subject_id, details|
-            TeacherClassRoomCourse.create({
-              :teacher_id => teacher_id,
-              :class_room_id => class_room_id,
-              :course_id => subject_id
-            })
+        TeacherClassRoomCourse.create({
+            :teacher_id => teacher_id,
+            :class_room_id => class_room_id,
+            :course_id => subject_id
+          })
       end
     end
     flash[:notice] = "Operation successful"
@@ -152,27 +152,27 @@ class TeacherController < ApplicationController
   end
   
   def teacher_stats
-     render :layout => false
+    render :layout => false
   end
 
   def create_teacher_class_assignment
     teacher_id = params[:teacher_id]
     class_room_id = params[:class_room_id]
     if (ClassRoomTeacher.create({
-        :teacher_id => teacher_id,
-        :class_room_id => class_room_id
-      }))
-        flash[:notice] = "You have successfully assigned a class"
-        redirect_to :action => "assign_class" and return
-      else
-        flash[:error] = "Oops!!. Operation aborted"
-        redirect_to :action => "assign_me_class", :teacher_id => params[:teacher_id] and return
-      end
+            :teacher_id => teacher_id,
+            :class_room_id => class_room_id
+          }))
+      flash[:notice] = "You have successfully assigned a class"
+      redirect_to :action => "assign_class" and return
+    else
+      flash[:error] = "Oops!!. Operation aborted"
+      redirect_to :action => "assign_me_class", :teacher_id => params[:teacher_id] and return
+    end
   end
   
   def assign_subjects
-     @teachers = Teacher.all
-     render :layout => false
+    @teachers = Teacher.all
+    render :layout => false
   end
 
   def filter_teachers
@@ -207,12 +207,12 @@ class TeacherController < ApplicationController
         teachers = ClassRoomTeacher.find_by_sql("SELECT * FROM class_room_teachers
           INNER JOIN teacher USING(teacher_id) WHERE class_room_id IN (#{class_room_ids})
           AND #{gender_conditions}
-        ").collect{|crt|crt.teacher}
+          ").collect{|crt|crt.teacher}
       else
         teachers = TeacherClassRoomCourse.find_by_sql("SELECT * FROM teacher_class_room_course
             INNER JOIN teacher USING(teacher_id) WHERE class_room_id IN (#{class_room_ids}) AND
             course_id IN (#{course_ids})  AND #{gender_conditions}
-        ").collect{|tcrc|tcrc.teacher}
+          ").collect{|tcrc|tcrc.teacher}
       end
 
       hash = {}
@@ -241,17 +241,16 @@ class TeacherController < ApplicationController
 
   def create
     if Teacher.create(:email => params[:email],
-                            :password => params[:password],
-                            :fname => params[:first_name],
-                            :lname => params[:last_name],
-                            :dob => params[:dob].to_date,
-                            :gender => params[:gender],
-                            :phone => params[:phone],
-                            :mobile => params[:mobile],
-                            :status => params[:status])
+        :fname => params[:firstname],
+        :lname => params[:lastname],
+        :dob => params[:dob].to_date,
+        :gender => params[:gender],
+        :phone => params[:phone],
+        :mobile => params[:mobile],
+        :status => params[:status])
       flash[:notice] = "Teacher successfully added"
     else
-       flash[:error] = "Unable to save. Check for errors and try again"
+      flash[:error] = "Unable to save. Check for errors and try again"
     end
     redirect_to :controller => "teacher", :action => "add_teacher"
   end
@@ -262,13 +261,13 @@ class TeacherController < ApplicationController
     
     if request.method == :post
       if (@teacher.update_attributes({
-          :fname => params[:first_name],
-          :lname => params[:last_name],
-          :gender => params[:gender],
-          :email => params[:email],
-          :phone => params[:phone],
-          :dob => params[:dob].to_date
-        }))
+              :fname => params[:firstname],
+              :lname => params[:lastname],
+              :gender => params[:gender],
+              :email => params[:email],
+              :phone => params[:phone],
+              :dob => params[:dob].to_date
+            }))
         flash[:notice] = "You have successfully edited the details"
         redirect_to :controller => "teacher", :action => "edit_teacher" and return
       else
