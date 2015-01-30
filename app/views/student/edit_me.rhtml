@@ -7,24 +7,56 @@
     <!-- Optimize for mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
+    <!-- jQuery & JS files -->
+
     <%= javascript_include_tag("jquery") %>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("jquery.confirm") %>
     <%= javascript_include_tag("script") %>
+    <%= javascript_include_tag("gvalidator") %>
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("metallic") %>
-    <script>
-      function checkGender(){
-        <% unless @student.gender.blank?%>
-            <% if (@student.gender.upcase == "MALE") %>
-                document.getElementById('male').checked = true
-            <%  end %>
+    <%= stylesheet_link_tag("gvalidator") %>
+    <%= stylesheet_link_tag("bootstrap") %>
 
-            <% if (@student.gender.upcase == "FEMALE") %>
-                document.getElementById('female').checked = true
-            <%  end %>
+    <script>
+      function selectGender(){
+        <% unless @student.gender.blank? %>
+            <% if @student.gender.upcase == 'MALE' %>
+                document.getElementById('male').setAttribute("selected", 'true')
+            <% end %>
+            <% if @student.gender.upcase == 'FEMALE' %>
+                document.getElementById('female').setAttribute("selected", 'true')
+            <% end %>
         <% end %>
       }
+
+      window.setTimeout("selectGender();", 100);
     </script>
     <style>
+      .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: red;
+      }
+
+      form.autoform .msg.icon {
+        margin: 0 10px;
+        padding: 5px 5px 5px 30px;
+        position: unset;
+      }
+
+      form label {
+        font-size: 0.9em;
+        font-weight: bold;
+      }
+      form.autoform input, select{
+        font-size: 0.8em !important;
+        font-weight: bold;
+      }
+
       table{
         margin-left:15%;
         width: 60%;
@@ -34,23 +66,38 @@
       }
 
       table label{
-       text-align: left;
+        text-align: left;
       }
       #simple-input{
         font-size: 10pt !important;
       }
 
-    form input[type="text"], input[type="password"], textarea {
+      #registration input[type="text"], input[type="password"], textarea {
         border: 1px solid #d9dbdd;
         outline: medium none;
         padding: 0.5em 0.225em;
-    }
-    input[type="submit"] {
-      margin-left: 37%;
-    }
+      }
+      input[type="submit"] {
+        margin-left: 37%;
+      }
+      #gender{
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        color: #555;
+        font-size: 14px;
+        height: 34px;
+        line-height: 1.42857;
+        width: 205px;
+        text-align: center;
+        padding: 6px 12px;
+        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+      }
     </style>
   </head>
-  <body onload="checkGender();">
+  <body>
 
     <!-- TOP BAR -->
     <div id="top-bar">
@@ -154,53 +201,33 @@
 
             <div class="content-module-main">
               <% if flash[:notice] %>
-                  <div class="confirmation-box round">
-                    <%= flash[:notice] %>
-                  </div>
-                <% end %>
-                <% if flash[:error] %>
-                  <div class="error-box round">
-                      <%= flash[:error] %>
-                  </div>
-                <% end %>
-              <form id="registration" method="POST" action="/student/edit_me">
-                <table>
-                  <tr>
-                    <td><label for="simple-input">First Name</label></td>
-                    <td><input type="text" name="first_name" id="simple-input" class="round default-width-input" value="<%=  @student.fname %>"/></td>
-                  </tr>
-                  <tr>
-                    <td><label for="simple-input">Last Name</label></td>
-                    <td><input type="text" name="last_name" id="simple-input" class="round default-width-input" value="<%=  @student.lname %>"/></td>
-                  </tr>
-                  <tr>
-                    <td><label for="simple-input">Gender</label></td>
-                    <td>
-                      <span style="margin-left:40%;"><input type="radio" value="Male" name="gender" id="male"/>Male</span>
-                      <span style="margin-left:10%;"><input type="radio" value="Female" name="gender" id="female"/>Female</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><label for="simple-input">E-mail</label></td>
-                    <td><input type="text" name="email"  id="simple-input" class="round default-width-input" value="<%=  @student.email %>"/></td>
-                  </tr>
-                  <tr>
-                    <td><label for="simple-input">Phone</label></td>
-                    <td><input type="text" name="phone" id="simple-input" class="round default-width-input" value="<%=  @student.phone %>"/></td>
-                  </tr>
-                  <tr>
-                    <td><label for="simple-input">Password</label></td>
-                    <td><input type="password" name="password" id="simple-input" class="round default-width-input" /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="simple-input">Re-type password</label></td>
-                    <td><input type="password" name="password_confirm" id="simple-input" class="round default-width-input" /></td>
-                  </tr>
-                  <tr>
-                    <td><label for="simple-input">Date of Birth</label></td>
-                    <td><input type="text" name="dob" id="simple-input" class="round default-width-input date-picker" value="<%=  @student.dob %>"/></td>
-                  </tr>
-                </table>
+                <div class="confirmation-box round">
+                  <%= flash[:notice] %>
+                </div>
+              <% end %>
+              <% if flash[:error] %>
+                <div class="error-box round">
+                  <%= flash[:error] %>
+                </div>
+              <% end %>
+              <form id="registration" class="autoform" action="/student/edit_me" method="POST" >
+
+                <div><label for="firstname">First Name</label><input type="text" name="firstname" class="firstname required" id="firstname" maxlength="30" value="<%= @student.fname %>"/></div>
+                <div><label for="lastname">Last Name</label><input type="text" name="lastname" class="lastname required" id="lastname" maxlength="30" value="<%= @student.lname %>"/></div>
+                <div><label for="phone">Phone</label><input type="text" name="phone" class="phone required" id="phone" maxlength="12" value="<%= @student.phone %>"/></div>
+                <div><label for="email">Email</label><input type="text" name="email" class="email required" id="email" maxlength="60" value="<%= @student.email %>"/></div>
+
+                <div>
+                  <label for="gender">Gender</label>
+                  <select id="gender" name="gender" class="select required">
+                    <option value="">[select Gender]</option>
+                    <option value="Male" id="male">Male</option>
+                    <option value="Female" id="female">Female</option>
+                  </select>
+                </div>
+
+                <div><label for="text">Date of Birth</label><input type="text" name="dob" class="text required date-picker" value="<%= @student.dob %>"/></div>
+
                 <div class="stripe-separator"><!--  --></div>
                 <input type="hidden" name="student_id" value="<%= params[:student_id] %>" />
                 <input type="submit" value="Submit" class="round blue ic-right-arrow" />
@@ -226,12 +253,12 @@
 
     </div> <!-- end footer -->
 
-    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("bootstrap") %>
     <%= javascript_include_tag("zebra_datepicker") %>
     <script>
       $('.date-picker').Zebra_DatePicker({
-            view : 'years',
-            direction: ['<%=  (Date.today - 30.years).strftime("%Y-%m-%d") %>', '<%=  (Date.today - 12.years).strftime("%Y-%m-%d") %>']
+        view : 'years',
+        direction: ['<%=  (Date.today - 30.years).strftime("%Y-%m-%d") %>', '<%=  (Date.today - 12.years).strftime("%Y-%m-%d") %>']
       });
     </script>
   </body>

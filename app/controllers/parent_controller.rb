@@ -61,8 +61,8 @@ class ParentController < ApplicationController
     @parent = Parent.find(parent_id)
     if request.method == :post
       if (@parent.update_attributes({
-          :fname => params[:first_name],
-          :lname => params[:last_name],
+          :fname => params[:firstname],
+          :lname => params[:lastname],
           :gender => params[:gender],
           :email => params[:email],
           :phone => params[:phone],
@@ -148,8 +148,8 @@ class ParentController < ApplicationController
   end
   
   def create
-    first_name = params[:first_name]
-    last_name = params[:last_name]
+    first_name = params[:firstname]
+    last_name = params[:lastname]
     gender = params[:gender]
     email = params[:email]
     phone = params[:phone]

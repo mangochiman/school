@@ -364,8 +364,8 @@ class StudentController < ApplicationController
     @student = Student.find(student_id)
     if request.method == :post
       if (@student.update_attributes({
-          :fname => params[:first_name],
-          :lname => params[:last_name],
+          :fname => params[:firstname],
+          :lname => params[:lastname],
           :gender => params[:gender],
           :email => params[:email],
           :phone => params[:phone],
