@@ -382,8 +382,8 @@ class StudentController < ApplicationController
   end
   
   def create
-    first_name = params[:first_name]
-    last_name = params[:last_name]
+    first_name = params[:firstname]
+    last_name = params[:lastname]
     gender = params[:gender]
     email = params[:email]
     phone = params[:phone]
