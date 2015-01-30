@@ -10,19 +10,35 @@
     <!-- jQuery & JS files -->
 
     <%= javascript_include_tag("jquery") %>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("jquery.confirm") %>
     <%= javascript_include_tag("script") %>
     <%= javascript_include_tag("gvalidator") %>
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("metallic") %>
     <%= stylesheet_link_tag("gvalidator") %>
+    <%= stylesheet_link_tag("bootstrap") %>
 
     <style>
+      .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: red;
+      }
+      
       form.autoform .msg.icon {
         margin: 0 10px;
         padding: 5px 5px 5px 30px;
         position: unset;
       }
 
+      form label {
+        font-size: 0.9em;
+        font-weight: bold;
+      }
+      
       table{
         margin-left:15%;
         width: 60%;
@@ -218,8 +234,8 @@
 
     </div> <!-- end footer -->
 
+<%= javascript_include_tag("bootstrap") %>
 
-    <%= javascript_include_tag("jquery-1.9.1.min") %>
     <%= javascript_include_tag("zebra_datepicker") %>
     <script>
       $('.date-picker').Zebra_DatePicker({
