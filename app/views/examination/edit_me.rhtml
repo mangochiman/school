@@ -9,9 +9,37 @@
 
     <!-- jQuery & JS files -->
     <%= javascript_include_tag("jquery") %>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("jquery.confirm") %>
     <%= javascript_include_tag("script") %>
+    <%= javascript_include_tag("gvalidator") %>
     <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("metallic") %>
+    <%= stylesheet_link_tag("gvalidator") %>
+    <%= stylesheet_link_tag("bootstrap") %>
     <style>
+      .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: red;
+      }
+
+      form.autoform .msg.icon {
+        margin: 0 10px;
+        padding: 5px 5px 5px 30px;
+        position: unset;
+      }
+
+      form label {
+        font-size: 0.9em;
+        font-weight: bold;
+      }
+      form.autoform input, select{
+        font-size: 0.8em !important;
+        font-weight: bold;
+      }
       #exam_type input[type="text"], input[type="password"], textarea {
         border: 1px solid #d9dbdd;
         outline: medium none;
@@ -137,16 +165,10 @@
                       <%= flash[:error] %>
                   </div>
                 <% end %>
-              <form id="exam_type" action="/examination/edit_me" method="POST">
-                <table>
-                  <tr>
-                    <td><label for="simple-input">Exam Name</label></td>
-                    <td><input type="text" name="exam_type" value="<%=  @exam_type.name %>" id="simple-input" class="round default-width-input" /></td>
-                  </tr>
-                </table>
+              <form id="exam_type" class="autoform" action="/examination/edit_me" method="POST">
+                <div><label for="text">Exam Name</label><input type="text" name="exam_type" class="text required" value="<%=  @exam_type.name %>" /></div>
                 <div class="stripe-separator"><!--  --></div>
-                
-                <%= hidden_field_tag("exam_type_id", params[:exam_type_id]) %>
+                <%= hidden_field_tag("exam_type_id", params[:exam_type_id]) %>  
                 <input type="submit" value="Submit" class="round blue ic-right-arrow" />
               </form>
 
@@ -154,11 +176,11 @@
 
           </div> <!-- end content-module -->
 
-          
 
-          
 
-          
+
+
+
 
         </div> <!-- end side-content -->
 
@@ -175,6 +197,6 @@
       <p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
 
     </div> <!-- end footer -->
-
+     <%= javascript_include_tag("bootstrap") %>
   </body>
 </html>

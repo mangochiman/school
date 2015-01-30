@@ -9,9 +9,14 @@
 
     <!-- jQuery & JS files -->
     <%= javascript_include_tag("jquery") %>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("jquery.confirm") %>
     <%= javascript_include_tag("script") %>
+    <%= javascript_include_tag("gvalidator") %>
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("metallic") %>
+    <%= stylesheet_link_tag("gvalidator") %>
+    <%= stylesheet_link_tag("bootstrap") %>
     <script>
       function loadClassStudents(obj){
         jQuery.ajax({
@@ -66,6 +71,29 @@
       }
     </script>
     <style>
+      .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: red;
+      }
+
+      form.autoform .msg.icon {
+        margin: 0 10px;
+        padding: 5px 5px 5px 30px;
+        position: unset;
+      }
+
+      form label {
+        font-size: 0.9em;
+        font-weight: bold;
+      }
+      form.autoform input, select{
+        font-size: 0.8em !important;
+        font-weight: bold;
+      }
+      
       #course option{
         padding-left: 40px;
       }
@@ -111,12 +139,10 @@
         border-radius: 4px;
         box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
         color: #555;
-        display: block;
         font-size: 14px;
         height: 34px;
         line-height: 1.42857;
         padding: 6px 12px;
-        margin-left: 30%;
         min-width: 208px;
         transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
       }
@@ -218,7 +244,7 @@
 
             <div class="content-module-heading cf">
 
-              <h3 class="fl">Table design</h3>
+              <h3 class="fl">Exam Assignment</h3>
               <span class="fr expand-collapse-text">Click to collapse</span>
               <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -236,26 +262,29 @@
                   <%= flash[:error] %>
                 </div>
               <% end %>
-              <form id="exam_assignment" method="POST" action="/examination/create_exam_assignment">
-                <table style="width:50%; margin-left: 20%;">
-                  <tr>
-                    <td style="min-width:30%; text-align: left;"><span>Select Class</span></td>
-                    <td><span style=""><%= select_tag("class_room", options_for_select(@class_rooms), {:onchange=>"loadClassStudents(this);"})%></span></td>
-                  </tr>
-                  <tr>
-                    <td style="text-align: left;"><span>Select Exam Type</span></td>
-                    <td><%= select_tag("exam_type", options_for_select(@exam_types))%></td>
-                  </tr>
-                  <tr>
-                    <td style="text-align: left;"><span>Select Course</span></td>
-                    <td><%= select_tag("course", options_for_select(@courses))%></td>
-                  </tr>
-                  <tr>
-                    <td style="text-align: left;"><span>Exam Date</span></td>
-                    <td><input type="text" name="exam_date" id="simple-input" class="round default-width-input date-picker" /></td>
-                  </tr>
+              <form id="exam_assignment" class="autoform" method="POST" action="/examination/create_exam_assignment">
+                
+                <div>
+                  <label for="text">Class</label>
+                  <%= select_tag("class_room", options_for_select(@class_rooms), {
+                          :onchange=>"loadClassStudents(this);",
+                          :class => "text required"})
+                  %>
+                </div>
+                <div>
+                  <label for="text">Exam Type</label>
+                  <%= select_tag("exam_type", options_for_select(@exam_types), {
+                          :class => "text required"})
+                  %>
+                </div>
+                <div>
+                  <label for="text">Course</label>
+                  <%= select_tag("course", options_for_select(@courses), {
+                          :class => "text required"})
+                  %>
+                </div>
+                <div><label for="text">Exam Date</label><input type="text" name="exam_date" class="text required date-picker"/></div>
 
-                </table>
                 <div id="class_courses">
 
                 </div>
@@ -290,7 +319,7 @@
       <p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
 
     </div> <!-- end footer -->
-    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("bootstrap") %>
     <%= javascript_include_tag("zebra_datepicker") %>
     <script>
       $('.date-picker').Zebra_DatePicker({
