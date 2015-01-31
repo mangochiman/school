@@ -9,17 +9,51 @@
 
     <!-- jQuery & JS files -->
     <%= javascript_include_tag("jquery") %>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("jquery.confirm") %>
     <%= javascript_include_tag("script") %>
+    <%= javascript_include_tag("gvalidator") %>
     <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("metallic") %>
+    <%= stylesheet_link_tag("gvalidator") %>
+    <%= stylesheet_link_tag("bootstrap") %>
+
     <style>
+      .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: red;
+      }
+
+      form.autoform .msg.icon {
+        margin: 0 10px;
+        padding: 5px 5px 5px 30px;
+        position: unset;
+      }
+
+      form label {
+        font-size: 0.9em;
+        font-weight: bold;
+      }
+      form.autoform input, select{
+        font-size: 0.8em !important;
+        font-weight: bold;
+      }
+
       #course input[type="text"], input[type="password"], textarea {
         border: 1px solid #d9dbdd;
         outline: medium none;
         padding: 0.5em 0.225em;
       }
-      
+
       #simple-input {
         font-size: 10pt !important;
+      }
+      
+      input[type="submit"] {
+        margin-left: 31%;
       }
     </style>
   </head>
@@ -123,22 +157,19 @@
             <div class="content-module-main">
 
               <% if flash[:notice] %>
-                  <div class="confirmation-box round">
-                    <%= flash[:notice] %>
-                  </div>
-                <% end %>
-                <% if flash[:error] %>
-                  <div class="error-box round">
-                      <%= flash[:error] %>
-                  </div>
-                <% end %>
-              <form id="course" action="/course/create">
-                <table>
-                  <tr>
-                    <td><label for="simple-input">Course Name</label></td>
-                    <td><input type="text" name="course_name" id="simple-input" class="round default-width-input" /></td>
-                  </tr>
-                </table>
+                <div class="confirmation-box round">
+                  <%= flash[:notice] %>
+                </div>
+              <% end %>
+              <% if flash[:error] %>
+                <div class="error-box round">
+                  <%= flash[:error] %>
+                </div>
+              <% end %>
+              <form id="course" class="autoform" action="/course/create" method="POST">
+                
+                <div><label for="text">Course Name</label><input type="text" name="course_name" class="text required" /></div>
+                
                 <div class="stripe-separator"><!--  --></div>
                 <input type="submit" value="Submit" class="round blue ic-right-arrow" />
               </form>
@@ -147,8 +178,8 @@
 
           </div> <!-- end content-module -->
 
-          
-          
+
+
 
         </div> <!-- end side-content -->
 
@@ -166,5 +197,13 @@
 
     </div> <!-- end footer -->
 
+    <%= javascript_include_tag("bootstrap") %>
+    <%= javascript_include_tag("zebra_datepicker") %>
+    <script>
+      $('.date-picker').Zebra_DatePicker({
+        view : 'years',
+        direction: ['<%=  Date.today.strftime("%Y-%m-%d") %>', '<%=  (Date.today + 1.year).strftime("%Y-%m-%d") %>']
+      });
+    </script>
   </body>
 </html>
