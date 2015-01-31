@@ -8,14 +8,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <!-- jQuery & JS files -->
+    <%= javascript_include_tag("jquery") %>
     <%= javascript_include_tag("jquery-1.9.1.min") %>
-    <%= javascript_include_tag("highcharts") %>
+    <%= javascript_include_tag("jquery.confirm") %>
     <%= javascript_include_tag("script") %>
-
-    <%= javascript_include_tag("exporting") %>
+    <%= javascript_include_tag("gvalidator") %>
     <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("metallic") %>
+    <%= stylesheet_link_tag("gvalidator") %>
+    <%= stylesheet_link_tag("bootstrap") %>
 
     <style>
+      .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: red;
+      }
+
+      form.autoform .msg.icon {
+        margin: 0 10px;
+        padding: 5px 5px 5px 30px;
+        position: unset;
+      }
+
+      form label {
+        font-size: 0.9em;
+        font-weight: bold;
+      }
+      form.autoform input, select{
+        font-size: 0.8em !important;
+        font-weight: bold;
+      }
+
       #semester input[type="text"], input[type="password"], textarea {
         border: 1px solid #d9dbdd;
         outline: medium none;
@@ -25,6 +51,9 @@
       #simple-input {
         font-size: 10pt !important;
         width: 150px;
+      }
+      input[type="submit"] {
+        margin-left: 31%;
       }
     </style>
   </head>
@@ -125,22 +154,19 @@
 
             <div class="content-module-main">
               <% if flash[:notice] %>
-                  <div class="confirmation-box round">
-                    <%= flash[:notice] %>
-                  </div>
-                <% end %>
-                <% if flash[:error] %>
-                  <div class="error-box round">
-                      <%= flash[:error] %>
-                  </div>
-                <% end %>
-              <form id="semester" action="/semesters/create_semester">
-                <table style="width:58%; margin-left: 20%;">
-                  <tr>
-                    <td style="width:10em"><label for="simple-input">Total Semesters</label></td>
-                    <td><input type="text" value="<%= @total_semesters %>" name="total_semesters" id="simple-input" class="round default-width-input" /></td>
-                  </tr>
-                </table>
+                <div class="confirmation-box round">
+                  <%= flash[:notice] %>
+                </div>
+              <% end %>
+              <% if flash[:error] %>
+                <div class="error-box round">
+                  <%= flash[:error] %>
+                </div>
+              <% end %>
+              <form id="semester" class="autoform" action="/semesters/create_semester" method="POST">
+
+                <div><label for="text">Total Semesters</label><input type="text" name="total_semesters" class="text required" value="<%= @total_semesters %>" style="text-align:center;" /></div>
+
                 <div class="stripe-separator"><!--  --></div>
                 <input type="submit" value="Submit" class="round blue ic-right-arrow" />
               </form>
@@ -164,5 +190,13 @@
 
     </div> <!-- end footer -->
 
+    <%= javascript_include_tag("bootstrap") %>
+    <%= javascript_include_tag("zebra_datepicker") %>
+    <script>
+      $('.date-picker').Zebra_DatePicker({
+        view : 'years',
+        direction: ['<%=  Date.today.strftime("%Y-%m-%d") %>', '<%=  (Date.today + 1.year).strftime("%Y-%m-%d") %>']
+      });
+    </script>
   </body>
 </html>
