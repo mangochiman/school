@@ -1,379 +1,418 @@
 <!DOCTYPE html>
 
 <html lang="en">
-<head>
-	<meta charset="utf-8">
-	<title>SimpleAdmin - Other page elements</title>
+  <head>
+    <meta charset="utf-8">
+    <title>SimpleAdmin - Other page elements</title>
 
-	<!-- Stylesheets -->
+    <!-- Stylesheets -->
 
-	<!-- Optimize for mobile devices -->
-	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!-- Optimize for mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-	<!-- jQuery & JS files -->
-	<%= javascript_include_tag("script") %>
-        <%= stylesheet_link_tag("style") %>
+    <!-- jQuery & JS files -->
+    <%= javascript_include_tag("script") %>
+    <%= stylesheet_link_tag("style") %>
 
-        <script>
-          var attribute = "";
+    <script>
+      var attribute = "";
 
-          function __$(id){
-            return document.getElementById(id)
+      function __$(id){
+        return document.getElementById(id)
+      }
+
+      function addElement(ele, parent, name, cl){
+        var p = __$(parent)
+        p.innerHTML = "";
+        var input = document.createElement(ele)
+        input.name = name
+        input.className = "round full-width-input"
+        input.id = name
+        p.appendChild(input)
+
+        cl.className = "table-actions-button ic-table-reload";
+        cl.onclick = function (){
+          this.className = 'table-actions-button ic-table-edit';
+          p.innerHTML = document.getElementById(name).value;
+          attribute = p.innerHTML;
+          writeProperty(name, attribute)
+          this.onclick = function (){
+            addElement(ele, parent, name, cl)
           }
+        }
 
-          function addElement(ele, parent, name, cl){
-            var p = __$(parent)
-            p.innerHTML = "";
-            var input = document.createElement(ele)
-            input.name = name
-            input.className = "round full-width-input"
-            input.id = name
-            p.appendChild(input)
+      }
 
-            cl.className = "table-actions-button ic-table-reload";
-            cl.onclick = function (){
-              this.className = 'table-actions-button ic-table-edit';
-               p.innerHTML = document.getElementById(name).value;
-               attribute = p.innerHTML;
-               writeProperty(name, attribute)
-               this.onclick = function (){
-                 addElement(ele, parent, name, cl)
-               }
-            }
+      function addLogo(name, id, ele){
+        var p = __$(id)
+        p.innerHTML = "";
+        var input = document.createElement('input')
+        input.name = 'logos'
+        input.className = "round full-width-input"
+        input.id = 'logos'
+        input.setAttribute("type", "file")
+        p.appendChild(input)
+
+        ele.className = "table-actions-button ic-table-reload";
+        ele.onclick = function (){
+          this.className = 'table-actions-button ic-table-edit';
+          p.innerHTML = document.getElementById('logos').value
+          attribute = p.innerHTML;
+          writeProperty("logo", attribute)
+          this.onclick = function (){
+            addLogo('input', id,  ele)
+          }
+        }
+      }
+
+      function writeProperty(name, value){
+        if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+          xmlhttp=new XMLHttpRequest();
+        }else{// code for IE6, IE5
+          xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange=function() {
+          if (xmlhttp.readyState==4 && xmlhttp.status==200) {
 
           }
+        }
 
-          function addLogo(name, id, ele){
-             var p = __$(id)
-            p.innerHTML = "";
-            var input = document.createElement('input')
-            input.name = 'logos'
-            input.className = "round full-width-input"
-            input.id = 'logos'
-            input.setAttribute("type", "file")
-            p.appendChild(input)
+        xmlhttp.open("GET","/admin/add_property?name=" + name + "&value=" + value, true);
+        xmlhttp.send();
+      }
 
-            ele.className = "table-actions-button ic-table-reload";
-            ele.onclick = function (){
-              this.className = 'table-actions-button ic-table-edit';
-              p.innerHTML = document.getElementById('logos').value
-               attribute = p.innerHTML;
-               writeProperty("logo", attribute)
-               this.onclick = function (){
-                 addLogo('input', id,  ele)
-               }
-            }
-          }
+    </script>
+    table-actions-button ic-table-edit
+    <style>
+      .table {
+        display:table;
+        width:100%;
+      }
 
-          function writeProperty(name, value){
-                    if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
-                  xmlhttp=new XMLHttpRequest();
-                      }else{// code for IE6, IE5
-                              xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-                      }
-                      xmlhttp.onreadystatechange=function() {
-                              if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+      .ic-table-reload {
+        background-image: url("../images/icons/message-boxes/confirmation.png");
+      }
 
-                                }
-                              }
+      .row {
+        display:table-row;
+        width: 100%;
+      }
 
-                      xmlhttp.open("GET","/admin/add_property?name=" + name + "&value=" + value, true);
-                      xmlhttp.send();
-          }
+      .text {
+        display:table-cell;
+      }
+      .input {
+        display:table-cell;
+      }
 
-        </script>
-        table-actions-button ic-table-edit
-        <style>
-          .table {
-            display:table;
-            width:100%;
-          }
-          
-          .ic-table-reload {
-              background-image: url("../images/icons/message-boxes/confirmation.png");
-          }
+      .edit{
+        display:table-cell;
+      }
 
-          .row {
-                display:table-row;
-                width: 100%;
-          }
+      .text, .edit{
+        padding: 0;
+        text-align: center;
+        width: 7em;
+        border-bottom: 1px solid #f8f9fa;
+        border-left: 1px solid white;
+      }
+    </style>
+  </head>
+  <body>
 
-          .text {
-            display:table-cell;
-          }
-          .input {
-            display:table-cell;
-          }
+    <!-- TOP BAR -->
+    <div id="top-bar">
 
-          .edit{
-            display:table-cell;
-          }
+      <div class="page-full-width cf">
 
-           .text, .edit{
-            padding: 0;
-            text-align: center;
-            width: 7em;
-            border-bottom: 1px solid #f8f9fa;
-            border-left: 1px solid white;
-}
-        </style>
-</head>
-<body>
+        <ul id="nav" class="fl">
+          <li class="v-sep"><a href="#" class="round button dark menu-user image-left">Logged in as <strong>admin</strong></a>
+            <ul>
+              <li><a href="#">My Profile</a></li>
+              <li><a href="/admin/settings">Settings</a></li>
+              <li><a href="#">Change Password</a></li>
+              <li><a href="/user/login">Log out</a></li>
+            </ul>
+          </li>
+          <li class="v-sep"><a href="#" class="round button dark menu-settings image-left">School Management</a>
+            <ul>
+              <li><a href="#">Registration/Admission</a></li>
+              <li><a href="#">Behavior Management</a></li>
+              <li><a href="#">Examination results</a></li>
+              <li><a href="#">Payments Management</a></li>
+              <li><a href="#">Student ID cards</a></li>
+              <li><a href="#">Student semester statement</a></li>
+              <li><a href="#">Student semester statement</a></li>
+              <li><a href="#">Warning letters for overdue students</a></li>
+              <li><a href="#">Examination Registration</a></li>
+            </ul>
+          </li>
+          <li class="v-sep"><a href="#" class="round button dark menu-settings image-left">School Administration</a>
+            <ul>
+              <li><a href="#">Timetable management</a></li>
+              <li><a href="#">Subject groups’ management</a></li>
+              <li><a href="#">Semester/Term management </a></li>
+              <li><a href="#">Payments Overview</a></li>
+              <li><a href="#">Print teacher's timetable</a></li>
+              <li><a href="#">Documents management</a></li>
+              <li><a href="#">Barcode scanning functions (Ids)</a></li>
+              <li><a href="#">Email functions</a></li>
+            </ul>
+          </li>
+          <li class="v-sep"><a href="#" class="round button dark menu-settings image-left">Employee Management</a>
+            <ul>
+              <li><a href="#">Employee registration</a></li>
+              <li><a href="#">Employee management</a></li>
+              <li><a href="#">Position management</a></li>
+              <li><a href="#">Mini payroll</a></li>
+            </ul>
+          </li>
+          <li class="v-sep"><a href="#" class="round button dark menu-settings image-left">System Administration</a>
+            <ul>
+              <li><a href="#">User management</a></li>
+              <li><a href="#">Parents management</a></li>
+              <li><a href="#">System configuration/Administration</a></li>
+              <li><a href="#">Fees management</a></li>
+              <li><a href="#">Supper reports generator</a></li>
+              <li><a href="#">Backup Settings</a></li>
+            </ul>
+          </li>
+          <li><a href="#" class="round button dark menu-logoff image-left">Log out</a></li>
 
-	<!-- TOP BAR -->
-	<div id="top-bar">
-
-		<div class="page-full-width cf">
-
-			<ul id="nav" class="fl">
-
-				<li class="v-sep"><a href="#" class="round button dark ic-left-arrow image-left">Go to website</a></li>
-				<li class="v-sep"><a href="#" class="round button dark menu-user image-left">Logged in as <strong>admin</strong></a>
-					<ul>
-                                                <li><a href="/admin/home">Home</a></li>
-						<li><a href="#">My Profile</a></li>
-						<li><a href="#">Change Password</a></li>
-						<li><a href="#">Log out</a></li>
-					</ul>
-				</li>
-
-				<li><a href="#" class="round button dark menu-email-special image-left">3 new messages</a></li>
-				<li><a href="#" class="round button dark menu-logoff image-left">Log out</a></li>
-
-			</ul> <!-- end nav -->
-
-
-			<form action="#" method="POST" id="search-form" class="fr">
-				<fieldset>
-					<input type="text" id="search-keyword" class="round button dark ic-search image-right" placeholder="Search..." />
-					<input type="hidden" value="SUBMIT" />
-				</fieldset>
-			</form>
-
-		</div> <!-- end full-width -->
-
-	</div> <!-- end top-bar -->
+        </ul> <!-- end nav -->
 
 
+        <form action="#" method="POST" id="search-form" class="fr">
+          <fieldset>
+            <input type="text" id="search-keyword" class="round button dark ic-search image-right" placeholder="Search..." />
+            <input type="hidden" value="SUBMIT" />
+          </fieldset>
+        </form>
 
-	<!-- HEADER -->
-	<div id="header-with-tabs">
+      </div> <!-- end full-width -->
 
-		<div class="page-full-width cf">
-
-			<ul id="tabs" class="fl">
-				<li><a href="dashboard.html" class="dashboard-tab">Dashboard</a></li>
-				<li><a href="page-full-width.html">Full width page</a></li>
-				<li><a href="page-other.html" class="active-tab">Settings</a></li>
-			</ul> <!-- end tabs -->
-                        
-			<!-- Change this image to your own company's logo -->
-			<!-- The logo will automatically be resized to 30px height. -->
-			<a href="#" id="company-branding-small" class="fr"><img src="images/company-logo.png" alt="Blue Hosting" /></a>
-
-		</div> <!-- end full-width -->
-
-	</div> <!-- end header -->
+    </div> <!-- end top-bar -->
 
 
 
-	<!-- MAIN CONTENT -->
-	<div id="content">
+    <!-- HEADER -->
+    <div id="header-with-tabs">
 
-		<div class="page-full-width cf">
+      <div class="page-full-width cf">
 
-			<div class="side-menu fl">
+        <ul id="tabs" class="fl">
+          <li><a href="dashboard.html" class="dashboard-tab">Dashboard</a></li>
+          <li><a href="page-full-width.html">Full width page</a></li>
+          <li><a href="page-other.html" class="active-tab">Settings</a></li>
+        </ul> <!-- end tabs -->
 
-				<h3>Tasks</h3>
-				<ul>
-                                <li><a href="/admin/home">Home</a></li>
-				<li><a href="/admin/dashboard" class="active-tab dashboard-tab">Dashboard</a></li>
-				<li><a href="/admin/page_full_width">Students</a></li>
-				<li><a href="/admin/page_other">Parents</a></li>
-                                <li><a href="/admin/page_other">Teachers</a></li>
-                                <li><a href="/admin/page_other">Research</a></li>
-                                <li><a href="/admin/page_other">Exams</a></li>
-                                <li><a href="/admin/page_other">Classes</a></li>
-                                <li><a href="/admin/page_other">Reports</a></li>
-                                <li><a href="/semesters/index">Semester</a></li>
-                                <li><a href="/admin/page_other">Daily Attendance</a></li>
-			</ul>
+        <!-- Change this image to your own company's logo -->
+        <!-- The logo will automatically be resized to 30px height. -->
+        <a href="#" id="company-branding-small" class="fr"><img src="images/company-logo.png" alt="Blue Hosting" /></a>
 
-			</div> <!-- end side-menu -->
+      </div> <!-- end full-width -->
 
-			<div class="side-content fr">
-
-				<div class="half-size-column fl">
-
-					<div class="content-module">
-
-						<div class="content-module-heading cf">
-
-							<h3 class="fl">School Details</h3>
-							<span class="fr expand-collapse-text">Click to collapse</span>
-							<span class="fr expand-collapse-text initial-expand">Click to expand</span>
-
-						</div> <!-- end content-module-heading -->
+    </div> <!-- end header -->
 
 
-						<div class="content-module-main">
-                                                  <div class="table">
-                                                    <div class="row">
-                                                            <div class="text">
-                                                                Name:
-                                                            </div>
 
-                                                            <div class="input" id="input">
-                                                                  <%=  @settings["name"] %>
-                                                            </div>
-                                                            <div class="edit">
-                                                            <a class="table-actions-button ic-table-edit" href="#" onclick="addElement('input', 'input', 'name', this);"></a>
-                                                            </div>
-                                                    </div>
-                                                    <div class="row">
-                                                            <div class="text">
-                                                                Logo:
-                                                            </div>
+    <!-- MAIN CONTENT -->
+    <div id="content">
 
-                                                            <div class="input" id="logo">
+      <div class="page-full-width cf">
 
-                                                            </div>
-                                                            <div class="edit">
-                                                            <a class="table-actions-button ic-table-edit" href="#" onclick="addLogo('input', 'logo', this);"></a>
-                                                            </div>
-                                                    </div>
+        <div class="side-menu fl">
 
-                                                  </div>
-							<div class="stripe-separator"><!-- --></div>
+          <h3>Tasks</h3>
+          <ul>
+            <li><a href="/admin/home">Home</a></li>
+            <li><a href="/admin/dashboard" class="active-tab dashboard-tab">Dashboard</a></li>
+            <li><a href="/admin/page_full_width">Students</a></li>
+            <li><a href="/admin/page_other">Parents</a></li>
+            <li><a href="/admin/page_other">Teachers</a></li>
+            <li><a href="/admin/page_other">Research</a></li>
+            <li><a href="/admin/page_other">Exams</a></li>
+            <li><a href="/admin/page_other">Classes</a></li>
+            <li><a href="/admin/page_other">Reports</a></li>
+            <li><a href="/semesters/index">Semester</a></li>
+            <li><a href="/admin/page_other">Daily Attendance</a></li>
+          </ul>
 
-							<h2>This is an H2 heading</h2>
-							<h3>This is an H3 heading</h3>
-							<h4>This is an H4 heading</h4>
-							<h5>This is an H5 heading</h5>
+        </div> <!-- end side-menu -->
 
-							<div class="stripe-separator"><!-- --></div>
+        <div class="side-content fr">
 
-							<p>The separator above has top and bottom margin set by default, so it will split the content accordingly without
+          <div class="half-size-column fl">
+
+            <div class="content-module">
+
+              <div class="content-module-heading cf">
+
+                <h3 class="fl">School Details</h3>
+                <span class="fr expand-collapse-text">Click to collapse</span>
+                <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+              </div> <!-- end content-module-heading -->
+
+
+              <div class="content-module-main">
+                <div class="table">
+                  <div class="row">
+                    <div class="text">
+                      Name:
+                    </div>
+
+                    <div class="input" id="input">
+                      <%=  @settings["name"] %>
+                    </div>
+                    <div class="edit">
+                      <a class="table-actions-button ic-table-edit" href="#" onclick="addElement('input', 'input', 'name', this);"></a>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="text">
+                      Logo:
+                    </div>
+
+                    <div class="input" id="logo">
+
+                    </div>
+                    <div class="edit">
+                      <a class="table-actions-button ic-table-edit" href="#" onclick="addLogo('input', 'logo', this);"></a>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="stripe-separator"><!-- --></div>
+
+                <h2>This is an H2 heading</h2>
+                <h3>This is an H3 heading</h3>
+                <h4>This is an H4 heading</h4>
+                <h5>This is an H5 heading</h5>
+
+                <div class="stripe-separator"><!-- --></div>
+
+                <p>The separator above has top and bottom margin set by default, so it will split the content accordingly without
 							any extra tweaks needed from you.</p>
 
-							<div class="stripe-separator"><!-- --></div>
+                <div class="stripe-separator"><!-- --></div>
 
-							<blockquote>This is a blockquote followed by a cite tag. And no matter how much text you put in this, it will automatically resize.</blockquote>
-							<cite>- John</cite>
+                <blockquote>This is a blockquote followed by a cite tag. And no matter how much text you put in this, it will automatically resize.</blockquote>
+                <cite>- John</cite>
 
-						</div> <!-- end content-module-main -->
+              </div> <!-- end content-module-main -->
 
-					</div> <!-- end content-module -->
+            </div> <!-- end content-module -->
 
-				</div> <!--end half-size-column-->
+          </div> <!--end half-size-column-->
 
-				<div class="half-size-column fr">
+          <div class="half-size-column fr">
 
-					<div class="content-module">
+            <div class="content-module">
 
-						<div class="content-module-heading cf">
+              <div class="content-module-heading cf">
 
-							<h3 class="fl">Ordered Lists</h3>
-							<span class="fr expand-collapse-text">Click to collapse</span>
-							<span class="fr expand-collapse-text initial-expand">Click to expand</span>
+                <h3 class="fl">Ordered Lists</h3>
+                <span class="fr expand-collapse-text">Click to collapse</span>
+                <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
-						</div> <!-- end content-module-heading -->
-
-
-						<div class="content-module-main cf">
-
-							<div class="half-size-column fl">
-
-								<h2 class="text-upper">A simple ordered list</h2>
-
-								<ol>
-									<li>This is list item number 1.</li>
-									<li>Another list item.</li>
-									<li>A slightly longer list item. This will probably wrap on the next line.</li>
-									<li>Another list item.</li>
-								</ol>
-
-							</div>
-
-							<div class="half-size-column fr">
-
-								<h2 class="text-upper">An ordered list with links</h2>
-
-								<ol>
-									<li><a href="#">Some links go here</a></li>
-									<li><a href="#">Another link</a></li>
-									<li><a href="#">And yet another link</a></li>
-								</ol>
-
-							</div>
-
-						</div> <!-- end content-module-main -->
-
-					</div> <!-- end content-module -->
-
-					<div class="content-module">
-
-						<div class="content-module-heading cf">
-
-							<h3 class="fl">Unordered Lists</h3>
-							<span class="fr expand-collapse-text">Click to collapse</span>
-							<span class="fr expand-collapse-text initial-expand">Click to expand</span>
-
-						</div> <!-- end content-module-heading -->
+              </div> <!-- end content-module-heading -->
 
 
-						<div class="content-module-main cf">
+              <div class="content-module-main cf">
 
-							<div class="half-size-column fl">
+                <div class="half-size-column fl">
 
-								<h2 class="text-upper">A simple unordered list</h2>
+                  <h2 class="text-upper">A simple ordered list</h2>
 
-								<ul class="regular-ul">
-									<li>This is list item number 1.</li>
-									<li>Another list item.</li>
-									<li>A slightly longer list item.</li>
-									<li>Another list item.</li>
-								</ul>
+                  <ol>
+                    <li>This is list item number 1.</li>
+                    <li>Another list item.</li>
+                    <li>A slightly longer list item. This will probably wrap on the next line.</li>
+                    <li>Another list item.</li>
+                  </ol>
 
-								<p>To add a simple list, make sure you specify <code>class="regular-ul"</code> to the list.</p>
+                </div>
 
-							</div>
+                <div class="half-size-column fr">
 
-							<div class="half-size-column fr">
+                  <h2 class="text-upper">An ordered list with links</h2>
 
-								<h2 class="text-upper">A custom unordered list</h2>
+                  <ol>
+                    <li><a href="#">Some links go here</a></li>
+                    <li><a href="#">Another link</a></li>
+                    <li><a href="#">And yet another link</a></li>
+                  </ol>
 
-								<ul class="custom-ul">
-									<li><a href="#">Some links go here</a></li>
-									<li><a href="#">Another link</a></li>
-									<li><a href="#">And yet another link</a></li>
-								</ul>
+                </div>
 
-								<p>To add a custom list, make sure you specify <code>class="custom-ul"</code> to the list.</p>
+              </div> <!-- end content-module-main -->
 
-							</div>
+            </div> <!-- end content-module -->
 
-						</div> <!-- end content-module-main -->
+            <div class="content-module">
 
-					</div> <!-- end content-module -->
+              <div class="content-module-heading cf">
 
-				</div> <!--end half-size-column-->
+                <h3 class="fl">Unordered Lists</h3>
+                <span class="fr expand-collapse-text">Click to collapse</span>
+                <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
-			</div> <!-- end side-content -->
-
-		</div> <!-- end full-width -->
-
-	</div> <!-- end content -->
+              </div> <!-- end content-module-heading -->
 
 
+              <div class="content-module-main cf">
 
-	<!-- FOOTER -->
-	<div id="footer">
+                <div class="half-size-column fl">
 
-		<p>&copy; Copyright 2012 <a href="#">BlueHosting, LLC</a>. All rights reserved.</p>
-		<p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
+                  <h2 class="text-upper">A simple unordered list</h2>
 
-	</div> <!-- end footer -->
+                  <ul class="regular-ul">
+                    <li>This is list item number 1.</li>
+                    <li>Another list item.</li>
+                    <li>A slightly longer list item.</li>
+                    <li>Another list item.</li>
+                  </ul>
 
-</body>
+                  <p>To add a simple list, make sure you specify <code>class="regular-ul"</code> to the list.</p>
+
+                </div>
+
+                <div class="half-size-column fr">
+
+                  <h2 class="text-upper">A custom unordered list</h2>
+
+                  <ul class="custom-ul">
+                    <li><a href="#">Some links go here</a></li>
+                    <li><a href="#">Another link</a></li>
+                    <li><a href="#">And yet another link</a></li>
+                  </ul>
+
+                  <p>To add a custom list, make sure you specify <code>class="custom-ul"</code> to the list.</p>
+
+                </div>
+
+              </div> <!-- end content-module-main -->
+
+            </div> <!-- end content-module -->
+
+          </div> <!--end half-size-column-->
+
+        </div> <!-- end side-content -->
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end content -->
+
+
+
+    <!-- FOOTER -->
+    <div id="footer">
+
+      <p>&copy; Copyright 2012 <a href="#">BlueHosting, LLC</a>. All rights reserved.</p>
+      <p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
+
+    </div> <!-- end footer -->
+
+  </body>
 </html>
