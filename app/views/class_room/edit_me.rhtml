@@ -10,11 +10,39 @@
     <!-- jQuery & JS files -->
 
     <%= javascript_include_tag("jquery") %>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("jquery.confirm") %>
     <%= javascript_include_tag("script") %>
+    <%= javascript_include_tag("gvalidator") %>
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("metallic") %>
+    <%= stylesheet_link_tag("gvalidator") %>
+    <%= stylesheet_link_tag("bootstrap") %>
     
     <style>
+      .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: red;
+      }
+
+      form.autoform .msg.icon {
+        margin: 0 10px;
+        padding: 5px 5px 5px 30px;
+        position: unset;
+      }
+
+      form label {
+        font-size: 0.9em;
+        font-weight: bold;
+      }
+      form.autoform input, select{
+        font-size: 0.8em !important;
+        font-weight: bold;
+      }
+      
       table{
         margin-left:15%;
         width: 60%;
@@ -134,7 +162,7 @@
 
             <div class="content-module-heading cf">
 
-              <h3 class="fl">Student Registration</h3>
+              <h3 class="fl">ClassRoom Edit</h3>
               <span class="fr expand-collapse-text">Click to collapse</span>
               <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -152,21 +180,12 @@
                   <%= flash[:error] %>
                 </div>
               <% end %>
-              <form id="registration" action="/class_room/edit_me" method="post">
-                <table>
-                  <tr>
-                    <td><label for="simple-input">Class Name</label></td>
-                    <td><input type="text" name="class_name" id="simple-input" class="round default-width-input" value="<%= @class_room.name %>"/></td>
-                  </tr>
-                  <tr>
-                    <td><label for="simple-input">Year</label></td>
-                    <td><input type="text" name="year" id="simple-input" class="round default-width-input" value="<%= @class_room.year %>"/></td>
-                  </tr>
-                  <tr>
-                    <td><label for="simple-input">Grade</label></td>
-                    <td><input type="text" name="grade" id="simple-input" class="round default-width-input date-picker" value="<%= @class_room.grade %>"/></td>
-                  </tr>
-                </table>
+              <form id="registration" class="autoform" action="/class_room/edit_me" method="post">
+
+                <div><label for="text">Class Name</label><input type="text" name="class_name" class="text required" value="<%= @class_room.name %>"/></div>
+                <div><label for="text">Year</label><input type="text" name="year" class="text required" value="<%= @class_room.year %>"/></div>
+                <div><label for="text">Grade</label><input type="text" name="grade" class="text required" value="<%= @class_room.grade %>"/></div>
+                
                 <div class="stripe-separator"><!--  --></div>
                 <input type="hidden" name="class_room_id" value="<%= params[:class_room_id] %>" />
                 <input type="submit" value="Submit" class="round blue ic-right-arrow" />
@@ -191,5 +210,14 @@
       <p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
 
     </div> <!-- end footer -->
+
+    <%= javascript_include_tag("bootstrap") %>
+    <%= javascript_include_tag("zebra_datepicker") %>
+    <script>
+      $('.date-picker').Zebra_DatePicker({
+        view : 'years',
+        direction: ['<%=  Date.today.strftime("%Y-%m-%d") %>', '<%=  (Date.today + 1.year).strftime("%Y-%m-%d") %>']
+      });
+    </script>
   </body>
 </html>
