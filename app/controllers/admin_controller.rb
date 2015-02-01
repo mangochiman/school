@@ -269,5 +269,8 @@ class AdminController < ApplicationController
   def documents_management_menu
     render :layout => false
   end
-  
+
+  def barcode_scanning_menu
+    render :layout => false
+  end
 end
