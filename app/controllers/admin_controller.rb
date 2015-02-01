@@ -265,4 +265,9 @@ class AdminController < ApplicationController
   def print_teacher_time_table
     render :layout => false
   end
+
+  def documents_management_menu
+    render :layout => false
+  end
+  
 end

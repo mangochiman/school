@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Student Section</title>
+    <title>Documents Management System</title>
     <!-- Optimize for mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
@@ -17,61 +17,7 @@
     <%= stylesheet_link_tag("style") %>
 
     <script>
-      $(function () {
-        $('#container').highcharts({
-          chart: {
-            type: 'column'
-          },
-          title: {
-            text: 'Students Statistics'
-          },
-          subtitle: {
-            text: 'Distribution by Class'
-          },
-          xAxis: {
-            categories: eval('<%= @class_rooms.to_json %>')
-          },
-          yAxis: {
-            min: 0,
-            title: {
-              text: 'Total Students'
-            }
-          },
-          tooltip: {
-            headerFormat: '<span style="font-size:10px; font-weight:bold;">{point.key}</span><table>',
-            pointFormat: '<tr><td style="color:{series.color};text-align:left; padding:3px;">{series.name}: </td>' +
-              '<td style="padding:0"><b>{point.y}</b></td></tr>',
-            footerFormat: '</table>',
-            shared: true,
-            useHTML: true
-          },
-          plotOptions: {
-            column: {
-              pointPadding: 0.2,
-              borderWidth: 0
-            }
-          },
-          series: [
 
-            {
-              name: 'Males',
-              data: eval('<%= @males.to_json %>')
-
-            },
-            {
-              name: 'Females',
-              data: eval('<%= @females.to_json %>')
-
-            },
-            {
-              name: 'Total',
-              data: eval('<%= @totals.to_json %>')
-
-            }
-          ]
-        });
-      });
-    
     </script>
   </head>
   <body>
@@ -158,8 +104,7 @@
 
         <ul id="tabs" class="fl">
           <li><a href="/admin/home" class="dashboard-tab">Dashboard</a></li>
-          <li><a href="/student/warning_letters_menu" class="active-tab">Overdue Students</a></li>
-
+          <li><a href="/admin/time_table_management_menu" class="active-tab">Documents</a></li>
         </ul> <!-- end tabs -->
 
         <!-- Change this image to your own company's logo -->
@@ -177,22 +122,41 @@
 
       <div class="page-full-width cf">
 
-        <div class="content-module">
+        <div class="side-menu fl">
 
-          <div class="content-module-heading cf">
+          <h3>Task</h3>
+          <ul>
+            <li><a href="/admin/upload_document/">Upload Document</a></li>
+            <li><a href="/admin/download_document/">Download Document</a></li>
+            <li><a href="/admin/delete_documents/">Delete Documents</a></li>
+            <li><a href="/admin/view_documents/">View Documents</a></li>
+          </ul>
 
-            <h3 class="fl">Overdue Students</h3>
-            <span class="fr expand-collapse-text">Click to collapse</span>
-            <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+        </div> <!-- end side-menu -->
 
-          </div> <!-- end content-module-heading -->
+        <div class="side-content fr">
+
+          <div class="content-module">
+
+            <div class="content-module-heading cf">
+
+              <h3 class="fl">Documents Management</h3>
+              <span class="fr expand-collapse-text">Click to collapse</span>
+              <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+            </div> <!-- end content-module-heading -->
 
 
-          <div class="content-module-main">
+            <div class="content-module-main">
+              <div id="container">
+              </div>
+            </div> <!-- end content-module-main -->
 
-          </div> <!-- end content-module-main -->
+          </div> <!-- end content-module -->
 
-        </div> <!-- end content-module -->
+           <!-- end content-module -->
+
+        </div> <!-- end side-content -->
 
       </div> <!-- end full-width -->
 
