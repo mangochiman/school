@@ -3,36 +3,22 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>SimpleAdmin - Dashboard</title>
+    <title>Behavior Management</title>
     <!-- Optimize for mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <!-- jQuery & JS files -->
-    <%= javascript_include_tag("jquery") %>
+
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("highcharts") %>
     <%= javascript_include_tag("script") %>
+    
+    <%= javascript_include_tag("exporting") %>
     <%= stylesheet_link_tag("style") %>
 
-    <style>
-      #class_room, #course, #year{
-        background-color: #fff;
-        background-image: none;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
-        color: #555;
-        display: block;
-        font-size: 14px;
-        height: 34px;
-        line-height: 1.42857;
-        padding: 6px 12px;
-        min-width: 208px;
-        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
-      }
+    <script>
 
-      a{
-        cursor: pointer;
-      }
-    </style>
+    </script>
   </head>
   <body>
 
@@ -118,16 +104,7 @@
 
         <ul id="tabs" class="fl">
           <li><a href="/admin/home" class="dashboard-tab">Dashboard</a></li>
-          <li><a href="/student/index">Students</a></li>
-          <li><a href="/parent/index">Parents</a></li>
-          <li><a href="/teacher/index">Teachers</a></li>
-          <li><a href="/admin/research">Research</a></li>
-          <li><a href="/examination/index">Exams</a></li>
-          <li><a href="/class_room/index">Classes</a></li>
-          <li><a href="/course/index">Courses</a></li>
-          <li><a href="/report/index" class="active-tab">Reports</a></li>
-          <li><a href="/semesters/index">Semester</a></li>
-          <li><a href="/attendance/index">Daily Attendance</a></li>
+          <li><a href="/student/behavior_management" class="active-tab">Punishments</a></li>
         </ul> <!-- end tabs -->
 
         <!-- Change this image to your own company's logo -->
@@ -147,90 +124,43 @@
 
         <div class="side-menu fl">
 
-          <h3>Select Report</h3>
+          <h3>Task</h3>
           <ul>
-            <li><a href="/report/students_per_semester_report">Students per semester</a></li>
-            <li><a href="/report/students_per_year_report">Students per year Report</a></li>
-            <li><a href="/report/students_per_class_report">Students per class Report </a></li>
-            <li><a href="/report/courses_report">Courses Report</a></li>
-            <li><a href="/report/courses_per_class_report">Courses per class Report</a></li>
-            <li><a href="/report/teachers_report">Teachers Report</a></li>
-            <li><a href="/report/teachers_per_subjects_report">Teacher vs subjects Report</a></li>
-            <li><a href="/report/results_per_class_report">Results per class Report</a></li>
-            <li><a href="/report/subject_pass_rate_report">Subject pass rate report</a></li>
-            <!-- <li><a href="/report/employees_report">Employees Report</a></li> -->
+            <li><a href="/student/add_punishment/">Add Punishment</a></li>
+            <li><a href="/student/edit_punishment/">Edit Punishment</a></li>
+            <li><a href="/student/remove_punishments/">Void Punishment</a></li>
+            <li><a href="/student/view_punishments/">view Punishments</a></li>
           </ul>
 
         </div> <!-- end side-menu -->
 
         <div class="side-content fr">
 
-          <div class="half-size-column fl" style="width:34%;">
+          <div class="content-module">
 
-            <div class="content-module">
+            <div class="content-module-heading cf">
 
-              <div class="content-module-heading cf">
+              <h3 class="fl">Behavior Management</h3>
+              <span class="fr expand-collapse-text">Click to collapse</span>
+              <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
-                <h3 class="fl">Results per class report</h3>
-                <span class="fr expand-collapse-text">Click to collapse</span>
-                <span class="fr expand-collapse-text initial-expand">Click to expand</span>
-
-              </div> <!-- end content-module-heading -->
+            </div> <!-- end content-module-heading -->
 
 
-              <div class="content-module-main">
+            <div class="content-module-main">
+              <div id="container">
+              </div>
+            </div> <!-- end content-module-main -->
 
-                <table>
-                  <tr>
-                    <td style="min-width:30%; text-align: left;"><span style="font-size:1.4em;">Class</span></td>
-                    <td><%= select_tag("class_room", options_for_select(@class_rooms), {:style => 'text-align:center'})%></td>
-                  </tr>
-                  <tr>
-                    <td style="min-width:30%; text-align: left;"><span style="font-size:1.4em;">Year</span></td>
-                    <td><%= select_tag("year", options_for_select(@years), {:style => 'text-align:center'})%></td>
-                  </tr>
-                  <tr>
-                    <td style="text-align: left;"><span style="font-size:1.4em;">Course</span></td>
-                    <td><%= select_tag("course", options_for_select(@courses), {:style => 'text-align:center'})%></td>
-                  </tr>
-                </table>
-                <div class="stripe-separator"><!-- --></div>
-                <span style="margin-left:41%; position: relative;">
-                  <a class="button round blue image-right ic-right-arrow text-upper">Apply</a>
-                </span>
+          </div> <!-- end content-module -->
 
-              </div> <!-- end content-module-main -->
-
-            </div> <!-- end content-module -->
-
-          </div> <!--end half-size-column-->
-
-          <div class="half-size-column fr" style="width:65%;">
-
-            <div class="content-module">
-
-              <div class="content-module-heading cf">
-
-                <h3 class="fl">Report</h3>
-                <span class="fr expand-collapse-text">Click to collapse</span>
-                <span class="fr expand-collapse-text initial-expand">Click to expand</span>
-
-              </div> <!-- end content-module-heading -->
-
-
-              <div class="content-module-main cf">
-
-              </div> <!-- end content-module-main -->
-
-            </div> <!-- end content-module -->
-
-          </div> <!--end half-size-column-->
+           <!-- end content-module -->
 
         </div> <!-- end side-content -->
 
       </div> <!-- end full-width -->
 
-    </div>
+    </div> <!-- end content -->
 
 
 

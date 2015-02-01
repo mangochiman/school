@@ -105,7 +105,7 @@
       examTypeOptions = examType.getElementsByTagName('option');
       courseOptions = course.getElementsByTagName('option');
       yearOptions = year.getElementsByTagName('option');
- 
+
       firstExamClassRoomId = parseInt(<%= @first_exam_class_room %>);
       firstExamTypeId = parseInt(<%= @first_exam_type %>);
       firstExamCourseId = parseInt(<%= @first_exam_course %>);
@@ -234,7 +234,7 @@
         padding: 3px;
         font-size: 14px;
       }
-      
+
      #class_room, #exam_type, #course{
         background-color: #fff;
         background-image: none;
@@ -354,16 +354,7 @@
 
         <ul id="tabs" class="fl">
           <li><a href="/admin/home" class="dashboard-tab">Dashboard</a></li>
-          <li><a href="/student/index">Students</a></li>
-          <li><a href="/parent/index">Parents</a></li>
-          <li><a href="/teacher/index">Teachers</a></li>
-          <li><a href="/admin/research">Research</a></li>
-          <li><a href="/examination/index" class="active-tab">Exams</a></li>
-          <li><a href="/class_room/index">Classes</a></li>
-          <li><a href="/course/index">Courses</a></li>
-          <li><a href="/report/index">Reports</a></li>
-          <li><a href="/semesters/index">Semester</a></li>
-          <li><a href="/attendance/index">Daily Attendance</a></li>
+          <li><a href="/examination/index" class="active-tab">Examinations</a></li>
         </ul> <!-- end tabs -->
 
         <!-- Change this image to your own company's logo -->
@@ -441,7 +432,7 @@
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->
-          
+
         </div> <!-- end side-content -->
 
       </div> <!-- end full-width -->
