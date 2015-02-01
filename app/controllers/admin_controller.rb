@@ -232,4 +232,33 @@ class AdminController < ApplicationController
   def view_semesters
     render :layout => false
   end
+
+  def time_table_management_menu
+    render :layout => false
+  end
+
+  def subject_groups_management
+    @class_rooms = ClassRoom.find(:all).map(&:name)
+    @class_room_courses = []
+
+    class_rooms = ClassRoom.find(:all)
+    (class_rooms || []).each do |class_room|
+      total_courses = class_room.class_room_courses.count
+      @class_room_courses << total_courses
+    end
+    
+    render :layout => false
+  end
+
+  def semester_management_menu
+    @current_year = Date.today.year
+    @current_semester = GlobalProperty.find_by_property("current_semester").value rescue nil
+    @current_semester_start_date = GlobalProperty.find_by_property("current_semester_start_date").value rescue nil
+    @current_semester_end_date = GlobalProperty.find_by_property("current_semester_end_date").value rescue nil
+    render :layout => false
+  end
+
+  def payments_overview_menu
+    render :layout => false
+  end
 end

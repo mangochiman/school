@@ -3,11 +3,12 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Student Section</title>
+    <title>Time Table Management</title>
     <!-- Optimize for mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <!-- jQuery & JS files -->
+
     <%= javascript_include_tag("jquery-1.9.1.min") %>
     <%= javascript_include_tag("highcharts") %>
     <%= javascript_include_tag("script") %>
@@ -16,59 +17,6 @@
     <%= stylesheet_link_tag("style") %>
 
     <script>
-      $(function () {
-        $('#container').highcharts({
-            chart: {
-                type: 'column'
-            },
-            title: {
-                text: 'Teachers Statistics'
-            },
-            subtitle: {
-                text: 'Distribution By Class'
-            },
-            xAxis: {
-                categories: eval('<%= @class_rooms.to_json %>')
-            },
-            yAxis: {
-                min: 0,
-                title: {
-                    text: 'Total Teachers'
-                }
-            },
-            tooltip: {
-                headerFormat: '<span style="font-size:10px; font-weight:bold;">{point.key}</span><table>',
-                pointFormat: '<tr><td style="color:{series.color};text-align:left; padding:3px;">{series.name}: </td>' +
-                    '<td style="padding:0"><b>{point.y}</b></td></tr>',
-                footerFormat: '</table>',
-                shared: true,
-                useHTML: true
-            },
-            plotOptions: {
-                column: {
-                    pointPadding: 0.2,
-                    borderWidth: 0
-                }
-            },
-            series: [
-              {
-                name: 'Males',
-                data: eval('<%= @males.to_json %>')
-
-              },
-              {
-                name: 'Females',
-                data: eval('<%= @females.to_json %>')
-
-              }, 
-              {
-                name: 'Total',
-                data: eval('<%= @totals.to_json %>')
-
-              }
-            ]
-        });
-    });
 
     </script>
   </head>
@@ -156,16 +104,7 @@
 
         <ul id="tabs" class="fl">
           <li><a href="/admin/home" class="dashboard-tab">Dashboard</a></li>
-          <li><a href="/student/index" > Students</a></li>
-          <li><a href="/parent/index" >Parents</a></li>
-          <li><a href="/teacher/index" class="active-tab">Teachers</a></li>
-          <li><a href="/admin/research">Research</a></li>
-          <li><a href="/examination/index">Exams</a></li>
-          <li><a href="/class_room/index">Classes</a></li>
-          <li><a href="/course/index">Courses</a></li>
-          <li><a href="/report/index">Reports</a></li>
-          <li><a href="/semesters/index">Semester</a></li>
-          <li><a href="/attendance/index">Daily Attendance</a></li>
+          <li><a href="/admin/time_table_management_menu" class="active-tab">Time Table</a></li>
         </ul> <!-- end tabs -->
 
         <!-- Change this image to your own company's logo -->
@@ -187,13 +126,10 @@
 
           <h3>Task</h3>
           <ul>
-            <li><a href="/teacher/add_teacher/">Add Teacher</a></li>
-            <li><a href="/teacher/edit_teacher/">Edit Teacher</a></li>
-            <li><a href="/teacher/assign_class/">Assign Class</a></li>
-            <li><a href="/teacher/remove_class/">Remove Class</a></li>
-            <li><a href="/teacher/assign_subjects">Assign Subjects</a></li>
-            <li><a href="/teacher/teacher_stats">Teacher Stats</a></li>
-            <li><a href="/teacher/filter_teachers">Filter Teachers By</a></li>
+            <li><a href="/admin/generate_time_table/">Generate Time Table</a></li>
+            <li><a href="/admin/print_class_time_table/">Print class Time Table</a></li>
+            <li><a href="/admin/print_teacher_time_table">Print teacher Time Table</a></li>
+            <li><a href="/admin/print_teacher_time_table">Print school Time Table</a></li>
           </ul>
 
         </div> <!-- end side-menu -->
@@ -204,7 +140,7 @@
 
             <div class="content-module-heading cf">
 
-              <h3 class="fl">Table design</h3>
+              <h3 class="fl">School Time Table</h3>
               <span class="fr expand-collapse-text">Click to collapse</span>
               <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 

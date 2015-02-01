@@ -3,11 +3,12 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Student Section</title>
+    <title>Subject Groups' Management</title>
     <!-- Optimize for mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <!-- jQuery & JS files -->
+
     <%= javascript_include_tag("jquery-1.9.1.min") %>
     <%= javascript_include_tag("highcharts") %>
     <%= javascript_include_tag("script") %>
@@ -22,10 +23,10 @@
                 type: 'column'
             },
             title: {
-                text: 'Teachers Statistics'
+                text: 'Course Statistics'
             },
             subtitle: {
-                text: 'Distribution By Class'
+                text: 'By Class'
             },
             xAxis: {
                 categories: eval('<%= @class_rooms.to_json %>')
@@ -33,7 +34,7 @@
             yAxis: {
                 min: 0,
                 title: {
-                    text: 'Total Teachers'
+                    text: 'Total Courses'
                 }
             },
             tooltip: {
@@ -52,18 +53,8 @@
             },
             series: [
               {
-                name: 'Males',
-                data: eval('<%= @males.to_json %>')
-
-              },
-              {
-                name: 'Females',
-                data: eval('<%= @females.to_json %>')
-
-              }, 
-              {
-                name: 'Total',
-                data: eval('<%= @totals.to_json %>')
+                name: 'Total Courses',
+                data: eval('<%= @class_room_courses.to_json %>')
 
               }
             ]
@@ -156,16 +147,8 @@
 
         <ul id="tabs" class="fl">
           <li><a href="/admin/home" class="dashboard-tab">Dashboard</a></li>
-          <li><a href="/student/index" > Students</a></li>
-          <li><a href="/parent/index" >Parents</a></li>
-          <li><a href="/teacher/index" class="active-tab">Teachers</a></li>
-          <li><a href="/admin/research">Research</a></li>
-          <li><a href="/examination/index">Exams</a></li>
+          <li><a href="/course/index" class="active-tab">Courses</a></li>
           <li><a href="/class_room/index">Classes</a></li>
-          <li><a href="/course/index">Courses</a></li>
-          <li><a href="/report/index">Reports</a></li>
-          <li><a href="/semesters/index">Semester</a></li>
-          <li><a href="/attendance/index">Daily Attendance</a></li>
         </ul> <!-- end tabs -->
 
         <!-- Change this image to your own company's logo -->
@@ -187,13 +170,10 @@
 
           <h3>Task</h3>
           <ul>
-            <li><a href="/teacher/add_teacher/">Add Teacher</a></li>
-            <li><a href="/teacher/edit_teacher/">Edit Teacher</a></li>
-            <li><a href="/teacher/assign_class/">Assign Class</a></li>
-            <li><a href="/teacher/remove_class/">Remove Class</a></li>
-            <li><a href="/teacher/assign_subjects">Assign Subjects</a></li>
-            <li><a href="/teacher/teacher_stats">Teacher Stats</a></li>
-            <li><a href="/teacher/filter_teachers">Filter Teachers By</a></li>
+            <li><a href="/course/add_course">Add course</a></li>
+            <li><a href="/course/edit_course">Edit course</a></li>
+            <li><a href="/course/remove_course">Void course</a></li>
+            <li><a href="/course/view_courses">View courses</a></li>
           </ul>
 
         </div> <!-- end side-menu -->
@@ -204,7 +184,7 @@
 
             <div class="content-module-heading cf">
 
-              <h3 class="fl">Table design</h3>
+              <h3 class="fl">Course Management</h3>
               <span class="fr expand-collapse-text">Click to collapse</span>
               <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
