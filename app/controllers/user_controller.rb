@@ -1,6 +1,6 @@
 class UserController < ApplicationController
 
-    def login
+  def login
     if request.get?
       reset_session
     else
@@ -15,8 +15,11 @@ class UserController < ApplicationController
         flash[:error] = "Invalid username or password"
       end
     end
-     @settings = school_setting
+    @settings = school_setting
     render :layout => false
   end
 
+  def user_management_menu
+    render :layout => false
+  end
 end

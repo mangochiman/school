@@ -273,4 +273,8 @@ class AdminController < ApplicationController
   def barcode_scanning_menu
     render :layout => false
   end
+
+  def system_configuration_menu
+    render :layout => false
+  end
 end

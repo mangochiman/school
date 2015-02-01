@@ -3,26 +3,22 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>SimpleAdmin - Dashboard</title>
+    <title>System Configuration</title>
     <!-- Optimize for mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <!-- jQuery & JS files -->
-    <%= javascript_include_tag("jquery") %>
-    <%= javascript_include_tag("script") %>
-    <%= stylesheet_link_tag("style") %>
-    <script>
-      function editMe(obj){
-        examTypeID = obj.getAttribute("exam_type_id");
-        window.location = "/examination/edit_me?exam_type_id=" + examTypeID;
-      }
-    </script>
 
-    <style>
-      table th:first-child {
-        border-style: none none none !important;
-    }
-    </style>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("highcharts") %>
+    <%= javascript_include_tag("script") %>
+
+    <%= javascript_include_tag("exporting") %>
+    <%= stylesheet_link_tag("style") %>
+
+    <script>
+
+    </script>
   </head>
   <body>
 
@@ -108,16 +104,7 @@
 
         <ul id="tabs" class="fl">
           <li><a href="/admin/home" class="dashboard-tab">Dashboard</a></li>
-          <li><a href="/student/index">Students</a></li>
-          <li><a href="/parent/index">Parents</a></li>
-          <li><a href="/teacher/index">Teachers</a></li>
-          <li><a href="/admin/research">Research</a></li>
-          <li><a href="/examination/index" class="active-tab">Exams</a></li>
-          <li><a href="/class_room/index">Classes</a></li>
-          <li><a href="/course/index">Courses</a></li>
-          <li><a href="/report/index">Reports</a></li>
-          <li><a href="/semesters/index">Semester</a></li>
-          <li><a href="/attendance/index">Daily Attendance</a></li>
+          <li><a href="/admin/system_configuration_menu" class="active-tab">System Configuration</a></li>
         </ul> <!-- end tabs -->
 
         <!-- Change this image to your own company's logo -->
@@ -139,15 +126,9 @@
 
           <h3>Task</h3>
           <ul>
-            <li><a href="/examination/new_exam_type">Add Exam Type</a></li>
-            <li><a href="/examination/edit_exam_type">Edit Exam Type</a></li>
-            <li><a href="/examination/void_exam_type">Void Exam Type</a></li>
-            <li><a href="/examination/assign_exam">Assign Exam</a></li>
-            <li><a href="/examination/edit_exam_assignment">Edit Exam Assignment</a></li>
-            <li><a href="/examination/void_exam">Void Exam</a></li>
-             <li><a href="/examination/capture_exam_results">Capture Exam Results</a></li>
-            <li><a href="/examination/edit_exam_results">Edit Exam Results</a></li>
-            <li><a href="/examination/void_exam_results">Void Exam Results</a></li>
+            <li><a href="/admin/enter_school_details">Enter School Details</a></li>
+            <li><a href="/admin/add_remove_features">Add/Remove Features</a></li>
+            <li><a href="/admin/set_school_holidays">Set School Holidays</a></li>
           </ul>
 
         </div> <!-- end side-menu -->
@@ -158,7 +139,7 @@
 
             <div class="content-module-heading cf">
 
-              <h3 class="fl">Table design</h3>
+              <h3 class="fl">System Configuration</h3>
               <span class="fr expand-collapse-text">Click to collapse</span>
               <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -166,54 +147,13 @@
 
 
             <div class="content-module-main">
-
-              <% if flash[:notice] %>
-                  <div class="confirmation-box round">
-                    <%= flash[:notice] %>
-                  </div>
-                <% end %>
-                <% if flash[:error] %>
-                  <div class="error-box round">
-                      <%= flash[:error] %>
-                  </div>
-                <% end %>
-             <table>
-
-                <thead>
-
-                  <tr>
-                    <th>#</th>
-                    <th style="min-width:35%;">Exam Type Name</th>
-                    <th style="min-width:35%;"><center>Date created</center></th>
-                    <th>Action</th>
-                  </tr>
-
-                </thead>
-
-                <tbody id="exam_types">
-                  <% count = 0 %>
-                  <% @exam_types.each do |exam_type| %>
-                  <tr>
-                    <td><b><%= count += 1 %></b></td>
-                    <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%=  exam_type.name.capitalize %></td>
-                    <td><center><%= exam_type.created_at.to_date.strftime("%d-%b-%Y") %></center></td>
-                    <td>
-                      <a exam_type_id="<%= exam_type.id %>" onclick="editMe(this)" href="#" class="table-actions-button ic-table-edit"></a>
-                    </td>
-                  </tr>
-                  <% end %>
-                </tbody>
-
-              </table>
+              <div id="container">
+              </div>
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->
 
-          
-
-          
-
-          
+           <!-- end content-module -->
 
         </div> <!-- end side-content -->
 
