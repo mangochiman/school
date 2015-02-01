@@ -85,11 +85,11 @@ class AdminController < ApplicationController
     @week_day_end = week_day_end.strftime("%d-%b-%Y")
 
     @periods = [
-                  ['This Week','this_week'],
-                  ['This Month', 'this_month'],
-                  ['This Year', 'this_year'],
-                  ['Custom Date','custom_date']
-               ]
+      ['This Week','this_week'],
+      ['This Month', 'this_month'],
+      ['This Year', 'this_year'],
+      ['Custom Date','custom_date']
+    ]
     attendance_data = {}
 
     (week_day_start..week_day_end).to_a.each do |date|
@@ -177,20 +177,20 @@ class AdminController < ApplicationController
   end
   
   def page_full_width
-     render :layout => false
+    render :layout => false
   end
   
   def page_other
-     render :layout => false
+    render :layout => false
   end
 
   def dashboard
-   render :layout => false
+    render :layout => false
   end
 
   def settings
-          @settings = school_setting
-          render :layout => false
+    @settings = school_setting
+    render :layout => false
   end
 
   def index
@@ -206,15 +206,15 @@ class AdminController < ApplicationController
   end
 
   def add_property
-      g = GlobalProperty.find_by_property("#{params[:name]}")
-      if g.blank?
-        GlobalProperty.create(:property => params[:name],
-                                  :value => params[:value])
-      else
-        g.value = params[:value]
-        g.save
-      end
-        render :text => g.to_json
+    g = GlobalProperty.find_by_property("#{params[:name]}")
+    if g.blank?
+      GlobalProperty.create(:property => params[:name],
+        :value => params[:value])
+    else
+      g.value = params[:value]
+      g.save
+    end
+    render :text => g.to_json
   end
   
   def semester_settings
@@ -222,7 +222,7 @@ class AdminController < ApplicationController
   end
 
   def set_total_semesters
-     render :layout => false
+    render :layout => false
   end
 
   def set_current_semester
@@ -259,6 +259,10 @@ class AdminController < ApplicationController
   end
 
   def payments_overview_menu
+    render :layout => false
+  end
+
+  def print_teacher_time_table
     render :layout => false
   end
 end
