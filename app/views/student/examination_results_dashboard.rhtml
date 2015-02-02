@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Time Table Dashboard</title>
+    <!-- Optimize for mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!-- jQuery & JS files -->
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("highcharts") %>
+    <%= javascript_include_tag("script") %>
+
+    <%= javascript_include_tag("exporting") %>
+    <%= stylesheet_link_tag("style") %>
+    <script type="text/javascript">
+      var males = parseInt('<%= @males %>');
+      var females = parseInt('<%= @females %>');
+      $(function () {
+        $('#container').highcharts({
+          chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+          },
+          title: {
+            text: 'Students Enrollment By Gender'
+          },
+          subtitle: {
+            text: '<%= Date.today.year %>'
+          },
+          tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage}%</b>',
+            percentageDecimals: 1
+          },
+          plotOptions: {
+            pie: {
+              allowPointSelect: true,
+              cursor: 'pointer',
+              dataLabels: {
+                enabled: true,
+                color: '#000000',
+                connectorColor: '#000000',
+                formatter: function() {
+                  return '<b>'+ this.point.name +'</b>: '+ this.percentage +' %';
+                }
+              }
+            }
+          },
+          series: [{
+              type: 'pie',
+              name: 'Total',
+              data: [
+                ['Males',   males],
+                {
+                  name: 'Females',
+                  y: females,
+                  sliced: true,
+                  selected: true
+                }
+              ]
+            }]
+        });
+      });
+
+      function plotGraph(){
+        year = document.getElementById('year').value;
+        jQuery.ajax({
+          type: "POST",
+          url: "/admin/load_enrollment_by_gender_data",
+          data: "year=" + year,
+          success: function(results){
+            results = eval('(' + results + ')')
+            year = results['year'];
+            totalMales = results['males'];
+            totalFemales = results['females'];
+
+            $('#container').highcharts({
+              chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false
+              },
+              title: {
+                text: 'Students Enrollment By Gender'
+              },
+              subtitle: {
+                text: year
+              },
+              tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage}%</b>',
+                percentageDecimals: 1
+              },
+              plotOptions: {
+                pie: {
+                  allowPointSelect: true,
+                  cursor: 'pointer',
+                  dataLabels: {
+                    enabled: true,
+                    color: '#000000',
+                    connectorColor: '#000000',
+                    formatter: function() {
+                      return '<b>'+ this.point.name +'</b>: '+ this.percentage +' %';
+                    }
+                  }
+                }
+              },
+              series: [{
+                  type: 'pie',
+                  name: 'Total',
+                  data: [
+                    ['Males',   totalMales],
+                    {
+                      name: 'Females',
+                      y: totalFemales,
+                      sliced: true,
+                      selected: true
+                    }
+                  ]
+                }]
+            });
+          }
+
+        });
+      }
+    </script>
+
+    <style>
+      #filter-graph-form fieldset {
+        border: 1px solid gray;
+        padding: 0px;
+        width: 98.7%;
+      }
+      #filter-graph-form legend {
+        color: #abda0f;
+        font-size: 14px;
+        font-weight: 100;
+        margin-left: 14px;
+        padding: 2px;
+      }
+      #filter-graph-form fieldset input {
+        color: #505050;
+        float: left;
+        margin-right: 5px;
+        width: 140px;
+        padding: 0px;
+        font-size: 14px;
+      }
+
+      #year{
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        color: #555;
+        display: block;
+        font-size: 14px;
+        height: 34px;
+        line-height: 1.42857;
+        padding: 6px 12px;
+        min-width: 167px;
+        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+      }
+
+      a{
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- TOP BAR -->
+    <div id="top-bar">
+
+      <div class="page-full-width cf">
+
+        <ul id="nav" class="fl">
+          <li class="v-sep"><a href="#" class="round button dark menu-user image-left">Logged in as <strong>admin</strong></a>
+            <ul>
+              <li><a href="#">My Profile</a></li>
+              <li><a href="/admin/settings">Settings</a></li>
+              <li><a href="#">Change Password</a></li>
+              <li><a href="/user/login">Log out</a></li>
+            </ul>
+          </li>
+          <li class="v-sep"><a href="#" class="round button dark menu-settings image-left">Student Management</a>
+            <ul>
+              <li><a href="/student/registration_menu">Registration/Admission</a></li>
+              <li><a href="/student/behavior_management_menu">Behavior Management</a></li>
+              <li><a href="/student/examination_results_menu">Examination results</a></li>
+              <li><a href="/student/payments_management_menu">Payments Management</a></li>
+              <li><a href="/student/id_cards_menu">Student ID cards</a></li>
+              <li><a href="/student/semester_statement_menu">Student semester statement</a></li>
+              <li><a href="/student/semester_statement_menu">Student semester statement</a></li>
+              <li><a href="/student/warning_letters_menu">Warning letters for overdue students</a></li>
+              <li><a href="/student/examination_results_menu">Examination Registration</a></li>
+            </ul>
+          </li>
+          <li class="v-sep"><a href="#" class="round button dark menu-settings image-left">School Administration</a>
+            <ul>
+              <li><a href="/admin/time_table_management_menu">Timetable management</a></li>
+              <li><a href="/admin/subject_groups_management">Subject groups’ management</a></li>
+              <li><a href="/admin/semester_management_menu">Semester/Term management </a></li>
+              <li><a href="/admin/payments_overview_menu">Payments Overview</a></li>
+              <li><a href="/admin/print_teacher_time_table">Print teacher's timetable</a></li>
+              <li><a href="/admin/documents_management_menu">Documents management</a></li>
+              <li><a href="/admin/barcode_scanning_menu">Barcode scanning functions (Ids)</a></li>
+              <li><a href="#">Email functions</a></li>
+            </ul>
+          </li>
+          <li class="v-sep"><a href="#" class="round button dark menu-settings image-left">Employee Management</a>
+            <ul>
+              <li><a href="/employees/employee_registration_menu">Employee registration</a></li>
+              <li><a href="/employees/employee_management_menu">Employee management</a></li>
+              <li><a href="/employees/position_management_menu">Position management</a></li>
+              <li><a href="#">Mini payroll</a></li>
+            </ul>
+          </li>
+          <li class="v-sep"><a href="#" class="round button dark menu-settings image-left">System Administration</a>
+            <ul>
+              <li><a href="/user/user_management_menu">User management</a></li>
+              <li><a href="/parent/parents_menu">Parents management</a></li>
+              <li><a href="/admin/system_configuration_menu">System configuration/Administration</a></li>
+              <li><a href="#">Fees management</a></li>
+              <li><a href="/report/reports_generator_menu">Supper reports generator</a></li>
+              <li><a href="/admin/backup_data_menu">Backup Settings</a></li>
+            </ul>
+          </li>
+          <li><a href="#" class="round button dark menu-logoff image-left">Log out</a></li>
+
+        </ul> <!-- end nav -->
+
+
+        <form action="#" method="POST" id="search-form" class="fr">
+          <fieldset>
+            <input type="text" id="search-keyword" class="round button dark ic-search image-right" placeholder="Search..." />
+            <input type="hidden" value="SUBMIT" />
+          </fieldset>
+        </form>
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end top-bar -->
+
+
+
+    <!-- HEADER -->
+    <div id="header-with-tabs">
+
+      <div class="page-full-width cf">
+
+        <ul id="tabs" class="fl">
+          <li><a href="/student/examination_results_dashboard" class="dashboard-tab active-tab">Dashboard</a></li>
+          <li><a href="/examination/index">Examinations</a></li>
+        </ul> <!-- end tabs -->
+
+        <!-- Change this image to your own company's logo -->
+        <!-- The logo will automatically be resized to 30px height. -->
+        <a href="#" id="company-branding-small" class="fr"><img src="/images/company-logo.png" alt="Blue Hosting" /></a>
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end header -->
+
+
+
+    <!-- MAIN CONTENT -->
+    <div id="content">
+
+      <div class="page-full-width cf">
+
+        <div class="content-module">
+
+          <div class="content-module-heading cf">
+
+            <h3 class="fl">Enrollment By Gender</h3>
+            <span class="fr expand-collapse-text">Click to collapse</span>
+            <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+          </div> <!-- end content-module-heading -->
+
+
+          <div class="content-module-main">
+            <form id="filter-graph-form" action="#">
+              <fieldset>
+                <legend>Search</legend>
+                <div style="margin-right:2%;">
+                  <table style="width:22%; float: right;">
+                    <tr style="background-color: white;">
+                      <td style="text-align: left; font-size: 1.2em; width: 10em;"><span>Year</span></td>
+                      <td><%= select_tag("year", options_for_select(@years),{:style=>'text-align:center'})%></td>
+                      <td><a onclick="plotGraph();" class="button round blue image-right ic-refresh text-upper">Plot</a></td>
+                    </tr>
+                  </table>
+
+                </div>
+              </fieldset>
+            </form>
+            <div id="container">
+            </div>
+          </div> <!-- end content-module-main -->
+
+        </div> <!-- end content-module -->
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end content -->
+
+
+
+    <!-- FOOTER -->
+    <div id="footer">
+
+      <p>&copy; Copyright 2012 <a href="#">BlueHosting, LLC</a>. All rights reserved.</p>
+      <p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
+
+    </div> <!-- end footer -->
+
+  </body>
+</html>
