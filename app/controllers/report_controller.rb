@@ -522,4 +522,8 @@ class ReportController < ApplicationController
   def employees_report
     render :layout => false
   end
+
+  def reports_generator_menu
+    render :layout => false
+  end
 end

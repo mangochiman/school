@@ -277,4 +277,8 @@ class AdminController < ApplicationController
   def system_configuration_menu
     render :layout => false
   end
+
+  def backup_data_menu
+    render :layout => false
+  end
 end

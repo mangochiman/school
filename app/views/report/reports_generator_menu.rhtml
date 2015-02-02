@@ -3,22 +3,14 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>System Configuration</title>
+    <title>Reports Generator</title>
     <!-- Optimize for mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <!-- jQuery & JS files -->
-
-    <%= javascript_include_tag("jquery-1.9.1.min") %>
-    <%= javascript_include_tag("highcharts") %>
+    <%= javascript_include_tag("jquery") %>
     <%= javascript_include_tag("script") %>
-
-    <%= javascript_include_tag("exporting") %>
     <%= stylesheet_link_tag("style") %>
-
-    <script>
-
-    </script>
   </head>
   <body>
 
@@ -104,7 +96,7 @@
 
         <ul id="tabs" class="fl">
           <li><a href="/admin/home" class="dashboard-tab">Dashboard</a></li>
-          <li><a href="/admin/system_configuration_menu" class="active-tab">System Configuration</a></li>
+          <li><a href="/report/index" class="active-tab">Reports</a></li>
         </ul> <!-- end tabs -->
 
         <!-- Change this image to your own company's logo -->
@@ -124,42 +116,81 @@
 
         <div class="side-menu fl">
 
-          <h3>Task</h3>
+          <h3>Select Report</h3>
           <ul>
-            <li><a href="/admin/enter_school_details">Enter School Details</a></li>
-            <li><a href="/admin/add_remove_features">Add/Remove Features</a></li>
-            <li><a href="/admin/set_school_holidays">Set School Holidays</a></li>
+            <li><a href="/report/students_per_semester_report">Students per semester</a></li>
+            <li><a href="/report/students_per_year_report">Students per year Report</a></li>
+            <li><a href="/report/students_per_class_report">Students per class Report </a></li>
+            <li><a href="/report/courses_report">Courses Report</a></li>
+            <li><a href="/report/courses_per_class_report">Courses per class Report</a></li>
+            <li><a href="/report/teachers_report">Teachers Report</a></li>
+            <li><a href="/report/teachers_per_subjects_report">Teacher vs subjects Report</a></li>
+            <li><a href="/report/results_per_class_report">Results per class Report</a></li>
+            <li><a href="/report/subject_pass_rate_report">Subject pass rate report</a></li>
+            <!-- <li><a href="/report/employees_report">Employees Report</a></li> -->
           </ul>
 
         </div> <!-- end side-menu -->
 
         <div class="side-content fr">
 
-          <div class="content-module">
+          <div class="half-size-column fl" style="width:34%;">
 
-            <div class="content-module-heading cf">
+            <div class="content-module">
 
-              <h3 class="fl">System Configuration</h3>
-              <span class="fr expand-collapse-text">Click to collapse</span>
-              <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+              <div class="content-module-heading cf">
 
-            </div> <!-- end content-module-heading -->
+                <h3 class="fl">Headings &amp; Paragraphs</h3>
+                <span class="fr expand-collapse-text">Click to collapse</span>
+                <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+              </div> <!-- end content-module-heading -->
 
 
-            <div class="content-module-main">
-              <div id="container">
-              </div>
-            </div> <!-- end content-module-main -->
+              <div class="content-module-main">
 
-          </div> <!-- end content-module -->
+              </div> <!-- end content-module-main -->
 
-           <!-- end content-module -->
+            </div> <!-- end content-module -->
+
+          </div> <!--end half-size-column-->
+
+          <div class="half-size-column fr" style="width:65%;">
+
+            <div class="content-module">
+
+              <div class="content-module-heading cf">
+
+                <h3 class="fl">Ordered Lists</h3>
+                <span class="fr expand-collapse-text">Click to collapse</span>
+                <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+              </div> <!-- end content-module-heading -->
+
+
+              <div class="content-module-main cf">
+
+                <div class="half-size-column fl">
+
+                </div>
+
+                <div class="half-size-column fr">
+
+                </div>
+
+              </div> <!-- end content-module-main -->
+
+            </div> <!-- end content-module -->
+
+<!-- end content-module -->
+
+          </div> <!--end half-size-column-->
 
         </div> <!-- end side-content -->
 
       </div> <!-- end full-width -->
 
-    </div> <!-- end content -->
+    </div>
 
 
 

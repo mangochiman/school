@@ -3,94 +3,22 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>SimpleAdmin - Dashboard</title>
+    <title>Backup Data</title>
     <!-- Optimize for mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <!-- jQuery & JS files -->
 
-    <%= javascript_include_tag("jquery") %>
-    <%= javascript_include_tag("script") %>
     <%= javascript_include_tag("jquery-1.9.1.min") %>
-    <%= javascript_include_tag("jquery.confirm") %>
+    <%= javascript_include_tag("highcharts") %>
+    <%= javascript_include_tag("script") %>
+
+    <%= javascript_include_tag("exporting") %>
     <%= stylesheet_link_tag("style") %>
-    <%= stylesheet_link_tag("bootstrap") %>
+
     <script>
-      function selectAll(){
-        selectAllInput = document.getElementById('table-select-all');
-        if (selectAllInput.checked){
-          selectAllInput.checked = true;
-        }
-        else {
-          selectAllInput.checked = false
-        }
-        inputs = document.getElementsByTagName("input");
-        for (var i=0; i<=inputs.length - 1; i++){
-          if (inputs[i] == selectAllInput) continue;
-          if (inputs[i].type == 'checkbox'){
-            if (inputs[i].checked){
-              inputs[i].checked = false;
-            }
-            else{
-              inputs[i].checked = true;
-            }
-          }
-        }
-      }
-      
-      function assignSubjects(obj){
-        classRoomId = obj.getAttribute("class_room_id");
-        window.location = "/class_room/assign_me_subjects?class_room_id=" + classRoomId;
-      }
-        
+
     </script>
-    <style>
-      table{
-        margin-left:15%;
-        width: 60%;
-      }
-      table td #simple-input{
-        float: right;
-      }
-
-      table label{
-        text-align: left;
-      }
-      #simple-input{
-        font-size: 10pt !important;
-      }
-
-      #registration input[type="text"], input[type="password"], textarea {
-        border: 1px solid #d9dbdd;
-        outline: medium none;
-        padding: 0.5em 0.225em;
-      }
-      input[type="submit"] {
-        margin-left: 37%;
-      }
-      table th:first-child {
-        border-style: none none none !important;
-    }
-
-    .classes{
-        position: relative;
-        margin-left: 0%;
-        width: 100%;
-     }
-
-    .classes th, tbody{
-        text-align: center;
-    }
-
-    .modal-title {
-        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-        font-weight: 500;
-        line-height: 1.1;
-        font-size: 1.2em;
-        color: #317eac;
-    }
-    
-    </style>
   </head>
   <body>
 
@@ -176,16 +104,7 @@
 
         <ul id="tabs" class="fl">
           <li><a href="/admin/home" class="dashboard-tab">Dashboard</a></li>
-          <li><a href="/student/index"> Students</a></li>
-          <li><a href="/parent/index">Parents</a></li>
-          <li><a href="/teacher/index">Teachers</a></li>
-          <li><a href="/admin/research">Research</a></li>
-          <li><a href="/examination/index">Exams</a></li>
-          <li><a href="/class_room/index" class="active-tab">Classes</a></li>
-          <li><a href="/course/index">Courses</a></li>
-          <li><a href="/report/index">Reports</a></li>
-          <li><a href="/semesters/index">Semester</a></li>
-          <li><a href="/attendance/index">Daily Attendance</a></li>
+          <li><a href="/admin/time_table_management_menu" class="active-tab">Backup Data</a></li>
         </ul> <!-- end tabs -->
 
         <!-- Change this image to your own company's logo -->
@@ -207,14 +126,8 @@
 
           <h3>Task</h3>
           <ul>
-            <li><a href="/class_room/add_class">Add class</a></li>
-            <li><a href="/class_room/edit_class">Edit class</a></li>
-            <li><a href="/class_room/remove_class">Void class</a></li>
-            <li><a href="/class_room/assign_subjects">Assign subjects</a></li>
-            <li><a href="/class_room/edit_subjects">Edit subjects</a></li>
-            <li><a href="/class_room/assign_teacher">Assign teacher</a></li>
-            <li><a href="/class_room/edit_teacher">Edit teacher</a></li>
-            <li><a href="/class_room/view_classes">View classes</a></li>
+            <li><a href="/admin/backup_data">Backup Data</a></li>
+            <li><a href="/admin/backup_settings">Backup Settings</a></li>
           </ul>
 
         </div> <!-- end side-menu -->
@@ -225,7 +138,7 @@
 
             <div class="content-module-heading cf">
 
-              <h3 class="fl">Student Registration</h3>
+              <h3 class="fl">Data Backup</h3>
               <span class="fr expand-collapse-text">Click to collapse</span>
               <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -233,53 +146,13 @@
 
 
             <div class="content-module-main">
-              <div class="information-box round">
-                Showing only teachers that are not assigned to this class
+              <div id="container">
               </div>
-              <% if flash[:notice] %>
-                <div class="confirmation-box round">
-                  <%= flash[:notice] %>
-                </div>
-              <% end %>
-              <% if flash[:error] %>
-                <div class="error-box round">
-                  <%= flash[:error] %>
-                </div>
-              <% end %>
-              <form method="post" action="assign_me_teachers">
-              <table class="classes" style="">
-
-                <thead>
-                  <tr>
-                    <th><input type="checkbox" id="table-select-all" onclick="selectAll();"/></th>
-                    <th colspan="5" style=" padding: 1.25em 0 1.25em 1.25em;">Select teachers</th>
-                  </tr>
-                </thead>
-           
-                <tbody id="class_rooms">
-                  <% @teachers.in_groups_of(3).each do |row| %>
-                    <tr>
-                        <% row.each do |teacher| %>
-                            <% unless teacher.blank? %>
-                                  <td><input type="checkbox" id="<%= teacher.id %>" name="teachers[<%= teacher.id   %>]"/></td>
-                                  <td style="border-left: none; text-align: left;"><%= teacher.fname.capitalize.to_s + ' ' + teacher.lname.to_s %></td>
-                              <% else %>
-                                  <td style="border-left: none;">&nbsp;</td>
-                                  <td style="border-left: none;">&nbsp;</td>
-                            <% end %>
-                        <% end %>
-                    </tr>
-                  <% end %>
-                </tbody>
-                
-              </table>
-              <div class="stripe-separator"><!--  --></div>
-                <%= hidden_field_tag("class_room_id", params[:class_room_id]) %>
-                <input type="submit" value="Submit" class="round blue ic-right-arrow" />
-              </form>
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->
+
+           <!-- end content-module -->
 
         </div> <!-- end side-content -->
 
@@ -296,6 +169,6 @@
       <p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
 
     </div> <!-- end footer -->
-    
+
   </body>
 </html>
