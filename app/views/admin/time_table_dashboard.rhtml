@@ -271,55 +271,38 @@
 
       <div class="page-full-width cf">
 
-        <div class="side-menu fl">
+        <div class="content-module">
 
-          <h3>Task</h3>
-          <ul>
-            <li><a href="/admin/generate_time_table/">Generate Time Table</a></li>
-            <li><a href="/admin/print_class_time_table/">Print class Time Table</a></li>
-            <li><a href="/admin/print_teacher_time_table">Print teacher Time Table</a></li>
-            <li><a href="/admin/print_teacher_time_table">Print school Time Table</a></li>
-          </ul>
+          <div class="content-module-heading cf">
 
-        </div> <!-- end side-menu -->
+            <h3 class="fl">Enrollment By Gender</h3>
+            <span class="fr expand-collapse-text">Click to collapse</span>
+            <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
-        <div class="side-content fr">
-
-          <div class="content-module">
-
-            <div class="content-module-heading cf">
-
-              <h3 class="fl">Enrollment By Gender</h3>
-              <span class="fr expand-collapse-text">Click to collapse</span>
-              <span class="fr expand-collapse-text initial-expand">Click to expand</span>
-
-            </div> <!-- end content-module-heading -->
+          </div> <!-- end content-module-heading -->
 
 
-            <div class="content-module-main">
-              <form id="filter-graph-form" action="#">
-                <fieldset>
-                  <legend>Search</legend>
-                  <div style="margin-right:2%;">
-                    <table style="width:22%; float: right;">
-                      <tr style="background-color: white;">
-                        <td style="text-align: left; font-size: 1.2em; width: 10em;"><span>Year</span></td>
-                        <td><%= select_tag("year", options_for_select(@years),{:style=>'text-align:center'})%></td>
-                        <td><a onclick="plotGraph();" class="button round blue image-right ic-refresh text-upper">Plot</a></td>
-                      </tr>
-                    </table>
+          <div class="content-module-main">
+            <form id="filter-graph-form" action="#">
+              <fieldset>
+                <legend>Search</legend>
+                <div style="margin-right:2%;">
+                  <table style="width:22%; float: right;">
+                    <tr style="background-color: white;">
+                      <td style="text-align: left; font-size: 1.2em; width: 10em;"><span>Year</span></td>
+                      <td><%= select_tag("year", options_for_select(@years),{:style=>'text-align:center'})%></td>
+                      <td><a onclick="plotGraph();" class="button round blue image-right ic-refresh text-upper">Plot</a></td>
+                    </tr>
+                  </table>
 
-                  </div>
-                </fieldset>
-              </form>
-              <div id="container">
-              </div>
-            </div> <!-- end content-module-main -->
+                </div>
+              </fieldset>
+            </form>
+            <div id="container">
+            </div>
+          </div> <!-- end content-module-main -->
 
-          </div> <!-- end content-module -->
-          <!-- end content-module -->
-
-        </div> <!-- end side-content -->
+        </div> <!-- end content-module -->
 
       </div> <!-- end full-width -->
 
