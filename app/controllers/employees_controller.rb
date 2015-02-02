@@ -42,5 +42,6 @@ class EmployeesController < ApplicationController
     @females = Student.find_by_sql("SELECT * FROM student WHERE gender = 'FEMALE' AND
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
     render :layout => false
+    
   end
 end

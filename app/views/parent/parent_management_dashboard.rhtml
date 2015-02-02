@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>SimpleAdmin - Dashboard</title>
+    <title>Time Table Dashboard</title>
     <!-- Optimize for mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
@@ -14,54 +14,141 @@
 
     <%= javascript_include_tag("exporting") %>
     <%= stylesheet_link_tag("style") %>
-    <%= stylesheet_link_tag("metallic") %>
+    <script type="text/javascript">
+      var males = parseInt('<%= @males %>');
+      var females = parseInt('<%= @females %>');
+      $(function () {
+        $('#container').highcharts({
+          chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+          },
+          title: {
+            text: 'Students Enrollment By Gender'
+          },
+          subtitle: {
+            text: '<%= Date.today.year %>'
+          },
+          tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage}%</b>',
+            percentageDecimals: 1
+          },
+          plotOptions: {
+            pie: {
+              allowPointSelect: true,
+              cursor: 'pointer',
+              dataLabels: {
+                enabled: true,
+                color: '#000000',
+                connectorColor: '#000000',
+                formatter: function() {
+                  return '<b>'+ this.point.name +'</b>: '+ this.percentage +' %';
+                }
+              }
+            }
+          },
+          series: [{
+              type: 'pie',
+              name: 'Total',
+              data: [
+                ['Males',   males],
+                {
+                  name: 'Females',
+                  y: females,
+                  sliced: true,
+                  selected: true
+                }
+              ]
+            }]
+        });
+      });
 
-    <script>
-
-      function queryReportData(){
-        startDate = $('.start-date')[0].value;
-        endDate = $('.end-date')[0].value;
-
+      function plotGraph(){
+        year = document.getElementById('year').value;
         jQuery.ajax({
           type: "POST",
-          url: "/report/teachers_report",
-          data: "start_date=" + startDate + "&end_date=" + endDate,
+          url: "/admin/load_enrollment_by_gender_data",
+          data: "year=" + year,
           success: function(results){
-            html = "<table>";
-            html += "<thead>";
-            html += "<tr>";
-            html += "<th style='min-width:30%;'>Name</th><th>Email</th><th>Gender</th><th>Date of Birth</th>";
-            html += "</tr>";
-            html += "</thead>";
-            results = eval('(' + results + ')');
-            console.log(results)
-            html += "<tbody>";
-            for (var teacherID in results){
-              teacherName = results[teacherID]["name"];
-              teacherGender = results[teacherID]["gender"];
-              teacherEmail = results[teacherID]["email"];
-              teacherDOB = results[teacherID]["dob"];
-              html += "<tr>";
-              html += "<td style='text-align:left; padding-left:40px;'>" + teacherName + "</td>";
-              html += "<td><a href='#'>" + teacherEmail + "</a></td>";
-              html += "<td>" + teacherGender + "</td>";
-              html += "<td>" + teacherDOB + "</td>";
-              html += "</tr>";
+            results = eval('(' + results + ')')
+            year = results['year'];
+            totalMales = results['males'];
+            totalFemales = results['females'];
 
-            }
-            html += "</tbody>";
-            html += "</table>";
-            reportData = document.getElementById('report_data');
-            reportData.innerHTML = html;
+            $('#container').highcharts({
+              chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false
+              },
+              title: {
+                text: 'Students Enrollment By Gender'
+              },
+              subtitle: {
+                text: year
+              },
+              tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage}%</b>',
+                percentageDecimals: 1
+              },
+              plotOptions: {
+                pie: {
+                  allowPointSelect: true,
+                  cursor: 'pointer',
+                  dataLabels: {
+                    enabled: true,
+                    color: '#000000',
+                    connectorColor: '#000000',
+                    formatter: function() {
+                      return '<b>'+ this.point.name +'</b>: '+ this.percentage +' %';
+                    }
+                  }
+                }
+              },
+              series: [{
+                  type: 'pie',
+                  name: 'Total',
+                  data: [
+                    ['Males',   totalMales],
+                    {
+                      name: 'Females',
+                      y: totalFemales,
+                      sliced: true,
+                      selected: true
+                    }
+                  ]
+                }]
+            });
           }
 
         });
       }
-
     </script>
 
     <style>
-      .start-date, .end-date{
+      #filter-graph-form fieldset {
+        border: 1px solid gray;
+        padding: 0px;
+        width: 98.7%;
+      }
+      #filter-graph-form legend {
+        color: #abda0f;
+        font-size: 14px;
+        font-weight: 100;
+        margin-left: 14px;
+        padding: 2px;
+      }
+      #filter-graph-form fieldset input {
+        color: #505050;
+        float: left;
+        margin-right: 5px;
+        width: 140px;
+        padding: 0px;
+        font-size: 14px;
+      }
+
+      #year{
         background-color: #fff;
         background-image: none;
         border: 1px solid #ccc;
@@ -70,8 +157,8 @@
         color: #555;
         display: block;
         font-size: 14px;
-        height: 20px;
-        line-height: 1.22857;
+        height: 34px;
+        line-height: 1.42857;
         padding: 6px 12px;
         min-width: 167px;
         transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
@@ -79,10 +166,6 @@
 
       a{
         cursor: pointer;
-      }
-
-      table th:first-child {
-        border-style: none none none !important;
       }
     </style>
   </head>
@@ -169,8 +252,8 @@
       <div class="page-full-width cf">
 
         <ul id="tabs" class="fl">
-          <li><a href="/report/reports_generator_dashboard" class="dashboard-tab">Dashboard</a></li>
-          <li><a href="/report/reports_generator_menu" class="active-tab">Reports</a></li>
+          <li><a href="/parent/parent_management_dashboard" class="dashboard-tab active-tab">Dashboard</a></li>
+          <li><a href="/parent/parents_menu">Parents</a></li>
         </ul> <!-- end tabs -->
 
         <!-- Change this image to your own company's logo -->
@@ -188,92 +271,42 @@
 
       <div class="page-full-width cf">
 
-        <div class="side-menu fl">
+        <div class="content-module">
 
-          <h3>Select Report</h3>
-          <ul>
-            <li><a href="/report/students_per_semester_report">Students per semester</a></li>
-            <li><a href="/report/students_per_year_report">Students per year Report</a></li>
-            <li><a href="/report/students_per_class_report">Students per class Report </a></li>
-            <li><a href="/report/courses_report">Courses Report</a></li>
-            <li><a href="/report/courses_per_class_report">Courses per class Report</a></li>
-            <li><a href="/report/teachers_report">Teachers Report</a></li>
-            <li><a href="/report/teachers_per_subjects_report">Teacher vs subjects Report</a></li>
-            <li><a href="/report/results_per_class_report">Results per class Report</a></li>
-            <li><a href="/report/subject_pass_rate_report">Subject pass rate report</a></li>
-            <!-- <li><a href="/report/employees_report">Employees Report</a></li> -->
-          </ul>
+          <div class="content-module-heading cf">
 
-        </div> <!-- end side-menu -->
+            <h3 class="fl">Enrollment By Gender</h3>
+            <span class="fr expand-collapse-text">Click to collapse</span>
+            <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
-        <div class="side-content fr">
-
-          <div class="half-size-column fl" style="width:34%;">
-
-            <div class="content-module">
-
-              <div class="content-module-heading cf">
-
-                <h3 class="fl">Teachers report</h3>
-                <span class="fr expand-collapse-text">Click to collapse</span>
-                <span class="fr expand-collapse-text initial-expand">Click to expand</span>
-
-              </div> <!-- end content-module-heading -->
+          </div> <!-- end content-module-heading -->
 
 
-              <div class="content-module-main">
+          <div class="content-module-main">
+            <form id="filter-graph-form" action="#">
+              <fieldset>
+                <legend>Search</legend>
+                <div style="margin-right:2%;">
+                  <table style="width:22%; float: right;">
+                    <tr style="background-color: white;">
+                      <td style="text-align: left; font-size: 1.2em; width: 10em;"><span>Year</span></td>
+                      <td><%= select_tag("year", options_for_select(@years),{:style=>'text-align:center'})%></td>
+                      <td><a onclick="plotGraph();" class="button round blue image-right ic-refresh text-upper">Plot</a></td>
+                    </tr>
+                  </table>
 
-                <table>
-                  <tr>
-                    <td class="custom-date-inputs" style=" text-align: left; font-size: 1.2em; width: 5em;">Start Date</td>
-                    <td class="custom-date-inputs"> <input style="text-align:center;" type="text"  id="simple-input" class="round start-date date-picker" /></td>
-                  </tr>
-                  <tr>
-                    <td class="custom-date-inputs" style="text-align: left; font-size: 1.2em;;">End Date</td>
-                    <td class="custom-date-inputs" style="text-align:left;">
-                      <input style="text-align:center;" type="text"  id="simple-input" class="round end-date date-picker" />
-                    </td>
-                  </tr>
-                </table>
-
-                <div class="stripe-separator"><!-- --></div>
-                <span style="margin-left:41%; position: relative;">
-                  <a onclick="queryReportData();" class="button round blue image-right ic-right-arrow text-upper">Apply</a>
-                </span>
-
-              </div> <!-- end content-module-main -->
-
-            </div> <!-- end content-module -->
-
-          </div> <!--end half-size-column-->
-
-          <div class="half-size-column fr" style="width:65%;">
-
-            <div class="content-module">
-
-              <div class="content-module-heading cf">
-
-                <h3 class="fl">Report</h3>
-                <span class="fr expand-collapse-text">Click to collapse</span>
-                <span class="fr expand-collapse-text initial-expand">Click to expand</span>
-
-              </div> <!-- end content-module-heading -->
-
-
-              <div class="content-module-main cf">
-                <div id="report_data">
                 </div>
-              </div> <!-- end content-module-main -->
+              </fieldset>
+            </form>
+            <div id="container">
+            </div>
+          </div> <!-- end content-module-main -->
 
-            </div> <!-- end content-module -->
-
-          </div> <!--end half-size-column-->
-
-        </div> <!-- end side-content -->
+        </div> <!-- end content-module -->
 
       </div> <!-- end full-width -->
 
-    </div>
+    </div> <!-- end content -->
 
 
 
@@ -285,17 +318,5 @@
 
     </div> <!-- end footer -->
 
-    <%= javascript_include_tag("zebra_datepicker") %>
-    <script>
-      $('.start-date').Zebra_DatePicker({
-        view : 'years',
-        direction: ['<%=  (Date.today - 10.years).strftime("%Y-%m-%d") %>', '<%=  (Date.today).strftime("%Y-%m-%d") %>']
-      });
-
-      $('.end-date').Zebra_DatePicker({
-        view : 'years',
-        direction: ['<%=  (Date.today - 10.years).strftime("%Y-%m-%d") %>', '<%=  (Date.today).strftime("%Y-%m-%d") %>']
-      });
-    </script>
   </body>
 </html>
