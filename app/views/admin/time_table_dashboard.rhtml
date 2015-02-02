@@ -3,125 +3,170 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Student Section</title>
+    <title>Time Table Dashboard</title>
     <!-- Optimize for mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <!-- jQuery & JS files -->
-    <%= javascript_include_tag("jquery") %>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("highcharts") %>
     <%= javascript_include_tag("script") %>
+
+    <%= javascript_include_tag("exporting") %>
     <%= stylesheet_link_tag("style") %>
     <script type="text/javascript">
-
-      function assignGuardian(obj){
-        studentId = obj.getAttribute("student_id");
-        window.location = "/student/select_guardian?student_id=" + studentId;
-      }
-
-      function loadSearchResults(){
-        firstName = document.getElementById('fname_search').value;
-        lastName = document.getElementById('lname_search').value;
-        gender = document.getElementsByClassName('gender_search')[0].value;
-        jQuery.ajax({
-          type: "POST",
-          url: "/student/search_students",
-          data: "first_name=" + firstName + "&last_name=" + lastName + "&gender=" + gender,
-          success: function(results){
-            results = eval("(" + results  + ")");
-            html = "";
-            tbody = document.getElementById("students");
-
-            for (var student_id in results){
-              firstName = results[student_id]["fname"];
-              lastName = results[student_id]["lname"];
-              gender = results[student_id]["gender"];
-              phone = results[student_id]["phone"];
-              email = results[student_id]["email"];
-              dob = results[student_id]["dob"];
-              join_date = results[student_id]["join_date"];
-              html+="<tr>";
-              html+="<td style='text-align:left; padding: 0.833em 0 0.833em 1.25em;'>" + firstName + ' ' + lastName +  "</td>";
-              html+="<td><a href='#'>" + email +  "</a></td>";
-              html+="<td>" + gender +  "</td>";
-              html+="<td>" + dob +  "</td>";
-              html+="<td>" + phone +  "</td>";
-              html+="<td>" + join_date +  "</td>";
-              html+="<td><a student_id=" + student_id + " onclick='assignGuardian(this)' href='#' class='button round blue image-right ic-add text-upper'>Assign Parent/Guardian &nbsp;</a></td>";
-              html+="</tr>";
+      var males = parseInt('<%= @males %>');
+      var females = parseInt('<%= @females %>');
+      $(function () {
+        $('#container').highcharts({
+          chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+          },
+          title: {
+            text: 'Students Enrollment By Gender'
+          },
+          subtitle: {
+            text: '<%= Date.today.year %>'
+          },
+          tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage}%</b>',
+            percentageDecimals: 1
+          },
+          plotOptions: {
+            pie: {
+              allowPointSelect: true,
+              cursor: 'pointer',
+              dataLabels: {
+                enabled: true,
+                color: '#000000',
+                connectorColor: '#000000',
+                formatter: function() {
+                  return '<b>'+ this.point.name +'</b>: '+ this.percentage +' %';
+                }
+              }
             }
-
-            tbody.innerHTML = html
-          }
-
+          },
+          series: [{
+              type: 'pie',
+              name: 'Total',
+              data: [
+                ['Males',   males],
+                {
+                  name: 'Females',
+                  y: females,
+                  sliced: true,
+                  selected: true
+                }
+              ]
+            }]
+        });
       });
 
-  }
+      function plotGraph(){
+        year = document.getElementById('year').value;
+        jQuery.ajax({
+          type: "POST",
+          url: "/admin/load_enrollment_by_gender_data",
+          data: "year=" + year,
+          success: function(results){
+            results = eval('(' + results + ')')
+            year = results['year'];
+            totalMales = results['males'];
+            totalFemales = results['females'];
+
+            $('#container').highcharts({
+              chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false
+              },
+              title: {
+                text: 'Students Enrollment By Gender'
+              },
+              subtitle: {
+                text: year
+              },
+              tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage}%</b>',
+                percentageDecimals: 1
+              },
+              plotOptions: {
+                pie: {
+                  allowPointSelect: true,
+                  cursor: 'pointer',
+                  dataLabels: {
+                    enabled: true,
+                    color: '#000000',
+                    connectorColor: '#000000',
+                    formatter: function() {
+                      return '<b>'+ this.point.name +'</b>: '+ this.percentage +' %';
+                    }
+                  }
+                }
+              },
+              series: [{
+                  type: 'pie',
+                  name: 'Total',
+                  data: [
+                    ['Males',   totalMales],
+                    {
+                      name: 'Females',
+                      y: totalFemales,
+                      sliced: true,
+                      selected: true
+                    }
+                  ]
+                }]
+            });
+          }
+
+        });
+      }
     </script>
+
     <style>
-      /*table{
-        margin-left:15%;
-        width: 60%;
-      }
-      table td #simple-input{
-        float: right;
-      }
-
-      table label{
-       text-align: left;
-      }
-      #simple-input{
-        font-size: 10pt !important;
-      }
-
-    form input[type="text"], input[type="password"], textarea {
-        border: 1px solid #d9dbdd;
-        outline: medium none;
-        padding: 0.5em 0.225em;
-    }
-
-    input[type="submit"] {
-      margin-left: 37%;
-    }*/
-
-
-      #search-student-form fieldset {
+      #filter-graph-form fieldset {
         border: 1px solid gray;
-        float: left;
-        margin-bottom: 15px;
-        padding: 5px;
+        padding: 0px;
         width: 98.7%;
       }
-      #search-student-form legend {
+      #filter-graph-form legend {
         color: #abda0f;
         font-size: 14px;
         font-weight: 100;
         margin-left: 14px;
         padding: 2px;
       }
-      #search-student-form fieldset input {
+      #filter-graph-form fieldset input {
         color: #505050;
         float: left;
         margin-right: 5px;
         width: 140px;
-        padding: 3px;
+        padding: 0px;
         font-size: 14px;
       }
 
-      .search_table{
-        display: table;
+      #year{
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        color: #555;
+        display: block;
+        font-size: 14px;
+        height: 34px;
+        line-height: 1.42857;
+        padding: 6px 12px;
+        min-width: 167px;
+        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
       }
 
-      .search_row{
-        display: table-row;
+      a{
+        cursor: pointer;
       }
-
-      .search_td{
-        display: table-cell;
-      }
-
-      table th:first-child {
-        border-style: none none none !important;
-    }
     </style>
   </head>
   <body>
@@ -207,8 +252,8 @@
       <div class="page-full-width cf">
 
         <ul id="tabs" class="fl">
-          <li><a href="/student/student_dashboard" class="dashboard-tab">Dashboard</a></li>
-          <li><a href="/student/index" class="active-tab"> Students</a></li>
+          <li><a href="/admin/time_table_dashboard" class="dashboard-tab active-tab">Dashboard</a></li>
+          <li><a href="/admin/time_table_management_menu">Time Table</a></li>
         </ul> <!-- end tabs -->
 
         <!-- Change this image to your own company's logo -->
@@ -230,15 +275,10 @@
 
           <h3>Task</h3>
           <ul>
-            <li><a href="/student/add_student/">Add Student</a></li>
-            <li><a href="/student/edit_student/">Edit Student</a></li>
-            <li><a href="/student/remove_students/">Void Student</a></li>
-            <li><a href="/student/assign_class/">Assign Class</a></li>
-            <li><a href="/student/assign_subjects">Assign Subjects</a></li>
-            <li><a href="/student/edit_subjects">Edit Subjects</a></li>
-            <li><a href="/student/assign_parent_guardian">Assign Parent/Guardian</a></li>
-            <li><a href="/student/edit_parent_guardian">Edit Parent/Guardian</a></li>
-            <li><a href="/student/filter_students">Filter Students By</a></li>
+            <li><a href="/admin/generate_time_table/">Generate Time Table</a></li>
+            <li><a href="/admin/print_class_time_table/">Print class Time Table</a></li>
+            <li><a href="/admin/print_teacher_time_table">Print teacher Time Table</a></li>
+            <li><a href="/admin/print_teacher_time_table">Print school Time Table</a></li>
           </ul>
 
         </div> <!-- end side-menu -->
@@ -249,7 +289,7 @@
 
             <div class="content-module-heading cf">
 
-              <h3 class="fl">Edit student details</h3>
+              <h3 class="fl">Enrollment By Gender</h3>
               <span class="fr expand-collapse-text">Click to collapse</span>
               <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -257,79 +297,27 @@
 
 
             <div class="content-module-main">
-              <% if flash[:notice] %>
-                  <div class="confirmation-box round">
-                    <%= flash[:notice] %>
-                  </div>
-                <% end %>
-                <% if flash[:error] %>
-                  <div class="error-box round">
-                      <%= flash[:error] %>
-                  </div>
-                <% end %>
-              <form id="search-student-form" action="#">
+              <form id="filter-graph-form" action="#">
                 <fieldset>
                   <legend>Search</legend>
-                  <div style="width:71%; margin-left:10%;">
-                    <table>
-                      <tr>
-                        <td style="width:10%;">First Name</td>
-                        <td style="width:10%;"><input type="text" id="fname_search"/></td>
-                        <td style="width:10%;">Last Name</td>
-                        <td style="width:10%;"><input type="text" id="lname_search"/></td>
-                        <td style="width:10%;">Gender</td>
-                        <td style="width:5%">
-                          <select id="dropdown-actions" class="gender_search">
-                            <option value="">Select Gender</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                          </select>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td colspan="6"><a onclick="loadSearchResults();" href="#" class="button round blue image-right ic-search text-upper">Search</a></td>
+                  <div style="margin-right:2%;">
+                    <table style="width:22%; float: right;">
+                      <tr style="background-color: white;">
+                        <td style="text-align: left; font-size: 1.2em; width: 10em;"><span>Year</span></td>
+                        <td><%= select_tag("year", options_for_select(@years),{:style=>'text-align:center'})%></td>
+                        <td><a onclick="plotGraph();" class="button round blue image-right ic-refresh text-upper">Plot</a></td>
                       </tr>
                     </table>
+
                   </div>
                 </fieldset>
               </form>
-
-              <table>
-
-                <thead>
-
-                  <tr>
-                    <th style="min-width:15%;">Name</th>
-                    <th>Email</th>
-                    <th>Gender</th>
-                    <th>Date Of Birth</th>
-                    <th>Phone #</th>
-                    <th>Date of Join</th>
-                    <th style="min-width:16%;">Action</th>
-                  </tr>
-
-                </thead>
-
-                <tbody id="students">
-                  <% @students.each do |student| %>
-                  <tr>
-                    <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= student.fname.capitalize.to_s + ' ' + student.lname.capitalize.to_s %></td>
-                    <td><a href="#"><%=  student.email %></a></td>
-                    <td><%=  student.gender %></td>
-                    <td><%=  student.dob.to_date.strftime("%d-%b-%Y") %></td>
-                    <td><%=  student.phone %></td>
-                    <td><%=  student.created_at.strftime("%d-%b-%Y") %></td>
-                    <td>
-                      <a student_id="<%= student.id %>" onclick="assignGuardian(this)" href="#" class="button round blue image-right ic-add text-upper">Assign Parent/Guardian &nbsp;</a>
-                    </td>
-                  </tr>
-                  <% end %>
-                </tbody>
-
-              </table>
+              <div id="container">
+              </div>
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->
+          <!-- end content-module -->
 
         </div> <!-- end side-content -->
 
