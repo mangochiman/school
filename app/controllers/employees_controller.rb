@@ -41,7 +41,51 @@ class EmployeesController < ApplicationController
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
     @females = Student.find_by_sql("SELECT * FROM student WHERE gender = 'FEMALE' AND
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
+    render :layout => false    
+  end
+
+  def add_position
+    if (request.method == :post)
+
+      if (Position.create({
+              :name => params[:position_name]
+            }))
+        flash[:notice] = "Operation successful"
+      else
+        flash[:error] = "Unable to save. Check for errors and try again"
+      end
+      redirect_to :action => "add_position" and return
+    end
     render :layout => false
-    
+  end
+
+  def edit_position
+    @positions = Position.all
+    render :layout => false
+  end
+
+  def edit_me_position
+    position_id = params[:position_id]
+    @position = Position.find(position_id)
+    if (request.method == :post)
+
+      if (@position.update_attributes({
+              :name => params[:position_name]
+            }))
+        flash[:notice] = "Operation successful"
+      else
+        flash[:error] = "Unable to save. Check for errors and try again"
+      end
+      redirect_to :action => "edit_position" and return
+    end
+    render :layout => false
+  end
+  
+  def remove_positions
+    render :layout => false
+  end
+
+  def view_positions
+    render :layout => false
   end
 end
