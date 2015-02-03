@@ -155,6 +155,28 @@ class EmployeesController < ApplicationController
     @my_position = @employee.employee_position.position
     if (request.method == :post)
 
+      ActiveRecord::Base.transaction do
+        employee = Employee.find(employee_id)
+        employee.update_attributes({
+            :fname => params[:firstname],
+            :lname => params[:lastname],
+            :gender => params[:gender],
+            :email => params[:email],
+            :phone => params[:phone],
+            :dob => params[:dob].to_date
+          })
+
+        employ_position = EmployeePosition.find_by_employee_id(employee_id)
+        employ_position.delete #EmployPosition couldn't be updated. Needs to be Improved
+
+        employ_position = EmployeePosition.new
+        employ_position.employee_id = employee.id
+        employ_position.position_id = params[:position]
+        employ_position.save
+      end
+
+      flash[:notice] = "Operation successful"
+      redirect_to :action => "edit_employee" and return
     end
     render :layout => false
   end
