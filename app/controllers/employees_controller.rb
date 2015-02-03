@@ -99,10 +99,72 @@ class EmployeesController < ApplicationController
     end
 
     position_ids = params[:position_ids].split(",")
-      (position_ids || []).each do |position_id|
-       position = Position.find(position_id)
-       position.delete
+    (position_ids || []).each do |position_id|
+      position = Position.find(position_id)
+      position.delete
     end
     render :text => "true" and return
   end
+
+  def add_employee
+    @positions = [["[select Position]", ""]]
+    @positions += Position.find(:all).collect{|p|[p.name, p.id]}
+    if (request.method == :post)
+      first_name = params[:firstname]
+      last_name = params[:lastname]
+      gender = params[:gender]
+      email = params[:email]
+      phone = params[:phone]
+      date_of_birth = params[:dob].to_date
+
+      position_id = params[:position]
+      ActiveRecord::Base.transaction do
+        employee = Employee.new
+        employee.fname = first_name
+        employee.lname = last_name
+        employee.gender = gender
+        employee.email = email
+        employee.phone = phone
+        employee.dob = date_of_birth
+        employee.save
+
+        employ_position = EmployeePosition.new
+        employ_position.employee_id = employee.id
+        employ_position.position_id = position_id
+        employ_position.save
+      end
+      
+      flash[:notice] = "Operation successful"
+      redirect_to :action => "add_employee" and return
+    end
+    
+    render :layout => false
+  end
+  
+  def edit_employee
+    @employees = Employee.all
+    render :layout => false
+  end
+
+  def edit_me_employee
+    @positions = [["[select Position]", ""]]
+    @positions += Position.find(:all).collect{|p|[p.name, p.id]}
+    
+    employee_id = params[:employee_id]
+    @employee = Employee.find(employee_id)
+    @my_position = @employee.employee_position.position
+    if (request.method == :post)
+
+    end
+    render :layout => false
+  end
+  
+  def remove_employees
+    render :layout => false
+  end
+
+  def view_employees
+    render :layout => false
+  end
+  
 end
