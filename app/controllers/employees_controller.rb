@@ -213,5 +213,24 @@ class EmployeesController < ApplicationController
     end
     render :text => "true" and return
   end
-  
+
+  def retire_employee
+    @employees = Employee.all
+    render :layout => false
+  end
+
+  def suspend_employee
+    @employees = Employee.all
+    render :layout => false
+  end
+
+  def stop_employees
+    @employees = Employee.all
+    render :layout => false
+  end
+
+  def end_contract
+    @employees = Employee.all
+    render :layout => false
+  end
 end
