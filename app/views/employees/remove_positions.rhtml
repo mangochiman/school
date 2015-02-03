@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>SimpleAdmin - Dashboard</title>
+    <!-- Optimize for mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!-- jQuery & JS files -->
+    <%= javascript_include_tag("jquery") %>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("jquery.confirm") %>
+    <%= javascript_include_tag("script") %>
+    <%= javascript_include_tag("gvalidator") %>
+    <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("metallic") %>
+    <%= stylesheet_link_tag("gvalidator") %>
+    <%= stylesheet_link_tag("bootstrap") %>
+    <script>
+      function selectAll(){
+        selectAllInput = document.getElementById('table-select-all');
+        inputs = document.getElementsByTagName("input");
+        if (selectAllInput.checked){
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+              inputs[i].checked = true;
+            }
+          }
+        }
+        else{
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+              inputs[i].checked = false;
+            }
+          }
+        }
+      }
+
+      function deletePositions(){
+        inputs = document.getElementsByTagName("input");
+        positionIDs = []
+        for (var i=0; i<=inputs.length - 1; i++){
+          if (inputs[i].type == 'checkbox'){
+            if (inputs[i].checked){
+              if (inputs[i].hasAttribute("position_id")){
+                positionID = inputs[i].getAttribute("position_id");
+                positionIDs.push(positionID);
+              }
+            }
+          }
+        }
+
+        jQuery.ajax({
+          type: "POST",
+          url: "/employees/delete_positions",
+          data: "position_ids=" + positionIDs,
+          success: function(){
+            for (var x=0; x<= positionIDs.length - 1; x++){
+              id = positionIDs[x];
+              element = document.getElementById(id);
+              element.parentNode.removeChild(element)
+            }
+          }
+
+        });
+      }
+      var currentPositionId = "";
+      function setCurrentPositionId(obj){
+        currentPositionId = obj.getAttribute("position_id");
+      }
+
+      function deleteSingleEntry(){
+        jQuery.ajax({
+          type: "POST",
+          url: "/employees/delete_positions",
+          data: "position_id=" + currentPositionId + "&mode=single_entry",
+          success: function(){
+            element = document.getElementById(currentPositionId);
+            element.parentNode.removeChild(element);
+          }
+
+        });
+      }
+    </script>
+    <style>
+      .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: red;
+      }
+
+      form.autoform .msg.icon {
+        margin: 0 10px;
+        padding: 5px 5px 5px 30px;
+        position: unset;
+      }
+
+      form label {
+        font-size: 0.9em;
+        font-weight: bold;
+      }
+      form.autoform input, select{
+        font-size: 0.8em !important;
+        font-weight: bold;
+      }
+      #add_position input[type="text"], input[type="password"], textarea {
+        border: 1px solid #d9dbdd;
+        outline: medium none;
+        padding: 0.5em 0.225em;
+      }
+
+      #simple-input {
+        font-size: 10pt !important;
+      }
+
+      table th:first-child {
+        border-style: none none none !important;
+      }
+      a{
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- TOP BAR -->
+    <div id="top-bar">
+
+      <div class="page-full-width cf">
+
+        <ul id="nav" class="fl">
+          <li class="v-sep"><a href="#" class="round button dark menu-user image-left">Logged in as <strong>admin</strong></a>
+            <ul>
+              <li><a href="#">My Profile</a></li>
+              <li><a href="/admin/settings">Settings</a></li>
+              <li><a href="#">Change Password</a></li>
+              <li><a href="/user/login">Log out</a></li>
+            </ul>
+          </li>
+          <li class="v-sep"><a href="#" class="round button dark menu-settings image-left">Student Management</a>
+            <ul>
+              <li><a href="/student/registration_menu">Registration/Admission</a></li>
+              <li><a href="/student/behavior_management_menu">Behavior Management</a></li>
+              <li><a href="/student/examination_results_menu">Examination results</a></li>
+              <li><a href="/student/payments_management_menu">Payments Management</a></li>
+              <li><a href="/student/id_cards_menu">Student ID cards</a></li>
+              <li><a href="/student/semester_statement_menu">Student semester statement</a></li>
+              <li><a href="/student/semester_statement_menu">Student semester statement</a></li>
+              <li><a href="/student/warning_letters_menu">Warning letters for overdue students</a></li>
+              <li><a href="/student/examination_results_menu">Examination Registration</a></li>
+            </ul>
+          </li>
+          <li class="v-sep"><a href="#" class="round button dark menu-settings image-left">School Administration</a>
+            <ul>
+              <li><a href="/admin/time_table_management_menu">Timetable management</a></li>
+              <li><a href="/admin/subject_groups_management">Subject groups’ management</a></li>
+              <li><a href="/admin/semester_management_menu">Semester/Term management </a></li>
+              <li><a href="/admin/payments_overview_menu">Payments Overview</a></li>
+              <li><a href="/admin/print_teacher_time_table">Print teacher's timetable</a></li>
+              <li><a href="/admin/documents_management_menu">Documents management</a></li>
+              <li><a href="/admin/barcode_scanning_menu">Barcode scanning functions (Ids)</a></li>
+              <li><a href="#">Email functions</a></li>
+            </ul>
+          </li>
+          <li class="v-sep"><a href="#" class="round button dark menu-settings image-left">Employee Management</a>
+            <ul>
+              <li><a href="/employees/employee_registration_menu">Employee registration</a></li>
+              <li><a href="/employees/employee_management_menu">Employee management</a></li>
+              <li><a href="/employees/position_management_menu">Position management</a></li>
+              <li><a href="#">Mini payroll</a></li>
+            </ul>
+          </li>
+          <li class="v-sep"><a href="#" class="round button dark menu-settings image-left">System Administration</a>
+            <ul>
+              <li><a href="/user/user_management_menu">User management</a></li>
+              <li><a href="/parent/parents_menu">Parents management</a></li>
+              <li><a href="/admin/system_configuration_menu">System configuration/Administration</a></li>
+              <li><a href="#">Fees management</a></li>
+              <li><a href="/report/reports_generator_menu">Supper reports generator</a></li>
+              <li><a href="/admin/backup_data_menu">Backup Settings</a></li>
+            </ul>
+          </li>
+          <li><a href="#" class="round button dark menu-logoff image-left">Log out</a></li>
+
+        </ul> <!-- end nav -->
+
+
+        <form action="#" method="POST" id="search-form" class="fr">
+          <fieldset>
+            <input type="text" id="search-keyword" class="round button dark ic-search image-right" placeholder="Search..." />
+            <input type="hidden" value="SUBMIT" />
+          </fieldset>
+        </form>
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end top-bar -->
+
+
+
+    <!-- HEADER -->
+    <div id="header-with-tabs">
+
+      <div class="page-full-width cf">
+
+        <ul id="tabs" class="fl">
+          <li><a href="/employees/position_management_dashboard" class="dashboard-tab">Dashboard</a></li>
+          <li><a href="/employees/position_management_menu" class="active-tab">Position Management</a></li>
+        </ul> <!-- end tabs -->
+
+        <!-- Change this image to your own company's logo -->
+        <!-- The logo will automatically be resized to 30px height. -->
+        <a href="#" id="company-branding-small" class="fr"><img src="/images/company-logo.png" alt="Blue Hosting" /></a>
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end header -->
+
+
+
+    <!-- MAIN CONTENT -->
+    <div id="content">
+
+      <div class="page-full-width cf">
+
+        <div class="side-menu fl">
+
+          <h3>Task</h3>
+          <ul>
+            <li><a href="/employees/add_position/">Add Position</a></li>
+            <li><a href="/employees/edit_position/">Edit Position</a></li>
+            <li><a href="/employees/remove_positions/">Void Position</a></li>
+            <li><a href="/employees/view_positions/">View Positions</a></li>
+          </ul>
+
+        </div> <!-- end side-menu -->
+
+        <div class="side-content fr">
+
+          <div class="content-module">
+
+            <div class="content-module-heading cf">
+
+              <h3 class="fl">Remove Position</h3>
+              <span class="fr expand-collapse-text">Click to collapse</span>
+              <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+            </div> <!-- end content-module-heading -->
+
+
+            <div class="content-module-main">
+
+              <% if flash[:notice] %>
+                <div class="confirmation-box round">
+                  <%= flash[:notice] %>
+                </div>
+              <% end %>
+              <% if flash[:error] %>
+                <div class="error-box round">
+                  <%= flash[:error] %>
+                </div>
+              <% end %>
+              <table>
+
+                <thead>
+                  <tr>
+                    <th><input type="checkbox" id="table-select-all" onclick="selectAll();"/></th>
+                    <th style="min-width:35%;">Position Name</th>
+                    <th style="min-width:35%;"><center>Date created</center></th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tfoot>
+                  <tr>
+                    <td colspan="3" class="table-footer">
+                      <a href="#" class="button round blue image-right ic-delete text-upper delete-multiple">Delete</a>
+                    </td>
+                  </tr>
+                </tfoot>
+                <tbody id="positions">
+                  <% @positions.each do |position| %>
+                    <tr id="<%= position.id %>">
+                      <td><input type="checkbox" position_id="<%= position.id %>"/></td>
+                      <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%=  position.name.titleize %></td>
+                      <td><center><%= position.created_at.to_date.strftime("%d-%b-%Y") %></center></td>
+                      <td>
+                        <a position_id="<%= position.id %>" href="#" onmousedown="setCurrentPositionId(this)" class="table-actions-button ic-table-delete confirm"></a>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+
+              </table>
+
+            </div> <!-- end content-module-main -->
+
+          </div> <!-- end content-module -->
+
+
+
+
+
+
+
+        </div> <!-- end side-content -->
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end content -->
+
+
+
+    <!-- FOOTER -->
+    <div id="footer">
+
+      <p>&copy; Copyright 2012 <a href="#">BlueHosting, LLC</a>. All rights reserved.</p>
+      <p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
+
+    </div> <!-- end footer -->
+    <%= javascript_include_tag("bootstrap") %>
+    <script>
+
+      $(".delete-multiple").confirm({
+            title:"Delete confirmation",
+            text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+            confirm: function(button) {
+              deletePositions();
+            },
+            cancel: function(button) {
+              alert("You aborted the operation.");
+            },
+            confirmButton: "Yes I am",
+            cancelButton: "No"
+        });
+
+        $(".confirm").confirm({
+            title:"Delete confirmation",
+            text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+            confirm: function(button) {
+              deleteSingleEntry();
+            },
+            cancel: function(button) {
+
+            },
+            confirmButton: "Yes I am",
+            cancelButton: "No"
+        });
+    </script>
+  </body>
+</html>

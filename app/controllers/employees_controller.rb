@@ -82,10 +82,27 @@ class EmployeesController < ApplicationController
   end
   
   def remove_positions
+    @positions = Position.all
     render :layout => false
   end
 
   def view_positions
     render :layout => false
+  end
+
+  def delete_positions
+    if (params[:mode] == 'single_entry')
+      position = Position.find(params[:position_id])
+      position.delete
+      render :text => "true" and return
+    end
+
+    position_ids = params[:position_ids].split(",")
+      (position_ids || []).each do |position_id|
+       position = Position.find(position_id)
+       position.delete
+    end
+
+    render :text => "true" and return
   end
 end
