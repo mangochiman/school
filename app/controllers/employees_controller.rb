@@ -187,6 +187,7 @@ class EmployeesController < ApplicationController
   end
 
   def view_employees
+    @employees = Employee.all
     render :layout => false
   end
 
