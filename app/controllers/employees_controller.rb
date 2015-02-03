@@ -182,11 +182,35 @@ class EmployeesController < ApplicationController
   end
   
   def remove_employees
+    @employees = Employee.all
     render :layout => false
   end
 
   def view_employees
     render :layout => false
+  end
+
+  def delete_employees
+    if (params[:mode] == 'single_entry')
+      ActiveRecord::Base.transaction do
+        employee = Employee.find(params[:employee_id])
+        employee.delete
+        employ_position = EmployeePosition.find_by_employee_id(params[:employee_id])
+        employ_position.delete
+      end
+      render :text => "true" and return
+    end
+
+    employee_ids = params[:employee_ids].split(",")
+    ActiveRecord::Base.transaction do
+      (employee_ids || []).each do |employee_id|
+        employee = Employee.find(employee_id)
+        employee.delete
+        employ_position = EmployeePosition.find_by_employee_id(employee_id)
+        employ_position.delete
+      end
+    end
+    render :text => "true" and return
   end
   
 end
