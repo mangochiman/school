@@ -87,6 +87,7 @@ class EmployeesController < ApplicationController
   end
 
   def view_positions
+    @positions = Position.all
     render :layout => false
   end
 
@@ -102,7 +103,6 @@ class EmployeesController < ApplicationController
        position = Position.find(position_id)
        position.delete
     end
-
     render :text => "true" and return
   end
 end
