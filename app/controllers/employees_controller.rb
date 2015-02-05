@@ -216,6 +216,21 @@ class EmployeesController < ApplicationController
 
   def retire_employee
     @employees = Employee.all
+
+    if (request.method == :post)
+      if (params[:mode] == 'single_entry')
+        employee = Employee.find(params[:employee_id])
+        render :text => "true" and return
+      end
+
+      employee_ids = params[:employee_ids].split(",")
+      (employee_ids || []).each do |employee_id|
+        employee = Employee.find(employee_id)
+      end
+
+      render :text => "true" and return
+    end
+    
     render :layout => false
   end
 
