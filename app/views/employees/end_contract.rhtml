@@ -86,6 +86,17 @@
       }
     </script>
     <style>
+      .date-picker{
+        text-align: center;
+        font-size: 14pt;
+        width: 250px;
+
+      }
+
+      .Zebra_DatePicker {
+        z-index: 2000;/* custom z-index. Conflicts with jquery.confirm*/
+      }
+      
       a.table-actions-button {
         height: 2.5em;
         width: 2.5em;
@@ -320,7 +331,7 @@
                       <td><%=  employee.phone %></td>
                       <td><%=  employee.employee_position.position.name.titleize %></td>
                       <td>
-                        <a employee_id="<%= employee.id %>" href="#" onmousedown="setCurrentEmployeeId(this)" class="table-actions-button ic-table-contract-end confirm"></a>
+                        <a employee_id="<%= employee.id %>" href="#" onmousedown="setCurrentEmployeeId(this); interval = window.setInterval('loadDatePicker();', 350);" class="table-actions-button ic-table-contract-end confirm"></a>
                       </td>
                     </tr>
                   <% end %>
@@ -354,13 +365,14 @@
 
     </div> <!-- end footer -->
     <%= javascript_include_tag("bootstrap") %>
+    <%= javascript_include_tag("zebra_datepicker") %>
     <script>
 
       $(".delete-multiple").confirm({
-        title:"Delete confirmation",
-        text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+        title:"Stop Employee confirmation",
+        text:"Are you sure you want to retire the selected employees?",
         confirm: function(button) {
-          deleteEmployees();
+          endContractEmployees();
         },
         cancel: function(button) {
         },
@@ -369,10 +381,11 @@
       });
 
       $(".confirm").confirm({
-        title:"Delete confirmation",
-        text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+        title:"End Contract confirmation",
+        text:"Are you sure you want to abort contract of the selected employee? <br /><br />Date Contract Ended: <input value='<%= Date.today.strftime('%Y-%m-%d') %>'type='text' id='end_contract_date' class='date-picker'/>",
         confirm: function(button) {
-          deleteSingleEntry();
+          endContractDate = document.getElementById('end_contract_date').value;
+          endContractSingleEntry(endContractDate);
         },
         cancel: function(button) {
 
@@ -380,6 +393,17 @@
         confirmButton: "Yes I am",
         cancelButton: "No"
       });
+      
+      function loadDatePicker(){
+        $('.date-picker').Zebra_DatePicker({
+          view : 'years',
+          direction: ['<%=  (Date.today - 30.years).strftime("%Y-%m-%d") %>', '<%= Date.today.strftime("%Y-%m-%d") %>']
+        });
+        endContractDate = document.getElementById('end_contract_date');
+        if (endContractDate){
+          clearInterval(interval);
+        }
+      }
     </script>
   </body>
 </html>
