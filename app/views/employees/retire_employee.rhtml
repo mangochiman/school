@@ -39,7 +39,7 @@
         }
       }
 
-      function retireEmployees(){
+      function retireEmployees(startDate, endDate){
         inputs = document.getElementsByTagName("input");
         employeeIDs = []
         for (var i=0; i<=inputs.length - 1; i++){
@@ -56,7 +56,7 @@
         jQuery.ajax({
           type: "POST",
           url: "/employees/retire_employee",
-          data: "employee_ids=" + employeeIDs,
+          data: "employee_ids=" + employeeIDs + "&start_date=" + startDate + "&end_date=" + endDate,
           success: function(){
             for (var x=0; x<= employeeIDs.length - 1; x++){
               id = employeeIDs[x];
@@ -72,11 +72,11 @@
         currentEmployeeId = obj.getAttribute("employee_id");
       }
 
-      function retireSingleEntry(){
+      function retireSingleEntry(startDate, endDate){
         jQuery.ajax({
           type: "POST",
           url: "/employees/retire_employee",
-          data: "employee_id=" + currentEmployeeId + "&mode=single_entry",
+          data: "employee_id=" + currentEmployeeId + "&start_date=" + startDate + "&end_date=" + endDate + "&mode=single_entry",
           success: function(){
             element = document.getElementById(currentEmployeeId);
             element.parentNode.removeChild(element);
@@ -91,7 +91,7 @@
         font-size: 14pt;
         width: 80%;
       }
-      
+
       .Zebra_DatePicker {
         z-index: 2000;/* custom z-index. Conflicts with jquery.confirm*/
       }
@@ -314,7 +314,7 @@
                 <tfoot>
                   <tr>
                     <td colspan="3" class="table-footer">
-                      <a href="#" class="button round blue image-right ic-right-arrow text-upper delete-multiple">Retire Employees</a>
+                      <a href="#" onmousedown="interval = window.setInterval('loadDatePicker();', 350);" class="button round blue image-right ic-right-arrow text-upper retire-multiple">Retire Employees</a>
                     </td>
                   </tr>
                 </tfoot>
@@ -367,11 +367,13 @@
     <%= javascript_include_tag("zebra_datepicker") %>
     <script>
 
-      $(".delete-multiple").confirm({
+      $(".retire-multiple").confirm({
         title:"Retirement confirmation",
-        text:"Are you sure you want to retire the selected employees?",
+        text:"Are you sure you want to retire the selected employees? <br /><br />Retirement Date: <input value='<%= Date.today.strftime('%Y-%m-%d') %>'type='text' id='retirement_date' class='date-picker'/>",
         confirm: function(button) {
-          retireEmployees();
+          retirementDate = document.getElementById('retirement_date').value;
+          endDate = "";
+          retireEmployees(retirementDate, endDate);
         },
         cancel: function(button) {
         },
@@ -384,7 +386,8 @@
         text:"Are you sure you want to retire the selected employee? <br /><br />Retirement Date: <input value='<%= Date.today.strftime('%Y-%m-%d') %>'type='text' id='retirement_date' class='date-picker'/>",
         confirm: function(button) {
           retirementDate = document.getElementById('retirement_date').value;
-          retireSingleEntry(retirementDate);
+          endDate = "";
+          retireSingleEntry(retirementDate, endDate);
         },
         cancel: function(button) {
 

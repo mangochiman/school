@@ -39,7 +39,7 @@
         }
       }
 
-      function suspendEmployees(){
+      function suspendEmployees(startDate, endDate){
         inputs = document.getElementsByTagName("input");
         employeeIDs = []
         for (var i=0; i<=inputs.length - 1; i++){
@@ -56,7 +56,7 @@
         jQuery.ajax({
           type: "POST",
           url: "/employees/suspend_employee",
-          data: "employee_ids=" + employeeIDs,
+          data: "employee_ids=" + employeeIDs + "&start_date=" + startDate + "&end_date=" + endDate,
           success: function(){
             for (var x=0; x<= employeeIDs.length - 1; x++){
               id = employeeIDs[x];
@@ -72,11 +72,11 @@
         currentEmployeeId = obj.getAttribute("employee_id");
       }
 
-      function suspendSingleEntry(){
+      function suspendSingleEntry(startDate, endDate){
         jQuery.ajax({
           type: "POST",
           url: "/employees/suspend_employee",
-          data: "employee_id=" + currentEmployeeId + "&mode=single_entry",
+          data: "employee_id=" + currentEmployeeId + "&start_date=" + startDate + "&end_date=" + endDate + "&mode=single_entry",
           success: function(){
             element = document.getElementById(currentEmployeeId);
             element.parentNode.removeChild(element);
@@ -316,7 +316,7 @@
                 <tfoot>
                   <tr>
                     <td colspan="3" class="table-footer">
-                      <a href="#" class="button round blue image-right ic-right-arrow text-upper delete-multiple">Suspend Employees</a>
+                      <a href="#" onmousedown="interval = window.setInterval('loadDatePicker();', 350);" class="button round blue image-right ic-right-arrow text-upper suspend-multiple">Suspend Employees</a>
                     </td>
                   </tr>
                 </tfoot>
@@ -369,11 +369,14 @@
     <%= javascript_include_tag("zebra_datepicker") %>
     <script>
 
-      $(".delete-multiple").confirm({
-        title:"Delete confirmation",
-        text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+      $(".suspend-multiple").confirm({
+        title:"Suspend confirmation",
+        text:"Are you sure you want to suspend the selected employees? <br /><br /> Start Date: <input value='<%= Date.today.strftime('%Y-%m-%d') %>' type='text' id='start_date' class='date-picker'/>\
+            <br /><br />End Date: <input value='<%= Date.today.strftime('%Y-%m-%d') %>'type='text' id='end_date' class='date-picker'/>",
         confirm: function(button) {
-          suspendEmployees();
+          startDate = document.getElementById('start_date').value;
+          endDate = document.getElementById('end_date').value;
+          suspendEmployees(startDate, endDate);
         },
         cancel: function(button) {
         },
@@ -386,7 +389,9 @@
         text:"Are you sure you want to suspend the selected employee? <br /><br /> Start Date: <input value='<%= Date.today.strftime('%Y-%m-%d') %>' type='text' id='start_date' class='date-picker'/>\
             <br /><br />End Date: <input value='<%= Date.today.strftime('%Y-%m-%d') %>'type='text' id='end_date' class='date-picker'/>",
         confirm: function(button) {
-          suspendSingleEntry();
+          startDate = document.getElementById('start_date').value;
+          endDate = document.getElementById('end_date').value;
+          suspendSingleEntry(startDate, endDate);
         },
         cancel: function(button) {
 
@@ -398,7 +403,7 @@
       function loadDatePicker(){
         $('.date-picker').Zebra_DatePicker({
           view : 'years',
-          direction: ['<%=  (Date.today - 30.years).strftime("%Y-%m-%d") %>', '<%= Date.today.strftime("%Y-%m-%d") %>']
+          direction: ['<%=  (Date.today - 30.years).strftime("%Y-%m-%d") %>', '<%= (Date.today + 5.years).strftime("%Y-%m-%d") %>']
         });
         startDate = document.getElementById('start_date');
         if (startDate){

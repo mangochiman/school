@@ -215,19 +215,25 @@ class EmployeesController < ApplicationController
   end
 
   def retire_employee
-    @employees = Employee.all
-
+    @employees = []
+    employees = Employee.all
+    employees.each do |emp|
+      next if emp.currently_retired?
+      @employees << emp
+    end
+    
     if (request.method == :post)
       if (params[:mode] == 'single_entry')
         employee = Employee.find(params[:employee_id])
+        employee.retire(params[:start_date], params[:end_date])
         render :text => "true" and return
       end
 
       employee_ids = params[:employee_ids].split(",")
       (employee_ids || []).each do |employee_id|
         employee = Employee.find(employee_id)
+        employee.retire(params[:start_date], params[:end_date])
       end
-
       render :text => "true" and return
     end
     
@@ -235,17 +241,81 @@ class EmployeesController < ApplicationController
   end
 
   def suspend_employee
-    @employees = Employee.all
+    @employees = []
+    employees = Employee.all
+    employees.each do |emp|
+      next if emp.currently_suspended?
+      @employees << emp
+    end
+
+    if (request.method == :post)
+      if (params[:mode] == 'single_entry')
+        employee = Employee.find(params[:employee_id])
+        employee.suspend(params[:start_date], params[:end_date])
+        render :text => "true" and return
+      end
+
+      employee_ids = params[:employee_ids].split(",")
+      (employee_ids || []).each do |employee_id|
+        employee = Employee.find(employee_id)
+        employee.suspend(params[:start_date], params[:end_date])
+      end
+      render :text => "true" and return
+    end
+    
     render :layout => false
   end
 
   def stop_employees
-    @employees = Employee.all
+    @employees = []
+    employees = Employee.all
+    employees.each do |emp|
+      next if emp.currently_stopped?
+      @employees << emp
+    end
+    
+    if (request.method == :post)
+      if (params[:mode] == 'single_entry')
+        employee = Employee.find(params[:employee_id])
+        employee.stop(params[:start_date], params[:end_date])
+        render :text => "true" and return
+      end
+
+      employee_ids = params[:employee_ids].split(",")
+      (employee_ids || []).each do |employee_id|
+        employee = Employee.find(employee_id)
+        employee.stop(params[:start_date], params[:end_date])
+      end
+      render :text => "true" and return
+    end
+    
     render :layout => false
   end
 
   def end_contract
-    @employees = Employee.all
+    @employees = []
+    employees = Employee.all
+    employees.each do |emp|
+      next if emp.currently_ended_contract?
+      @employees << emp
+    end
+    
+    if (request.method == :post)
+      if (params[:mode] == 'single_entry')
+        employee = Employee.find(params[:employee_id])
+        employee.end_contract(params[:start_date], params[:end_date])
+        render :text => "true" and return
+      end
+
+      employee_ids = params[:employee_ids].split(",")
+      (employee_ids || []).each do |employee_id|
+        employee = Employee.find(employee_id)
+        employee.end_contract(params[:start_date], params[:end_date])
+      end
+      render :text => "true" and return
+    end
+
     render :layout => false
   end
+  
 end
