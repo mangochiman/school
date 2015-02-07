@@ -80,11 +80,27 @@ class PunishmentsController < ApplicationController
   end
 
   def remove_punishment_types
+    @punishment_types = PunishmentType.all
     render :layout => false
   end
 
   def view_punishment_types
     render :layout => false
   end
-  
+
+  def delete_punishment_types
+    if (params[:mode] == 'single_entry')
+      punishment_type = PunishmentType.find(params[:punishment_type_id])
+      punishment_type.delete
+      render :text => "true" and return
+    end
+
+    punishment_type_ids = params[:punishment_type_ids].split(",")
+    (punishment_type_ids || []).each do |punishment_type_id|
+        punishment_type = PunishmentType.find(punishment_type_id)
+        punishment_type.delete
+    end
+
+    render :text => "true" and return
+  end
 end

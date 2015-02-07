@@ -19,31 +19,95 @@
     <%= stylesheet_link_tag("gvalidator") %>
     <%= stylesheet_link_tag("bootstrap") %>
 
-  </head>
-  <style>
-    .modal-title {
+    <script>
+      function selectAll(){
+        selectAllInput = document.getElementById('table-select-all');
+        if (selectAllInput.checked){
+          selectAllInput.checked = true;
+        }
+        else {
+          selectAllInput.checked = false
+        }
+        inputs = document.getElementsByTagName("input");
+        for (var i=0; i<=inputs.length - 1; i++){
+          if (inputs[i] == selectAllInput) continue;
+          if (inputs[i].type == 'checkbox'){
+            if (inputs[i].checked){
+              inputs[i].checked = false;
+            }
+            else{
+              inputs[i].checked = true;
+            }
+          }
+        }
+      }
+
+      function deletePunishmentTypes(){
+        inputs = document.getElementsByTagName("input");
+        punishmentTypeIDs = []
+        for (var i=0; i<=inputs.length - 1; i++){
+          if (inputs[i].type == 'checkbox'){
+            if (inputs[i].checked){
+              if (inputs[i].hasAttribute("punishment_type_id")){
+                punishmentTypeID = inputs[i].getAttribute("punishment_type_id");
+                punishmentTypeIDs.push(punishmentTypeID);
+              }
+            }
+          }
+        }
+
+        jQuery.ajax({
+          type: "POST",
+          url: "/punishments/delete_punishment_types",
+          data: "punishment_type_ids=" + punishmentTypeIDs,
+          success: function(){
+            for (var x=0; x<= punishmentTypeIDs.length - 1; x++){
+              id = punishmentTypeIDs[x];
+              element = document.getElementById(id);
+              element.parentNode.removeChild(element)
+            }
+          }
+
+        });
+      }
+      var currentPunishmentTypeId = "";
+      function setCurrentPunishmentTypeId(obj){
+        currentPunishmentTypeId = obj.getAttribute("punishment_type_id");
+      }
+
+      function deleteSingleEntry(){
+        jQuery.ajax({
+          type: "POST",
+          url: "/punishments/delete_punishment_types",
+          data: "punishment_type_id=" + currentPunishmentTypeId + "&mode=single_entry",
+          success: function(){
+            element = document.getElementById(currentPunishmentTypeId);
+            element.parentNode.removeChild(element);
+          }
+
+        });
+      }
+    </script>
+
+    <style>
+      .modal-title {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         font-weight: 500;
         line-height: 1.1;
         font-size: 1.2em;
         color: red;
       }
-      form.autoform .msg.icon {
-        margin: 0 10px;
-        padding: 5px 5px 5px 30px;
-        position: unset;
+
+      table th:first-child {
+        border-style: none none none !important;
       }
 
-      form label {
-        font-size: 0.9em;
-        font-weight: bold;
+      a{
+        cursor: pointer;
       }
-      #punishment_type_form input[type="text"]{
-        border: 1px solid #d9dbdd;
-        outline: medium none;
-        padding: 0.5em 0.225em;
-      }
-  </style>
+    </style>
+  </head>
+
   <body>
 
     <!-- TOP BAR -->
@@ -164,7 +228,7 @@
 
             <div class="content-module-heading cf">
 
-              <h3 class="fl">Add Punishment Type</h3>
+              <h3 class="fl">Edit Punishment Types</h3>
               <span class="fr expand-collapse-text">Click to collapse</span>
               <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -182,13 +246,37 @@
                   <%= flash[:error] %>
                 </div>
               <% end %>
-              <form id="punishment_type_form" class="autoform" action="/punishments/add_punishment_type/" method="POST">
+              <table>
 
-                <div><label for="punishment_type">Punishment Type </label><input id="punishment_type" type="text" name="punishment_type" class="text required" /></div>
+                <thead>
+                  <tr>
+                    <th><input type="checkbox" id="table-select-all" onclick="selectAll();"/></th>
+                    <th style="min-width:35%;">Punishment Type</th>
+                    <th style="min-width:35%;"><center>Date created</center></th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
 
-                <div class="stripe-separator"><!--  --></div>
-                <input type="submit" value="Submit" class="round blue ic-right-arrow" />
-              </form>
+                <tfoot>
+                  <tr>
+                    <td colspan="3" class="table-footer">
+                      <a href="#" class="button round blue image-right ic-delete text-upper delete-multiple">Delete</a>
+                    </td>
+                  </tr>
+                </tfoot>
+
+                <tbody id="punishment_types">
+                  <% @punishment_types.each do |type| %>
+                    <tr id="<%= type.id %>">
+                      <td><input type="checkbox" punishment_type_id="<%= type.id %>"/></td>
+                      <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= type.name %></td>
+                      <td><center><%= type.created_at.to_date.strftime("%d-%b-%Y") %></center></td>
+                      <td><a href="#" punishment_type_id="<%= type.id %>" onmousedown="setCurrentPunishmentTypeId(this)" class="table-actions-button ic-table-delete confirm"></a></td>
+                    </tr>
+                  <% end %>
+                </tbody>
+
+              </table>
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->
@@ -211,11 +299,32 @@
 
     </div> <!-- end footer -->
     <%= javascript_include_tag("bootstrap") %>
-    <%= javascript_include_tag("zebra_datepicker") %>
     <script>
-      $('.date-picker').Zebra_DatePicker({
-        view : 'years',
-        direction: ['<%=  Date.today.strftime("%Y-%m-%d") %>', '<%=  (Date.today + 1.year).strftime("%Y-%m-%d") %>']
+
+      $(".delete-multiple").confirm({
+        title:"Delete confirmation",
+        text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+        confirm: function(button) {
+          deletePunishmentTypes();
+        },
+        cancel: function(button) {
+
+        },
+        confirmButton: "Yes I am",
+        cancelButton: "No"
+      });
+
+      $(".confirm").confirm({
+        title:"Delete confirmation",
+        text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+        confirm: function(button) {
+          deleteSingleEntry();
+        },
+        cancel: function(button) {
+
+        },
+        confirmButton: "Yes I am",
+        cancelButton: "No"
       });
     </script>
   </body>
