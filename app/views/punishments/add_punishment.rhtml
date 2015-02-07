@@ -91,15 +91,15 @@
       .date-picker{
         text-align: center;
         font-size: 14pt;
-        width: 250px;
+        width: 224px;
         float: right;
         right: 30%;
       }
       #reason{
-        margin-left: 25%;
+        margin-left: 29%;
       }
       #punishment{
-        margin-left: 25%;
+        margin-left: 29%;
       }
       .Zebra_DatePicker {
         z-index: 2000;/* custom z-index. Conflicts with jquery.confirm*/
@@ -142,6 +142,20 @@
           vertical-align: baseline;
           white-space: nowrap;
           cursor: pointer;
+      }
+      #teacher{
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        color: #555;
+        font-size: 14px;
+        height: 34px;
+        line-height: 1.42857;
+        padding: 6px 41px;
+        margin-left: 2%;
+        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
       }
     </style>
   </head>
@@ -292,7 +306,7 @@
                 <tfoot>
                   <tr>
                     <td colspan="3" class="table-footer">
-                      <a href="#" onmousedown="interval = window.setInterval('loadDatePicker();', 350);" class="button round blue image-right ic-right-arrow text-upper end-multiple">End Contract</a>
+                      <a href="#" onmousedown="interval = window.setInterval('loadDatePicker();', 350);" class="button round blue image-right ic-right-arrow text-upper end-multiple">Add punishment</a>
                     </td>
                   </tr>
                 </tfoot>
@@ -359,8 +373,9 @@
         title:"Punishment Details",
         text:"Capture Punishment Details Below <br /><br /> Start Date: <input value='<%= Date.today.strftime('%Y-%m-%d') %>' type='text' id='start_date' class='date-picker'/>\
             <br /><br />End Date: <input value='<%= Date.today.strftime('%Y-%m-%d') %>'type='text' id='end_date' class='date-picker'/><br />\
-            <br />Reason: <br /><textarea placeholder='Reason for punishment...' id='reason' class='text' cols='31' rows='2'></textarea>\
-            <br />Punishment: <br /><textarea placeholder='Punishment to be given...' id='punishment' class='text' cols='31' rows='2'></textarea>",
+            <br />Reason: <br /><textarea placeholder='Reason for punishment...' id='reason' class='text' cols='28' rows='2'></textarea>\
+            <br />Punishment: <br /><textarea placeholder='Punishment to be given...' id='punishment' class='text' cols='28' rows='2'></textarea>\
+            <br /><br />Responsible Teacher: <%= @select_tag %>",
         confirm: function(button) {
           startDate = document.getElementById('start_date').value;
           endDate = document.getElementById('end_date').value;

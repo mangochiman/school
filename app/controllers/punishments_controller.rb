@@ -16,6 +16,15 @@ class PunishmentsController < ApplicationController
 
   def add_punishment
     @students = Student.all
+    
+    @select_tag = "<select id='teacher'><option value=''></option>"
+    Teacher.all.each{|t|
+      name = t.fname.to_s + ' ' + t.lname.to_s + '(' + t.gender.first.upcase.to_s + ')'
+      option="<option value=#{t.teacher_id}>#{name}</option>"
+      @select_tag += option
+    }
+    @select_tag += '</select>'
+    
     render :layout => false
   end
 
