@@ -13,5 +13,22 @@ class PunishmentsController < ApplicationController
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
     render :layout => false
   end
+
+  def add_punishment
+    @students = Student.all
+    render :layout => false
+  end
+
+  def edit_punishment
+    render :layout => false
+  end
+
+  def remove_punishments
+    render :layout => false
+  end
+
+  def view_punishments
+    render :layout => false
+  end
   
 end

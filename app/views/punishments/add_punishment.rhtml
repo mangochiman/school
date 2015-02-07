@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Behavior Management</title>
+    <!-- Optimize for mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!-- jQuery & JS files -->
+
+    <%= javascript_include_tag("jquery") %>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("jquery.confirm") %>
+    <%= javascript_include_tag("script") %>
+    <%= javascript_include_tag("gvalidator") %>
+    <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("metallic") %>
+    <%= stylesheet_link_tag("gvalidator") %>
+    <%= stylesheet_link_tag("bootstrap") %>
+
+    <script>
+      function selectAll(){
+        selectAllInput = document.getElementById('table-select-all');
+        inputs = document.getElementsByTagName("input");
+        if (selectAllInput.checked){
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+              inputs[i].checked = true;
+            }
+          }
+        }
+        else{
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+              inputs[i].checked = false;
+            }
+          }
+        }
+      }
+
+      function punishStudents(startDate, endDate){
+        inputs = document.getElementsByTagName("input");
+        employeeIDs = []
+        for (var i=0; i<=inputs.length - 1; i++){
+          if (inputs[i].type == 'checkbox'){
+            if (inputs[i].checked){
+              if (inputs[i].hasAttribute("employee_id")){
+                employeeID = inputs[i].getAttribute("employee_id");
+                employeeIDs.push(employeeID);
+              }
+            }
+          }
+        }
+
+        jQuery.ajax({
+          type: "POST",
+          url: "/employees/end_contract",
+          data: "employee_ids=" + employeeIDs + "&start_date=" + startDate + "&end_date=" + endDate,
+          success: function(){
+            for (var x=0; x<= employeeIDs.length - 1; x++){
+              id = employeeIDs[x];
+              element = document.getElementById(id);
+              element.parentNode.removeChild(element)
+            }
+          }
+
+        });
+      }
+      var currentStudentId = "";
+      function setCurrentStudentId(obj){
+        currentStudentId = obj.getAttribute("employee_id");
+      }
+
+      function punishSingleEntry(startDate, endDate){
+        jQuery.ajax({
+          type: "POST",
+          url: "/employees/end_contract",
+          data: "employee_id=" + currentEmployeeId + "&start_date=" + startDate + "&end_date=" + endDate + "&mode=single_entry",
+          success: function(){
+            element = document.getElementById(currentEmployeeId);
+            element.parentNode.removeChild(element);
+          }
+
+        });
+      }
+    </script>
+    <style>
+      .date-picker{
+        text-align: center;
+        font-size: 14pt;
+        width: 250px;
+        float: right;
+        right: 30%;
+      }
+      #reason{
+        margin-left: 25%;
+      }
+      #punishment{
+        margin-left: 25%;
+      }
+      .Zebra_DatePicker {
+        z-index: 2000;/* custom z-index. Conflicts with jquery.confirm*/
+      }
+
+      .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: #317eac;
+      }
+      .ic-table-punishment{
+        background-image: url("/images/icons/table/action-lamp-inactive.png");
+
+      }
+      .ic-table-punishment:hover {
+        background-image: url("/images/icons/table/action-lamp-active.png");
+      }
+      a.table-actions-button {
+        height: 2.6em;
+        width: 2.6em;
+      }
+      table th:first-child {
+        border-style: none none none !important;
+      }
+      .label {
+          border-radius: 1.5em;
+          color: #fff;
+          display: inline;
+          background-color: #5bc0de;
+          font-size: 1.2em;
+          font-weight: bold;
+          line-height: 1;
+          padding-left: 20%;
+          padding-right: 20%;
+          padding-top:2%;
+          padding-bottom:2%;
+          text-align: center;
+          vertical-align: baseline;
+          white-space: nowrap;
+          cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- TOP BAR -->
+    <div id="top-bar">
+
+      <div class="page-full-width cf">
+
+        <ul id="nav" class="fl">
+          <li class="v-sep"><a href="#" class="round button dark menu-user image-left">Logged in as <strong>admin</strong></a>
+            <ul>
+              <li><a href="#">My Profile</a></li>
+              <li><a href="/admin/settings">Settings</a></li>
+              <li><a href="#">Change Password</a></li>
+              <li><a href="/user/login">Log out</a></li>
+            </ul>
+          </li>
+          <li class="v-sep"><a href="#" class="round button dark menu-settings image-left">Student Management</a>
+            <ul>
+              <li><a href="/student/registration_menu">Registration/Admission</a></li>
+              <li><a href="/punishments/behavior_management_menu">Behavior Management</a></li>
+              <li><a href="/student/examination_results_menu">Examination results</a></li>
+              <li><a href="/student/payments_management_menu">Payments Management</a></li>
+              <li><a href="/student/id_cards_menu">Student ID cards</a></li>
+              <li><a href="/student/semester_statement_menu">Student semester statement</a></li>
+              <li><a href="/student/semester_statement_menu">Student semester statement</a></li>
+              <li><a href="/student/warning_letters_menu">Warning letters for overdue students</a></li>
+              <li><a href="/student/examination_results_menu">Examination Registration</a></li>
+            </ul>
+          </li>
+          <li class="v-sep"><a href="#" class="round button dark menu-settings image-left">School Administration</a>
+            <ul>
+              <li><a href="/admin/time_table_management_menu">Timetable management</a></li>
+              <li><a href="/admin/subject_groups_management">Subject groups’ management</a></li>
+              <li><a href="/admin/semester_management_menu">Semester/Term management </a></li>
+              <li><a href="/admin/payments_overview_menu">Payments Overview</a></li>
+              <li><a href="/admin/print_teacher_time_table">Print teacher's timetable</a></li>
+              <li><a href="/admin/documents_management_menu">Documents management</a></li>
+              <li><a href="/admin/barcode_scanning_menu">Barcode scanning functions (Ids)</a></li>
+              <li><a href="#">Email functions</a></li>
+            </ul>
+          </li>
+          <li class="v-sep"><a href="#" class="round button dark menu-settings image-left">Employee Management</a>
+            <ul>
+              <li><a href="/employees/employee_registration_menu">Employee registration</a></li>
+              <li><a href="/employees/employee_management_menu">Employee management</a></li>
+              <li><a href="/employees/position_management_menu">Position management</a></li>
+              <li><a href="#">Mini payroll</a></li>
+            </ul>
+          </li>
+          <li class="v-sep"><a href="#" class="round button dark menu-settings image-left">System Administration</a>
+            <ul>
+              <li><a href="/user/user_management_menu">User management</a></li>
+              <li><a href="/parent/parents_menu">Parents management</a></li>
+              <li><a href="/admin/system_configuration_menu">System configuration/Administration</a></li>
+              <li><a href="#">Fees management</a></li>
+              <li><a href="/report/reports_generator_menu">Supper reports generator</a></li>
+              <li><a href="/admin/backup_data_menu">Backup Settings</a></li>
+            </ul>
+          </li>
+          <li><a href="#" class="round button dark menu-logoff image-left">Log out</a></li>
+
+        </ul> <!-- end nav -->
+
+
+        <form action="#" method="POST" id="search-form" class="fr">
+          <fieldset>
+            <input type="text" id="search-keyword" class="round button dark ic-search image-right" placeholder="Search..." />
+            <input type="hidden" value="SUBMIT" />
+          </fieldset>
+        </form>
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end top-bar -->
+
+
+
+    <!-- HEADER -->
+    <div id="header-with-tabs">
+
+      <div class="page-full-width cf">
+
+        <ul id="tabs" class="fl">
+          <li><a href="/punishments/behavior_management_dashboard" class="dashboard-tab">Dashboard</a></li>
+          <li><a href="/punishments/behavior_management_menu" class="active-tab">Punishments</a></li>
+        </ul> <!-- end tabs -->
+
+        <!-- Change this image to your own company's logo -->
+        <!-- The logo will automatically be resized to 30px height. -->
+        <a href="#" id="company-branding-small" class="fr"><img src="/images/company-logo.png" alt="Blue Hosting" /></a>
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end header -->
+
+
+
+    <!-- MAIN CONTENT -->
+    <div id="content">
+
+      <div class="page-full-width cf">
+
+        <div class="side-menu fl">
+
+          <h3>Task</h3>
+          <ul>
+            <li><a href="/punishments/add_punishment/">Add Punishment</a></li>
+            <li><a href="/punishments/edit_punishment/">Edit Punishment</a></li>
+            <li><a href="/punishments/remove_punishments/">Void Punishment</a></li>
+            <li><a href="/punishments/view_punishments/">View Punishments</a></li>
+          </ul>
+
+        </div> <!-- end side-menu -->
+
+        <div class="side-content fr">
+
+          <div class="content-module">
+
+            <div class="content-module-heading cf">
+
+              <h3 class="fl">Add Punishment</h3>
+              <span class="fr expand-collapse-text">Click to collapse</span>
+              <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+            </div> <!-- end content-module-heading -->
+
+
+            <div class="content-module-main">
+              <table>
+
+                <thead>
+
+                  <tr>
+                    <th><input type="checkbox" id="table-select-all" onclick="selectAll();"/></th>
+                    <th style="min-width:15%;">Name</th>
+                    <th>Email</th>
+                    <th>Gender</th>
+                    <th>Date Of Birth</th>
+                    <th>Phone #</th>
+                    <th>Punishments</th>
+                    <th>Add Punishment</th>
+                  </tr>
+                </thead>
+
+                <tfoot>
+                  <tr>
+                    <td colspan="3" class="table-footer">
+                      <a href="#" onmousedown="interval = window.setInterval('loadDatePicker();', 350);" class="button round blue image-right ic-right-arrow text-upper end-multiple">End Contract</a>
+                    </td>
+                  </tr>
+                </tfoot>
+
+                <tbody id="students">
+                  <% @students.each do |student| %>
+                    <tr id="<%= student.id %>">
+                      <td><input type="checkbox" student_id="<%= student.id %>"/></td>
+                      <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= student.fname.capitalize.to_s + ' ' + student.lname.capitalize.to_s %></td>
+                      <td><a href="#"><%= student.email %></a></td>
+                      <td><%=  student.gender %></td>
+                      <td><%=  student.dob.to_date.strftime("%d-%b-%Y") %></td>
+                      <td><%=  student.phone %></td>
+                      <td><center><span class="label">#</span></center></td>
+                      <td>
+                        <a student_id="<%= student.id %>" href="#" onmousedown="setCurrentStudentId(this); interval = window.setInterval('loadDatePicker();', 350);" class="table-actions-button ic-table-punishment confirm"></a>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+
+              </table>
+            </div> <!-- end content-module-main -->
+
+          </div> <!-- end content-module -->
+
+          <!-- end content-module -->
+
+        </div> <!-- end side-content -->
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end content -->
+
+
+
+    <!-- FOOTER -->
+    <div id="footer">
+
+      <p>&copy; Copyright 2012 <a href="#">BlueHosting, LLC</a>. All rights reserved.</p>
+      <p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
+
+    </div> <!-- end footer -->
+    <%= javascript_include_tag("bootstrap") %>
+    <%= javascript_include_tag("zebra_datepicker") %>
+    <script>
+
+      $(".punish-multiple").confirm({
+        title:"Punishment Details",
+        text:"Capture Punishment Details Below <br /><br /> Start Date: <input value='<%= Date.today.strftime('%Y-%m-%d') %>' type='text' id='start_date' class='date-picker'/>\
+            <br /><br />End Date: <input value='<%= Date.today.strftime('%Y-%m-%d') %>'type='text' id='end_date' class='date-picker'/>",
+        confirm: function(button) {
+          startDate = document.getElementById('start_date').value;
+          endDate = document.getElementById('end_date').value;
+          suspendEmployees(startDate, endDate);
+        },
+        cancel: function(button) {
+        },
+        confirmButton: "Yes I am",
+        cancelButton: "No"
+      });
+
+      $(".confirm").confirm({
+        title:"Punishment Details",
+        text:"Capture Punishment Details Below <br /><br /> Start Date: <input value='<%= Date.today.strftime('%Y-%m-%d') %>' type='text' id='start_date' class='date-picker'/>\
+            <br /><br />End Date: <input value='<%= Date.today.strftime('%Y-%m-%d') %>'type='text' id='end_date' class='date-picker'/><br />\
+            <br />Reason: <br /><textarea placeholder='Reason for punishment...' id='reason' class='text' cols='31' rows='2'></textarea>\
+            <br />Punishment: <br /><textarea placeholder='Punishment to be given...' id='punishment' class='text' cols='31' rows='2'></textarea>",
+        confirm: function(button) {
+          startDate = document.getElementById('start_date').value;
+          endDate = document.getElementById('end_date').value;
+          suspendSingleEntry(startDate, endDate);
+        },
+        cancel: function(button) {
+
+        },
+        confirmButton: "Okay",
+        cancelButton: "Cancel"
+      });
+
+      function loadDatePicker(){
+        $('.date-picker').Zebra_DatePicker({
+          view : 'years',
+          direction: ['<%=  (Date.today - 30.years).strftime("%Y-%m-%d") %>', '<%= (Date.today + 5.years).strftime("%Y-%m-%d") %>']
+        });
+        startDate = document.getElementById('start_date');
+        console.log(startDate)
+        if (startDate){
+          clearInterval(interval);
+        }
+      }
+    </script>
+  </body>
+</html>
