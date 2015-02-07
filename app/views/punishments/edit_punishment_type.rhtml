@@ -9,17 +9,42 @@
 
     <!-- jQuery & JS files -->
 
+    <%= javascript_include_tag("jquery") %>
     <%= javascript_include_tag("jquery-1.9.1.min") %>
-    <%= javascript_include_tag("highcharts") %>
+    <%= javascript_include_tag("jquery.confirm") %>
     <%= javascript_include_tag("script") %>
-    
-    <%= javascript_include_tag("exporting") %>
+    <%= javascript_include_tag("gvalidator") %>
     <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("metallic") %>
+    <%= stylesheet_link_tag("gvalidator") %>
+    <%= stylesheet_link_tag("bootstrap") %>
 
     <script>
-
+      function editMe(obj){
+        punishmentTypeId = obj.getAttribute("punishment_type_id");
+        window.location = "/punishments/edit_me_punishment_type?punishment_type_id=" + punishmentTypeId;
+      }
     </script>
+
+    <style>
+      .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: red;
+      }
+
+      table th:first-child {
+        border-style: none none none !important;
+      }
+      
+      a{
+        cursor: pointer;
+      }
+    </style>
   </head>
+
   <body>
 
     <!-- TOP BAR -->
@@ -126,11 +151,10 @@
 
           <h3>Task</h3>
           <ul>
-            <li><a href="/punishments/add_punishment/">Add Punishment</a></li>
-            <li><a href="/punishments/edit_punishment/">Edit Punishment</a></li>
-            <li><a href="/punishments/remove_punishments/">Void Punishment</a></li>
-            <li><a href="/punishments/view_punishments/">View Punishments</a></li>
-            <li><a href="/punishments/punishment_types_menu/">Punishments Types</a></li>
+            <li><a href="/punishments/add_punishment_type/">Add Punishment Type</a></li>
+            <li><a href="/punishments/edit_punishment_type/">Edit Punishment Type</a></li>
+            <li><a href="/punishments/remove_punishment_types/">Void Punishment Types</a></li>
+            <li><a href="/punishments/view_punishment_types/">View Punishments Types</a></li>
           </ul>
 
         </div> <!-- end side-menu -->
@@ -141,7 +165,7 @@
 
             <div class="content-module-heading cf">
 
-              <h3 class="fl">Behavior Management</h3>
+              <h3 class="fl">Punishment Types</h3>
               <span class="fr expand-collapse-text">Click to collapse</span>
               <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -149,13 +173,46 @@
 
 
             <div class="content-module-main">
-              <div id="container">
-              </div>
+              <% if flash[:notice] %>
+                <div class="confirmation-box round">
+                  <%= flash[:notice] %>
+                </div>
+              <% end %>
+              <% if flash[:error] %>
+                <div class="error-box round">
+                  <%= flash[:error] %>
+                </div>
+              <% end %>
+              <table>
+
+                <thead>
+
+                  <tr>
+                    <th style="min-width:35%;">Punishment Type</th>
+                    <th style="min-width:35%;"><center>Date created</center></th>
+                    <th>Action</th>
+                  </tr>
+
+                </thead>
+
+                <tbody id="punishment_types">
+                  <% @punishment_types.each do |type| %>
+                    <tr>
+                      <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= type.name %></td>
+                      <td><center><%= type.created_at.to_date.strftime("%d-%b-%Y") %></center></td>
+                      <td>
+                        <a punishment_type_id="<%= type.id %>" onclick="editMe(this)" class="table-actions-button ic-table-edit"></a>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+
+              </table>
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->
 
-           <!-- end content-module -->
+          <!-- end content-module -->
 
         </div> <!-- end side-content -->
 
@@ -172,6 +229,13 @@
       <p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
 
     </div> <!-- end footer -->
-
+    <%= javascript_include_tag("bootstrap") %>
+    <%= javascript_include_tag("zebra_datepicker") %>
+    <script>
+      $('.date-picker').Zebra_DatePicker({
+        view : 'years',
+        direction: ['<%=  Date.today.strftime("%Y-%m-%d") %>', '<%=  (Date.today + 1.year).strftime("%Y-%m-%d") %>']
+      });
+    </script>
   </body>
 </html>

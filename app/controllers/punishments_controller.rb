@@ -39,5 +39,52 @@ class PunishmentsController < ApplicationController
   def view_punishments
     render :layout => false
   end
+
+  def punishment_types_menu
+    render :layout => false
+  end
+
+  def add_punishment_type
+    if (request.method == :post)
+      punishment_type = params[:punishment_type]
+      if (PunishmentType.create({:name => punishment_type}))
+        flash[:notice] = "Operation successful"
+        redirect_to :action => "add_punishment_type" and return
+      else
+        flash[:error] = "Unable to save. Check for errors and try again"
+        render  :action => "add_punishment_type" and return
+      end
+    end
+    render :layout => false
+  end
+  
+  def edit_punishment_type
+    @punishment_types = PunishmentType.all
+    render :layout => false
+  end
+
+  def edit_me_punishment_type
+    punishment_type_id = params[:punishment_type_id]
+    @punishment_type = PunishmentType.find(punishment_type_id)
+
+    if (request.method == :post)
+      if (@punishment_type.update_attributes({:name => params[:punishment_type]}))
+        flash[:notice] = "Operation successful"
+        redirect_to :action => "edit_punishment_type" and return
+      else
+        render :action => "edit_me_punishment_type", :punishment_type_id => params[:punishment_type] and return
+      end
+    end
+    
+    render :layout => false
+  end
+
+  def remove_punishment_types
+    render :layout => false
+  end
+
+  def view_punishment_types
+    render :layout => false
+  end
   
 end

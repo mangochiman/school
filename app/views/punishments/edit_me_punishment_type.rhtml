@@ -9,17 +9,41 @@
 
     <!-- jQuery & JS files -->
 
+    <%= javascript_include_tag("jquery") %>
     <%= javascript_include_tag("jquery-1.9.1.min") %>
-    <%= javascript_include_tag("highcharts") %>
+    <%= javascript_include_tag("jquery.confirm") %>
     <%= javascript_include_tag("script") %>
-    
-    <%= javascript_include_tag("exporting") %>
+    <%= javascript_include_tag("gvalidator") %>
     <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("metallic") %>
+    <%= stylesheet_link_tag("gvalidator") %>
+    <%= stylesheet_link_tag("bootstrap") %>
 
-    <script>
-
-    </script>
   </head>
+  <style>
+    .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: red;
+      }
+      form.autoform .msg.icon {
+        margin: 0 10px;
+        padding: 5px 5px 5px 30px;
+        position: unset;
+      }
+
+      form label {
+        font-size: 0.9em;
+        font-weight: bold;
+      }
+      #punishment_type_form input[type="text"]{
+        border: 1px solid #d9dbdd;
+        outline: medium none;
+        padding: 0.5em 0.225em;
+      }
+  </style>
   <body>
 
     <!-- TOP BAR -->
@@ -126,11 +150,10 @@
 
           <h3>Task</h3>
           <ul>
-            <li><a href="/punishments/add_punishment/">Add Punishment</a></li>
-            <li><a href="/punishments/edit_punishment/">Edit Punishment</a></li>
-            <li><a href="/punishments/remove_punishments/">Void Punishment</a></li>
-            <li><a href="/punishments/view_punishments/">View Punishments</a></li>
-            <li><a href="/punishments/punishment_types_menu/">Punishments Types</a></li>
+            <li><a href="/punishments/add_punishment_type/">Add Punishment Type</a></li>
+            <li><a href="/punishments/edit_punishment_type/">Edit Punishment Type</a></li>
+            <li><a href="/punishments/remove_punishment_types/">Void Punishment Types</a></li>
+            <li><a href="/punishments/view_punishment_types/">View Punishments Types</a></li>
           </ul>
 
         </div> <!-- end side-menu -->
@@ -141,7 +164,7 @@
 
             <div class="content-module-heading cf">
 
-              <h3 class="fl">Behavior Management</h3>
+              <h3 class="fl">Punishment Types</h3>
               <span class="fr expand-collapse-text">Click to collapse</span>
               <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -149,13 +172,29 @@
 
 
             <div class="content-module-main">
-              <div id="container">
-              </div>
+              <% if flash[:notice] %>
+                <div class="confirmation-box round">
+                  <%= flash[:notice] %>
+                </div>
+              <% end %>
+              <% if flash[:error] %>
+                <div class="error-box round">
+                  <%= flash[:error] %>
+                </div>
+              <% end %>
+              <form id="punishment_type_form" class="autoform" action="/punishments/edit_me_punishment_type/" method="POST">
+
+                <div><label for="punishment_type">Punishment Type </label><input id="punishment_type" type="text" value="<%= @punishment_type.name %>" name="punishment_type" class="text required" /></div>
+
+                <div class="stripe-separator"><!--  --></div>
+                <%= hidden_field_tag("punishment_type_id", params[:punishment_type_id]) %>
+                <input type="submit" value="Submit" class="round blue ic-right-arrow" />
+              </form>
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->
 
-           <!-- end content-module -->
+          <!-- end content-module -->
 
         </div> <!-- end side-content -->
 
@@ -172,6 +211,13 @@
       <p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
 
     </div> <!-- end footer -->
-
+    <%= javascript_include_tag("bootstrap") %>
+    <%= javascript_include_tag("zebra_datepicker") %>
+    <script>
+      $('.date-picker').Zebra_DatePicker({
+        view : 'years',
+        direction: ['<%=  Date.today.strftime("%Y-%m-%d") %>', '<%=  (Date.today + 1.year).strftime("%Y-%m-%d") %>']
+      });
+    </script>
   </body>
 </html>
