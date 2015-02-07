@@ -19,75 +19,6 @@
     <%= stylesheet_link_tag("gvalidator") %>
     <%= stylesheet_link_tag("bootstrap") %>
 
-    <script>
-      function selectAll(){
-        selectAllInput = document.getElementById('table-select-all');
-        inputs = document.getElementsByTagName("input");
-        if (selectAllInput.checked){
-          for (var i=0; i<=inputs.length - 1; i++){
-            if (inputs[i] == selectAllInput) continue;
-            if (inputs[i].type == 'checkbox'){
-              inputs[i].checked = true;
-            }
-          }
-        }
-        else{
-          for (var i=0; i<=inputs.length - 1; i++){
-            if (inputs[i] == selectAllInput) continue;
-            if (inputs[i].type == 'checkbox'){
-              inputs[i].checked = false;
-            }
-          }
-        }
-      }
-
-      function deletePunishmentTypes(){
-        inputs = document.getElementsByTagName("input");
-        punishmentTypeIDs = []
-        for (var i=0; i<=inputs.length - 1; i++){
-          if (inputs[i].type == 'checkbox'){
-            if (inputs[i].checked){
-              if (inputs[i].hasAttribute("punishment_type_id")){
-                punishmentTypeID = inputs[i].getAttribute("punishment_type_id");
-                punishmentTypeIDs.push(punishmentTypeID);
-              }
-            }
-          }
-        }
-
-        jQuery.ajax({
-          type: "POST",
-          url: "/punishments/delete_punishment_types",
-          data: "punishment_type_ids=" + punishmentTypeIDs,
-          success: function(){
-            for (var x=0; x<= punishmentTypeIDs.length - 1; x++){
-              id = punishmentTypeIDs[x];
-              element = document.getElementById(id);
-              element.parentNode.removeChild(element)
-            }
-          }
-
-        });
-      }
-      var currentPunishmentTypeId = "";
-      function setCurrentPunishmentTypeId(obj){
-        currentPunishmentTypeId = obj.getAttribute("punishment_type_id");
-      }
-
-      function deleteSingleEntry(){
-        jQuery.ajax({
-          type: "POST",
-          url: "/punishments/delete_punishment_types",
-          data: "punishment_type_id=" + currentPunishmentTypeId + "&mode=single_entry",
-          success: function(){
-            element = document.getElementById(currentPunishmentTypeId);
-            element.parentNode.removeChild(element);
-          }
-
-        });
-      }
-    </script>
-
     <style>
       .modal-title {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -100,7 +31,7 @@
       table th:first-child {
         border-style: none none none !important;
       }
-
+      
       a{
         cursor: pointer;
       }
@@ -248,29 +179,22 @@
               <table>
 
                 <thead>
+
                   <tr>
-                    <th><input type="checkbox" id="table-select-all" onclick="selectAll();"/></th>
+                    <th style="font-weight:bold;">#</th>
                     <th style="min-width:35%;">Punishment Type</th>
                     <th style="min-width:35%;"><center>Date created</center></th>
-                    <th>Action</th>
                   </tr>
+
                 </thead>
 
-                <tfoot>
-                  <tr>
-                    <td colspan="3" class="table-footer">
-                      <a href="#" class="button round blue image-right ic-delete text-upper delete-multiple">Delete</a>
-                    </td>
-                  </tr>
-                </tfoot>
-
                 <tbody id="punishment_types">
+                  <% count = 0 %>
                   <% @punishment_types.each do |type| %>
-                    <tr id="<%= type.id %>">
-                      <td><input type="checkbox" punishment_type_id="<%= type.id %>"/></td>
+                    <tr>
+                      <td><%= count = count + 1 %></td>
                       <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= type.name %></td>
                       <td><center><%= type.created_at.to_date.strftime("%d-%b-%Y") %></center></td>
-                      <td><a href="#" punishment_type_id="<%= type.id %>" onmousedown="setCurrentPunishmentTypeId(this)" class="table-actions-button ic-table-delete confirm"></a></td>
                     </tr>
                   <% end %>
                 </tbody>
@@ -298,32 +222,11 @@
 
     </div> <!-- end footer -->
     <%= javascript_include_tag("bootstrap") %>
+    <%= javascript_include_tag("zebra_datepicker") %>
     <script>
-
-      $(".delete-multiple").confirm({
-        title:"Delete confirmation",
-        text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
-        confirm: function(button) {
-          deletePunishmentTypes();
-        },
-        cancel: function(button) {
-
-        },
-        confirmButton: "Yes I am",
-        cancelButton: "No"
-      });
-
-      $(".confirm").confirm({
-        title:"Delete confirmation",
-        text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
-        confirm: function(button) {
-          deleteSingleEntry();
-        },
-        cancel: function(button) {
-
-        },
-        confirmButton: "Yes I am",
-        cancelButton: "No"
+      $('.date-picker').Zebra_DatePicker({
+        view : 'years',
+        direction: ['<%=  Date.today.strftime("%Y-%m-%d") %>', '<%=  (Date.today + 1.year).strftime("%Y-%m-%d") %>']
       });
     </script>
   </body>

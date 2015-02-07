@@ -85,6 +85,7 @@ class PunishmentsController < ApplicationController
   end
 
   def view_punishment_types
+    @punishment_types = PunishmentType.all
     render :layout => false
   end
 
