@@ -86,6 +86,16 @@
 
         });
       }
+
+      function validatePunishmentDetails(){
+        if ($('#punishment_type_select').val() == "" || $('#teacher').val() == ""){
+          $("button[class='confirm btn btn-primary']").css("display", 'none') //Hide okay button when form is incomplete
+        }
+        if ($('#punishment_type_select').val() != "" && $('#teacher').val() != ""){
+          $("button[class='confirm btn btn-primary']").css("display", '') //Show okay button when form is complete
+        }
+      }
+      window.setInterval("validatePunishmentDetails();", 350);
     </script>
     <style>
       .date-picker{
