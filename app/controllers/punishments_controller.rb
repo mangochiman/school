@@ -17,13 +17,20 @@ class PunishmentsController < ApplicationController
   def add_punishment
     @students = Student.all
     
-    @select_tag = "<select id='teacher'><option value=''></option>"
+    @teachers_select_tag = "<select id='teacher'><option value=''></option>"
     Teacher.all.each{|t|
       name = t.fname.to_s + ' ' + t.lname.to_s + '(' + t.gender.first.upcase.to_s + ')'
       option="<option value=#{t.teacher_id}>#{name}</option>"
-      @select_tag += option
+      @teachers_select_tag += option
     }
-    @select_tag += '</select>'
+    @teachers_select_tag += '</select>'
+
+    @punishment_types_select_tag = "<select id='punishment_type_select'><option value=''></option>"
+    PunishmentType.all.each{|pt|
+      option="<option value=#{pt.punishment_type_id}>#{pt.name}</option>"
+      @punishment_types_select_tag += option
+    }
+    @punishment_types_select_tag += '</select>'
     
     render :layout => false
   end

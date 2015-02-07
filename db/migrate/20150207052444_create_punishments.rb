@@ -3,9 +3,9 @@ class CreatePunishments < ActiveRecord::Migration
     create_table :punishment, :primary_key => :punishment_id do |t|
       t.integer :student_id
       t.integer :teacher_id
+      t.integer :punishment_type_id
       t.date :start_date
       t.date :end_date
-      t.string :reason
       t.string :details
       t.string :completed
       t.timestamps
