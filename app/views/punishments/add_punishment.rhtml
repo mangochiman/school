@@ -41,15 +41,15 @@
         }
       }
 
-      function punishStudents(startDate, endDate){
+      function punishStudents(startDate, endDate, punishmentTypeID, teacherID, punishmentDetails){
         inputs = document.getElementsByTagName("input");
-        employeeIDs = []
+        studentIDs = []
         for (var i=0; i<=inputs.length - 1; i++){
           if (inputs[i].type == 'checkbox'){
             if (inputs[i].checked){
-              if (inputs[i].hasAttribute("employee_id")){
-                employeeID = inputs[i].getAttribute("employee_id");
-                employeeIDs.push(employeeID);
+              if (inputs[i].hasAttribute("student_id")){
+                studentID = inputs[i].getAttribute("student_id");
+                studentIDs.push(studentID);
               }
             }
           }
@@ -57,14 +57,17 @@
 
         jQuery.ajax({
           type: "POST",
-          url: "/employees/end_contract",
-          data: "employee_ids=" + employeeIDs + "&start_date=" + startDate + "&end_date=" + endDate,
+          url: "/punishments/punish_students",
+          data: "student_ids=" + studentIDs + "&punishment_type_id=" + punishmentTypeID + "&teacher_id=" + teacherID +
+            "&start_date=" + startDate + "&end_date=" + endDate +
+            "&punishment_details=" + punishmentDetails,
           success: function(){
-            for (var x=0; x<= employeeIDs.length - 1; x++){
+
+            /*for (var x=0; x<= employeeIDs.length - 1; x++){
               id = employeeIDs[x];
               element = document.getElementById(id);
               element.parentNode.removeChild(element)
-            }
+            }*/
           }
 
         });
@@ -74,14 +77,16 @@
         currentStudentId = obj.getAttribute("employee_id");
       }
 
-      function punishSingleEntry(startDate, endDate){
+      function punishSingleEntry(startDate, endDate, punishmentTypeID, teacherID, punishmentDetails){
         jQuery.ajax({
           type: "POST",
-          url: "/employees/end_contract",
-          data: "employee_id=" + currentEmployeeId + "&start_date=" + startDate + "&end_date=" + endDate + "&mode=single_entry",
+          url: "/punishments/punish_students",
+          data: "student_id=" + currentStudentId + "&punishment_type_id=" + punishmentTypeID + "&teacher_id=" + teacherID +
+            "&start_date=" + startDate + "&end_date=" + endDate + 
+            "&punishment_details=" + punishmentDetails + "&mode=single_entry",
           success: function(){
-            element = document.getElementById(currentEmployeeId);
-            element.parentNode.removeChild(element);
+            /*element = document.getElementById(currentEmployeeId);
+            element.parentNode.removeChild(element);*/
           }
 
         });
@@ -96,6 +101,7 @@
         }
       }
       window.setInterval("validatePunishmentDetails();", 350);
+      
     </script>
     <style>
       .date-picker{
@@ -332,7 +338,7 @@
                 <tfoot>
                   <tr>
                     <td colspan="3" class="table-footer">
-                      <a href="#" onmousedown="interval = window.setInterval('loadDatePicker();', 350);" class="button round blue image-right ic-right-arrow text-upper end-multiple">Add punishment</a>
+                      <a href="#" onmousedown="interval = window.setInterval('loadDatePicker();', 350);" class="button round blue image-right ic-right-arrow text-upper punish-multiple">Add punishment</a>
                     </td>
                   </tr>
                 </tfoot>
@@ -383,16 +389,22 @@
       $(".punish-multiple").confirm({
         title:"Punishment Details",
         text:"Capture Punishment Details Below <br /><br /> Start Date: <input value='<%= Date.today.strftime('%Y-%m-%d') %>' type='text' id='start_date' class='date-picker'/>\
-            <br /><br />End Date: <input value='<%= Date.today.strftime('%Y-%m-%d') %>'type='text' id='end_date' class='date-picker'/>",
+            <br /><br />End Date: <input value='<%= Date.today.strftime('%Y-%m-%d') %>'type='text' id='end_date' class='date-picker'/><br />\
+            <br />Punishment Details: <br /><textarea placeholder='Punishment to be given...' id='punishment' class='text' cols='28' rows='2'></textarea>\
+            <br /><br />Punishment Type: <%= @punishment_types_select_tag %>\
+            <br /><br />Responsible Teacher: <%= @teachers_select_tag %>",
         confirm: function(button) {
           startDate = document.getElementById('start_date').value;
           endDate = document.getElementById('end_date').value;
-          suspendEmployees(startDate, endDate);
+          punishmentTypeID = $('#punishment_type_select').val();
+          teacherID = $('#teacher').val();
+          punishmentDetails = $('#punishment').val();
+          punishStudents(startDate, endDate, punishmentTypeID, teacherID, punishmentDetails);
         },
         cancel: function(button) {
         },
-        confirmButton: "Yes I am",
-        cancelButton: "No"
+        confirmButton: "Okay",
+        cancelButton: "Cancel"
       });
 
       $(".confirm").confirm({
@@ -405,7 +417,10 @@
         confirm: function(button) {
           startDate = document.getElementById('start_date').value;
           endDate = document.getElementById('end_date').value;
-          suspendSingleEntry(startDate, endDate);
+          punishmentTypeID = $('#punishment_type_select').val();
+          teacherID = $('#teacher').val();
+          punishmentDetails = $('#punishment').val();
+          punishSingleEntry(startDate, endDate, punishmentTypeID, teacherID, punishmentDetails)
         },
         cancel: function(button) {
 
@@ -420,7 +435,6 @@
           direction: ['<%=  (Date.today - 30.years).strftime("%Y-%m-%d") %>', '<%= (Date.today + 5.years).strftime("%Y-%m-%d") %>']
         });
         startDate = document.getElementById('start_date');
-        console.log(startDate)
         if (startDate){
           clearInterval(interval);
         }
