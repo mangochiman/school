@@ -118,15 +118,19 @@ class PunishmentsController < ApplicationController
     start_date = params[:start_date]
     end_date = params[:end_date]
     punishment_details = params[:punishment_details]
+
+    punishment =  Punishment.create({
+        :teacher_id => teacher_id,
+        :punishment_type_id => punishment_type_id,
+        :start_date => start_date,
+        :end_date => end_date,
+        :details => punishment_details,
+      })
       
     if (params[:mode] == 'single_entry')
-      Punishment.create({
+      StudentPunishment.create({
           :student_id => params[:student_id],
-          :teacher_id => teacher_id,
-          :punishment_type_id => punishment_type_id,
-          :start_date => start_date,
-          :end_date => end_date,
-          :details => punishment_details,
+          :punishment_id => punishment.punishment_id,
           :completed => 0
         })
       render :text => "true" and return
@@ -134,13 +138,9 @@ class PunishmentsController < ApplicationController
 
     student_ids = params[:student_ids].split(",")
     (student_ids || []).each do |student_id|
-      Punishment.create({
+      StudentPunishment.create({
           :student_id => student_id,
-          :teacher_id => teacher_id,
-          :punishment_type_id => punishment_type_id,
-          :start_date => start_date,
-          :end_date => end_date,
-          :details => punishment_details,
+          :punishment_id => punishment.punishment_id,
           :completed => 0
         })
     end
