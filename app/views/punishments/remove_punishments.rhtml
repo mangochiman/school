@@ -9,16 +9,117 @@
 
     <!-- jQuery & JS files -->
 
+    <%= javascript_include_tag("jquery") %>
     <%= javascript_include_tag("jquery-1.9.1.min") %>
-    <%= javascript_include_tag("highcharts") %>
+    <%= javascript_include_tag("jquery.confirm") %>
     <%= javascript_include_tag("script") %>
-    
-    <%= javascript_include_tag("exporting") %>
+    <%= javascript_include_tag("gvalidator") %>
     <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("metallic") %>
+    <%= stylesheet_link_tag("gvalidator") %>
+    <%= stylesheet_link_tag("bootstrap") %>
 
     <script>
+      function selectAll(){
+        selectAllInput = document.getElementById('table-select-all');
+        inputs = document.getElementsByTagName("input");
+        if (selectAllInput.checked){
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+              inputs[i].checked = true;
+            }
+          }
+        }
+        else{
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+              inputs[i].checked = false;
+            }
+          }
+        }
+      }
 
+      function deletePunishments(){
+        inputs = document.getElementsByTagName("input");
+        punishmentIDs = []
+        for (var i=0; i<=inputs.length - 1; i++){
+          if (inputs[i].type == 'checkbox'){
+            if (inputs[i].checked){
+              if (inputs[i].hasAttribute("punishment_id")){
+                punishmentID = inputs[i].getAttribute("punishment_id");
+                punishmentIDs.push(punishmentID);
+              }
+            }
+          }
+        }
+
+        jQuery.ajax({
+          type: "POST",
+          url: "/punishments/delete_punishments",
+          data: "punishment_ids=" + punishmentIDs,
+          success: function(){
+            for (var x=0; x<= punishmentIDs.length - 1; x++){
+              id = punishmentIDs[x];
+              element = document.getElementById(id);
+              element.parentNode.removeChild(element)
+            }
+          }
+
+        });
+      }
+      var currentPunishmentId = "";
+      function setCurrentPunishmentId(obj){
+        currentPunishmentId = obj.getAttribute("punishment_id");
+      }
+
+      function deleteSingleEntry(){
+        jQuery.ajax({
+          type: "POST",
+          url: "/punishments/delete_punishments",
+          data: "punishment_id=" + currentPunishmentId + "&mode=single_entry",
+          success: function(){
+            element = document.getElementById(currentPunishmentId);
+            element.parentNode.removeChild(element);
+          }
+
+        });
+      }
     </script>
+    <style>
+      .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: red;
+      }
+      
+      .label {
+        border-radius: 1.5em;
+        color: #fff;
+        display: inline;
+        background-color: #5bc0de;
+        font-size: 1.2em;
+        font-weight: bold;
+        line-height: 1;
+        padding-left: 20%;
+        padding-right: 20%;
+        padding-top:2%;
+        padding-bottom:2%;
+        text-align: center;
+        vertical-align: baseline;
+        white-space: nowrap;
+        cursor: pointer;
+      }
+      table th:first-child {
+        border-style: none none none !important;
+      }
+      a{
+        cursor: pointer;
+      }
+    </style>
   </head>
   <body>
 
@@ -149,13 +250,62 @@
 
 
             <div class="content-module-main">
-              <div id="container">
-              </div>
+              <% if flash[:notice] %>
+                <div class="confirmation-box round">
+                  <%= flash[:notice] %>
+                </div>
+              <% end %>
+              <% if flash[:error] %>
+                <div class="error-box round">
+                  <%= flash[:error] %>
+                </div>
+              <% end %>
+              <table>
+
+                <thead>
+                  <tr>
+                    <th><input type="checkbox" id="table-select-all" onclick="selectAll();"/></th>
+                    <th style="min-width:15%;">Punishment Type</th>
+                    <th>Punishment Details</th>
+                    <th>Teacher Responsible</th>
+                    <th>Total Students</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+
+                <tfoot>
+                  <tr>
+                    <td colspan="3" class="table-footer">
+                      <a href="#" class="button round blue image-right ic-delete text-upper delete-multiple">Delete</a>
+                    </td>
+                  </tr>
+                </tfoot>
+                
+                <tbody id="punishments">
+                  <% @punishments.each do |punishment| %>
+                    <tr id="<%= punishment.id %>">
+                      <td><input type="checkbox" punishment_id="<%= punishment.id %>"/></td>
+                      <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= punishment.punishment_type.name %></td>
+                      <td><%=  punishment.details %></td>
+                      <td><%=  punishment.teacher.fname + ' ' + punishment.teacher.lname%></td>
+                      <td><center><span class="label"><%=  punishment.students.count %></span></center></td>
+                      <td><%=  punishment.start_date.to_date.strftime("%d-%b-%Y") %></td>
+                      <td><%=  punishment.end_date.to_date.strftime("%d-%b-%Y") %></td>
+                      <td>
+                        <a punishment_id="<%= punishment.id %>" href="#" onmousedown="setCurrentPunishmentId(this)" class="table-actions-button ic-table-delete confirm"></a>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+
+              </table>
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->
 
-           <!-- end content-module -->
+          <!-- end content-module -->
 
         </div> <!-- end side-content -->
 
@@ -172,6 +322,33 @@
       <p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
 
     </div> <!-- end footer -->
+    <%= javascript_include_tag("bootstrap") %>
+    <script>
 
+      $(".delete-multiple").confirm({
+            title:"Delete confirmation",
+            text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+            confirm: function(button) {
+              deletePunishments();
+            },
+            cancel: function(button) {
+            },
+            confirmButton: "Yes I am",
+            cancelButton: "No"
+        });
+
+        $(".confirm").confirm({
+            title:"Delete confirmation",
+            text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+            confirm: function(button) {
+              deleteSingleEntry();
+            },
+            cancel: function(button) {
+
+            },
+            confirmButton: "Yes I am",
+            cancelButton: "No"
+        });
+    </script>
   </body>
 </html>

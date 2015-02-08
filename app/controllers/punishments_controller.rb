@@ -83,6 +83,7 @@ class PunishmentsController < ApplicationController
   end
   
   def remove_punishments
+    @punishments = Punishment.find(:all)
     render :layout => false
   end
 
@@ -188,6 +189,31 @@ class PunishmentsController < ApplicationController
         })
     end
     
+    render :text => "true" and return
+  end
+
+  def delete_punishments
+    if (params[:mode] == 'single_entry')
+      punishment = Punishment.find(params[:punishment_id])
+      students_punishments = StudentPunishment.find(:all, :conditions => ["punishment_id =?",
+          punishment.id])
+      (students_punishments || []).each do |sp|
+        sp.delete
+      end
+      punishment.delete
+      render :text => "true" and return
+    end
+
+    punishment_ids = params[:punishment_ids].split(",")
+    (punishment_ids || []).each do |punishment_id|
+      punishment = Punishment.find(punishment_id)
+      students_punishments = StudentPunishment.find(:all, :conditions => ["punishment_id =?", punishment.id])
+      (students_punishments || []).each do |sp|
+        sp.delete
+      end
+      punishment.delete
+    end
+
     render :text => "true" and return
   end
 end
