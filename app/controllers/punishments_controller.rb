@@ -232,5 +232,10 @@ class PunishmentsController < ApplicationController
     student_punishment.delete
     render :text => true and return
   end
-  
+
+  def show_student_punishments
+    student_id = params[:student_id]
+    @student_punishments = StudentPunishment.find(:all, :conditions => ["student_id =?", student_id])
+    render :layout => false
+  end
 end

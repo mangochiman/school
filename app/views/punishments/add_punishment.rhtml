@@ -101,7 +101,10 @@
         }
       }
       window.setInterval("validatePunishmentDetails();", 350);
-      
+
+      function showStudentPunishments(studentID){
+        window.location = "/punishments/show_student_punishments?student_id=" + studentID
+      }
     </script>
     <style>
       .date-picker{
@@ -352,7 +355,7 @@
                       <td><%=  student.gender %></td>
                       <td><%=  student.dob.to_date.strftime("%d-%b-%Y") %></td>
                       <td><%=  student.phone %></td>
-                      <td><center><span class="label">#</span></center></td>
+                      <td><center><span class="label" onmousedown="showStudentPunishments(<%= student.student_id %>)"><%= student.punishments.count %></span></center></td>
                       <td>
                         <a student_id="<%= student.id %>" href="#" onmousedown="setCurrentStudentId(this); interval = window.setInterval('loadDatePicker();', 350);" class="table-actions-button ic-table-punishment confirm"></a>
                       </td>
