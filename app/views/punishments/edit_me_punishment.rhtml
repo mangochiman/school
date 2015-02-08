@@ -25,14 +25,35 @@
         window.location = "/punishments/edit_me_punishment?punishment_id=" + punishmentId;
       }
 
-      function loadTextAreaInputValue(){
-        punishmentDetails = "<%= @punishment.details %>"
-        punishment = document.getElementById('punishment');
-        if (punishment){
-          punishment.value = punishmentDetails
-        }
+      function selectValues(){
+          <% unless @punishment.blank? %>
+                punishmentId='<%=  @punishment.punishment_type_id %>'
+                options = document.getElementById('punishment_type').getElementsByTagName('option');
+                for (var i=0; i<=options.length - 1; i++){
+                  if (options[i].value == punishmentId){
+                    options[i].selected = true;
+                  }
+                }
+          <% end %>
+          <% unless @punishment.blank? %>
+                teacherId='<%=  @punishment.teacher_id %>'
+                options = document.getElementById('teacher').getElementsByTagName('option');
+                for (var i=0; i<=options.length - 1; i++){
+                  if (options[i].value == teacherId){
+                    options[i].selected = true;
+                  }
+                }
+          <% end %>
       }
-      window.setTimeout("loadTextAreaInputValue();", 350);
+      
+  function loadTextAreaInputValue(){
+    punishmentDetails = "<%= @punishment.details %>"
+    punishment = document.getElementById('punishment');
+    if (punishment){
+      punishment.value = punishmentDetails
+    }
+  }
+  window.setTimeout("loadTextAreaInputValue();selectValues();", 100);
       
     </script>
     <style>
@@ -101,16 +122,16 @@
         font-size: 14px;
         height: 34px;
         line-height: 1.42857;
-        padding: 6px 71px;
+        text-align: center;
         transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
       }
-      
+
       #punishment_details input[type="text"]{
         border: 1px solid #d9dbdd;
         outline: medium none;
         padding: 0.5em 0.225em;
       }
-      
+
       #punishment_details textarea{
         padding: 0.5em 0.225em;
         width: 250px;
@@ -119,7 +140,7 @@
       .punishment_details .msg.icon {
         position: absolute !important;
       }
-      
+
       form.autoform select {
         width: 206px;
       }
@@ -274,11 +295,11 @@
                 <div><label for="teacher">Responsible Teacher</label>
                   <%= @teachers_select_tag %>
                 </div>
-    
-                  <div class="punishment_details">
-                    <label for="punishment">Punishment Details</label><textarea rows="9" type="text" name="punishment_details" class="text required" id="punishment" style="font-weight:bold;"></textarea>
-                  </div>
-                
+
+                <div class="punishment_details">
+                  <label for="punishment">Punishment Details</label><textarea rows="9" type="text" name="punishment_details" class="text required" id="punishment" style="font-weight:bold;"></textarea>
+                </div>
+
                 <div class="stripe-separator"><!--  --></div>
                 <input type="submit" value="Submit" class="round blue ic-right-arrow" />
               </form>
