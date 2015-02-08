@@ -56,6 +56,29 @@ class PunishmentsController < ApplicationController
       @punishment_types_select_tag += option
     }
     @punishment_types_select_tag += '</select>'
+
+    if (request.method == :post)
+      punishment_type_id = params[:punishment_type]
+      teacher_id = params[:teacher]
+      start_date = params[:start_date]
+      end_date = params[:end_date]
+      punishment_details = params[:punishment_details]
+
+      if (@punishment.update_attributes({
+              :teacher_id => teacher_id,
+              :punishment_type_id => punishment_type_id,
+              :start_date => start_date,
+              :end_date => end_date,
+              :details => punishment_details,
+            }))
+        flash[:notice] = "Operation successful"
+        redirect_to :action => "edit_punishment" and return
+      else
+        flash[:error] = "Unable to save. Check for errors and try again"
+        redirect_to :action => "edit_punishment" and return
+      end
+    end
+    
     render :layout => false
   end
   
