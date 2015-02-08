@@ -214,6 +214,11 @@
                   <%= flash[:error] %>
                 </div>
               <% end %>
+              <div style="float:right;">
+                <% punishment = Punishment.find(params[:punishment_id]) %>
+                Punishment Type: <span style="font-weight:bold;"><%=  punishment.punishment_type.name%></span><br />
+                Responsible Teacher: <span style="font-weight:bold;"><%=  punishment.teacher.fname.to_s + ' ' + punishment.teacher.lname.to_s %></span><br /><br />
+              </div>
               <table>
 
                 <thead>
