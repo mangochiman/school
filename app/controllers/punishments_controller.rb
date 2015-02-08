@@ -36,9 +36,29 @@ class PunishmentsController < ApplicationController
   end
 
   def edit_punishment
+    @punishments = Punishment.find(:all)
     render :layout => false
   end
 
+  def edit_me_punishment
+    @punishment = Punishment.find(params[:punishment_id])
+    @teachers_select_tag = "<select id='teacher' name='teacher' class='select required'><option value=''></option>"
+    Teacher.all.each{|t|
+      name = t.fname.to_s + ' ' + t.lname.to_s + '(' + t.gender.first.upcase.to_s + ')'
+      option="<option value=#{t.teacher_id}>#{name}</option>"
+      @teachers_select_tag += option
+    }
+    @teachers_select_tag += '</select>'
+
+    @punishment_types_select_tag = "<select id='punishment_type' name = 'punishment_type' class='select required'><option value=''></option>"
+    PunishmentType.all.each{|pt|
+      option="<option value=#{pt.punishment_type_id}>#{pt.name}</option>"
+      @punishment_types_select_tag += option
+    }
+    @punishment_types_select_tag += '</select>'
+    render :layout => false
+  end
+  
   def remove_punishments
     render :layout => false
   end
