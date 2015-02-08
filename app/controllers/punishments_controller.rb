@@ -88,6 +88,7 @@ class PunishmentsController < ApplicationController
   end
 
   def view_punishments
+    @punishments = Punishment.find(:all)
     render :layout => false
   end
 
@@ -216,4 +217,20 @@ class PunishmentsController < ApplicationController
 
     render :text => "true" and return
   end
+
+  def punishment_students_edit
+    punishment_id = params[:punishment_id]
+    @punishment_students = StudentPunishment.find(:all, :conditions => ["punishment_id =?", punishment_id])
+    render :layout => false
+  end
+
+  def student_punishment_delete
+    student_id = params[:student_id]
+    punishment_id = params[:punishment_id]
+    student_punishment = StudentPunishment.find(:last, :conditions => ["student_id =? AND 
+        punishment_id =?", student_id, punishment_id])
+    student_punishment.delete
+    render :text => true and return
+  end
+  
 end

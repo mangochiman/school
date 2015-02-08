@@ -9,28 +9,47 @@
 
     <!-- jQuery & JS files -->
 
+    <%= javascript_include_tag("jquery") %>
     <%= javascript_include_tag("jquery-1.9.1.min") %>
-    <%= javascript_include_tag("highcharts") %>
+    <%= javascript_include_tag("jquery.confirm") %>
     <%= javascript_include_tag("script") %>
-
-    <%= javascript_include_tag("exporting") %>
+    <%= javascript_include_tag("gvalidator") %>
     <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("metallic") %>
+    <%= stylesheet_link_tag("gvalidator") %>
+    <%= stylesheet_link_tag("bootstrap") %>
 
     <script>
-      function editMe(obj){
-        punishmentId = obj.getAttribute("punishment_id");
-        window.location = "/punishments/edit_me_punishment?punishment_id=" + punishmentId;
+      var currentStudentId = "";
+      var currentPunishmentId = "";
+      function setcurrentIds(obj){
+        currentStudentId = obj.getAttribute("student_id");
+        currentPunishmentId = obj.getAttribute("punishment_id");
       }
 
-      function loadPunishmentType(){
+      function deleteSingleEntry(){
+        jQuery.ajax({
+          type: "POST",
+          url: "/punishments/student_punishment_delete",
+          data: "student_id=" + currentStudentId + "&punishment_id=" + currentPunishmentId,
+          success: function(){
+            element = document.getElementById(currentStudentId + '_' + currentPunishmentId);
+            element.parentNode.removeChild(element);
+          }
 
+        });
       }
-
-      function loadResponsibleTeacher(){
-
-      }
+      
     </script>
     <style>
+      .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: red;
+      }
+      
       .label {
         border-radius: 1.5em;
         color: #fff;
@@ -198,26 +217,27 @@
               <table>
 
                 <thead>
-
                   <tr>
-                    <th style="min-width:15%;">Punishment Type</th>
+                    <th style="min-width:15%;">Student Name</th>
+                    <th>Gender</th>
                     <th>Punishment Details</th>
-                    <th>Teacher Responsible</th>
-                    <th>Total Students</th>
                     <th>Start Date</th>
                     <th>End Date</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
 
-                <tbody id="punishments">
-                  <% @punishments.each do |punishment| %>
-                    <tr id="<%= punishment.id %>">
-                      <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= punishment.punishment_type.name %></td>
-                      <td><%=  punishment.details %></td>
-                      <td><%=  punishment.teacher.fname + ' ' + punishment.teacher.lname%></td>
-                      <td><center><span class="label"><%=  punishment.students.count %></span></center></td>
-                      <td><%=  punishment.start_date.to_date.strftime("%d-%b-%Y") %></td>
-                      <td><%=  punishment.end_date.to_date.strftime("%d-%b-%Y") %></td>
+                <tbody id="punishment_students">
+                  <% @punishment_students.each do |sp| %>
+                    <tr id="<%= sp.student.id.to_s + '_' + sp.punishment_id.to_s %>">
+                      <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= sp.student.fname.capitalize.to_s + ' ' +  sp.student.lname.capitalize.to_s %></td>
+                      <td><%=  sp.student.gender %></td>
+                      <td><%=  sp.punishment.details %></td>
+                      <td><%=  sp.punishment.start_date.to_date.strftime("%d-%b-%Y") %></td>
+                      <td><%=  sp.punishment.end_date.to_date.strftime("%d-%b-%Y") %></td>
+                      <td>
+                        <a href="#" student_id="<%= sp.student.id %>" punishment_id="<%= sp.punishment_id %>" onmousedown="setcurrentIds(this)" class="table-actions-button ic-table-delete confirm"></a>
+                      </td>
                     </tr>
                   <% end %>
                 </tbody>
@@ -244,6 +264,20 @@
       <p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
 
     </div> <!-- end footer -->
+    <%= javascript_include_tag("bootstrap") %>
+    <script>
+      $(".confirm").confirm({
+        title:"Delete confirmation",
+        text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+        confirm: function(button) {
+          deleteSingleEntry();
+        },
+        cancel: function(button) {
 
+        },
+        confirmButton: "Yes I am",
+        cancelButton: "No"
+      });
+    </script>
   </body>
 </html>
