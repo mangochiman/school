@@ -14,116 +14,61 @@
 
     <%= javascript_include_tag("exporting") %>
     <%= stylesheet_link_tag("style") %>
-    <script type="text/javascript">
-      var males = parseInt('<%= @males %>');
-      var females = parseInt('<%= @females %>');
+    <script>
       $(function () {
         $('#container').highcharts({
-          chart: {
-            plotBackgroundColor: null,
-            plotBorderWidth: null,
-            plotShadow: false
-          },
-          title: {
-            text: 'Students Enrollment By Gender'
-          },
-          subtitle: {
-            text: '<%= Date.today.year %>'
-          },
-          tooltip: {
-            pointFormat: '{series.name}: <b>{point.percentage}%</b>',
-            percentageDecimals: 1
-          },
-          plotOptions: {
-            pie: {
-              allowPointSelect: true,
-              cursor: 'pointer',
-              dataLabels: {
-                enabled: true,
-                color: '#000000',
-                connectorColor: '#000000',
-                formatter: function() {
-                  return '<b>'+ this.point.name +'</b>: '+ this.percentage +' %';
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Teachers Statistics'
+            },
+            subtitle: {
+                text: 'Distribution By Class'
+            },
+            xAxis: {
+                categories: eval('<%= @class_rooms.to_json %>')
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Total Teachers'
                 }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px; font-weight:bold;">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};text-align:left; padding:3px;">{series.name}: </td>' +
+                    '<td style="padding:0"><b>{point.y}</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: [
+              {
+                name: 'Males',
+                data: eval('<%= @males.to_json %>')
+
+              },
+              {
+                name: 'Females',
+                data: eval('<%= @females.to_json %>')
+
+              },
+              {
+                name: 'Total',
+                data: eval('<%= @totals.to_json %>')
+
               }
-            }
-          },
-          series: [{
-              type: 'pie',
-              name: 'Total',
-              data: [
-                ['Males',   males],
-                {
-                  name: 'Females',
-                  y: females,
-                  sliced: true,
-                  selected: true
-                }
-              ]
-            }]
+            ]
         });
-      });
+    });
 
-      function plotGraph(){
-        year = document.getElementById('year').value;
-        jQuery.ajax({
-          type: "POST",
-          url: "/admin/load_enrollment_by_gender_data",
-          data: "year=" + year,
-          success: function(results){
-            results = eval('(' + results + ')')
-            year = results['year'];
-            totalMales = results['males'];
-            totalFemales = results['females'];
-
-            $('#container').highcharts({
-              chart: {
-                plotBackgroundColor: null,
-                plotBorderWidth: null,
-                plotShadow: false
-              },
-              title: {
-                text: 'Students Enrollment By Gender'
-              },
-              subtitle: {
-                text: year
-              },
-              tooltip: {
-                pointFormat: '{series.name}: <b>{point.percentage}%</b>',
-                percentageDecimals: 1
-              },
-              plotOptions: {
-                pie: {
-                  allowPointSelect: true,
-                  cursor: 'pointer',
-                  dataLabels: {
-                    enabled: true,
-                    color: '#000000',
-                    connectorColor: '#000000',
-                    formatter: function() {
-                      return '<b>'+ this.point.name +'</b>: '+ this.percentage +' %';
-                    }
-                  }
-                }
-              },
-              series: [{
-                  type: 'pie',
-                  name: 'Total',
-                  data: [
-                    ['Males',   totalMales],
-                    {
-                      name: 'Females',
-                      y: totalFemales,
-                      sliced: true,
-                      selected: true
-                    }
-                  ]
-                }]
-            });
-          }
-
-        });
-      }
     </script>
 
     <style>
@@ -253,8 +198,8 @@
       <div class="page-full-width cf">
 
         <ul id="tabs" class="fl">
-          <li><a href="/admin/subject_groups_dashboard" class="dashboard-tab active-tab">Dashboard</a></li>
-          <li><a href="/course/index">Courses</a></li>
+          <li><a href="/teacher/manage_teachers_dashboard" class="dashboard-tab active-tab">Dashboard</a></li>
+          <li><a href="/teacher/index">Teachers</a></li>
         </ul> <!-- end tabs -->
 
         <!-- Change this image to your own company's logo -->
@@ -276,7 +221,7 @@
 
           <div class="content-module-heading cf">
 
-            <h3 class="fl">Enrollment By Gender</h3>
+            <h3 class="fl">Teachers Statistics</h3>
             <span class="fr expand-collapse-text">Click to collapse</span>
             <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -284,21 +229,6 @@
 
 
           <div class="content-module-main">
-              <form id="filter-graph-form" action="#">
-                <fieldset>
-                  <legend>Search</legend>
-                  <div style="margin-right:2%;">
-                    <table style="width:22%; float: right;">
-                      <tr style="background-color: white;">
-                        <td style="text-align: left; font-size: 1.2em; width: 10em;"><span>Year</span></td>
-                        <td><%= select_tag("year", options_for_select(@years),{:style=>'text-align:center'})%></td>
-                        <td><a onclick="plotGraph();" class="button round blue image-right ic-refresh text-upper">Plot</a></td>
-                      </tr>
-                    </table>
-
-                  </div>
-                </fieldset>
-              </form>
               <div id="container">
               </div>
             </div> <!-- end content-module-main -->

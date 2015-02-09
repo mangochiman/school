@@ -323,5 +323,88 @@ class TeacherController < ApplicationController
 
     render :json => hash
   end
-  
+
+  def manage_teachers_menu
+    @class_rooms = ClassRoom.find(:all).map(&:name)
+
+    @totals = []
+    @males = []
+    @females = []
+
+    class_rooms = ClassRoom.find(:all)
+    hash = {}
+
+    (class_rooms || []).each do |class_room|
+      total_teachers = class_room.class_room_teachers.count
+      class_room_id = class_room.id
+      hash[class_room_id] = {}
+      hash[class_room_id]["total_teachers"] = total_teachers
+      total_males = 0
+      total_females = 0
+
+      (class_room.class_room_teachers || []).each do |crt|
+        next if crt.teacher.blank?
+        if (crt.teacher.gender.upcase == 'MALE')
+          total_males += 1
+        end
+        if (crt.teacher.gender.upcase == 'FEMALE')
+          total_females += 1
+        end
+      end
+      hash[class_room_id]["total_males"] = total_males
+      hash[class_room_id]["total_females"] = total_females
+    end
+
+    @statistics = hash.sort_by{|key, value|key.to_i}
+
+    @statistics.each do |key, value|
+      @males << value["total_males"]
+      @females << value["total_females"]
+      @totals << value["total_teachers"]
+    end
+    
+    render :layout => false
+  end
+
+  def manage_teachers_dashboard
+    @class_rooms = ClassRoom.find(:all).map(&:name)
+
+    @totals = []
+    @males = []
+    @females = []
+
+    class_rooms = ClassRoom.find(:all)
+    hash = {}
+
+    (class_rooms || []).each do |class_room|
+      total_teachers = class_room.class_room_teachers.count
+      class_room_id = class_room.id
+      hash[class_room_id] = {}
+      hash[class_room_id]["total_teachers"] = total_teachers
+      total_males = 0
+      total_females = 0
+
+      (class_room.class_room_teachers || []).each do |crt|
+        next if crt.teacher.blank?
+        if (crt.teacher.gender.upcase == 'MALE')
+          total_males += 1
+        end
+        if (crt.teacher.gender.upcase == 'FEMALE')
+          total_females += 1
+        end
+      end
+      hash[class_room_id]["total_males"] = total_males
+      hash[class_room_id]["total_females"] = total_females
+    end
+
+    @statistics = hash.sort_by{|key, value|key.to_i}
+
+    @statistics.each do |key, value|
+      @males << value["total_males"]
+      @females << value["total_females"]
+      @totals << value["total_teachers"]
+    end
+
+    render :layout => false
+  end
 end
