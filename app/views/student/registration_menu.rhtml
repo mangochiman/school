@@ -12,65 +12,65 @@
     <%= javascript_include_tag("jquery-1.9.1.min") %>
     <%= javascript_include_tag("highcharts") %>
     <%= javascript_include_tag("script") %>
-    
+
     <%= javascript_include_tag("exporting") %>
     <%= stylesheet_link_tag("style") %>
 
     <script>
       $(function () {
         $('#container').highcharts({
-            chart: {
-                type: 'column'
-            },
+          chart: {
+            type: 'column'
+          },
+          title: {
+            text: 'Students Statistics'
+          },
+          subtitle: {
+            text: 'Distribution by Class'
+          },
+          xAxis: {
+            categories: eval('<%= @class_rooms.to_json %>')
+          },
+          yAxis: {
+            min: 0,
             title: {
-                text: 'Students Statistics'
-            },
-            subtitle: {
-                text: 'Distribution by Class'
-            },
-            xAxis: {
-                categories: eval('<%= @class_rooms.to_json %>')
-            },
-            yAxis: {
-                min: 0,
-                title: {
-                    text: 'Total Students'
-                }
-            },
-            tooltip: {
-                headerFormat: '<span style="font-size:10px; font-weight:bold;">{point.key}</span><table>',
-                pointFormat: '<tr><td style="color:{series.color};text-align:left; padding:3px;">{series.name}: </td>' +
-                    '<td style="padding:0"><b>{point.y}</b></td></tr>',
-                footerFormat: '</table>',
-                shared: true,
-                useHTML: true
-            },
-            plotOptions: {
-                column: {
-                    pointPadding: 0.2,
-                    borderWidth: 0
-                }
-            },
-            series: [
+              text: 'Total Students'
+            }
+          },
+          tooltip: {
+            headerFormat: '<span style="font-size:10px; font-weight:bold;">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};text-align:left; padding:3px;">{series.name}: </td>' +
+              '<td style="padding:0"><b>{point.y}</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+          },
+          plotOptions: {
+            column: {
+              pointPadding: 0.2,
+              borderWidth: 0
+            }
+          },
+          series: [
 
-              {
-                name: 'Males',
-                data: eval('<%= @males.to_json %>')
+            {
+              name: 'Males',
+              data: eval('<%= @males.to_json %>')
 
-              },
-              {
-                name: 'Females',
-                data: eval('<%= @females.to_json %>')
+            },
+            {
+              name: 'Females',
+              data: eval('<%= @females.to_json %>')
 
-              }, 
-              {
-                name: 'Total',
-                data: eval('<%= @totals.to_json %>')
+            },
+            {
+              name: 'Total',
+              data: eval('<%= @totals.to_json %>')
 
-              }
+            }
           ]
         });
-    });
+      });
     
     </script>
   </head>
@@ -127,6 +127,7 @@
             <ul>
               <li><a href="/user/user_management_menu">User management</a></li>
               <li><a href="/parent/parents_menu">Parents management</a></li>
+              <li><a href="/class_room/index">Class management</a></li>
               <li><a href="/admin/system_configuration_menu">System configuration/Administration</a></li>
               <li><a href="#">Fees management</a></li>
               <li><a href="/report/reports_generator_menu">Supper reports generator</a></li>
@@ -213,7 +214,7 @@
 
           </div> <!-- end content-module -->
 
-           <!-- end content-module -->
+          <!-- end content-module -->
 
         </div> <!-- end side-content -->
 
