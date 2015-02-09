@@ -407,4 +407,8 @@ class TeacherController < ApplicationController
 
     render :layout => false
   end
+
+  def select_from_employees
+    render :layout => false
+  end
 end
