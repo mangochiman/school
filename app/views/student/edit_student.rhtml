@@ -40,13 +40,13 @@
               dob = results[student_id]["dob"];
               join_date = results[student_id]["join_date"];
               html+="<tr>";
-              html+="<td>" + firstName + ' ' + lastName +  "</td>";
+              html+="<td style='text-align:left; padding: 0.833em 0 0.833em 1.25em;'>" + firstName + ' ' + lastName +  "</td>";
               html+="<td><a href='#'>" + email +  "</a></td>";
               html+="<td>" + gender +  "</td>";
               html+="<td>" + dob +  "</td>";
               html+="<td>" + phone +  "</td>";
               html+="<td>" + join_date +  "</td>";
-              html+="<td><a student_id=" + student_id + " onclick='editMe(this)' href='#' class='table-actions-button ic-table-edit'></a></td>";
+              html+="<td><a student_id=" + student_id + " onclick='editMe(this)' class='table-actions-button ic-table-edit'></a></td>";
               html+="</tr>";
             }
 
@@ -122,6 +122,9 @@
       table th:first-child {
         border-style: none none none !important;
       }
+      a{
+        cursor: pointer;
+      }
     </style>
   </head>
   <body>
@@ -177,7 +180,9 @@
             <ul>
               <li><a href="/user/user_management_menu">User management</a></li>
               <li><a href="/parent/parents_menu">Parents management</a></li>
-              <li><a href="/class_room/index">Class management</a></li><li><a href="/teacher/manage_teachers_menu">Manage Lecturers/teachers</a></li><li><a href="/examination_type/manage_exam_type_menu">Exam Type Management</a></li>
+              <li><a href="/class_room/index">Class management</a></li>
+              <li><a href="/teacher/manage_teachers_menu">Manage Lecturers/teachers</a></li>
+              <li><a href="/examination_type/manage_exam_type_menu">Exam Type Management</a></li>
               <li><a href="/admin/system_configuration_menu">System configuration/Administration</a></li>
               <li><a href="#">Fees management</a></li>
               <li><a href="/report/reports_generator_menu">Supper reports generator</a></li>
@@ -287,7 +292,7 @@
                         </td>
                       </tr>
                       <tr>
-                        <td colspan="6"><a onclick="loadSearchResults();" href="#" class="button round blue image-right ic-search text-upper">Search</a></td>
+                        <td colspan="6"><a onclick="loadSearchResults();" class="button round blue image-right ic-search text-upper">Search</a></td>
                       </tr>
                     </table>
                   </div>
@@ -320,7 +325,7 @@
                     <td><%=  student.phone %></td>
                     <td><%=  student.created_at.strftime("%d-%b-%Y") %></td>
                     <td>
-                      <a student_id="<%= student.id %>" onclick="editMe(this)" href="#" class="table-actions-button ic-table-edit"></a>
+                      <a student_id="<%= student.id %>" onclick="editMe(this)" class="table-actions-button ic-table-edit"></a>
                     </td>
                   </tr>
                   <% end %>

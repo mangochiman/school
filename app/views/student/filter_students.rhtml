@@ -12,7 +12,7 @@
     <%= javascript_include_tag("script") %>
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("metallic") %>
-    
+
     <script>
       function showHideCustomDateInputs(value){
         console.log(value);
@@ -50,7 +50,7 @@
               dob = results[student_id]["dob"];
               join_date = results[student_id]["join_date"];
               html+="<tr>";
-              html+="<td>" + firstName + ' ' + lastName +  "</td>";
+              html+="<td style='text-align:left; padding: 0.833em 0 0.833em 1.25em;'>" + firstName + ' ' + lastName +  "</td>";
               html+="<td><a href='#'>" + email +  "</a></td>";
               html+="<td>" + gender +  "</td>";
               html+="<td>" + dob +  "</td>";
@@ -63,9 +63,9 @@
             tbody.innerHTML = html
           }
 
-      });
+        });
 
-  }
+      }
     </script>
     <style>
       /*table{
@@ -100,7 +100,7 @@
         height: 26px;
         line-height: 1.42857;
         margin-left: 30%;
-        
+
         padding: 6px 12px;
         transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
         margin-left: 0%;
@@ -160,7 +160,10 @@
 
       table th:first-child {
         border-style: none none none !important;
-    }
+      }
+      a{
+        cursor: pointer;
+      }
     </style>
   </head>
   <body>
@@ -216,7 +219,9 @@
             <ul>
               <li><a href="/user/user_management_menu">User management</a></li>
               <li><a href="/parent/parents_menu">Parents management</a></li>
-              <li><a href="/class_room/index">Class management</a></li><li><a href="/teacher/manage_teachers_menu">Manage Lecturers/teachers</a></li><li><a href="/examination_type/manage_exam_type_menu">Exam Type Management</a></li>
+              <li><a href="/class_room/index">Class management</a></li>
+              <li><a href="/teacher/manage_teachers_menu">Manage Lecturers/teachers</a></li>
+              <li><a href="/examination_type/manage_exam_type_menu">Exam Type Management</a></li>
               <li><a href="/admin/system_configuration_menu">System configuration/Administration</a></li>
               <li><a href="#">Fees management</a></li>
               <li><a href="/report/reports_generator_menu">Supper reports generator</a></li>
@@ -289,7 +294,7 @@
 
             <div class="content-module-heading cf">
 
-              <h3 class="fl">Class assignment</h3>
+              <h3 class="fl">Filter Students</h3>
               <span class="fr expand-collapse-text">Click to collapse</span>
               <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -298,15 +303,15 @@
 
             <div class="content-module-main">
               <% if flash[:notice] %>
-                  <div class="confirmation-box round">
-                    <%= flash[:notice] %>
-                  </div>
-                <% end %>
-                <% if flash[:error] %>
-                  <div class="error-box round">
-                      <%= flash[:error] %>
-                  </div>
-                <% end %>
+                <div class="confirmation-box round">
+                  <%= flash[:notice] %>
+                </div>
+              <% end %>
+              <% if flash[:error] %>
+                <div class="error-box round">
+                  <%= flash[:error] %>
+                </div>
+              <% end %>
               <form id="search-student-form" action="#">
                 <fieldset>
                   <legend>Filter</legend>
@@ -347,7 +352,7 @@
                         <td><input type="text"  id="simple-input" class="round default-width-input end-date date-picker" /></td>
                       </tr>
                       <tr>
-                        <td colspan="6"><a href="#" onclick="loadSearchResults();" class="button round blue image-right ic-search text-upper">Filter</a></td>
+                        <td colspan="6"><a onclick="loadSearchResults();" class="button round blue image-right ic-search text-upper">Filter</a></td>
                       </tr>
                     </table>
                   </div>
@@ -371,7 +376,7 @@
                 </thead>
 
                 <tbody id="students">
-                  
+
                 </tbody>
 
               </table>
@@ -394,20 +399,20 @@
       <p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
 
     </div> <!-- end footer -->
-    
+
     <%= javascript_include_tag("jquery-1.9.1.min") %>
     <%= javascript_include_tag("zebra_datepicker") %>
     <script>
       
-        $('.start-date').Zebra_DatePicker({
-              view : 'years',
-              direction: ['<%=  (Date.today - 10.years).strftime("%Y-%m-%d") %>', '<%=  (Date.today).strftime("%Y-%m-%d") %>']
-        });
+      $('.start-date').Zebra_DatePicker({
+        view : 'years',
+        direction: ['<%=  (Date.today - 10.years).strftime("%Y-%m-%d") %>', '<%=  (Date.today).strftime("%Y-%m-%d") %>']
+      });
 
-        $('.end-date').Zebra_DatePicker({
-              view : 'years',
-              direction: ['<%=  (Date.today - 10.years).strftime("%Y-%m-%d") %>', '<%=  (Date.today).strftime("%Y-%m-%d") %>']
-        });
+      $('.end-date').Zebra_DatePicker({
+        view : 'years',
+        direction: ['<%=  (Date.today - 10.years).strftime("%Y-%m-%d") %>', '<%=  (Date.today).strftime("%Y-%m-%d") %>']
+      });
 
     </script>
   </body>

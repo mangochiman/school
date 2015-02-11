@@ -68,21 +68,21 @@ class StudentController < ApplicationController
 
     student_ids = params[:student_ids].split(",")
     (student_ids || []).each do |student_id|
-        student = Student.find(student_id)
-        student.delete
+      student = Student.find(student_id)
+      student.delete
     end
     
     render :text => "true" and return
   end
   
   def assign_class
-     student_ids_with_class_rooms = Student.find(:all,
-          :joins => [:class_room_student]).map(&:student_id)
+    student_ids_with_class_rooms = Student.find(:all,
+      :joins => [:class_room_student]).map(&:student_id)
 
     student_ids_with_class_rooms = '' if student_ids_with_class_rooms.blank? #To handle mysql NOT IN when the data is array is blank
-     @students = Student.find(:all, :conditions => ["student_id NOT IN (?)",
-                    student_ids_with_class_rooms]
-                )
+    @students = Student.find(:all, :conditions => ["student_id NOT IN (?)",
+        student_ids_with_class_rooms]
+    )
     render :layout => false
   end
   
@@ -99,18 +99,20 @@ class StudentController < ApplicationController
     class_room_courses = ClassRoom.find(class_room_id).class_room_courses
     (class_room_courses || []).each do |crc|
       StudentCourse.create({
-        :student_id => student_id,
-        :course_id => crc.course_id
-      })
+          :student_id => student_id,
+          :course_id => crc.course_id
+        })
     end #Enrolling student to courses available for a particular class
 
     unless student_id.blank?
-      if (ClassRoomStudent.create({
-        :student_id => student_id,
-        :class_room_id => class_room_id
-      }))
+      class_room_student = ClassRoomStudent.create({
+          :student_id => student_id,
+          :class_room_id => class_room_id
+        })
+      if class_room_student
         flash[:notice] = "You have successfully assigned a class"
-        redirect_to :action => "assign_class"
+        redirect_to :controller => "student", :action => "assign_optional_courses", :student_id => params[:student_id] and return
+        #redirect_to :action => "assign_class"
       else
         flash[:error] = "Oops!!. Operation aborted"
         redirect_to :action => "assign_me_class", :student_id => params[:student_id]
@@ -132,20 +134,21 @@ class StudentController < ApplicationController
     
     if (request.method == :post)
       (params[:subjects] || []).each do |subject_id, details|
-          StudentCourse.create({
+        StudentCourse.create({
             :student_id => params[:student_id],
             :course_id => subject_id
           })
       end
       flash[:notice] = "You have successfully assigned courses"
-      redirect_to :action => "assign_optional_courses", :student_id => params[:student_id] and return
+      redirect_to :controller => "student", :action => "select_guardian", :student_id => params[:student_id] and return
+      #redirect_to :action => "assign_optional_courses", :student_id => params[:student_id] and return
     end
     
     render :layout => false
   end
 
   def edit_subjects
-    @students = Student.find(:all, :joins => [:student_courses])
+    @students = Student.find(:all, :joins => [:student_courses]).uniq
     render :layout => false
   end
 
@@ -170,7 +173,7 @@ class StudentController < ApplicationController
           StudentCourse.create({
               :student_id => params[:student_id],
               :course_id => subject_id
-          })
+            })
         end
 
         ((assigned_course_ids - already_signed_course_ids) || []).each do |course_id|
@@ -217,18 +220,18 @@ class StudentController < ApplicationController
         student_parent.delete
         
         StudentParent.create({
-          :student_id => params[:student_id],
-          :parent_id => params[:parent_id]
-        })
+            :student_id => params[:student_id],
+            :parent_id => params[:parent_id]
+          })
       end
       flash[:notice] = "Operation successful"
       redirect_to :action => "select_guardian", :student_id => params[:student_id], :mode => params[:mode] and return
     end
 
     if (StudentParent.create({
-        :student_id => params[:student_id],
-        :parent_id => params[:parent_id]
-      }))
+            :student_id => params[:student_id],
+            :parent_id => params[:parent_id]
+          }))
       flash[:notice] = "Operation successful"
       redirect_to :action => "assign_parent_guardian" and return
     else
@@ -284,19 +287,19 @@ class StudentController < ApplicationController
     end
     
     unless  params[:gender].blank?
-     gender =  [params[:gender]]
+      gender =  [params[:gender]]
     end
 
     unless (start_date.blank? && end_date.blank?)
       students = ClassRoomStudent.find(:all, :joins => [:student],
-                  :conditions => ["class_room_id IN (?) AND gender IN (?) AND
+        :conditions => ["class_room_id IN (?) AND gender IN (?) AND
                    DATE(date_of_join) >= ? AND DATE(date_of_join) <= ?",
-                   class_room_id, gender, start_date, end_date]
-                 ).collect{|cr| cr.student }
+          class_room_id, gender, start_date, end_date]
+      ).collect{|cr| cr.student }
     else
       students = ClassRoomStudent.find(:all, :joins => [:student],
-      :conditions => ["class_room_id IN (?) AND gender IN (?)", class_room_id, gender]
-        ).collect{|cr| cr.student}
+        :conditions => ["class_room_id IN (?) AND gender IN (?)", class_room_id, gender]
+      ).collect{|cr| cr.student}
     end
     
 
@@ -364,13 +367,13 @@ class StudentController < ApplicationController
     @student = Student.find(student_id)
     if request.method == :post
       if (@student.update_attributes({
-          :fname => params[:firstname],
-          :lname => params[:lastname],
-          :gender => params[:gender],
-          :email => params[:email],
-          :phone => params[:phone],
-          :dob => params[:dob].to_date
-        }))
+              :fname => params[:firstname],
+              :lname => params[:lastname],
+              :gender => params[:gender],
+              :email => params[:email],
+              :phone => params[:phone],
+              :dob => params[:dob].to_date
+            }))
         flash[:notice] = "You have successfully edited the details"
         redirect_to :controller => "student", :action => "edit_student" and return
       else
@@ -390,16 +393,18 @@ class StudentController < ApplicationController
     password = params[:password] #To be used later
     date_of_birth = params[:dob].to_date
     username = first_name.first.downcase.to_s + '' + last_name.squish.downcase #To be used later
-    if (Student.create({
+    student = Student.create({
         :fname => first_name,
         :lname => last_name,
         :gender => gender,
         :email => email,
         :phone => phone,
         :dob => date_of_birth
-      }))
+      })
+    if student
       flash[:notice] = "Operation successful"
-      redirect_to :controller => "student", :action => "add_student"
+      redirect_to :controller => "student", :action => "assign_me_class", :student_id => student.student_id
+      #redirect_to :controller => "student", :action => "add_student"
     else
       flash[:error] = "Unable to save. Check for errors and try again"
       render :controller => "student", :action => "add_student"
@@ -481,13 +486,13 @@ class StudentController < ApplicationController
       without_results = 0
       with_results = 0
       (course_exams || []).each do |course_exam|
-          if (course_exam.examination_results.blank?)
-            without_results += 1
-          end
+        if (course_exam.examination_results.blank?)
+          without_results += 1
+        end
 
-          unless (course_exam.examination_results.blank?)
-            with_results += 1
-          end
+        unless (course_exam.examination_results.blank?)
+          with_results += 1
+        end
       end
 
       total_exams_per_month = course_exams.count
