@@ -13,6 +13,7 @@ class CourseController < ApplicationController
   end
 
   def add_course
+    @courses = Course.all
     render :layout => false
   end
 
