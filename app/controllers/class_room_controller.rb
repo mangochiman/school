@@ -112,7 +112,8 @@ class ClassRoomController < ApplicationController
             })
       end
       flash[:notice] = "You have successfuly assigned courses"
-      redirect_to :action => "assign_me_subjects", :class_room_id => params[:class_room_id] and return
+      redirect_to :controller => "class_room", :action => "assign_me_teachers", :class_room_id => params[:class_room_id] and return
+      #redirect_to :action => "assign_me_subjects", :class_room_id => params[:class_room_id] and return
     end
     render :layout => false
   end
@@ -173,7 +174,8 @@ class ClassRoomController < ApplicationController
       end
       
       flash[:notice] = "You have successfuly assigned teachers"
-      redirect_to :action => "assign_me_teachers", :class_room_id => params[:class_room_id] and return
+      redirect_to :controller => "class_room", :action => "index" and return
+      #redirect_to :action => "assign_me_teachers", :class_room_id => params[:class_room_id] and return
     end
     render :layout => false
   end
@@ -226,13 +228,15 @@ class ClassRoomController < ApplicationController
     class_name = params[:class_name]
     year = params[:year]
     grade = params[:grade]
-    if (ClassRoom.create({
+    class_room = ClassRoom.create({
         :year => year,
         :grade => grade,
         :name => class_name
-      }))
+      })
+    if (class_room)
         flash[:notice] = "You have successfully created classroom"
-        redirect_to :action => "add_class" and return
+        redirect_to :controller => "class_room", :action => "assign_me_subjects", :class_room_id => class_room.class_room_id and return
+        #redirect_to :action => "add_class" and return
     else
       flash[:error] = "Operation not successful. Check for errors and try again"
       render :action => "add_class" and return

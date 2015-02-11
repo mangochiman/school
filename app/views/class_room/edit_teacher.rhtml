@@ -17,47 +17,47 @@
     <%= stylesheet_link_tag("bootstrap") %>
     <script>
 
-        function editTeachers(obj){
-          classRoomId = obj.getAttribute("class_room_id");
-          window.location = "/class_room/edit_my_teachers?class_room_id=" + classRoomId;
-        }
+      function editTeachers(obj){
+        classRoomId = obj.getAttribute("class_room_id");
+        window.location = "/class_room/edit_my_teachers?class_room_id=" + classRoomId;
+      }
 
-        function loadClassRoomTeachers(obj){
-            jQuery.ajax({
-            type: "POST",
-            url: "/class_room/render_teachers",
-            data: "class_room_id=" + obj.getAttribute("class_room_id"),
-            success: function(results){
-              table = "<table>";
-              table+="<tr>";
-              table+="<th>#</th>";
-              table+="<th>Teacher's Name</th>";
+      function loadClassRoomTeachers(obj){
+        jQuery.ajax({
+          type: "POST",
+          url: "/class_room/render_teachers",
+          data: "class_room_id=" + obj.getAttribute("class_room_id"),
+          success: function(results){
+            table = "<table>";
+            table+="<tr>";
+            table+="<th>#</th>";
+            table+="<th>Teacher's Name</th>";
+            table+="</tr>";
+            var pos = 0
+            className = results[0]
+            results = results[1];
+            for (var i=0; i<=results.length - 1; i++){
+              teacherName = results[i];
+              table+="<tr style='background-color:white;'>";
+              table+="<td>" + (pos = pos + 1) + "</td>";
+              table+="<td style='text-align:left;'>" + teacherName + "</td>";
               table+="</tr>";
-              var pos = 0
-              className = results[0]
-              results = results[1];
-              for (var i=0; i<=results.length - 1; i++){
-                teacherName = results[i];
-                table+="<tr style='background-color:white;'>";
-                table+="<td>" + (pos = pos + 1) + "</td>";
-                table+="<td style='text-align:left;'>" + teacherName + "</td>";
-                table+="</tr>";
-              }
+            }
 
-              table += "</table>";
-              teachers = table;
+            table += "</table>";
+            teachers = table;
 
-              jQuery.confirm({
-                title:className,
-                text:teachers,
-                confirm: function(button) {
-                },
-                cancel: function(button) {
-                },
-                confirmButton: "Done"
-              });
-            }});
-        }
+            jQuery.confirm({
+              title:className,
+              text:teachers,
+              confirm: function(button) {
+              },
+              cancel: function(button) {
+              },
+              confirmButton: "Done"
+            });
+          }});
+      }
     </script>
     <style>
       .label {
@@ -77,7 +77,7 @@
         white-space: nowrap;
         cursor: pointer;
       }
-      
+
       table{
         margin-left:15%;
         width: 60%;
@@ -103,26 +103,28 @@
       }
       table th:first-child {
         border-style: none none none !important;
-    }
+      }
 
-    .classes{
+      .classes{
         position: relative;
         margin-left: 0%;
         width: 100%;
-     }
+      }
 
-    .classes th, tbody{
+      .classes th, tbody{
         text-align: center;
-    }
+      }
 
-    .modal-title {
+      .modal-title {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         font-weight: 500;
         line-height: 1.1;
         font-size: 1.2em;
         color: #317eac;
-    }
-    
+      }
+      a{
+        cursor: pointer;
+      }
     </style>
   </head>
   <body>
@@ -178,7 +180,9 @@
             <ul>
               <li><a href="/user/user_management_menu">User management</a></li>
               <li><a href="/parent/parents_menu">Parents management</a></li>
-              <li><a href="/class_room/index">Class management</a></li><li><a href="/teacher/manage_teachers_menu">Manage Lecturers/teachers</a></li><li><a href="/examination_type/manage_exam_type_menu">Exam Type Management</a></li>
+              <li><a href="/class_room/index">Class management</a></li>
+              <li><a href="/teacher/manage_teachers_menu">Manage Lecturers/teachers</a></li>
+              <li><a href="/examination_type/manage_exam_type_menu">Exam Type Management</a></li>
               <li><a href="/admin/system_configuration_menu">System configuration/Administration</a></li>
               <li><a href="#">Fees management</a></li>
               <li><a href="/report/reports_generator_menu">Supper reports generator</a></li>
@@ -250,7 +254,7 @@
 
             <div class="content-module-heading cf">
 
-              <h3 class="fl">Student Registration</h3>
+              <h3 class="fl">Class Room Teachers Edit</h3>
               <span class="fr expand-collapse-text">Click to collapse</span>
               <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -280,23 +284,23 @@
                     <th style="min-width:10.5%;">Action</th>
                   </tr>
                 </thead>
-           
+
                 <tbody id="class_rooms">
                   <% @class_rooms.each do |class_room| %>
-                  <tr id="<%= class_room.id %>">
-                    <td><%= class_room.name%></td>
-                    <td><%=  class_room.year %></td>
-                    <td><%= class_room.grade %></td>
-                    <td>
-                      <span class_room_id="<%= class_room.id %>" class="label view-teachers" onmousedown="loadClassRoomTeachers(this);" style="margin-left:0%;"><%= class_room.class_room_teachers.count %></span>
-                    </td>
-                    <td>
-                      <a href="#" class_room_id="<%= class_room.id %>" onmousedown="editTeachers(this)" class="button round blue image-right ic-add text-upper">Edit Teachers &nbsp;</a>
-                    </td>
-                  </tr>
+                    <tr id="<%= class_room.id %>">
+                      <td><%= class_room.name%></td>
+                      <td><%=  class_room.year %></td>
+                      <td><%= class_room.grade %></td>
+                      <td>
+                        <span class_room_id="<%= class_room.id %>" class="label view-teachers" onmousedown="loadClassRoomTeachers(this);" style="margin-left:0%;"><%= class_room.class_room_teachers.count %></span>
+                      </td>
+                      <td>
+                        <a class_room_id="<%= class_room.id %>" onmousedown="editTeachers(this)" class="button round blue image-right ic-add text-upper">Edit Teachers &nbsp;</a>
+                      </td>
+                    </tr>
                   <% end %>
                 </tbody>
-                
+
               </table>
 
             </div> <!-- end content-module-main -->
@@ -318,17 +322,15 @@
       <p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
 
     </div> <!-- end footer -->
-  <%= javascript_include_tag("bootstrap") %>
+    <%= javascript_include_tag("bootstrap") %>
 
     <script>
-
-
-        function hideCancelButton(){
-          if ($("button.cancel")[0]){
-            $("button.cancel")[0].style.display='none';
-          }
+      function hideCancelButton(){
+        if ($("button.cancel")[0]){
+          $("button.cancel")[0].style.display='none';
         }
-        window.setInterval("hideCancelButton();", 300);
+      }
+      window.setInterval("hideCancelButton();", 300);
     </script>
   </body>
 </html>
