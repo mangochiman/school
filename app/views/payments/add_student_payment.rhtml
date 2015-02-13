@@ -61,21 +61,13 @@
       #payment_type input[type="text"]{
         border: 1px solid #d9dbdd;
         outline: medium none;
-        padding: 0.5em 0.225em;
-        width: 30%;
+        width: 187px;
       }
 
       input[type="submit"] {
         margin-left: 31%;
       }
 
-      table td:first-child{
-        text-align: left;
-      }
-
-      table td:last-child{
-        text-align: right;
-      }
       #payment, #semester {
         background-color: #fff;
         background-image: none;
@@ -91,6 +83,10 @@
         width: 199px;
         padding: 6px 12px;
         transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+      }
+
+      #dop{
+        width: 191px !important;
       }
     </style>
   </head>
@@ -250,11 +246,14 @@
                       <label for="semester" style="width:101px;">Semester</label>
                       <%= select_tag("semester", options_for_select(@semesters), {:class => "select required"}) %>
                     </div>
-                    
+
                     <div>
                       <label for="amount" style="width:101px;">Amount</label><input type="text" name="amount_required" id="amount" class="text required" onkeyup="validateAmount(this)"/>
                     </div>
 
+                    <div>
+                      <label for="dop" style="width:101px;">Date Paid</label><input type="text" name="payment_date" id="dop" class="text required date-picker"/>
+                    </div>
                     <div class="stripe-separator"><!--  --></div>
                     <input type="submit" value="Submit" class="round blue ic-right-arrow" />
                   </form>
@@ -277,7 +276,14 @@
 
 
                 <div class="content-module-main cf">
-
+                  <span style="font-size: 0.9em; font-weight: bold;">Name</span>:
+                  <span style="font-size:0.9em;">
+                    <a href="#"><%= @student.fname.to_s + ' ' + @student.lname.to_s + ' (' + @student.gender.first.capitalize.to_s + ')' %></a>
+                  </span><br />
+                  <span style="font-size: 0.9em; font-weight: bold;">Class:</span>
+                  <span style="font-size:0.9em;">
+                    <a href="#"><%= @student.class_room_student.class_room.name rescue 'Unknown Class'%></a>
+                  </span>
                 </div> <!-- end content-module-main -->
 
               </div> <!-- end content-module -->
@@ -310,7 +316,7 @@
     <script>
       $('.date-picker').Zebra_DatePicker({
         view : 'years',
-        direction: ['<%=  Date.today.strftime("%Y-%m-%d") %>', '<%=  (Date.today + 1.year).strftime("%Y-%m-%d") %>']
+        direction: ['<%=  (Date.today - 10.years).strftime("%Y-%m-%d") %>', '<%=  Date.today.strftime("%Y-%m-%d") %>']
       });
     </script>
   </body>
