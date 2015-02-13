@@ -253,7 +253,7 @@
                   <table>
                     <% (@payment_types || []).each do |payment| %>
                       <tr>
-                        <td><a href="#"><%= payment.name %></a></td>
+                        <td><a href="/payment_types/edit_me?payment_type_id=<%= payment.id %>"><%= payment.name %></a></td>
                         <td><%= number_to_currency(payment.amount_required, :unit => 'MK') %></td>
                       </tr>
                     <% end %>
