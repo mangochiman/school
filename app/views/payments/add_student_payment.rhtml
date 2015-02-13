@@ -300,6 +300,15 @@
                   <span style="font-size:0.9em;">
                     <a href="#"><%= @student.class_room_student.class_room.name rescue 'Unknown Class'%></a>
                   </span><br />
+                  
+                  <% if @payments_hash.blank? %>
+                    <table>
+                      <tr>
+                        <th colspan="2" style="font-weight: bold;">No Previous Payments</th>
+                      </tr>
+                    </table>
+                  <% end %>
+
                   <% @payments_hash.each do |payment_type_id, values| %>
                     <table>
                       <tr>
@@ -307,11 +316,15 @@
                       </tr>
                       <tr>
                         <td style="text-align: left;">Previous Payments</td>
-                        <td style="text-align: right;"><%= number_to_currency(values["amount_paid"], :unit => 'MK') %></td>
+                        <td style="text-align: right; font-weight: bold;"><%= number_to_currency(values["amount_paid"], :unit => 'MK') %></td>
                       </tr>
                       <tr>
                         <td style="text-align: left;">Balance</td>
-                        <td style="text-align: right;"><%= number_to_currency(values["balance"], :unit => 'MK') %></td>
+                        <td style="text-align: right; font-weight: bold;"><%= number_to_currency(values["balance"], :unit => 'MK') %></td>
+                      </tr>
+                      <tr>
+                        <td style="text-align: left;">Latest Date Paid</td>
+                        <td style="text-align: right; font-weight: bold;"><%= values["latest_date_paid"] %></td>
                       </tr>
                     </table>
                   <% end %>

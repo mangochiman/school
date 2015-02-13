@@ -44,16 +44,21 @@ class PaymentsController < ApplicationController
     end
     
     previous_payments = @student.payments
+
     @payments_hash = {}
     
     previous_payments.each do |payment|
       payment_type_id = payment.payment_type_id
       @payments_hash[payment_type_id] = {} if @payments_hash[payment_type_id].blank?
+      latest_payment = @student.payments.find(:first, :order => "DATE(date) DESC",
+        :conditions => ["payment_type_id =?", payment_type_id]) if @payments_hash[payment_type_id].blank?
+      
       @payments_hash[payment_type_id]["amount_required"] = payment.payment_type.amount_required.to_i
       @payments_hash[payment_type_id]["amount_paid"] = 0 if @payments_hash[payment_type_id]["amount_paid"].blank?
       @payments_hash[payment_type_id]["amount_paid"] += payment.amount_paid.to_i
       @payments_hash[payment_type_id]["balance"] = payment.payment_type.amount_required.to_i if @payments_hash[payment_type_id]["balance"].blank?
       @payments_hash[payment_type_id]["balance"] -= payment.amount_paid.to_i
+      @payments_hash[payment_type_id]["latest_date_paid"] = latest_payment.date.to_date.strftime("%d-%b-%Y") if latest_payment
     end
     
     render :layout => false
