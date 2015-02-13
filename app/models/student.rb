@@ -8,4 +8,5 @@ class Student < ActiveRecord::Base
   has_many :exam_attendees, :foreign_key => :student_id
   has_many :student_punishments, :foreign_key => :student_id
   has_many :punishments, :through => :student_punishments
+  has_many :payments, :foreign_key => :student_id
 end

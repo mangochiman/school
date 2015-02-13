@@ -31,6 +31,20 @@
           amountInput.value = amount;
         }
       }
+
+      function selectCurrentSemester(){
+<% unless @current_semester_id.blank? %>
+      currentSemesterId='<%=  @current_semester_id.to_i %>'
+      options = document.getElementById('semester').getElementsByTagName('option');
+      for (var i=0; i<=options.length - 1; i++){
+        if (options[i].value == currentSemesterId){
+          options[i].selected = true;
+        }
+      }
+<% end %>
+  }
+
+  window.setTimeout("selectCurrentSemester();", 100);
     </script>
 
     <style>
@@ -87,6 +101,7 @@
 
       #dop{
         width: 191px !important;
+        text-align: center;
       }
     </style>
   </head>
@@ -236,7 +251,7 @@
                       <%= flash[:error] %>
                     </div>
                   <% end %>
-                  <form id="payment_type" class="autoform" action="/payment_types/create" method="POST">
+                  <form id="payment_type" class="autoform" action="/payments/create_student_payment" method="POST">
                     <div>
                       <label for="payment" style="width:101px;">Payment Type</label>
                       <%= select_tag("payment", options_for_select(@payment_types), {:name => "payment_type", :class => "select required"}) %>
@@ -248,13 +263,14 @@
                     </div>
 
                     <div>
-                      <label for="amount" style="width:101px;">Amount</label><input type="text" name="amount_required" id="amount" class="text required" onkeyup="validateAmount(this)"/>
+                      <label for="amount" style="width:101px;">Amount</label><input type="text" name="amount" id="amount" class="text required" onkeyup="validateAmount(this)"/>
                     </div>
 
                     <div>
-                      <label for="dop" style="width:101px;">Date Paid</label><input type="text" name="payment_date" id="dop" class="text required date-picker"/>
+                      <label for="dop" style="width:101px;">Date Paid</label><input type="text" name="payment_date" id="dop" class="text required date-picker" value="<%= Date.today.strftime("%Y-%m-%d") %>"/>
                     </div>
                     <div class="stripe-separator"><!--  --></div>
+                    <%= hidden_field_tag("student_id", params[:student_id]) %>
                     <input type="submit" value="Submit" class="round blue ic-right-arrow" />
                   </form>
                 </div> <!-- end content-module-main -->
@@ -283,7 +299,22 @@
                   <span style="font-size: 0.9em; font-weight: bold;">Class:</span>
                   <span style="font-size:0.9em;">
                     <a href="#"><%= @student.class_room_student.class_room.name rescue 'Unknown Class'%></a>
-                  </span>
+                  </span><br />
+                  <% @payments_hash.each do |payment_type_id, values| %>
+                    <table>
+                      <tr>
+                        <th colspan="2" style="font-weight: bold;"><%= @payment_types_hash[payment_type_id].to_s + ' ('+  number_to_currency(values["amount_required"], :unit => 'MK').to_s + ')' %></th>
+                      </tr>
+                      <tr>
+                        <td style="text-align: left;">Previous Payments</td>
+                        <td style="text-align: right;"><%= number_to_currency(values["amount_paid"], :unit => 'MK') %></td>
+                      </tr>
+                      <tr>
+                        <td style="text-align: left;">Balance</td>
+                        <td style="text-align: right;"><%= number_to_currency(values["balance"], :unit => 'MK') %></td>
+                      </tr>
+                    </table>
+                  <% end %>
                 </div> <!-- end content-module-main -->
 
               </div> <!-- end content-module -->

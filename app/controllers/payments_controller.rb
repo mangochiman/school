@@ -36,7 +36,48 @@ class PaymentsController < ApplicationController
     
     @current_student_payments = Payment.find(:all, :conditions => ["student_id =?",
         params[:student_id]])
+    @current_semester_id = GlobalProperty.find_by_property("current_semester").value rescue ""
+
+    @payment_types_hash = {}
+    (PaymentType.all || []).each do |payment_type|
+      @payment_types_hash[payment_type.id] = payment_type.name
+    end
+    
+    previous_payments = @student.payments
+    @payments_hash = {}
+    
+    previous_payments.each do |payment|
+      payment_type_id = payment.payment_type_id
+      @payments_hash[payment_type_id] = {} if @payments_hash[payment_type_id].blank?
+      @payments_hash[payment_type_id]["amount_required"] = payment.payment_type.amount_required.to_i
+      @payments_hash[payment_type_id]["amount_paid"] = 0 if @payments_hash[payment_type_id]["amount_paid"].blank?
+      @payments_hash[payment_type_id]["amount_paid"] += payment.amount_paid.to_i
+      @payments_hash[payment_type_id]["balance"] = payment.payment_type.amount_required.to_i if @payments_hash[payment_type_id]["balance"].blank?
+      @payments_hash[payment_type_id]["balance"] -= payment.amount_paid.to_i
+    end
+    
     render :layout => false
+  end
+
+  def create_student_payment
+    student_id = params[:student_id]
+    payment_type = params[:payment_type]
+    semester = params[:semester]
+    amount_paid = params[:amount]
+    date_paid = params[:payment_date]
+    if (Payment.create({
+            :student_id => student_id,
+            :payment_type_id => payment_type,
+            :semester_id => semester,
+            :amount_paid => amount_paid,
+            :date => date_paid
+          }))
+      flash[:notice] = "Operation successful"
+      redirect_to :controller => "payments", :action => "add_student_payment", :student_id => student_id
+    else
+      flash[:error] = "Unable to save the details. Check for the errors and try again"
+      render :controller => "payments", :action => "add_student_payment", :student_id => student_id
+    end
   end
   
 end
