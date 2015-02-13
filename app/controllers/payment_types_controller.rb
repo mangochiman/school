@@ -45,20 +45,36 @@ class PaymentTypesController < ApplicationController
       end
     end
     
-  render :layout => false
-end
+    render :layout => false
+  end
   
-def edit_payment_type
-  @payment_types = PaymentType.find(:all)
-  render :layout => false
-end
+  def edit_payment_type
+    @payment_types = PaymentType.find(:all)
+    render :layout => false
+  end
 
-def void_payment_types
-  render :layout => false
-end
+  def void_payment_types
+    @payment_types = PaymentType.find(:all)
+    render :layout => false
+  end
 
-def view_payment_types
-  render :layout => false
-end
+  def view_payment_types
+    render :layout => false
+  end
+
+  def delete_payment_types
+    if (params[:mode] == 'single_entry')
+      payment_type = PaymentType.find(params[:payment_type_id])
+      payment_type.delete
+      render :text => "true" and return
+    end
+
+    payment_type_ids = params[:payment_type_ids].split(",")
+    (payment_type_ids || []).each do |payment_type_id|
+      payment_type = PaymentType.find(payment_type_id)
+      payment_type.delete
+    end
+    render :text => "true" and return
+  end
   
 end
