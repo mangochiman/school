@@ -9,6 +9,7 @@ class PaymentTypesController < ApplicationController
   end
 
   def add_payment_type
+    @payment_types = PaymentType.find(:all)
     render :layout => false
   end
 

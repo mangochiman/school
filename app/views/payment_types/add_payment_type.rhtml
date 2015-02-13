@@ -3,22 +3,76 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>User Management</title>
+    <title>Payment Types</title>
     <!-- Optimize for mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <!-- jQuery & JS files -->
 
+    <%= javascript_include_tag("jquery") %>
     <%= javascript_include_tag("jquery-1.9.1.min") %>
-    <%= javascript_include_tag("highcharts") %>
+    <%= javascript_include_tag("jquery.confirm") %>
     <%= javascript_include_tag("script") %>
-
-    <%= javascript_include_tag("exporting") %>
+    <%= javascript_include_tag("gvalidator") %>
     <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("metallic") %>
+    <%= stylesheet_link_tag("gvalidator") %>
+    <%= stylesheet_link_tag("bootstrap") %>
 
-    <script>
-
+    <script type="text/javascript">
+      function validateAmount(){
+        amountInput = document.getElementById('amount');
+        amount = parseInt(amountInput.value).toString();
+        console.log(amount)
+        if (amount == 'NaN'){
+          amountInput.value = '';
+        }
+        else{
+          amountInput.value = amount;
+        }
+      }
     </script>
+    
+    <style>
+      .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: red;
+      }
+
+      form.autoform .msg.icon {
+        margin: 0 10px;
+        padding: 5px 5px 5px 30px;
+        position: unset;
+        font-size: 8.99pt;
+      }
+
+      form label {
+        font-size: 0.9em;
+        font-weight: bold;
+      }
+      form.autoform input, select{
+        font-size: 0.8em !important;
+        font-weight: bold;
+      }
+
+      #payment_type input[type="text"]{
+        border: 1px solid #d9dbdd;
+        outline: medium none;
+        padding: 0.5em 0.225em;
+        width: 30%;
+      }
+
+      input[type="submit"] {
+        margin-left: 31%;
+      }
+
+      table td:first-child, table td:last-child{
+        text-align: left;
+      }
+    </style>
   </head>
   <body>
 
@@ -141,23 +195,68 @@
 
           <div class="content-module">
 
-            <div class="content-module-heading cf">
+            <div class="half-size-column fl" style="width:67%;">
 
-              <h3 class="fl">Add Payment Type</h3>
-              <span class="fr expand-collapse-text">Click to collapse</span>
-              <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+              <div class="content-module">
 
-            </div> <!-- end content-module-heading -->
+                <div class="content-module-heading cf">
+
+                  <h3 class="fl">New Payment Type</h3>
+                  <span class="fr expand-collapse-text">Click to collapse</span>
+                  <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+                </div> <!-- end content-module-heading -->
 
 
-            <div class="content-module-main">
-              <div id="container">
-              </div>
-            </div> <!-- end content-module-main -->
+                <div class="content-module-main">
+                  <% if flash[:notice] %>
+                    <div class="confirmation-box round">
+                      <%= flash[:notice] %>
+                    </div>
+                  <% end %>
+                  <% if flash[:error] %>
+                    <div class="error-box round">
+                      <%= flash[:error] %>
+                    </div>
+                  <% end %>
+                  <form id="payment_type" class="autoform" action="/payment_types/create" method="POST">
+
+                    <div><label for="payment" style="width:101px;">Payment Type</label><input type="text" name="payment_type" id="payment" class="text required" /></div>
+                    <div><label for="amount" style="width:101px;">Amount</label><input type="text" name="amount_required" id="amount" class="text required" onkeyup="validateAmount(this)"/></div>
+                    
+                    <div class="stripe-separator"><!--  --></div>
+                    <input type="submit" value="Submit" class="round blue ic-right-arrow" />
+                  </form>
+                </div> <!-- end content-module-main -->
+
+              </div> <!-- end content-module -->
+
+            </div>
+            <div class="half-size-column fr" style="width:32%">
+
+              <div class="content-module">
+
+                <div class="content-module-heading cf">
+
+                  <h3 class="fl">Existing Payment Types (<%= @payment_types.count %>)</h3>
+                  <span class="fr expand-collapse-text">Click to collapse</span>
+                  <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+                </div> <!-- end content-module-heading -->
+
+
+                <div class="content-module-main cf">
+
+                </div> <!-- end content-module-main -->
+
+              </div> <!-- end content-module -->
+
+            </div>
 
           </div> <!-- end content-module -->
 
-           <!-- end content-module -->
+
+
 
         </div> <!-- end side-content -->
 
@@ -175,5 +274,13 @@
 
     </div> <!-- end footer -->
 
+    <%= javascript_include_tag("bootstrap") %>
+    <%= javascript_include_tag("zebra_datepicker") %>
+    <script>
+      $('.date-picker').Zebra_DatePicker({
+        view : 'years',
+        direction: ['<%=  Date.today.strftime("%Y-%m-%d") %>', '<%=  (Date.today + 1.year).strftime("%Y-%m-%d") %>']
+      });
+    </script>
   </body>
 </html>
