@@ -13,6 +13,19 @@ class PaymentTypesController < ApplicationController
     render :layout => false
   end
 
+  def create
+    if (PaymentType.create({
+            :name => params[:payment_type],
+            :amount_required => params[:amount_required]
+          }))
+      flash[:notice] = "Operation successful"
+      redirect_to :controller => "payment_types", :action => "add_payment_type"
+    else
+      flash[:error] = "Unable to save. Check for errors and try again"
+      render :controller => "payment_types", :action => "add_payment_type"
+    end
+  end
+  
   def edit_payment_type
     render :layout => false
   end

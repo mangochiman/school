@@ -32,7 +32,7 @@
         }
       }
     </script>
-    
+
     <style>
       .modal-title {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -69,8 +69,12 @@
         margin-left: 31%;
       }
 
-      table td:first-child, table td:last-child{
+      table td:first-child{
         text-align: left;
+      }
+      
+      table td:last-child{
+        text-align: right;
       }
     </style>
   </head>
@@ -223,7 +227,7 @@
 
                     <div><label for="payment" style="width:101px;">Payment Type</label><input type="text" name="payment_type" id="payment" class="text required" /></div>
                     <div><label for="amount" style="width:101px;">Amount</label><input type="text" name="amount_required" id="amount" class="text required" onkeyup="validateAmount(this)"/></div>
-                    
+
                     <div class="stripe-separator"><!--  --></div>
                     <input type="submit" value="Submit" class="round blue ic-right-arrow" />
                   </form>
@@ -246,7 +250,14 @@
 
 
                 <div class="content-module-main cf">
-
+                  <table>
+                    <% (@payment_types || []).each do |payment| %>
+                      <tr>
+                        <td><a href="#"><%= payment.name %></a></td>
+                        <td><%= number_to_currency(payment.amount_required, :unit => 'MK') %></td>
+                      </tr>
+                    <% end %>
+                  </table>
                 </div> <!-- end content-module-main -->
 
               </div> <!-- end content-module -->
