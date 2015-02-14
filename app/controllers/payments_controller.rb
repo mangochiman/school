@@ -14,9 +14,32 @@ class PaymentsController < ApplicationController
   end
   
   def edit_payment
+    @students = Student.find(:all)
     render :layout => false
   end
 
+  def edit_my_payments_menu
+    student_id = params[:student_id]
+    @student = Student.find(student_id)
+    @payments_hash = {}
+    @payment_types_hash = {}
+    
+    (PaymentType.all || []).each do |payment_type|
+      @payment_types_hash[payment_type.id] = payment_type.name
+    end
+    
+    @student.payments.each do |payment|
+      payment_id = payment.id
+      payment_type_id = payment.payment_type_id
+      @payments_hash[payment_type_id] = {} if @payments_hash[payment_type_id].blank?
+      @payments_hash[payment_type_id][payment_id] = {}
+      @payments_hash[payment_type_id][payment_id]["amount_paid"] = payment.amount_paid.to_i
+      @payments_hash[payment_type_id][payment_id]["date_paid"] = payment.date.to_date.strftime("%d-%b-%Y")
+    end
+    
+    render :layout => false
+  end
+  
   def void_payments
     render :layout => false
   end
