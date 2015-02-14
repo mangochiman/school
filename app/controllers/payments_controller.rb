@@ -116,9 +116,33 @@ class PaymentsController < ApplicationController
   end
   
   def view_payments
+    @students = Student.find(:all)
     render :layout => false
   end
 
+  def view_my_payments
+    student_id = params[:student_id]
+    @student = Student.find(student_id)
+    @payments_hash = {}
+    @payment_types_hash = {}
+
+    (PaymentType.all || []).each do |payment_type|
+      @payment_types_hash[payment_type.id] = payment_type.name
+    end
+
+    @student.payments.each do |payment|
+      payment_id = payment.id
+      payment_type_id = payment.payment_type_id
+      @payments_hash[payment_type_id] = {} if @payments_hash[payment_type_id].blank?
+      @payments_hash[payment_type_id][payment_id] = {}
+      @payments_hash[payment_type_id][payment_id]["amount_paid"] = payment.amount_paid.to_i
+      @payments_hash[payment_type_id][payment_id]["date_paid"] = payment.date.to_date.strftime("%d-%b-%Y")
+      @payments_hash[payment_type_id][payment_id]["date_created"] = payment.created_at.to_date.strftime("%d-%b-%Y")
+    end
+    
+    render :layout => false
+  end
+  
   def add_student_payment
     @student = Student.find(params[:student_id])
 
