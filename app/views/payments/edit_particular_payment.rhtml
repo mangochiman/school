@@ -21,11 +21,6 @@
 
     <script type="text/javascript">
       
-      function editMe(obj){
-        paymentId = obj.getAttribute("payment_id");
-        window.location = "/payments/edit_particular_payment?payment_id=" + paymentId;
-      }
-      
       function validateAmount(){
         amountInput = document.getElementById('amount');
         amount = parseInt(amountInput.value).toString();
@@ -38,19 +33,6 @@
         }
       }
 
-      function selectCurrentSemester(){
-<% unless @current_semester_id.blank? %>
-      currentSemesterId='<%=  @current_semester_id.to_i %>'
-      options = document.getElementById('semester').getElementsByTagName('option');
-      for (var i=0; i<=options.length - 1; i++){
-        if (options[i].value == currentSemesterId){
-          options[i].selected = true;
-        }
-      }
-<% end %>
-  }
-
-  window.setTimeout("selectCurrentSemester();", 100);
     </script>
 
     <style>
@@ -109,11 +91,9 @@
         width: 191px !important;
         text-align: center;
       }
-      table th:first-child {
-        border-style: none none none !important;
-      }
-      a{
-        cursor: pointer;
+      
+      #amount{
+        text-align: center;
       }
     </style>
   </head>
@@ -245,7 +225,7 @@
 
                 <div class="content-module-heading cf">
 
-                  <h3 class="fl">Edit Payments</h3>
+                  <h3 class="fl">New Payment</h3>
                   <span class="fr expand-collapse-text">Click to collapse</span>
                   <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -263,27 +243,20 @@
                       <%= flash[:error] %>
                     </div>
                   <% end %>
-                  <table>
-                    <% @payments_hash.each do |payment_type_id, values| %>
-                      <tr>
-                        <th colspan="3" style="font-weight:bold;"><%= @payment_types_hash[payment_type_id] %></th>
-                      </tr>
-                      <tr>
-                        <th style="border-top:1px solid white !important">Date of Payment</th>
-                        <th style="border-top:1px solid white; border-left:1px solid white; padding:0px; text-align: center;">Amount Paid</th>
-                        <th style="border-top:1px solid white; border-left:1px solid white;">Action</th>
-                      </tr>
-                      <% values.each do |payment_id, data| %>
-                        <tr>
-                          <td style="width:20em;"><%= data["date_paid"] %></td>
-                          <td style="text-align: center;"><%= number_to_currency(data["amount_paid"], :unit => 'MK') %></td>
-                          <td>
-                            <a payment_id="<%= payment_id %>" onclick="editMe(this)" class="table-actions-button ic-table-edit"></a>
-                          </td>
-                        </tr>
-                      <% end %>
-                    <% end %>
-                  </table>
+                  <form id="payment_type" class="autoform" action="/payments/edit_particular_payment" method="POST">
+
+                    <div>
+                      <label for="amount" style="width:101px;">Amount</label><input type="text" name="amount" id="amount" class="text required" value="<%= @payment.amount_paid.to_i %>" onkeyup="validateAmount(this)"/>
+                    </div>
+
+                    <div>
+                      <label for="dop" style="width:101px;">Date Paid</label><input type="text" name="payment_date" id="dop" class="text required date-picker" value="<%= @payment.date.to_date.strftime("%Y-%m-%d") %>"/>
+                    </div>
+
+                    <div class="stripe-separator"><!--  --></div>
+                    <%= hidden_field_tag("payment_id", params[:payment_id]) %>
+                    <input type="submit" value="Submit" class="round blue ic-right-arrow" />
+                  </form>
                 </div> <!-- end content-module-main -->
 
               </div> <!-- end content-module -->
@@ -295,7 +268,7 @@
 
                 <div class="content-module-heading cf">
 
-                  <h3 class="fl">Student Details</h3>
+                  <h3 class="fl">Previous Payments</h3>
                   <span class="fr expand-collapse-text">Click to collapse</span>
                   <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -303,28 +276,42 @@
 
 
                 <div class="content-module-main cf">
-                  <table>
-                    <tr>
-                      <td style="text-align:left; font-weight: bold;">Name</td>
-                      <th style="text-align:left;">
-                        <%= @student.fname.to_s + ' ' + @student.lname.to_s + ' (' + @student.gender.first.capitalize.to_s + ')' %>
-                      </th>
-                    </tr>
-                    <tr>
-                      <td style="text-align:left; font-weight: bold;">Class</td>
-                      <th style="text-align:left; border-top: 2px solid white;">
-                        <%= @student.class_room_student.class_room.name rescue 'Unknown Class'%>
-                      </th>
-                    </tr>
-                    <tr>
-                      <td style="text-align:left; font-weight: bold; ">E-mail</td>
-                      <th style="text-align:left; border-top: 2px solid white;"><%= @student.email %></th>
-                    </tr>
-                    <tr>
-                      <td style="text-align:left; font-weight: bold;">Phone</td>
-                      <th style="text-align:left; border-top: 2px solid white;"><%= @student.phone %></th>
-                    </tr>
-                  </table>
+                  <span style="font-size: 0.9em; font-weight: bold;">Name</span>:
+                  <span style="font-size:0.9em;">
+                    <a href="#"><%= @student.fname.to_s + ' ' + @student.lname.to_s + ' (' + @student.gender.first.capitalize.to_s + ')' %></a>
+                  </span><br />
+                  <span style="font-size: 0.9em; font-weight: bold;">Class:</span>
+                  <span style="font-size:0.9em;">
+                    <a href="#"><%= @student.class_room_student.class_room.name rescue 'Unknown Class'%></a>
+                  </span><br />
+
+                  <% if @payments_hash.blank? %>
+                    <table>
+                      <tr>
+                        <th colspan="2" style="font-weight: bold;">No Previous Payments</th>
+                      </tr>
+                    </table>
+                  <% end %>
+
+                  <% @payments_hash.each do |payment_type_id, values| %>
+                    <table>
+                      <tr>
+                        <th colspan="2" style="font-weight: bold;"><%= @payment_types_hash[payment_type_id].to_s + ' ('+  number_to_currency(values["amount_required"], :unit => 'MK').to_s + ')' %></th>
+                      </tr>
+                      <tr>
+                        <td style="text-align: left;">Previous Payments</td>
+                        <td style="text-align: right; font-weight: bold;"><%= number_to_currency(values["amount_paid"], :unit => 'MK') %></td>
+                      </tr>
+                      <tr>
+                        <td style="text-align: left;">Balance</td>
+                        <td style="text-align: right; font-weight: bold;"><%= number_to_currency(values["balance"], :unit => 'MK') %></td>
+                      </tr>
+                      <tr>
+                        <td style="text-align: left;">Latest Date Paid</td>
+                        <td style="text-align: right; font-weight: bold;"><%= values["latest_date_paid"] %></td>
+                      </tr>
+                    </table>
+                  <% end %>
                 </div> <!-- end content-module-main -->
 
               </div> <!-- end content-module -->
