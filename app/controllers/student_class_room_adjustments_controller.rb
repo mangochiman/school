@@ -1,0 +1,2 @@
+class StudentClassRoomAdjustmentsController < ApplicationController
+end
