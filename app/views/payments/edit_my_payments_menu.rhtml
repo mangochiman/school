@@ -263,6 +263,13 @@
                       <%= flash[:error] %>
                     </div>
                   <% end %>
+                  
+                  <% if @payments_hash.blank? %>
+                    <div class="error-box round">
+                      No payments found
+                    </div>
+                  <% end %>
+                  
                   <table>
                     <% @payments_hash.each do |payment_type_id, values| %>
                       <tr>
