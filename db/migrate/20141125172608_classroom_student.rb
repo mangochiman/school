@@ -4,6 +4,8 @@ class ClassroomStudent < ActiveRecord::Migration
       t.integer :class_room_id
       t.integer :student_id
       t.integer :semester_id
+      t.date :start_date
+      t.date :end_date
       t.timestamps
     end
   end
