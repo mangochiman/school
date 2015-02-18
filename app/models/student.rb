@@ -10,4 +10,12 @@ class Student < ActiveRecord::Base
   has_many :student_punishments, :foreign_key => :student_id
   has_many :punishments, :through => :student_punishments
   has_many :payments, :foreign_key => :student_id
+
+  def current_class
+    current_class_room = self.student_class_room_adjustments.last.class_room.name rescue nil
+    if current_class_room.blank?
+      current_class_room = self.class_room_student.class_room.name rescue nil
+    end
+    return current_class_room
+  end
 end

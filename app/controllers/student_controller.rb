@@ -358,6 +358,7 @@ class StudentController < ApplicationController
       hash[student_id]["gender"] = student.gender
       hash[student_id]["dob"] = student.dob.to_date.strftime("%d-%b-%Y")
       hash[student_id]["join_date"] = student.created_at.to_date.strftime("%d-%b-%Y")
+      hash[student_id]["current_class"] = student.current_class
     end
     render :json => hash
   end
