@@ -42,8 +42,9 @@
             //results = eval("(" + results  + ")");
             html = "";
             tbody = document.getElementById("students");
-
+            count = 0
             for (var student_id in results){
+              count = count + 1
               firstName = results[student_id]["fname"];
               lastName = results[student_id]["lname"];
               gender = results[student_id]["gender"];
@@ -56,13 +57,14 @@
               }
               join_date = results[student_id]["join_date"];
               html+="<tr>";
-              html+="<td style='text-align:left; padding: 0.833em 0 0.833em 1.25em;'>" + firstName + ' ' + lastName +  "</td>";
-              html+="<td>" + gender +  "</td>";
-              html+="<td>" + current_class +  "</td>";
-              html+="<td><a style='line-height:0.9em;' student_id=" + student_id + " onclick='selectStudent(this)' class='button round blue image-right ic-right-arrow text-upper'>Select</a></td>";
+              html+="<td style='text-align:left; padding: 0.833em 0 0.833em 1.25em; border-bottom: 1px solid green;'>" + firstName + ' ' + lastName +  "</td>";
+              html+="<td style='border-left: none; border-bottom: 1px solid green;'>" + gender +  "</td>";
+              html+="<td style='border-left: none; border-bottom: 1px solid green;'>" + current_class +  "</td>";
+              html+="<td style='border-left: none; border-bottom: 1px solid green;'><a style='line-height:0.9em;' student_id=" + student_id + " onclick='selectStudent(this)' class='button round blue image-right ic-right-arrow text-upper'>Select</a></td>";
               html+="</tr>";
             }
-
+            count_div = document.getElementById('count');
+            count_div.innerHTML = '<span style="font-weight:bold;">' + count + '</span> Results found';
             tbody.innerHTML = html
           }
 
@@ -405,6 +407,8 @@
 
 
                 <div class="content-module-main cf">
+                  <div id="count" style="text-align:center; font-size: 10pt;">
+                  </div>
                   <div id="search_results">
                     <table style="width:100%; margin-left:0%;">
                       <tr>
