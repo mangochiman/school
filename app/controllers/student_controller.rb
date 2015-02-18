@@ -153,12 +153,19 @@ class StudentController < ApplicationController
     }
     
     if (request.method == :post)
+      current_student_class = student.student_class_room_adjustments.last rescue nil
+      
       (params[:subjects] || []).each do |subject_id, details|
-        StudentCourse.create({
+        student_class_room_course = StudentClassRoomCourse.find(:last, :conditions => ["
+          student_id =? AND class_room_id =? AND course_id =?", params[:student_id],
+            current_student_class.new_class_room_id, subject_id])
+        StudentClassRoomCourse.create({
             :student_id => params[:student_id],
+            :class_room_id => current_student_class.new_class_room_id,
             :course_id => subject_id
-          })
+          }) if student_class_room_course.blank?
       end
+      
       flash[:notice] = "You have successfully assigned courses"
       redirect_to :controller => "student", :action => "select_guardian", :student_id => params[:student_id] and return
       #redirect_to :action => "assign_optional_courses", :student_id => params[:student_id] and return
