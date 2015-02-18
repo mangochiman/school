@@ -15,45 +15,49 @@
       function assignMeClass(obj){
         studentID = '<%= params[:student_id] %>';
         classRoomId = obj.getAttribute("class_room_id");
-        window.location = "/student/create_student_class_assignment?student_id= " + studentID + "&class_room_id=" + classRoomId;
+        <% if params[:mode].blank? %>
+              window.location = "/student/create_student_class_assignment?student_id= " + studentID + "&class_room_id=" + classRoomId;
+        <% else %>
+              window.location = "/student/create_student_class_assignment?mode=class_update&student_id= " + studentID + "&class_room_id=" + classRoomId;
+        <% end %>
       }
 
-      function loadSearchResults(){
-        firstName = document.getElementById('fname_search').value;
-        lastName = document.getElementById('lname_search').value;
-        gender = document.getElementsByClassName('gender_search')[0].value;
-        jQuery.ajax({
-          type: "POST",
-          url: "/student/search_students",
-          data: "first_name=" + firstName + "&last_name=" + lastName + "&gender=" + gender,
-          success: function(results){
-            results = eval("(" + results  + ")");
-            html = "";
-            tbody = document.getElementById("students");
+  function loadSearchResults(){
+    firstName = document.getElementById('fname_search').value;
+    lastName = document.getElementById('lname_search').value;
+    gender = document.getElementsByClassName('gender_search')[0].value;
+    jQuery.ajax({
+      type: "POST",
+      url: "/student/search_students",
+      data: "first_name=" + firstName + "&last_name=" + lastName + "&gender=" + gender,
+      success: function(results){
+        results = eval("(" + results  + ")");
+        html = "";
+        tbody = document.getElementById("students");
 
-            for (var student_id in results){
-              firstName = results[student_id]["fname"];
-              lastName = results[student_id]["lname"];
-              gender = results[student_id]["gender"];
-              phone = results[student_id]["phone"];
-              email = results[student_id]["email"];
-              dob = results[student_id]["dob"];
-              join_date = results[student_id]["join_date"];
-              html+="<tr>";
-              html+="<td>" + firstName + ' ' + lastName +  "</td>";
-              html+="<td><a href='#'>" + email +  "</a></td>";
-              html+="<td>" + gender +  "</td>";
-              html+="<td>" + dob +  "</td>";
-              html+="<td>" + phone +  "</td>";
-              html+="<td>" + join_date +  "</td>";
-              html+="<td><a student_id=" + student_id + " onclick='assignMeClass(this)' href='#' class='button round blue image-right ic-add text-upper'>Assign Class &nbsp;</a></td>";
-              html+="</tr>";
-            }
+        for (var student_id in results){
+          firstName = results[student_id]["fname"];
+          lastName = results[student_id]["lname"];
+          gender = results[student_id]["gender"];
+          phone = results[student_id]["phone"];
+          email = results[student_id]["email"];
+          dob = results[student_id]["dob"];
+          join_date = results[student_id]["join_date"];
+          html+="<tr>";
+          html+="<td>" + firstName + ' ' + lastName +  "</td>";
+          html+="<td><a href='#'>" + email +  "</a></td>";
+          html+="<td>" + gender +  "</td>";
+          html+="<td>" + dob +  "</td>";
+          html+="<td>" + phone +  "</td>";
+          html+="<td>" + join_date +  "</td>";
+          html+="<td><a student_id=" + student_id + " onclick='assignMeClass(this)' href='#' class='button round blue image-right ic-add text-upper'>Assign Class &nbsp;</a></td>";
+          html+="</tr>";
+        }
 
-            tbody.innerHTML = html
-          }
+        tbody.innerHTML = html
+      }
 
-      });
+    });
 
   }
     </script>
@@ -83,22 +87,22 @@
       margin-left: 37%;
     }*/
 
-    .label {
-      border-radius: 1.5em;
-      color: #fff;
-      display: inline;
-      background-color: #5bc0de;
-      font-weight: bold;
-      line-height: 1;
-      padding-left: 20%;
-      padding-right: 20%;
-      padding-top:2%;
-      padding-bottom:2%;
-      text-align: center;
-      vertical-align: baseline;
-      white-space: nowrap;
+      .label {
+        border-radius: 1.5em;
+        color: #fff;
+        display: inline;
+        background-color: #5bc0de;
+        font-weight: bold;
+        line-height: 1;
+        padding-left: 20%;
+        padding-right: 20%;
+        padding-top:2%;
+        padding-bottom:2%;
+        text-align: center;
+        vertical-align: baseline;
+        white-space: nowrap;
 
-}
+      }
       #search-student-form fieldset {
         border: 1px solid gray;
         float: left;
@@ -136,7 +140,7 @@
 
       table th:first-child {
         border-style: none none none !important;
-    }
+      }
     </style>
   </head>
   <body>
@@ -276,15 +280,15 @@
 
             <div class="content-module-main">
               <% if flash[:notice] %>
-                  <div class="confirmation-box round">
-                    <%= flash[:notice] %>
-                  </div>
-                <% end %>
-                <% if flash[:error] %>
-                  <div class="error-box round">
-                      <%= flash[:error] %>
-                  </div>
-                <% end %>
+                <div class="confirmation-box round">
+                  <%= flash[:notice] %>
+                </div>
+              <% end %>
+              <% if flash[:error] %>
+                <div class="error-box round">
+                  <%= flash[:error] %>
+                </div>
+              <% end %>
 
               <table class="classes">
 
@@ -300,15 +304,15 @@
 
                 <tbody id="class_rooms">
                   <% @class_rooms.each do |class_room| %>
-                  <tr>
-                    <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= class_room.name%></td>
-                    <td><%=  class_room.year %></td>
-                    <td><%= class_room.grade %></td>
-                    <td><span class="label" style="margin-left:20%;"><%= class_room.class_room_students.count %></span></td>
-                    <td>
-                      <a class_room_id="<%= class_room.id %>" onclick="assignMeClass(this)" href="#" class="button round blue image-right ic-add text-upper">Select</a>
-                    </td>
-                  </tr>
+                    <tr>
+                      <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= class_room.name%></td>
+                      <td><%=  class_room.year %></td>
+                      <td><%= class_room.grade %></td>
+                      <td><span class="label" style="margin-left:20%;"><%= class_room.class_room_students.count %></span></td>
+                      <td>
+                        <a class_room_id="<%= class_room.id %>" onclick="assignMeClass(this)" href="#" class="button round blue image-right ic-add text-upper">Select</a>
+                      </td>
+                    </tr>
                   <% end %>
                 </tbody>
 

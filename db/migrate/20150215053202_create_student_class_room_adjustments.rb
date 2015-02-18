@@ -8,6 +8,7 @@ class CreateStudentClassRoomAdjustments < ActiveRecord::Migration
       t.integer :semester_id
       t.date :start_date
       t.date :end_date
+      t.string :status
       t.string :comments
       t.timestamps
     end

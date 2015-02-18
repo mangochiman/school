@@ -21,7 +21,7 @@
     <script type="text/javascript">
       function selectStudent(obj){
         studentId = obj.getAttribute("student_id");
-        window.location = "/student/assign_me_class?student_id=" + studentId;
+        window.location = "/student/assign_me_class?student_id=" + studentId + '&mode=class_update';
       }
 
       function loadSearchResults(){
