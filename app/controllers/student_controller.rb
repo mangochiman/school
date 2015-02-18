@@ -148,9 +148,10 @@ class StudentController < ApplicationController
   def assign_optional_courses
 
     student = Student.find(params[:student_id])
-    @courses = student.class_room_student.class_room.class_room_courses.collect{|crc|
+    @courses = student.student_class_room_adjustments.last.class_room.class_room_courses.collect{|crc|
       crc.course
     }
+    @my_class_room_id = student.student_class_room_adjustments.last.class_room.class_room_id
     
     if (request.method == :post)
       current_student_class = student.student_class_room_adjustments.last rescue nil

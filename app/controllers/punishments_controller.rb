@@ -18,8 +18,8 @@ class PunishmentsController < ApplicationController
     @students = Student.all
     
     @teachers_select_tag = "<select id='teacher'><option value=''></option>"
-    Teacher.all.each{|t|
-      name = t.fname.to_s + ' ' + t.lname.to_s + '(' + t.gender.first.upcase.to_s + ')'
+    (Teacher.all || []).each{|t|
+      name = t.fname.to_s + ' ' + t.lname.to_s + '(' + (t.gender.first.upcase.to_s rescue 'Unknown') + ')'
       option="<option value=#{t.teacher_id}>#{name}</option>"
       @teachers_select_tag += option
     }

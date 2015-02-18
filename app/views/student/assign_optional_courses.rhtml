@@ -69,9 +69,9 @@
             tbody.innerHTML = html
           }
 
-      });
+        });
 
-  }
+      }
     </script>
     <style>
       /*table{
@@ -137,7 +137,7 @@
 
       table th:first-child {
         border-style: none none none !important;
-    }
+      }
     </style>
   </head>
   <body>
@@ -277,48 +277,51 @@
 
             <div class="content-module-main">
               <% if flash[:notice] %>
-                  <div class="confirmation-box round">
-                    <%= flash[:notice] %>
-                  </div>
-                <% end %>
-                <% if flash[:error] %>
-                  <div class="error-box round">
-                      <%= flash[:error] %>
-                  </div>
-                <% end %>
-              
-              <form method="post" action="/student/assign_optional_courses">
-              <table class="classes" style="">
+                <div class="confirmation-box round">
+                  <%= flash[:notice] %>
+                </div>
+              <% end %>
+              <% if flash[:error] %>
+                <div class="error-box round">
+                  <%= flash[:error] %>
+                </div>
+              <% end %>
+              <% if @courses.blank? %>
+                <div class="error-box round">
+                  You haven't added courses for that class. Click <a href="/class_room/assign_me_subjects?class_room_id=<%= @my_class_room_id %>">here</a> to add courses.
+                </div>
+              <% else %>
+                <form method="post" action="/student/assign_optional_courses">
+                  <table class="classes" style="">
+                    <thead>
+                      <tr>
+                        <th><input type="checkbox" id="table-select-all" onclick="selectAll();"/></th>
+                        <th colspan="5" style=" padding: 1.25em 0 1.25em 1.25em;">Select courses</th>
+                      </tr>
+                    </thead>
 
-                <thead>
-                  <tr>
-                    <th><input type="checkbox" id="table-select-all" onclick="selectAll();"/></th>
-                    <th colspan="5" style=" padding: 1.25em 0 1.25em 1.25em;">Select courses</th>
-                  </tr>
-                </thead>
-
-                <tbody id="class_rooms">
-                  <% @courses.in_groups_of(3).each do |row| %>
-                    <tr>
-                        <% row.each do |subject| %>
+                    <tbody id="class_rooms">
+                      <% @courses.in_groups_of(3).each do |row| %>
+                        <tr>
+                          <% row.each do |subject| %>
                             <% unless subject.blank? %>
-                                  <td><input type="checkbox" id="<%= subject.id %>" name="subjects[<%= subject.id %>]"/></td>
-                                  <td style="border-left: none; text-align: left;"><%= subject.name.titlecase %></td>
-                              <% else %>
-                                  <td style="border-left: none;">&nbsp;</td>
-                                  <td style="border-left: none;">&nbsp;</td>
+                              <td><input type="checkbox" id="<%= subject.id %>" name="subjects[<%= subject.id %>]"/></td>
+                              <td style="border-left: none; text-align: left;"><%= subject.name.titlecase %></td>
+                            <% else %>
+                              <td style="border-left: none;">&nbsp;</td>
+                              <td style="border-left: none;">&nbsp;</td>
                             <% end %>
-                        <% end %>
-                    </tr>
-                  <% end %>
-                </tbody>
+                          <% end %>
+                        </tr>
+                      <% end %>
+                    </tbody>
 
-              </table>
-              <div class="stripe-separator"><!--  --></div>
-                <%= hidden_field_tag("student_id", params[:student_id]) %>
-                <input type="submit" value="Submit" class="round blue ic-right-arrow" />
-              </form>
-              
+                  </table>
+                  <div class="stripe-separator"><!--  --></div>
+                  <%= hidden_field_tag("student_id", params[:student_id]) %>
+                  <input type="submit" value="Submit" class="round blue ic-right-arrow" />
+                </form>
+              <% end %>
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->

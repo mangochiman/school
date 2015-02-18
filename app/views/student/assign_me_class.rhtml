@@ -308,7 +308,7 @@
                       <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= class_room.name%></td>
                       <td><%=  class_room.year %></td>
                       <td><%= class_room.grade %></td>
-                      <td><span class="label" style="margin-left:20%;"><%= class_room.class_room_students.count %></span></td>
+                      <td><span class="label" style="margin-left:20%;"><%= class_room.current_students.count %></span></td>
                       <td>
                         <a class_room_id="<%= class_room.id %>" onclick="assignMeClass(this)" href="#" class="button round blue image-right ic-add text-upper">Select</a>
                       </td>

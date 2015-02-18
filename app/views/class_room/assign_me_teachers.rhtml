@@ -70,26 +70,26 @@
       }
       table th:first-child {
         border-style: none none none !important;
-    }
+      }
 
-    .classes{
+      .classes{
         position: relative;
         margin-left: 0%;
         width: 100%;
-     }
+      }
 
-    .classes th, tbody{
+      .classes th, tbody{
         text-align: center;
-    }
+      }
 
-    .modal-title {
+      .modal-title {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         font-weight: 500;
         line-height: 1.1;
         font-size: 1.2em;
         color: #317eac;
-    }
-    
+      }
+
     </style>
   </head>
   <body>
@@ -228,9 +228,6 @@
 
 
             <div class="content-module-main">
-              <div class="information-box round">
-                Showing only teachers that are not assigned to this class
-              </div>
               <% if flash[:notice] %>
                 <div class="confirmation-box round">
                   <%= flash[:notice] %>
@@ -241,37 +238,49 @@
                   <%= flash[:error] %>
                 </div>
               <% end %>
-              <form method="post" action="assign_me_teachers">
-              <table class="classes" style="">
+              <% if Teacher.all.blank? %>
+                <div class="error-box round">
+                  No teachers created so far..
+                </div>
+              <% else %>
+                <% if @class_room.class_room_teachers.count == Teacher.all.count %>
+                  <div class="error-box round">
+                    All teachers are already assigned to this class
+                  </div>
+                <% else %>
+                  <form method="post" action="assign_me_teachers">
+                    <table class="classes" style="">
 
-                <thead>
-                  <tr>
-                    <th><input type="checkbox" id="table-select-all" onclick="selectAll();"/></th>
-                    <th colspan="5" style=" padding: 1.25em 0 1.25em 1.25em;">Select teachers</th>
-                  </tr>
-                </thead>
-           
-                <tbody id="class_rooms">
-                  <% @teachers.in_groups_of(3).each do |row| %>
-                    <tr>
-                        <% row.each do |teacher| %>
-                            <% unless teacher.blank? %>
-                                  <td><input type="checkbox" id="<%= teacher.id %>" name="teachers[<%= teacher.id   %>]"/></td>
-                                  <td style="border-left: none; text-align: left;"><%= teacher.fname.capitalize.to_s + ' ' + teacher.lname.to_s %></td>
+                      <thead>
+                        <tr>
+                          <th><input type="checkbox" id="table-select-all" onclick="selectAll();"/></th>
+                          <th colspan="5" style=" padding: 1.25em 0 1.25em 1.25em;">Select teachers</th>
+                        </tr>
+                      </thead>
+
+                      <tbody id="class_rooms">
+                        <% @teachers.in_groups_of(3).each do |row| %>
+                          <tr>
+                            <% row.each do |teacher| %>
+                              <% unless teacher.blank? %>
+                                <td><input type="checkbox" id="<%= teacher.id %>" name="teachers[<%= teacher.id   %>]"/></td>
+                                <td style="border-left: none; text-align: left;"><%= teacher.fname.capitalize.to_s + ' ' + teacher.lname.to_s %></td>
                               <% else %>
-                                  <td style="border-left: none;">&nbsp;</td>
-                                  <td style="border-left: none;">&nbsp;</td>
+                                <td style="border-left: none;">&nbsp;</td>
+                                <td style="border-left: none;">&nbsp;</td>
+                              <% end %>
                             <% end %>
+                          </tr>
                         <% end %>
-                    </tr>
-                  <% end %>
-                </tbody>
-                
-              </table>
-              <div class="stripe-separator"><!--  --></div>
-                <%= hidden_field_tag("class_room_id", params[:class_room_id]) %>
-                <input type="submit" value="Submit" class="round blue ic-right-arrow" />
-              </form>
+                      </tbody>
+
+                    </table>
+                    <div class="stripe-separator"><!--  --></div>
+                    <%= hidden_field_tag("class_room_id", params[:class_room_id]) %>
+                    <input type="submit" value="Submit" class="round blue ic-right-arrow" />
+                  </form>
+                <% end %>
+              <% end %>
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->
@@ -291,6 +300,6 @@
       <p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
 
     </div> <!-- end footer -->
-    
+
   </body>
 </html>

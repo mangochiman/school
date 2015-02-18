@@ -158,7 +158,6 @@ class ClassRoomController < ApplicationController
   def assign_me_teachers
     @class_room = ClassRoom.find(params[:class_room_id])
     @teachers = Teacher.all
-
     unless (@class_room.class_room_teachers.blank?)
       assigned_teacher_ids = @class_room.class_room_teachers.collect{|t| t.teacher_id}
       @teachers = Teacher.find(:all, :conditions => ["teacher_id NOT IN (?)", assigned_teacher_ids] )
@@ -259,6 +258,10 @@ class ClassRoomController < ApplicationController
       course_names[class_name] << crc.course.name
     end
 
+    if class_room_courses.blank?
+      course_names[class_name] = []
+    end
+    
     render :json => course_names.first and return
   end
 
@@ -292,6 +295,10 @@ class ClassRoomController < ApplicationController
       teacher_data[class_name] << teacher_name + ' (' + gender + ')'.to_s
     end
 
+    if (class_room_teachers.blank?)
+      teacher_data[class_name] = []
+    end
+    
     render :json => teacher_data.first and return
   end
 
