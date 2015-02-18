@@ -98,61 +98,45 @@ class StudentController < ApplicationController
 
     class_room_courses = ClassRoom.find(class_room_id).class_room_courses
     (class_room_courses || []).each do |crc|
+=begin
       StudentCourse.create({
           :student_id => student_id,
           :course_id => crc.course_id
         })
-      #Need for StudentClassRoomCourse model
+=end
+      student_class_room_course = StudentClassRoomCourse.find(:last, :conditions => ["
+          student_id =? AND class_room_id =? AND course_id =?", student_id, class_room_id, crc.course_id])
+      StudentClassRoomCourse.create({
+          :student_id => student_id,
+          :class_room_id => class_room_id,
+          :course_id => crc.course_id
+        }) if student_class_room_course.blank?
+
     end #Enrolling student to courses available for a particular class
 
     unless student_id.blank?
-      if (params[:mode] == 'class_update')
-        student = Student.find(student_id)
-        current_student_class = student.class_room_student
-        if (current_student_class.blank?)
-          class_room_student = ClassRoomStudent.create({
-              :student_id => student_id,
-              :class_room_id => class_room_id
-            })
-          flash[:notice] = "You have successfully assigned a class"
-          redirect_to :controller => "student", :action => "assign_optional_courses", :student_id => params[:student_id] and return
-        else
-          student_class_adjust = student.student_class_room_adjustments.last rescue nil
-          unless student_class_adjust.blank?
-            student_class_adjust.update_attributes({
-                :status => 'passive'
-              })
-            student.student_class_room_adjustments.create({
-                :old_class_room_id => student_class_adjust.new_class_room_id,
-                :new_class_room_id => class_room_id,
-                :status => 'active',
-                :semester_id => (GlobalProperty.find_by_property("current_semester").value rescue nil)
-              })
-          else
-            student.student_class_room_adjustments.create({
-                :old_class_room_id => current_student_class.class_room_id,
-                :new_class_room_id => class_room_id,
-                :status => 'active',
-                :semester_id => (GlobalProperty.find_by_property("current_semester").value rescue nil)
-              })
-          end
-          flash[:notice] = "You have successfully assigned a class"
-          redirect_to :controller => "student", :action => "assign_optional_courses", :student_id => params[:student_id] and return
-        end
-      else
-        class_room_student = ClassRoomStudent.create({
-            :student_id => student_id,
-            :class_room_id => class_room_id
+      student = Student.find(student_id)
+      student_class_adjustment = student.student_class_room_adjustments.last rescue nil
+      unless student_class_adjustment.blank?
+        student_class_adjustment.update_attributes({
+            :status => 'passive'
           })
-        if class_room_student
-          flash[:notice] = "You have successfully assigned a class"
-          redirect_to :controller => "student", :action => "assign_optional_courses", :student_id => params[:student_id] and return
-          #redirect_to :action => "assign_class"
-        else
-          flash[:error] = "Oops!!. Operation aborted"
-          redirect_to :action => "assign_me_class", :student_id => params[:student_id]
-        end
+        student.student_class_room_adjustments.create({
+            :old_class_room_id => student_class_adjustment.new_class_room_id,
+            :new_class_room_id => class_room_id,
+            :status => 'active',
+            :semester_id => (GlobalProperty.find_by_property("current_semester").value rescue nil)
+          })
+      else
+        student.student_class_room_adjustments.create({
+            :old_class_room_id => 0,
+            :new_class_room_id => class_room_id,
+            :status => 'active',
+            :semester_id => (GlobalProperty.find_by_property("current_semester").value rescue nil)
+          })
       end
+      flash[:notice] = "You have successfully assigned a class"
+      redirect_to :controller => "student", :action => "assign_optional_courses", :student_id => params[:student_id] and return
     end
   end
   
