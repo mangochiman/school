@@ -620,7 +620,7 @@ ONEGEEK.forms.PhoneField=function(a){
     this.field=a;
     this.regex=/^([0-9]{8,10})$/g;
     this.cleanRegex=/[^0-9]/g;
-    this.errorMsg="Your phone number needs to be at least 8 digits long";
+    this.errorMsg="At least 8 digits long";
     this.contextMsg=this.errorMsg;
 };
 
@@ -675,7 +675,7 @@ ONEGEEK.forms.EmailField=function(a){
     this.field=a;
     this.regex=/^[A-Z0-9._%+\-]+@[A-Z0-9.\-]+\.[A-Z]{2,4}$/i;
     this.errorMsg="Please enter a valid email address i.e. user@domain.com";
-    this.contextMsg="Your email address will be kept confidential";
+    this.contextMsg="This will be kept confidential";
     this.clean=function(){};
 
 };
