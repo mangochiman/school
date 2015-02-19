@@ -98,12 +98,7 @@ class StudentController < ApplicationController
 
     class_room_courses = ClassRoom.find(class_room_id).class_room_courses
     (class_room_courses || []).each do |crc|
-=begin
-      StudentCourse.create({
-          :student_id => student_id,
-          :course_id => crc.course_id
-        })
-=end
+      next if (crc.course.optional == true) #We don't want to assign optional courses by default
       student_class_room_course = StudentClassRoomCourse.find(:last, :conditions => ["
           student_id =? AND class_room_id =? AND course_id =?", student_id, class_room_id, crc.course_id])
       StudentClassRoomCourse.create({
@@ -148,9 +143,11 @@ class StudentController < ApplicationController
   def assign_optional_courses
 
     student = Student.find(params[:student_id])
-    @courses = student.student_class_room_adjustments.last.class_room.class_room_courses.collect{|crc|
-      crc.course
-    }
+    @courses = []
+    class_room_courses = student.student_class_room_adjustments.last.class_room.class_room_courses
+    class_room_courses.each do |class_room_course|
+      @courses << class_room_course.course if (class_room_course.course.optional == false)
+    end
     @my_class_room_id = student.student_class_room_adjustments.last.class_room.class_room_id
     
     if (request.method == :post)

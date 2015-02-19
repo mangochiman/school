@@ -288,7 +288,7 @@
               <% end %>
               <% if @courses.blank? %>
                 <div class="error-box round">
-                  You haven't added courses for that class. Click <a href="/class_room/assign_me_subjects?class_room_id=<%= @my_class_room_id %>">here</a> to add courses.
+                  No optional courses available for this class. Click <a href="/class_room/assign_me_subjects?class_room_id=<%= @my_class_room_id %>">here</a> to add courses.
                 </div>
               <% else %>
                 <form method="post" action="/student/assign_optional_courses">

@@ -186,7 +186,7 @@ class ParentController < ApplicationController
                 :parent_id => Parent.last.id
               }))
             flash[:notice] = "Operation successful"
-            redirect_to :controller => "student" ,:action => "assign_parent_guardian"
+            redirect_to :controller => "student" ,:action => "assign_parent_guardian" and return
           else
             flash[:error] = "Unable to save. Check for errors and try again"
             redirect_to :controller => "parent", :action => "new_parent_guardian", :first_name => params[:first_name],
@@ -199,7 +199,7 @@ class ParentController < ApplicationController
       redirect_to :controller => "parent", :action => "new_parent_guardian" and return #creating a parent without a student ID
     else
       flash[:error] = "Unable to save. Check for errors and try again"
-      render :controller => "parent", :action => "new_parent_guardian"
+      render :controller => "parent", :action => "new_parent_guardian" and return
     end
   end
 
