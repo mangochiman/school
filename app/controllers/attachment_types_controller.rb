@@ -1,0 +1,2 @@
+class AttachmentTypesController < ApplicationController
+end
