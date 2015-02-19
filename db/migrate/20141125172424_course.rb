@@ -4,6 +4,7 @@ class Course < ActiveRecord::Migration
       t.string :name
       t.string :description
       t.integer :grade_id
+      t.boolean :optional, :default => false
       t.timestamps
     end
   end
