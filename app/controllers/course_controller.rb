@@ -77,8 +77,11 @@ class CourseController < ApplicationController
   def edit_me
     @course = Course.find(params[:course_id])
     if request.method == :post
+      optional = false
+      optional = true if params[:optional]
       if (@course.update_attributes({
-              :name => params[:course_name]
+              :name => params[:course_name],
+              :optional => optional
             }))
         flash[:notice] = "You have successfully edited the details"
         redirect_to :action => "edit_course" and return
@@ -91,14 +94,25 @@ class CourseController < ApplicationController
   end
   
   def create
+    course_exists = Course.find_by_name(params[:course_name])
+    
+    if course_exists
+      flash[:error] = "Unable to save. Course name already exists"
+      redirect_to :controller => "course", :action => "add_course" and return
+    end
+
+    optional = false
+    optional = true if params[:optional]
     if (Course.create({
-            :name => params[:course_name]
+            :name => params[:course_name],
+            :optional => optional
           }))
       flash[:notice] = "Operation successful"
-      redirect_to :controller => "course", :action => "add_course"
+      redirect_to :controller => "course", :action => "add_course" and return
     else
       flash[:error] = "Unable to save. Check for errors and try again"
-      render :controller => "course", :action => "add_course"
+      render :controller => "course", :action => "add_course" and return
     end
   end
+  
 end

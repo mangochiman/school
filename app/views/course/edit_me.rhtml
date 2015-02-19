@@ -18,6 +18,19 @@
     <%= stylesheet_link_tag("gvalidator") %>
     <%= stylesheet_link_tag("bootstrap") %>
 
+    <script>
+
+      function checkIfOptional(){
+        optional = "<%=@course.optional%>"
+        console.log(optional)
+        if (optional == 'true'){
+          document.getElementById('optional').checked = true
+        }
+      }
+      window.setTimeout("checkIfOptional();", 250);
+      
+    </script>
+    
     <style>
       .modal-title {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -201,6 +214,7 @@
               <form id="course" class="autoform" method="POST" action="/course/edit_me">
 
                 <div><label for="text">Course Name</label><input type="text" name="course_name" class="text required" value="<%= @course.name %>" /></div>
+                <div><label for="text" style="width:239px;">Optional?</label><input type="checkbox" name="optional" id="optional" /></div>
 
                 <div class="stripe-separator"><!--  --></div>
                 <input type="hidden" name="course_id" value="<%= params[:course_id] %>" />
