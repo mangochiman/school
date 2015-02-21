@@ -391,4 +391,8 @@ class AdminController < ApplicationController
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
     render :layout => false
   end
+
+  def document_types_menu
+    render :layout => false
+  end
 end

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Document Types Management</title>
+    <!-- Optimize for mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!-- jQuery & JS files -->
+    <%= javascript_include_tag("jquery") %>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("jquery.confirm") %>
+    <%= javascript_include_tag("script") %>
+    <%= javascript_include_tag("gvalidator") %>
+    <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("metallic") %>
+    <%= stylesheet_link_tag("gvalidator") %>
+    <%= stylesheet_link_tag("bootstrap") %>
+
+    <style>
+      .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: red;
+      }
+
+      form.autoform .msg.icon {
+        margin: 0 10px;
+        padding: 5px 5px 5px 30px;
+        font-size: 8pt;
+        position: unset;
+      }
+
+      form label {
+        font-size: 0.9em;
+        font-weight: bold;
+      }
+      form.autoform input, select{
+        font-size: 0.8em !important;
+        font-weight: bold;
+      }
+
+      #document_type_form input[type="text"]{
+        border: 1px solid #d9dbdd;
+        outline: medium none;
+        padding: 0.5em 0.225em;
+      }
+
+      input[type="submit"] {
+        margin-left: 31%;
+      }
+
+      table td:first-child, table td:last-child{
+        text-align: left;
+      }
+
+    </style>
+  </head>
+  <body>
+
+    <!-- TOP BAR -->
+    <div id="top-bar">
+
+      <div class="page-full-width cf">
+
+        <ul id="nav" class="fl">
+          <li class="v-sep"><a href="#" class="round button dark menu-user image-left">Logged in as <strong>admin</strong></a>
+            <ul>
+              <li><a href="#">My Profile</a></li>
+              <li><a href="/admin/settings">Settings</a></li>
+              <li><a href="#">Change Password</a></li>
+              <li><a href="/user/login">Log out</a></li>
+            </ul>
+          </li>
+          <li class="v-sep"><a href="#" class="round button dark menu-settings image-left">Student Management</a>
+            <ul>
+              <li><a href="/student/registration_menu">Registration/Admission</a></li>
+              <li><a href="/punishments/behavior_management_menu">Behavior Management</a></li>
+              <li><a href="/student/examination_results_menu">Examination results</a></li>
+              <li><a href="/student/payments_management_menu">Payments Management</a></li>
+              <li><a href="/student/id_cards_menu">Student ID cards</a></li>
+              <li><a href="/student/semester_statement_menu">Student semester statement</a></li>
+              <li><a href="/student/semester_statement_menu">Student semester statement</a></li>
+              <li><a href="/student/warning_letters_menu">Warning letters for overdue students</a></li>
+              <li><a href="/student/examination_results_menu">Examination Registration</a></li>
+            </ul>
+          </li>
+          <li class="v-sep"><a href="#" class="round button dark menu-settings image-left">School Administration</a>
+            <ul>
+              <li><a href="/admin/time_table_management_menu">Timetable management</a></li>
+              <li><a href="/admin/subject_groups_management">Subject groups’ management</a></li>
+              <li><a href="/admin/semester_management_menu">Semester/Term management </a></li>
+              <li><a href="/admin/payments_overview_menu">Payments Overview</a></li>
+              <li><a href="/admin/print_teacher_time_table">Print teacher's timetable</a></li>
+              <li><a href="/attachments/documents_management_menu">Documents management</a></li>
+              <li><a href="/admin/barcode_scanning_menu">Barcode scanning functions (Ids)</a></li>
+              <li><a href="#">Email functions</a></li>
+            </ul>
+          </li>
+          <li class="v-sep"><a href="#" class="round button dark menu-settings image-left">Employee Management</a>
+            <ul>
+              <li><a href="/employees/employee_registration_menu">Employee registration</a></li>
+              <li><a href="/employees/employee_management_menu">Employee management</a></li>
+              <li><a href="/employees/position_management_menu">Position management</a></li>
+              <li><a href="#">Mini payroll</a></li>
+            </ul>
+          </li>
+          <li class="v-sep"><a href="#" class="round button dark menu-settings image-left">System Administration</a>
+            <ul>
+              <li><a href="/user/user_management_menu">User management</a></li>
+              <li><a href="/parent/parents_menu">Parents management</a></li>
+              <li><a href="/class_room/index">Class management</a></li>
+              <li><a href="/teacher/manage_teachers_menu">Manage Lecturers/teachers</a></li>
+              <li><a href="/examination_type/manage_exam_type_menu">Exam Type Management</a></li>
+              <li><a href="/admin/system_configuration_menu">System configuration/Administration</a></li>
+              <li><a href="/payments/payments_management_menu">Fees management</a></li>
+              <li><a href="/report/reports_generator_menu">Supper reports generator</a></li>
+              <li><a href="/admin/backup_data_menu">Backup Settings</a></li>
+            </ul>
+          </li>
+          <li><a href="#" class="round button dark menu-logoff image-left">Log out</a></li>
+
+        </ul> <!-- end nav -->
+
+
+        <form action="#" method="POST" id="search-form" class="fr">
+          <fieldset>
+            <input type="text" id="search-keyword" class="round button dark ic-search image-right" placeholder="Search..." />
+            <input type="hidden" value="SUBMIT" />
+          </fieldset>
+        </form>
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end top-bar -->
+
+
+
+    <!-- HEADER -->
+    <div id="header-with-tabs">
+
+      <div class="page-full-width cf">
+
+        <ul id="tabs" class="fl">
+          <li><a href="/attachments/documents_management_dashboard" class="dashboard-tab">Dashboard</a></li>
+          <li><a href="/attachments/documents_management_menu" class="active-tab">Documents</a></li>
+        </ul> <!-- end tabs -->
+
+        <!-- Change this image to your own company's logo -->
+        <!-- The logo will automatically be resized to 30px height. -->
+        <a href="#" id="company-branding-small" class="fr"><img src="/images/company-logo.png" alt="Blue Hosting" /></a>
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end header -->
+
+
+
+    <!-- MAIN CONTENT -->
+    <div id="content">
+
+      <div class="page-full-width cf">
+
+        <div class="side-menu fl">
+
+          <h3>Task</h3>
+          <ul>
+            <li><a href="/attachment_types/new_document_type/">New Document Type</a></li>
+            <li><a href="/attachment_types/edit_document_type/">Edit Document Type</a></li>
+            <li><a href="/attachment_types/void_document_types/">Void Document Type</a></li>
+            <li><a href="/attachment_types/view_document_types/">View Document Types</a></li>
+          </ul>
+
+        </div> <!-- end side-menu -->
+
+        <div class="side-content fr">
+
+          <div class="content-module">
+
+            <div class="half-size-column fl" style="width:66%;">
+
+              <div class="content-module">
+
+                <div class="content-module-heading cf">
+
+                  <h3 class="fl">Edit Document Type</h3>
+                  <span class="fr expand-collapse-text">Click to collapse</span>
+                  <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+                </div> <!-- end content-module-heading -->
+
+
+                <div class="content-module-main">
+                  <% if flash[:notice] %>
+                    <div class="confirmation-box round">
+                      <%= flash[:notice] %>
+                    </div>
+                  <% end %>
+                  <% if flash[:error] %>
+                    <div class="error-box round">
+                      <%= flash[:error] %>
+                    </div>
+                  <% end %>
+                  <form id="document_type_form" class="autoform" action="/attachment_types/edit_me" method="POST">
+
+                    <div><label for="document_type" style="width:100px;">Document Type</label><input type="text" value="<%= @attachment_type.name %>" name="document_type_name" id="document_type" class="text required" /></div>
+                    
+                    <div class="stripe-separator"><!--  --></div>
+                    <%= hidden_field_tag("attachment_type_id", params[:attachment_type_id]) %>
+                    <input type="submit" value="Submit" class="round blue ic-right-arrow" />
+                  </form>
+                </div> <!-- end content-module-main -->
+
+              </div> <!-- end content-module -->
+
+            </div>
+            <div class="half-size-column fr" style="width:33%">
+
+              <div class="content-module">
+
+                <div class="content-module-heading cf">
+
+                  <h3 class="fl">Existing Document Types (<%= @attachment_types.count %>)</h3>
+                  <span class="fr expand-collapse-text">Click to collapse</span>
+                  <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+                </div> <!-- end content-module-heading -->
+
+
+                <div class="content-module-main cf">
+                  <table>
+                    <% count = 0 %>
+                    <% @attachment_types.in_groups_of(2).each do |row| %>
+                      <tr>
+                        <% row.each do |attachment_type| %>
+                          <% next if attachment_type.blank? %>
+                          <% count = count + 1 %>
+                          <td><%= '<span style=font-weight:bold>' + count.to_s + '.</span> '.to_s + "<a href='/attachment_types/edit_me?attachment_type_id=#{attachment_type.id}'>" + attachment_type.name.to_s + '</a>'%></td>
+                        <% end %>
+                      </tr>
+                    <% end %>
+                  </table>
+                </div> <!-- end content-module-main -->
+
+              </div> <!-- end content-module -->
+
+            </div>
+
+          </div> <!-- end content-module -->
+
+
+
+
+        </div> <!-- end side-content -->
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end content -->
+
+
+
+    <!-- FOOTER -->
+    <div id="footer">
+
+      <p>&copy; Copyright 2012 <a href="#">BlueHosting, LLC</a>. All rights reserved.</p>
+      <p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
+
+    </div> <!-- end footer -->
+
+    <%= javascript_include_tag("bootstrap") %>
+    <%= javascript_include_tag("zebra_datepicker") %>
+    <script>
+      $('.date-picker').Zebra_DatePicker({
+        view : 'years',
+        direction: ['<%=  Date.today.strftime("%Y-%m-%d") %>', '<%=  (Date.today + 1.year).strftime("%Y-%m-%d") %>']
+      });
+    </script>
+  </body>
+</html>

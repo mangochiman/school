@@ -146,7 +146,7 @@ class StudentController < ApplicationController
     @courses = []
     class_room_courses = student.student_class_room_adjustments.last.class_room.class_room_courses
     class_room_courses.each do |class_room_course|
-      @courses << class_room_course.course if (class_room_course.course.optional == false)
+      @courses << class_room_course.course if (class_room_course.course.optional == true)
     end
     @my_class_room_id = student.student_class_room_adjustments.last.class_room.class_room_id
     
