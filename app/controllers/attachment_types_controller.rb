@@ -54,11 +54,28 @@ class AttachmentTypesController < ApplicationController
   end
 
   def void_document_types
+    @attachment_types = AttachmentType.find(:all)
     render :layout => false
   end
 
   def view_document_types
+    @attachment_types = AttachmentType.find(:all)
     render :layout => false
+  end
+
+  def delete_attachment_types
+    if (params[:mode] == 'single_entry')
+      attachment_type = AttachmentType.find(params[:attachment_type_id])
+      attachment_type.delete
+      render :text => "true" and return
+    end
+
+    attachment_type_ids = params[:attachment_type_ids].split(",")
+    (attachment_type_ids || []).each do |attachment_type_id|
+      attachment_type = AttachmentType.find(attachment_type_id)
+      attachment_type.delete
+    end
+    render :text => "true" and return
   end
   
 end

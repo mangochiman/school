@@ -11,20 +11,13 @@
     <%= javascript_include_tag("jquery") %>
     <%= javascript_include_tag("script") %>
     <%= stylesheet_link_tag("style") %>
-    <script>
-      function editMe(obj){
-        attachmentTypeId = obj.getAttribute("attachment_type_id");
-        window.location = "/attachment_types/edit_me?attachment_type_id=" + attachmentTypeId;
-      }
-    </script>
+
     <style>
+
       table th:first-child {
         border-style: none none none !important;
       }
       
-      a{
-        cursor: pointer;
-      }
     </style>
   </head>
   <body>
@@ -150,7 +143,7 @@
 
             <div class="content-module-heading cf">
 
-              <h3 class="fl">Edit Document Type</h3>
+              <h3 class="fl">View Document Types</h3>
               <span class="fr expand-collapse-text">Click to collapse</span>
               <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -173,21 +166,20 @@
                 <thead>
 
                   <tr>
+                    <th>#</th>
                     <th style="min-width:35%;">Document Type</th>
                     <th style="min-width:35%;"><center>Date created</center></th>
-                    <th>Action</th>
                   </tr>
 
                 </thead>
 
                 <tbody id="attachment_types">
+                  <% count = 0 %>
                   <% @attachment_types.each do |attachment_type| %>
                     <tr>
+                      <td><%= count = count + 1 %></td>
                       <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%=  attachment_type.name.capitalize %></td>
                       <td><center><%= attachment_type.created_at.to_date.strftime("%d-%b-%Y") %></center></td>
-                      <td>
-                        <a attachment_type_id="<%= attachment_type.id %>" onclick="editMe(this)" class="table-actions-button ic-table-edit"></a>
-                      </td>
                     </tr>
                   <% end %>
                 </tbody>

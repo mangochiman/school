@@ -10,21 +10,92 @@
     <!-- jQuery & JS files -->
     <%= javascript_include_tag("jquery") %>
     <%= javascript_include_tag("script") %>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("jquery.confirm") %>
     <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("bootstrap") %>
+    
     <script>
-      function editMe(obj){
-        attachmentTypeId = obj.getAttribute("attachment_type_id");
-        window.location = "/attachment_types/edit_me?attachment_type_id=" + attachmentTypeId;
+      function selectAll(){
+        selectAllInput = document.getElementById('table-select-all');
+        inputs = document.getElementsByTagName("input");
+        if (selectAllInput.checked){
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+              inputs[i].checked = true;
+            }
+          }
+        }
+        else{
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+              inputs[i].checked = false;
+            }
+          }
+        }
       }
-    </script>
-    <style>
-      table th:first-child {
-        border-style: none none none !important;
+
+      function deleteAttachmentTypes(){
+        inputs = document.getElementsByTagName("input");
+        attachmentTypeIDs = []
+        for (var i=0; i<=inputs.length - 1; i++){
+          if (inputs[i].type == 'checkbox'){
+            if (inputs[i].checked){
+              if (inputs[i].hasAttribute("attachment_type_id")){
+                attachmentTypeId = inputs[i].getAttribute("attachment_type_id");
+                attachmentTypeIDs.push(attachmentTypeId);
+              }
+            }
+          }
+        }
+        
+        jQuery.ajax({
+          type: "POST",
+          url: "/attachment_types/delete_attachment_types",
+          data: "attachment_type_ids=" + attachmentTypeIDs,
+          success: function(){
+            for (var x=0; x<= attachmentTypeIDs.length - 1; x++){
+              id = attachmentTypeIDs[x];
+              element = document.getElementById(id);
+              element.parentNode.removeChild(element)
+            }
+          }
+
+      });
+      }
+      var currentAttachmentTypeId = "";
+      function setCurrentAttachmentTypeId(obj){
+        currentAttachmentTypeId = obj.getAttribute("attachment_type_id");
       }
       
-      a{
-        cursor: pointer;
+      function deleteSingleEntry(){
+        jQuery.ajax({
+          type: "POST",
+          url: "/attachment_types/delete_attachment_types",
+          data: "attachment_type_id=" + currentAttachmentTypeId + "&mode=single_entry",
+          success: function(){
+              element = document.getElementById(currentAttachmentTypeId);
+              element.parentNode.removeChild(element);
+          }
+
+      });
       }
+    </script>
+
+    <style>
+    .modal-title {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-weight: 500;
+      line-height: 1.1;
+      font-size: 1.2em;
+      color: #317eac;
+    }
+    
+    table th:first-child {
+      border-style: none none none !important;
+    }
     </style>
   </head>
   <body>
@@ -150,7 +221,7 @@
 
             <div class="content-module-heading cf">
 
-              <h3 class="fl">Edit Document Type</h3>
+              <h3 class="fl">Void Document Types</h3>
               <span class="fr expand-collapse-text">Click to collapse</span>
               <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -158,38 +229,39 @@
 
 
             <div class="content-module-main">
-              <% if flash[:notice] %>
-                <div class="confirmation-box round">
-                  <%= flash[:notice] %>
-                </div>
-              <% end %>
-              <% if flash[:error] %>
-                <div class="error-box round">
-                  <%= flash[:error] %>
-                </div>
-              <% end %>
+
               <table>
 
                 <thead>
 
                   <tr>
+                    <th><input type="checkbox" id="table-select-all" onclick="selectAll();"/></th>
                     <th style="min-width:35%;">Document Type</th>
                     <th style="min-width:35%;"><center>Date created</center></th>
-                    <th>Action</th>
+                    <th>Actions</th>
                   </tr>
 
                 </thead>
 
-                <tbody id="attachment_types">
+                <tfoot>
+                  <tr>
+                    <td colspan="3" class="table-footer">
+                      <a href="#" class="button round blue image-right ic-delete text-upper delete-multiple">Delete</a>
+                    </td>
+                  </tr>
+                </tfoot>
+
+                <tbody>
+                  
                   <% @attachment_types.each do |attachment_type| %>
-                    <tr>
+                    <tr id="<%= attachment_type.id %>">
+                      <td><input type="checkbox" attachment_type_id="<%= attachment_type.id %>"/></td>
                       <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%=  attachment_type.name.capitalize %></td>
                       <td><center><%= attachment_type.created_at.to_date.strftime("%d-%b-%Y") %></center></td>
-                      <td>
-                        <a attachment_type_id="<%= attachment_type.id %>" onclick="editMe(this)" class="table-actions-button ic-table-edit"></a>
-                      </td>
+                      <td><a href="#" attachment_type_id="<%= attachment_type.id %>" onmousedown="setCurrentAttachmentTypeId(this)" class="table-actions-button ic-table-delete confirm"></a></td>
                     </tr>
                   <% end %>
+
                 </tbody>
 
               </table>
@@ -197,10 +269,7 @@
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->
-
-
-
-
+          
         </div> <!-- end side-content -->
 
       </div> <!-- end full-width -->
@@ -216,6 +285,34 @@
       <p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
 
     </div> <!-- end footer -->
+<%= javascript_include_tag("bootstrap") %>
+    <script>
 
+      $(".delete-multiple").confirm({
+            title:"Delete confirmation",
+            text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+            confirm: function(button) {
+              deleteAttachmentTypes();
+            },
+            cancel: function(button) {
+
+            },
+            confirmButton: "Yes I am",
+            cancelButton: "No"
+        });
+
+        $(".confirm").confirm({
+            title:"Delete confirmation",
+            text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+            confirm: function(button) {
+              deleteSingleEntry();
+            },
+            cancel: function(button) {
+              
+            },
+            confirmButton: "Yes I am",
+            cancelButton: "No"
+        });
+    </script>
   </body>
 </html>
