@@ -45,8 +45,10 @@
       }
 
       function downloadAttachments(){
+        downloadMagic = document.getElementById('download_margic');
         inputs = document.getElementsByTagName("input");
         attachmentIDs = []
+
         for (var i=0; i<=inputs.length - 1; i++){
           if (inputs[i].type == 'checkbox'){
             if (inputs[i].checked){
@@ -58,20 +60,14 @@
           }
         }
 
-        jQuery.ajax({
-          type: "POST",
-          url: "/attachments/download_attachments",
-          data: "attachment_ids=" + attachmentIDs,
-          success: function(){
-            for (var x=0; x<= attachmentIDs.length - 1; x++){
-              id = attachmentIDs[x];
-              element = document.getElementById(id);
-              element.parentNode.removeChild(element)
-            }
-          }
-
-        });
+        for (var j=0; j<=attachmentIDs.length - 1; j++){
+          attachmentID = attachmentIDs[j];
+          iframe = document.createElement('iframe');
+          iframe.src = '/attachments/file_download?attachment_id=' + attachmentID;
+          downloadMagic.appendChild(iframe);
+        }
       }
+
       var currentAttachmentId = "";
       function setCurrentAttachmentId(obj){
         currentAttachmentId = obj.getAttribute("attachment_id");
@@ -303,7 +299,7 @@
                       <tfoot>
                         <tr>
                           <td colspan="5" class="table-footer">
-                            <a onmousedown="downloadAttachments();" href="#" class="button round blue image-right ic-download text-upper download-multiple">Download</a>
+                            <a onmousedown="downloadAttachments();" class="button round blue image-right ic-download text-upper download-multiple">Download</a>
                           </td>
                         </tr>
                       </tfoot>
