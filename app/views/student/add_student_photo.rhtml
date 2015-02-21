@@ -48,6 +48,30 @@
           document.getElementById('pre_take_buttons').style.display = '';
           document.getElementById('post_take_buttons').style.display = 'none';
         } );
+        sendPictureToServer();
+      }
+
+      function sendPictureToServer(){
+        url = '/student_photos/upload_photo?student_id=<%=params[:student_id]%>'
+        Webcam.snap( function(data_uri) {
+
+		Webcam.on( 'uploadProgress', function(progress) {
+			// Upload in progress
+			// 'progress' will be between 0.0 and 1.0
+		} );
+
+		Webcam.on( 'uploadComplete', function(code, text) {
+			// Upload complete!
+			// 'code' will be the HTTP response code from the server, e.g. 200
+			// 'text' will be the raw response content
+                        window.location = location.href;
+		} );
+
+		Webcam.upload( data_uri, url );
+
+	} )
+
+
       }
     </script>
 
@@ -122,7 +146,12 @@
 
         border-radius: 5px;
       }
-      
+
+      .student_photo{
+          width: 80%;
+          height: 50%;
+          border-radius: 20px;
+        }
     </style>
   </head>
   <body>
@@ -314,7 +343,17 @@
                   <span style="font-size:0.9em;">
                     <a href="#"><%= @student.class_room_student.class_room.name rescue 'Unknown Class'%></a>
                   </span><br />
-
+                  <span style="font-size: 0.9em; font-weight: bold;">Age:</span>
+                  <span style="font-size:0.9em;">
+                    <a href="#"><%= @student.age %></a>
+                  </span><br /><br />
+                  <% unless @student.student_photos.blank? %>
+                  <%= image_tag("/student_photos/code_student_photo?student_id=#{params[:student_id]}", :class => "student_photo")%>
+                  <% else %>
+                      <div class="error-box round">
+                      No Photo available
+                    </div>
+                  <% end %>
                 </div> <!-- end content-module-main -->
 
               </div> <!-- end content-module -->

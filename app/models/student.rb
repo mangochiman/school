@@ -12,9 +12,14 @@ class Student < ActiveRecord::Base
   has_many :punishments, :through => :student_punishments
   has_many :payments, :foreign_key => :student_id
   has_many :courses, :through => :student_class_room_courses
+  has_many :student_photos
 
   def current_class
     current_class_room = self.student_class_room_adjustments.last.class_room.name rescue nil
     return current_class_room
+  end
+
+  def age
+    ((Date.today - (self.dob.to_date rescue nil)).to_i/365) rescue 'Error'
   end
 end
