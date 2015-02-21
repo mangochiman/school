@@ -37,7 +37,7 @@ class AttachmentsController < ApplicationController
   end
   
   def download_document
-   unless params[:attachment_type_id].blank?
+    unless params[:attachment_type_id].blank?
       @attachment_type = AttachmentType.find(params[:attachment_type_id])
     end
     @attachment_types = AttachmentType.find(:all)
@@ -53,7 +53,21 @@ class AttachmentsController < ApplicationController
   end
 
   def view_documents
+    unless params[:attachment_type_id].blank?
+      @attachment_type = AttachmentType.find(params[:attachment_type_id])
+    end
+    @attachment_types = AttachmentType.find(:all)
     render :layout => false
+  end
+
+  def view_raw_file
+    @attachment = Attachment.find(params[:attachment_id])
+    render :layout => false
+  end
+
+  def code_attachment
+    @attachment = Attachment.find(params[:attachment_id])
+    send_data @attachment.data, :filename => @attachment. filename, :type => @attachment.content_type, :disposition => "inline"
   end
 
   def delete_attachments
@@ -72,7 +86,7 @@ class AttachmentsController < ApplicationController
   end
 
   def download_attachments
-   if (params[:mode] == 'single_entry')
+    if (params[:mode] == 'single_entry')
       attachment = Attachment.find(params[:attachment_id])
       send_data attachment.data, :filename => attachment. filename, :type => attachment.content_type, :disposition => "attachment" and return
       #render :text => "true" and return
