@@ -14,24 +14,23 @@ class AttachmentsController < ApplicationController
   def documents_management_menu
     render :layout => false
   end
-
-  def document_types_menu
-    render :layout => false
-  end
   
-  def new_document_type
+  def upload_document
+    @attachment_types = AttachmentType.find(:all)
+    @attachment_select = [["[Document Type]", ""]]
+    @attachment_select += AttachmentType.find(:all).collect{|a|[a.name, a.id]}
     render :layout => false
   end
 
-  def edit_document_type
+  def download_document
     render :layout => false
   end
 
-  def void_document_types
+  def delete_documents
     render :layout => false
   end
 
-  def view_document_types
+  def view_documents
     render :layout => false
   end
   
