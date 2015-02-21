@@ -17,6 +17,10 @@
     <%= stylesheet_link_tag("style") %>
 
     <style>
+      .photo{
+        width: 100%;
+      }
+      
       a{
         cursor: pointer;
       }
@@ -140,14 +144,14 @@
 
           <div class="content-module-main">
             <center>
-            <% if @attachment.content_type.match(/image/i) %>
-              <%= image_tag("/attachments/code_attachment?attachment_id=#{params[:attachment_id]}") %>
-            <% else %>
-              <div class="error-box round">
-                You can only view images as of now. Work in progress!!!!!
-              </div>
-            <% end %><br />
-            <a class="button round blue image-left ic-left-arrow text-upper" onmousedown="window.history.back();">Back</a>
+              <% if @attachment.content_type.match(/image/i) %>
+                <%= image_tag("/attachments/code_attachment?attachment_id=#{params[:attachment_id]}", :class => 'photo') %>
+              <% else %>
+                <div class="error-box round">
+                  You can only view images as of now. Work in progress!!!!!
+                </div>
+              <% end %><br />
+              <a class="button round blue image-left ic-left-arrow text-upper" onmousedown="window.history.back();">Back</a>
             </center>
           </div> <!-- end content-module-main -->
 
