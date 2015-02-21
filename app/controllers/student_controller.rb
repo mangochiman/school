@@ -646,5 +646,15 @@ class StudentController < ApplicationController
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
     render :layout => false
   end
+
+  def take_picture
+    @students = Student.find(:all)
+    render :layout => false
+  end
+
+  def add_student_photo
+    @student = Student.find(params[:student_id])
+    render :layout => false
+  end
   
 end
