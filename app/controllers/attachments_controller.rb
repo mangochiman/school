@@ -37,6 +37,10 @@ class AttachmentsController < ApplicationController
   end
   
   def download_document
+   unless params[:attachment_type_id].blank?
+      @attachment_type = AttachmentType.find(params[:attachment_type_id])
+    end
+    @attachment_types = AttachmentType.find(:all)
     render :layout => false
   end
 

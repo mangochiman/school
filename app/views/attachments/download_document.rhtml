@@ -19,34 +19,77 @@
     <%= stylesheet_link_tag("bootstrap") %>
 
     <script>
-      function getFile(){
-        document.getElementById("attachment").click();
+      function pullMyAttachments(attachmentTypeId){
+        window.location = "/attachments/download_document?attachment_type_id=" + attachmentTypeId;
       }
 
-      function sub(obj){
-        var file = obj.value;
-        var fileName = file.split("\\");
-        document.getElementById("uploadFile").value = fileName[fileName.length-1];
-
-        file_upload_div = document.getElementById('file_upload_div');
-        notifier = file_upload_div.getElementsByTagName('span')[1];
-        notifier.className = 'msg icon ok';
-        notifier.innerHTML = 'Completed';
+      function selectAll(){
+        selectAllInput = document.getElementById('table-select-all');
+        inputs = document.getElementsByTagName("input");
+        if (selectAllInput.checked){
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+              inputs[i].checked = true;
+            }
+          }
+        }
+        else{
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+              inputs[i].checked = false;
+            }
+          }
+        }
       }
 
-      function selectDocumentType(documentTypeId){
-        options = document.getElementById('document_type').getElementsByTagName('option');
-        for (var i=0; i<=options.length - 1; i++){
-          if (parseInt(options[i].value) == parseInt(documentTypeId)){
-            options[i].selected = true;
+      function downloadAttachments(){
+        inputs = document.getElementsByTagName("input");
+        attachmentIDs = []
+        for (var i=0; i<=inputs.length - 1; i++){
+          if (inputs[i].type == 'checkbox'){
+            if (inputs[i].checked){
+              if (inputs[i].hasAttribute("attachment_id")){
+                attachmentId = inputs[i].getAttribute("attachment_id");
+                attachmentIDs.push(attachmentId);
+              }
+            }
           }
         }
 
-        document_type_div = document.getElementById('document_type_div');
-        notifier = document_type_div.getElementsByTagName('span')[1];
-        notifier.className = 'msg icon ok';
-        notifier.innerHTML = 'Completed';
+        jQuery.ajax({
+          type: "POST",
+          url: "/attachments/download_attachments",
+          data: "attachment_ids=" + attachmentIDs,
+          success: function(){
+            for (var x=0; x<= attachmentIDs.length - 1; x++){
+              id = attachmentIDs[x];
+              element = document.getElementById(id);
+              element.parentNode.removeChild(element)
+            }
+          }
+
+      });
       }
+      var currentAttachmentId = "";
+      function setCurrentAttachmentId(obj){
+        currentAttachmentId = obj.getAttribute("attachment_id");
+      }
+
+      function downloadSingleEntry(){
+        jQuery.ajax({
+          type: "POST",
+          url: "/attachments/download_attachments",
+          data: "attachment_id=" + currentAttachmentId + "&mode=single_entry",
+          success: function(){
+              //element = document.getElementById(currentAttachmentId);
+              //element.parentNode.removeChild(element);
+          }
+
+      });
+      }
+      
     </script>
     <style>
       .modal-title {
@@ -83,42 +126,18 @@
         margin-left: 31%;
       }
 
-      table td:first-child, table td:last-child{
+      #right_column td:first-child, #right_column td:last-child{
         text-align: left;
       }
 
-      #uploadFile{
-        border: 1px solid #d9dbdd;
-        color: #505050;
-        float: left;
-        font-size: 14px;
-        text-align: center;
-        margin-right: 5px;
-        outline: medium none;
-        padding: 6px;
-        width: 175px;
-      }
-
-      #document_type{
-        background-color: #fff;
-        background-image: none;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
-        color: #555;
-        font-size: 14px;
-        height: 30px;
-        line-height: 1.42857;
-        padding: 6px 12px;
-        text-align: center;
-        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
-        width: 190px;
+      #attachments th:first-child {
+        border-style: none none none !important;
       }
 
       a{
         cursor: pointer;
       }
-      
+
     </style>
   </head>
   <body>
@@ -249,7 +268,7 @@
 
                 <div class="content-module-heading cf">
 
-                  <h3 class="fl">Upload Documents</h3>
+                  <h3 class="fl">Download Documents</h3>
                   <span class="fr expand-collapse-text">Click to collapse</span>
                   <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -268,28 +287,50 @@
                     </div>
                   <% end %>
 
-                  <form action="/attachments/create_attachment" class="autoform" enctype="multipart/form-data" method="post">
-                    <div style="display:none;">
-                      <input id="attachment" name="attachment" type="file" onchange ="sub(this);" />
+                  <% if params[:attachment_type_id].blank? %>
+                    <div class="error-box round">
+                      No document type selected. Select Document Type to your right
                     </div>
-                    <div id="document_type_div">
-                      <label for="document_type" style="width:110px;">Document Type</label>
-                      <%= select_tag("document_type", options_for_select(@attachment_select),:class => "select required") %>
-                    </div>
+                  <% else %>
+                    <span style="float:right; font-weight: bold; color: #2069b4;"><%= @attachment_type.name %></span>
+                    <table id="attachments">
+                      <thead>
+                        <tr>
+                          <th><input type="checkbox" id="table-select-all" onclick="selectAll();"/></th>
+                          <th>File Name</th>
+                          <th>Content Type</th>
+                          <th>Date Uploaded</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
 
-                    <div id="file_upload_div">
-                      <label for="uploadFile" style="width:110px;">File</label>
-                      <input class="text required" id='uploadFile' placeholder='Click Browse Button' disabled='disabled'/>
-                    </div>
+                      <tfoot>
+                        <tr>
+                          <td colspan="5" class="table-footer">
+                            <a onmousedown="downloadAttachments();" href="#" class="button round blue image-right ic-download text-upper download-multiple">Download</a>
+                          </td>
+                        </tr>
+                      </tfoot>
 
-                    <div>
-                      <a style="float:right;"onclick='getFile()' class="button round blue image-right ic-upload text-upper">Browse</a>
-                    </div>
-
-                    <div class="stripe-separator"></div>
-                    <input name="commit" type="submit" value="Send Attachment" class="round blue ic-right-arrow"/>
-                  </form>
-
+                      <tbody>
+                        <% unless @attachment_type.attachments.blank? %>
+                          <% (@attachment_type.attachments || []).each do |attachment| %>
+                            <tr id="<%= attachment.id %>">
+                              <td><input type="checkbox" attachment_id="<%= attachment.id %>"/></td>
+                              <td><%=  attachment.filename %></td>
+                              <td><%=  attachment.content_type %></td>
+                              <td><%=  attachment.created_at.to_date.strftime("%d-%b-%Y") %></td>
+                              <td><a attachment_id="<%= attachment.id %>" onmousedown="setCurrentAttachmentId(this); downloadSingleEntry();" class="button round blue image-right ic-download text-upper">Download</a></td>
+                            </tr>
+                          <% end %>
+                        <% else %>
+                          <tr>
+                            <td colspan="5" style="text-align: center; line-height: 2.5em; color: #cf4425;background: url('../images/icons/message-boxes/error.png') no-repeat scroll 16.833em center #fde8e4;">There is nothing to download here..</td>
+                          </tr>
+                        <%  end %>
+                      </tbody>
+                    </table>
+                  <% end %>
                 </div> <!-- end content-module-main -->
 
               </div> <!-- end content-module -->
@@ -309,14 +350,14 @@
 
 
                 <div class="content-module-main cf">
-                  <table>
+                  <table id="right_column">
                     <% count = 0 %>
                     <% @attachment_types.in_groups_of(2).each do |row| %>
                       <tr>
                         <% row.each do |attachment_type| %>
                           <% next if attachment_type.blank? %>
                           <% count = count + 1 %>
-                          <td><%= '<span style=font-weight:bold>' + count.to_s + '.</span> '.to_s + "<a onclick='selectDocumentType(#{attachment_type.id})'>" + attachment_type.name.to_s + ' ('  + attachment_type.attachments.count.to_s + ')</a>'%></td>
+                          <td><%= '<span style=font-weight:bold>' + count.to_s + '.</span> '.to_s + "<a onclick='pullMyAttachments(#{attachment_type.id})'>" + attachment_type.name.to_s + ' ('  + attachment_type.attachments.count.to_s + ')</a>'%></td>
                         <% end %>
                       </tr>
                     <% end %>
@@ -349,12 +390,6 @@
     </div> <!-- end footer -->
 
     <%= javascript_include_tag("bootstrap") %>
-    <%= javascript_include_tag("zebra_datepicker") %>
-    <script>
-      $('.date-picker').Zebra_DatePicker({
-        view : 'years',
-        direction: ['<%=  Date.today.strftime("%Y-%m-%d") %>', '<%=  (Date.today + 1.year).strftime("%Y-%m-%d") %>']
-      });
-    </script>
+
   </body>
 </html>

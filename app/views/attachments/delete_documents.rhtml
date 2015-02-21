@@ -357,7 +357,7 @@
                         <% row.each do |attachment_type| %>
                           <% next if attachment_type.blank? %>
                           <% count = count + 1 %>
-                          <td><%= '<span style=font-weight:bold>' + count.to_s + '.</span> '.to_s + "<a onclick='pullMyAttachments(#{attachment_type.id})'>" + attachment_type.name.to_s + '</a>'%></td>
+                          <td><%= '<span style=font-weight:bold>' + count.to_s + '.</span> '.to_s + "<a onclick='pullMyAttachments(#{attachment_type.id})'>" + attachment_type.name.to_s + ' ('  + attachment_type.attachments.count.to_s + ')</a>'%></td>
                         <% end %>
                       </tr>
                     <% end %>
