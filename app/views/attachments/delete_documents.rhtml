@@ -22,6 +22,74 @@
       function pullMyAttachments(attachmentTypeId){
         window.location = "/attachments/delete_documents?attachment_type_id=" + attachmentTypeId;
       }
+
+      function selectAll(){
+        selectAllInput = document.getElementById('table-select-all');
+        inputs = document.getElementsByTagName("input");
+        if (selectAllInput.checked){
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+              inputs[i].checked = true;
+            }
+          }
+        }
+        else{
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+              inputs[i].checked = false;
+            }
+          }
+        }
+      }
+
+      function deleteAttachments(){
+        inputs = document.getElementsByTagName("input");
+        attachmentIDs = []
+        for (var i=0; i<=inputs.length - 1; i++){
+          if (inputs[i].type == 'checkbox'){
+            if (inputs[i].checked){
+              if (inputs[i].hasAttribute("attachment_id")){
+                attachmentId = inputs[i].getAttribute("attachment_id");
+                attachmentIDs.push(attachmentId);
+              }
+            }
+          }
+        }
+
+        jQuery.ajax({
+          type: "POST",
+          url: "/attachments/delete_attachments",
+          data: "attachment_ids=" + attachmentIDs,
+          success: function(){
+            for (var x=0; x<= attachmentIDs.length - 1; x++){
+              id = attachmentIDs[x];
+              element = document.getElementById(id);
+              element.parentNode.removeChild(element)
+            }
+          }
+
+      });
+      }
+      var currentAttachmentId = "";
+      function setCurrentAttachmentId(obj){
+        currentAttachmentId = obj.getAttribute("attachment_id");
+      }
+
+      function deleteSingleEntry(){
+        jQuery.ajax({
+          type: "POST",
+          url: "/attachments/delete_attachments",
+          data: "attachment_id=" + currentAttachmentId + "&mode=single_entry",
+          success: function(){
+              element = document.getElementById(currentAttachmentId);
+              element.parentNode.removeChild(element);
+          }
+
+      });
+      }
+      
     </script>
     <style>
       .modal-title {
@@ -247,7 +315,7 @@
                       <tbody>
                         <% unless @attachment_type.attachments.blank? %>
                           <% (@attachment_type.attachments || []).each do |attachment| %>
-                            <tr>
+                            <tr id="<%= attachment.id %>">
                               <td><input type="checkbox" attachment_id="<%= attachment.id %>"/></td>
                               <td><%=  attachment.filename %></td>
                               <td><%=  attachment.content_type %></td>
@@ -257,7 +325,7 @@
                           <% end %>
                         <% else %>
                           <tr>
-                            <td colspan="5" style="border: 1px solid #e6bbb3; text-align: center; line-height: 2.5em; color: #cf4425;background: url('../images/icons/message-boxes/error.png') no-repeat scroll 16.833em center #fde8e4;">There is nothing to delete here..</td>
+                            <td colspan="5" style="text-align: center; line-height: 2.5em; color: #cf4425;background: url('../images/icons/message-boxes/error.png') no-repeat scroll 16.833em center #fde8e4;">There is nothing to delete here..</td>
                           </tr>
                         <%  end %>
                       </tbody>
@@ -322,11 +390,32 @@
     </div> <!-- end footer -->
 
     <%= javascript_include_tag("bootstrap") %>
-    <%= javascript_include_tag("zebra_datepicker") %>
     <script>
-      $('.date-picker').Zebra_DatePicker({
-        view : 'years',
-        direction: ['<%=  Date.today.strftime("%Y-%m-%d") %>', '<%=  (Date.today + 1.year).strftime("%Y-%m-%d") %>']
+
+      $(".delete-multiple").confirm({
+        title:"Delete confirmation",
+        text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+        confirm: function(button) {
+          deleteAttachments();
+        },
+        cancel: function(button) {
+
+        },
+        confirmButton: "Yes I am",
+        cancelButton: "No"
+      });
+
+      $(".confirm").confirm({
+        title:"Delete confirmation",
+        text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+        confirm: function(button) {
+          deleteSingleEntry();
+        },
+        cancel: function(button) {
+
+        },
+        confirmButton: "Yes I am",
+        cancelButton: "No"
       });
     </script>
   </body>

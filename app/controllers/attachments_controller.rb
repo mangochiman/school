@@ -51,5 +51,20 @@ class AttachmentsController < ApplicationController
   def view_documents
     render :layout => false
   end
+
+  def delete_attachments
+    if (params[:mode] == 'single_entry')
+      attachment = Attachment.find(params[:attachment_id])
+      attachment.delete
+      render :text => "true" and return
+    end
+
+    attachment_ids = params[:attachment_ids].split(",")
+    (attachment_ids || []).each do |attachment_id|
+      attachment = Attachment.find(attachment_id)
+      attachment.delete
+    end
+    render :text => "true" and return
+  end
   
 end
