@@ -70,7 +70,7 @@
             }
           }
 
-      });
+        });
       }
       var currentAttachmentId = "";
       function setCurrentAttachmentId(obj){
@@ -78,16 +78,8 @@
       }
 
       function downloadSingleEntry(){
-        jQuery.ajax({
-          type: "POST",
-          url: "/attachments/download_attachments",
-          data: "attachment_id=" + currentAttachmentId + "&mode=single_entry",
-          success: function(){
-              //element = document.getElementById(currentAttachmentId);
-              //element.parentNode.removeChild(element);
-          }
-
-      });
+        iframe = document.getElementsByTagName('iframe')[0];
+        iframe.src='/attachments/file_download?attachment_id=' + currentAttachmentId;
       }
       
     </script>
@@ -287,6 +279,10 @@
                     </div>
                   <% end %>
 
+                  <div id="download_margic" style="display:none;">
+                    <iframe></iframe>
+                  </div>
+                  
                   <% if params[:attachment_type_id].blank? %>
                     <div class="error-box round">
                       No document type selected. Select Document Type to your right

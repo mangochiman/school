@@ -70,5 +70,24 @@ class AttachmentsController < ApplicationController
     end
     render :text => "true" and return
   end
-  
+
+  def download_attachments
+   if (params[:mode] == 'single_entry')
+      attachment = Attachment.find(params[:attachment_id])
+      send_data attachment.data, :filename => attachment. filename, :type => attachment.content_type, :disposition => "attachment" and return
+      #render :text => "true" and return
+    end
+
+    attachment_ids = params[:attachment_ids].split(",")
+    (attachment_ids || []).each do |attachment_id|
+      attachment = Attachment.find(attachment_id)
+      attachment.delete
+    end
+    render :text => "true" and return
+  end
+
+  def file_download
+    attachment = Attachment.find(params[:attachment_id])
+    send_data attachment.data, :filename => attachment. filename, :type => attachment.content_type, :disposition => "attachment" and return
+  end
 end
