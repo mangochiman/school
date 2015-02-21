@@ -41,6 +41,10 @@ class AttachmentsController < ApplicationController
   end
 
   def delete_documents
+    unless params[:attachment_type_id].blank?
+      @attachment_type = AttachmentType.find(params[:attachment_type_id])
+    end
+    @attachment_types = AttachmentType.find(:all)
     render :layout => false
   end
 
