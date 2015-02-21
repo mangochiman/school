@@ -27,6 +27,11 @@
         var file = obj.value;
         var fileName = file.split("\\");
         document.getElementById("uploadFile").value = fileName[fileName.length-1];
+
+        file_upload_div = document.getElementById('file_upload_div');
+        notifier = file_upload_div.getElementsByTagName('span')[1];
+        notifier.className = 'msg icon ok';
+        notifier.innerHTML = 'Completed';
       }
     </script>
     <style>
@@ -76,7 +81,27 @@
         margin-right: 5px;
         outline: medium none;
         padding: 6px;
-        width: 254px;
+        width: 175px;
+      }
+
+      #document_type{
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        color: #555;
+        font-size: 14px;
+        height: 30px;
+        line-height: 1.42857;
+        padding: 6px 12px;
+        text-align: center;
+        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+        width: 190px;
+      }
+      
+      a{
+        cursor: pointer;
       }
     </style>
   </head>
@@ -227,18 +252,24 @@
                     </div>
                   <% end %>
 
-                  <form action="create" enctype="multipart/form-data" method="post">
+                  <form action="/attachments/create" class="autoform" enctype="multipart/form-data" method="post">
                     <div style="display:none;">
                       <input id="attachment" name="attachment" type="file" onchange ="sub(this);" />
                     </div>
+                    <div>
+                      <label for="document_type" style="width:110px;">Document Type</label>
+                      <%= select_tag("document_type", options_for_select(@attachment_select),:class => "select required") %>
+                    </div>
 
-                    <table style="font-size: 14px; width:70%;">
-                      <tr style="background-color: white;">
-                        <td style="border-bottom: none;">File</td>
-                        <td style="padding:0px; border-bottom: none;"><input id='uploadFile' placeholder='Choose File' disabled='disabled'/></td>
-                        <td style="border-bottom: none;"><a onclick='getFile()' class="button round blue image-right ic-upload text-upper" href="#">Browse</a></td>
-                      </tr>
-                    </table>
+                    <div id="file_upload_div">
+                      <label for="uploadFile" style="width:110px;">File</label>
+                      <input class="text required" id='uploadFile' placeholder='Click Browse Button' disabled='disabled'/>
+                    </div>
+
+                    <div>
+                      <a style="float:right;"onclick='getFile()' class="button round blue image-right ic-upload text-upper">Browse</a>
+                    </div>
+
                     <div class="stripe-separator"></div>
                     <input name="commit" type="submit" value="Send Attachment" class="round blue ic-right-arrow"/>
                   </form>
