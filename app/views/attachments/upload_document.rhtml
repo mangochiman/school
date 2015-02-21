@@ -33,6 +33,20 @@
         notifier.className = 'msg icon ok';
         notifier.innerHTML = 'Completed';
       }
+
+      function selectDocumentType(documentTypeId){
+        options = document.getElementById('document_type').getElementsByTagName('option');
+        for (var i=0; i<=options.length - 1; i++){
+          if (parseInt(options[i].value) == parseInt(documentTypeId)){
+            options[i].selected = true;
+          }
+        }
+
+        document_type_div = document.getElementById('document_type_div');
+        notifier = document_type_div.getElementsByTagName('span')[1];
+        notifier.className = 'msg icon ok';
+        notifier.innerHTML = 'Completed';
+      }
     </script>
     <style>
       .modal-title {
@@ -100,10 +114,11 @@
         transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
         width: 190px;
       }
-      
+
       a{
         cursor: pointer;
       }
+      
     </style>
   </head>
   <body>
@@ -253,11 +268,11 @@
                     </div>
                   <% end %>
 
-                  <form action="/attachments/create" class="autoform" enctype="multipart/form-data" method="post">
+                  <form action="/attachments/create_attachment" class="autoform" enctype="multipart/form-data" method="post">
                     <div style="display:none;">
                       <input id="attachment" name="attachment" type="file" onchange ="sub(this);" />
                     </div>
-                    <div>
+                    <div id="document_type_div">
                       <label for="document_type" style="width:110px;">Document Type</label>
                       <%= select_tag("document_type", options_for_select(@attachment_select),:class => "select required") %>
                     </div>
@@ -301,7 +316,7 @@
                         <% row.each do |attachment_type| %>
                           <% next if attachment_type.blank? %>
                           <% count = count + 1 %>
-                          <td><%= '<span style=font-weight:bold>' + count.to_s + '.</span> '.to_s + "<a href='/attachment_types/edit_me?attachment_type_id=#{attachment_type.id}'>" + attachment_type.name.to_s + '</a>'%></td>
+                          <td><%= '<span style=font-weight:bold>' + count.to_s + '.</span> '.to_s + "<a onclick='selectDocumentType(#{attachment_type.id})'>" + attachment_type.name.to_s + '</a>'%></td>
                         <% end %>
                       </tr>
                     <% end %>
