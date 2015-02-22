@@ -20,5 +20,11 @@ class StudentPhotosController < ApplicationController
     @student_photo = StudentPhoto.find(params[:student_photo_id])
     send_data @student_photo.data, :filename => @student_photo.filename, :type => @student_photo.content_type, :disposition => "inline"
   end
+
+  def delete_photos
+    student_photo = StudentPhoto.find(params[:student_photo_id])
+    student_photo.delete
+    render :text => "true and return"
+  end
   
 end
