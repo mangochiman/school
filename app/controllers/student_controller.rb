@@ -392,6 +392,7 @@ class StudentController < ApplicationController
       hash[student_id]["dob"] = student.dob.to_date.strftime("%d-%b-%Y")
       hash[student_id]["join_date"] = student.created_at.to_date.strftime("%d-%b-%Y")
       hash[student_id]["current_class"] = student.current_class
+      hash[student_id]["total_photos"] = student.student_photos.count
     end
     render :json => hash
   end
@@ -654,6 +655,23 @@ class StudentController < ApplicationController
 
   def add_student_photo
     @student = Student.find(params[:student_id])
+    render :layout => false
+  end
+
+  def view_student_pictures
+    @students = Student.find(:all)
+    render :layout => false
+  end
+
+  def view_my_pictures
+    @student = Student.find(params[:student_id])
+    @students_with_photos = []
+    student_photos = StudentPhoto.find(:all, :group => "student_id")
+
+    student_photos.each do |student_photo|
+      next if student_photo.student.blank?
+      @students_with_photos << student_photo.student
+    end
     render :layout => false
   end
   

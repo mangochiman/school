@@ -3,22 +3,79 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>ID cards</title>
+    <title>ID cards Management</title>
     <!-- Optimize for mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <!-- jQuery & JS files -->
 
+    <%= javascript_include_tag("jquery") %>
     <%= javascript_include_tag("jquery-1.9.1.min") %>
-    <%= javascript_include_tag("highcharts") %>
+    <%= javascript_include_tag("jquery.confirm") %>
     <%= javascript_include_tag("script") %>
-
-    <%= javascript_include_tag("exporting") %>
+    <%= javascript_include_tag("gvalidator") %>
     <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("metallic") %>
+    <%= stylesheet_link_tag("gvalidator") %>
+    <%= stylesheet_link_tag("bootstrap") %>
 
-    <script>
+    <script type="text/javascript">
+      function selectStudent(obj){
+        studentId = obj.getAttribute("student_id");
+        window.location = "/student/view_my_pictures?student_id=" + studentId;
+      }
 
+      function highLightCurrentStudent(){
+        row = document.getElementById("<%= params[:student_id] %>");
+        console.log(row)
+        row.style["background-color"] = 'yellow';
+      }
+      window.setTimeout("highLightCurrentStudent();", 100);
     </script>
+
+    <style>
+      .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: red;
+      }
+
+      table th:first-child {
+        border-style: none none none !important;
+      }
+      
+      form.autoform .msg.icon {
+        margin: 0 10px;
+        padding: 5px 5px 5px 30px;
+        position: unset;
+        font-size: 8.99pt;
+      }
+
+      form label {
+        font-size: 0.9em;
+        font-weight: bold;
+      }
+      form.autoform input, select{
+        font-size: 0.8em !important;
+        font-weight: bold;
+      }
+
+      #payment_type input[type="text"]{
+        border: 1px solid #d9dbdd;
+        outline: medium none;
+        width: 187px;
+      }
+
+      input[type="submit"] {
+        margin-left: 31%;
+      }
+
+      a{
+        cursor: pointer;
+      }
+    </style>
   </head>
   <body>
 
@@ -141,23 +198,95 @@
 
           <div class="content-module">
 
-            <div class="content-module-heading cf">
+            <div class="half-size-column fl" style="width:67%;">
 
-              <h3 class="fl">Student ID cards</h3>
-              <span class="fr expand-collapse-text">Click to collapse</span>
-              <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+              <div class="content-module">
 
-            </div> <!-- end content-module-heading -->
+                <div class="content-module-heading cf">
+
+                  <h3 class="fl">View My Pictures</h3>
+                  <span class="fr expand-collapse-text">Click to collapse</span>
+                  <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+                </div> <!-- end content-module-heading -->
 
 
-            <div class="content-module-main">
-              <div id="container">
-              </div>
-            </div> <!-- end content-module-main -->
+                <div class="content-module-main">
+                  <% if flash[:notice] %>
+                    <div class="confirmation-box round">
+                      <%= flash[:notice] %>
+                    </div>
+                  <% end %>
+                  <% if flash[:error] %>
+                    <div class="error-box round">
+                      <%= flash[:error] %>
+                    </div>
+                  <% end %>
+                  <table style="width:100%;">
+                    <% count = 0 %>
+                    <% (@student.student_photos || []).in_groups_of(2).each do |row| %>
+                      <tr style="background-color:white;">
+                        <% row.each do |student_photo| %>
+                          <% next if student_photo.blank? %>
+                          <% count = count + 1 %>
+                          <td><%= image_tag("/student_photos/code_by_student_photo_id?student_photo_id=#{student_photo.id}", :class=>'student_photo') %></td>
+                        <% end %>
+                      </tr>
+                    <% end %>
+                  </table>
+                </div> <!-- end content-module-main -->
+
+              </div> <!-- end content-module -->
+
+            </div>
+            <div class="half-size-column fr" style="width:32%">
+
+              <div class="content-module">
+
+                <div class="content-module-heading cf">
+
+                  <h3 class="fl">Students with photos (<%= @students_with_photos.count %>)</h3>
+                  <span class="fr expand-collapse-text">Click to collapse</span>
+                  <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+                </div> <!-- end content-module-heading -->
+
+
+                <div class="content-module-main cf">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th style="width:20%;">Name</th>
+                        <th style="text-align:center; padding:0px;">Gender</th>
+                        <th style="padding:2px; width:20%; text-align: center;">Class</th>
+                        <th style="padding:2px;">Photos</th>
+                        <th>&nbsp;</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% @students_with_photos.each do |student| %>
+                        <tr id="<%= student.id %>">
+                          <td style="text-align:left; padding-left: 4px;"><%= student.fname.first.capitalize.to_s + '. ' + student.lname.to_s %></td>
+                          <td><%= student.gender.first %></td>
+                          <td><%= (student.current_class || 'N/A') %></td>
+                          <td style="text-align:left;"><%= student.student_photos.count %></td>
+                          <td style="background-color:white !important;">
+                            <a class="button round blue image-right ic-right-arrow text-upper" onclick="selectStudent(this)" student_id="<%= student.id %>">Select</a>
+                          </td>
+                        </tr>
+                      <% end %>
+                    </tbody>
+                  </table>
+                </div> <!-- end content-module-main -->
+
+              </div> <!-- end content-module -->
+
+            </div>
 
           </div> <!-- end content-module -->
 
-           <!-- end content-module -->
+
+
 
         </div> <!-- end side-content -->
 
@@ -175,5 +304,13 @@
 
     </div> <!-- end footer -->
 
+    <%= javascript_include_tag("bootstrap") %>
+    <%= javascript_include_tag("zebra_datepicker") %>
+    <script>
+      $('.date-picker').Zebra_DatePicker({
+        view : 'years',
+        direction: ['<%=  (Date.today - 10.years).strftime("%Y-%m-%d") %>', '<%=  Date.today.strftime("%Y-%m-%d") %>']
+      });
+    </script>
   </body>
 </html>

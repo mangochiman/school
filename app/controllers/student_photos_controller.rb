@@ -15,5 +15,10 @@ class StudentPhotosController < ApplicationController
     @student_photo = StudentPhoto.find(:last, :conditions => ["student_id =?", params[:student_id]])
     send_data @student_photo.data, :filename => @student_photo.filename, :type => @student_photo.content_type, :disposition => "inline"
   end
+
+  def code_by_student_photo_id
+    @student_photo = StudentPhoto.find(params[:student_photo_id])
+    send_data @student_photo.data, :filename => @student_photo.filename, :type => @student_photo.content_type, :disposition => "inline"
+  end
   
 end
