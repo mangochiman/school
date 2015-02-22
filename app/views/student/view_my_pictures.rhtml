@@ -27,10 +27,19 @@
 
       function highLightCurrentStudent(){
         row = document.getElementById("<%= params[:student_id] %>");
-        console.log(row)
+        tds = row.getElementsByTagName('td');
+        tds[0].style["border-left"] = '2px solid red';
+        for (var i=0; i<= tds.length - 1; i++){
+          if (i>0)tds[i].style["border-left"] = '0';
+          if (i<tds.length - 1)tds[i].style["border-top"] = '2px solid red';
+          if (i<tds.length - 1)tds[i].style["border-bottom"] = '2px solid red';
+          if (i == tds.length - 2)tds[i].style["border-right"] = '2px solid red';
+        }
         row.style["background-color"] = 'yellow';
       }
+      
       window.setTimeout("highLightCurrentStudent();", 100);
+      
     </script>
 
     <style>
@@ -45,7 +54,7 @@
       table th:first-child {
         border-style: none none none !important;
       }
-      
+
       form.autoform .msg.icon {
         margin: 0 10px;
         padding: 5px 5px 5px 30px;
@@ -267,10 +276,10 @@
                       <% @students_with_photos.each do |student| %>
                         <tr id="<%= student.id %>">
                           <td style="text-align:left; padding-left: 4px;"><%= student.fname.first.capitalize.to_s + '. ' + student.lname.to_s %></td>
-                          <td><%= student.gender.first %></td>
-                          <td><%= (student.current_class || 'N/A') %></td>
-                          <td style="text-align:left;"><%= student.student_photos.count %></td>
-                          <td style="background-color:white !important;">
+                          <td style="padding:2px; text-align: center;"><%= student.gender.first %></td>
+                          <td style="padding:2px; text-align: center;"><%= (student.current_class || 'N/A') %></td>
+                          <td style="text-align:center; padding:2px;"><%= student.student_photos.count %></td>
+                          <td style="background-color:white !important;padding:2px; ">
                             <a class="button round blue image-right ic-right-arrow text-upper" onclick="selectStudent(this)" student_id="<%= student.id %>">Select</a>
                           </td>
                         </tr>
