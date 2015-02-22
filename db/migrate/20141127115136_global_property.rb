@@ -3,6 +3,7 @@ class GlobalProperty < ActiveRecord::Migration
     create_table :global_property, :primary_key => :global_property_id do |t|
       t.string :property
       t.string :value
+      t.binary :data
       t.timestamps
     end
   end

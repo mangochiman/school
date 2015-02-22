@@ -189,7 +189,7 @@ class AdminController < ApplicationController
   end
 
   def settings
-    @settings = school_setting
+    @school_name = GlobalProperty.find_by_property("school_name") rescue nil
     render :layout => false
   end
 
@@ -206,15 +206,16 @@ class AdminController < ApplicationController
   end
 
   def add_property
-    g = GlobalProperty.find_by_property("#{params[:name]}")
-    if g.blank?
-      GlobalProperty.create(:property => params[:name],
-        :value => params[:value])
+    school_name = GlobalProperty.find_by_property("school_name")
+    if school_name.blank?
+      GlobalProperty.create(:property => 'school_name',
+        :value => params[:school_name])
     else
-      g.value = params[:value]
-      g.save
+      school_name.value = params[:school_name]
+      school_name.save
     end
-    render :text => g.to_json
+    flash[:notice] = "Operation successful"
+    redirect_to :controller => "admin", :action => "settings"
   end
   
   def semester_settings
@@ -395,4 +396,40 @@ class AdminController < ApplicationController
   def document_types_menu
     render :layout => false
   end
+
+  def add_logo
+    @school_logo = GlobalProperty.find_by_property('school_logo')
+    if (request.method == :post)
+      unless params[:attachment].content_type.match(/IMAGE/i)
+        flash[:error] = "File format not supported. Try another image if at all it was an image"
+        redirect_to :controller => :admin, :action => :add_logo and return
+      end
+      logo = GlobalProperty.new
+      current_logo = GlobalProperty.find_by_property('school_logo')
+      logo = current_logo unless current_logo.blank?
+      logo.uploaded_file = params[:attachment]
+      logo.property = 'school_logo'
+      if logo.save
+        flash[:notice] = "You have successfully uploaded your logo"
+        redirect_to :controller => :admin, :action => :add_logo and return
+      else
+        flash[:error] = "There was a problem submitting your attachment. Check for errors and try again"
+        redirect_to :controller => :attachments, :action => :upload_document and return
+      end
+    end
+    render :layout => false
+  end
+
+  def code_logo
+    @school_logo = GlobalProperty.find_by_property('school_logo')
+    send_data @school_logo.data, :filename => @school_logo.property, :disposition => "inline"
+  end
+
+  def school_logo
+    school_logo = GlobalProperty.find_by_property('school_logo')
+    unless school_logo.blank?
+      send_data school_logo.data, :filename => school_logo.property, :disposition => "inline" and return
+    end
+  end
+  
 end

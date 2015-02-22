@@ -3,22 +3,95 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>ID cards</title>
+    <title>School Settings</title>
     <!-- Optimize for mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <!-- jQuery & JS files -->
-
+    <%= javascript_include_tag("jquery") %>
     <%= javascript_include_tag("jquery-1.9.1.min") %>
-    <%= javascript_include_tag("highcharts") %>
+    <%= javascript_include_tag("jquery.confirm") %>
     <%= javascript_include_tag("script") %>
-
-    <%= javascript_include_tag("exporting") %>
+    <%= javascript_include_tag("gvalidator") %>
     <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("metallic") %>
+    <%= stylesheet_link_tag("gvalidator") %>
+    <%= stylesheet_link_tag("bootstrap") %>
 
     <script>
+      function getFile(){
+        document.getElementById("attachment").click();
+      }
 
+      function sub(obj){
+        var file = obj.value;
+        var fileName = file.split("\\");
+        document.getElementById("uploadFile").value = fileName[fileName.length-1];
+
+        file_upload_div = document.getElementById('file_upload_div');
+        notifier = file_upload_div.getElementsByTagName('span')[1];
+        notifier.className = 'msg icon ok';
+        notifier.innerHTML = 'Completed';
+      }
     </script>
+    <style>
+      .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: red;
+      }
+
+      form.autoform .msg.icon {
+        margin: 0 10px;
+        padding: 5px 5px 5px 30px;
+        position: unset;
+      }
+
+      form label {
+        font-size: 0.9em;
+        font-weight: bold;
+      }
+      form.autoform input, select{
+        font-size: 0.8em !important;
+        font-weight: bold;
+      }
+
+      #course input[type="text"], input[type="password"], textarea {
+        border: 1px solid #d9dbdd;
+        outline: medium none;
+        padding: 0.5em 0.225em;
+      }
+
+      #uploadFile{
+        border: 1px solid #d9dbdd;
+        color: #505050;
+        float: left;
+        font-size: 14px;
+        text-align: center;
+        margin-right: 5px;
+        outline: medium none;
+        padding: 6px;
+        width: 175px;
+      }
+
+      input[type="submit"] {
+        margin-left: 31%;
+      }
+
+      table td:first-child, table td:last-child{
+        text-align: left;
+      }
+      a{
+        cursor: pointer;
+      }
+
+      .school_logo{
+        height: 150px;
+        max-width: 240px;
+      }
+    </style>
   </head>
   <body>
 
@@ -106,8 +179,7 @@
       <div class="page-full-width cf">
 
         <ul id="tabs" class="fl">
-          <li><a href="/student/id_cards_dashboard" class="dashboard-tab">Dashboard</a></li>
-          <li><a href="/student/id_cards_menu" class="active-tab">ID cards</a></li>
+          <li><a href="/admin/settings" class="dashboard-tab active-tab">Settings</a></li>
         </ul> <!-- end tabs -->
 
         <!-- Change this image to your own company's logo -->
@@ -129,10 +201,8 @@
 
           <h3>Task</h3>
           <ul>
-            <li><a href="/student/take_picture/">Take student picture</a></li>
-            <li><a href="/student/view_student_pictures/">View Student Pictures</a></li>
-            <li><a href="/student/generate_id_card/">Generate ID card</a></li>
-            <li><a href="/student/print_id_card/">Print ID cards</a></li>
+            <li><a href="/admin/add_logo">Add Logo</a></li>
+            <li><a href="/admin/settings">Add School Name</a></li>
           </ul>
 
         </div> <!-- end side-menu -->
@@ -141,23 +211,84 @@
 
           <div class="content-module">
 
-            <div class="content-module-heading cf">
+            <div class="half-size-column fl" style="width:69%;">
 
-              <h3 class="fl">Student ID cards</h3>
-              <span class="fr expand-collapse-text">Click to collapse</span>
-              <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+              <div class="content-module">
 
-            </div> <!-- end content-module-heading -->
+                <div class="content-module-heading cf">
+
+                  <h3 class="fl">New School Logo</h3>
+                  <span class="fr expand-collapse-text">Click to collapse</span>
+                  <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+                </div> <!-- end content-module-heading -->
 
 
-            <div class="content-module-main">
-              <div id="container">
-              </div>
-            </div> <!-- end content-module-main -->
+                <div class="content-module-main">
+                  <% if flash[:notice] %>
+                    <div class="confirmation-box round">
+                      <%= flash[:notice] %>
+                    </div>
+                  <% end %>
+                  <% if flash[:error] %>
+                    <div class="error-box round">
+                      <%= flash[:error] %>
+                    </div>
+                  <% end %>
+
+                  <form action="/admin/add_logo" class="autoform" enctype="multipart/form-data" method="post">
+                    <div style="display:none;">
+                      <input id="attachment" name="attachment" type="file" onchange ="sub(this);" />
+                    </div>
+
+                    <div id="file_upload_div">
+                      <label for="uploadFile" style="width:110px;">LOGO</label>
+                      <input class="text required" id='uploadFile' placeholder='Click Browse Button' disabled='disabled'/>
+                    </div>
+
+                    <div>
+                      <a style="float:right;"onclick='getFile()' class="button round blue image-right ic-upload text-upper">Browse</a>
+                    </div>
+
+                    <div class="stripe-separator"></div>
+                    <input name="commit" type="submit" value="Send Attachment" class="round blue ic-right-arrow"/>
+                  </form>
+                </div> <!-- end content-module-main -->
+
+              </div> <!-- end content-module -->
+
+            </div>
+            <div class="half-size-column fr" style="width:30%">
+
+              <div class="content-module">
+
+                <div class="content-module-heading cf">
+
+                  <h3 class="fl">Current School Logo</h3>
+                  <span class="fr expand-collapse-text">Click to collapse</span>
+                  <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+                </div> <!-- end content-module-heading -->
+
+
+                <div class="content-module-main cf">
+                  <% unless @school_logo.blank? %>
+                    <center><%= image_tag("/admin/code_logo", :class => "school_logo") %></center>
+                  <% else %>
+                    <div class="error-box round">
+                      No logo found
+                    </div>
+                  <% end %>
+                </div> <!-- end content-module-main -->
+
+              </div> <!-- end content-module -->
+
+            </div>
 
           </div> <!-- end content-module -->
 
-           <!-- end content-module -->
+
+
 
         </div> <!-- end side-content -->
 
@@ -175,5 +306,13 @@
 
     </div> <!-- end footer -->
 
+    <%= javascript_include_tag("bootstrap") %>
+    <%= javascript_include_tag("zebra_datepicker") %>
+    <script>
+      $('.date-picker').Zebra_DatePicker({
+        view : 'years',
+        direction: ['<%=  Date.today.strftime("%Y-%m-%d") %>', '<%=  (Date.today + 1.year).strftime("%Y-%m-%d") %>']
+      });
+    </script>
   </body>
 </html>

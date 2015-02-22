@@ -1,6 +1,7 @@
 class UserController < ApplicationController
 
   def login
+    @school_name = GlobalProperty.find_by_property("school_name") rescue nil
     if request.get?
       reset_session
     else

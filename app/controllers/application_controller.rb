@@ -13,4 +13,5 @@ class ApplicationController < ActionController::Base
        settings["name"] = GlobalProperty.find_by_property("name").value rescue ""
        return settings
   end
+ 
 end

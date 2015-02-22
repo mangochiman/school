@@ -3,118 +3,66 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>SimpleAdmin - Other page elements</title>
-
-    <!-- Stylesheets -->
-
+    <title>School Settings</title>
     <!-- Optimize for mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <!-- jQuery & JS files -->
+    <%= javascript_include_tag("jquery") %>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("jquery.confirm") %>
     <%= javascript_include_tag("script") %>
+    <%= javascript_include_tag("gvalidator") %>
     <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("metallic") %>
+    <%= stylesheet_link_tag("gvalidator") %>
+    <%= stylesheet_link_tag("bootstrap") %>
 
-    <script>
-      var attribute = "";
-
-      function __$(id){
-        return document.getElementById(id)
-      }
-
-      function addElement(ele, parent, name, cl){
-        var p = __$(parent)
-        p.innerHTML = "";
-        var input = document.createElement(ele)
-        input.name = name
-        input.className = "round full-width-input"
-        input.id = name
-        p.appendChild(input)
-
-        cl.className = "table-actions-button ic-table-reload";
-        cl.onclick = function (){
-          this.className = 'table-actions-button ic-table-edit';
-          p.innerHTML = document.getElementById(name).value;
-          attribute = p.innerHTML;
-          writeProperty(name, attribute)
-          this.onclick = function (){
-            addElement(ele, parent, name, cl)
-          }
-        }
-
-      }
-
-      function addLogo(name, id, ele){
-        var p = __$(id)
-        p.innerHTML = "";
-        var input = document.createElement('input')
-        input.name = 'logos'
-        input.className = "round full-width-input"
-        input.id = 'logos'
-        input.setAttribute("type", "file")
-        p.appendChild(input)
-
-        ele.className = "table-actions-button ic-table-reload";
-        ele.onclick = function (){
-          this.className = 'table-actions-button ic-table-edit';
-          p.innerHTML = document.getElementById('logos').value
-          attribute = p.innerHTML;
-          writeProperty("logo", attribute)
-          this.onclick = function (){
-            addLogo('input', id,  ele)
-          }
-        }
-      }
-
-      function writeProperty(name, value){
-        if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
-          xmlhttp=new XMLHttpRequest();
-        }else{// code for IE6, IE5
-          xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-        }
-        xmlhttp.onreadystatechange=function() {
-          if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-
-          }
-        }
-
-        xmlhttp.open("GET","/admin/add_property?name=" + name + "&value=" + value, true);
-        xmlhttp.send();
-      }
-
-    </script>
-    table-actions-button ic-table-edit
     <style>
-      .table {
-        display:table;
-        width:100%;
+      .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: red;
       }
 
-      .ic-table-reload {
-        background-image: url("../images/icons/message-boxes/confirmation.png");
+      form.autoform .msg.icon {
+        margin: 0 10px;
+        padding: 5px 5px 5px 30px;
+        position: unset;
       }
 
-      .row {
-        display:table-row;
-        width: 100%;
+      form label {
+        font-size: 0.9em;
+        font-weight: bold;
+      }
+      form.autoform input, select{
+        font-size: 0.8em !important;
+        font-weight: bold;
       }
 
-      .text {
-        display:table-cell;
-      }
-      .input {
-        display:table-cell;
-      }
-
-      .edit{
-        display:table-cell;
+      #course input[type="text"], input[type="password"], textarea {
+        border: 1px solid #d9dbdd;
+        outline: medium none;
+        padding: 0.5em 0.225em;
       }
 
-      .text, .edit{
-        padding: 0;
-        text-align: center;
-        width: 7em;
-        border-bottom: 1px solid #f8f9fa;
-        border-left: 1px solid white;
+      #simple-input {
+        font-size: 10pt !important;
+      }
+
+      input[type="submit"] {
+        margin-left: 31%;
+      }
+
+      table td:first-child, table td:last-child{
+        text-align: left;
+      }
+
+      #optional{
+        position: relative;
+        left: 3%;
       }
     </style>
   </head>
@@ -204,14 +152,12 @@
       <div class="page-full-width cf">
 
         <ul id="tabs" class="fl">
-          <li><a href="dashboard.html" class="dashboard-tab">Dashboard</a></li>
-          <li><a href="page-full-width.html">Full width page</a></li>
-          <li><a href="page-other.html" class="active-tab">Settings</a></li>
+          <li><a href="/admin/settings" class="dashboard-tab active-tab">Settings</a></li>
         </ul> <!-- end tabs -->
 
         <!-- Change this image to your own company's logo -->
         <!-- The logo will automatically be resized to 30px height. -->
-        <a href="#" id="company-branding-small" class="fr"><img src="images/company-logo.png" alt="Blue Hosting" /></a>
+        <a href="#" id="company-branding-small" class="fr"><%= image_tag("/admin/school_logo", :alt => 'Logo Missing')%></a>
 
       </div> <!-- end full-width -->
 
@@ -226,180 +172,81 @@
 
         <div class="side-menu fl">
 
-          <h3>Tasks</h3>
+          <h3>Task</h3>
           <ul>
-            <li><a href="/admin/home">Home</a></li>
-            <li><a href="/admin/dashboard" class="active-tab dashboard-tab">Dashboard</a></li>
-            <li><a href="/admin/page_full_width">Students</a></li>
-            <li><a href="/admin/page_other">Parents</a></li>
-            <li><a href="/admin/page_other">Teachers</a></li>
-            <li><a href="/admin/page_other">Research</a></li>
-            <li><a href="/admin/page_other">Exams</a></li>
-            <li><a href="/admin/page_other">Classes</a></li>
-            <li><a href="/admin/page_other">Reports</a></li>
-            <li><a href="/semesters/index">Semester</a></li>
-            <li><a href="/admin/page_other">Daily Attendance</a></li>
+            <li><a href="/admin/add_logo">Add Logo</a></li>
+            <li><a href="/admin/settings">Add School Name</a></li>
           </ul>
 
         </div> <!-- end side-menu -->
 
         <div class="side-content fr">
 
-          <div class="half-size-column fl">
+          <div class="content-module">
 
-            <div class="content-module">
+            <div class="half-size-column fl" style="width:69%;">
 
-              <div class="content-module-heading cf">
+              <div class="content-module">
 
-                <h3 class="fl">School Details</h3>
-                <span class="fr expand-collapse-text">Click to collapse</span>
-                <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+                <div class="content-module-heading cf">
 
-              </div> <!-- end content-module-heading -->
+                  <h3 class="fl">New School Name</h3>
+                  <span class="fr expand-collapse-text">Click to collapse</span>
+                  <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+                </div> <!-- end content-module-heading -->
 
 
-              <div class="content-module-main">
-                <div class="table">
-                  <div class="row">
-                    <div class="text">
-                      Name:
+                <div class="content-module-main">
+                  <% if flash[:notice] %>
+                    <div class="confirmation-box round">
+                      <%= flash[:notice] %>
                     </div>
-
-                    <div class="input" id="input">
-                      <%=  @settings["name"] %>
+                  <% end %>
+                  <% if flash[:error] %>
+                    <div class="error-box round">
+                      <%= flash[:error] %>
                     </div>
-                    <div class="edit">
-                      <a class="table-actions-button ic-table-edit" href="#" onclick="addElement('input', 'input', 'name', this);"></a>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="text">
-                      Logo:
-                    </div>
+                  <% end %>
+                  <form id="school_name" class="autoform" action="/admin/add_property" method="POST">
+                    <div><label for="text" style="width:100px;">School Name</label><input type="text" value="<%= @school_name.value rescue '' %>" name="school_name" class="text required" /></div>
+                    <div class="stripe-separator"><!--  --></div>
+                    <input type="submit" value="Submit" class="round blue ic-right-arrow" />
+                  </form>
+                </div> <!-- end content-module-main -->
 
-                    <div class="input" id="logo">
+              </div> <!-- end content-module -->
 
-                    </div>
-                    <div class="edit">
-                      <a class="table-actions-button ic-table-edit" href="#" onclick="addLogo('input', 'logo', this);"></a>
-                    </div>
-                  </div>
+            </div>
+            <div class="half-size-column fr" style="width:30%">
 
-                </div>
-                <div class="stripe-separator"><!-- --></div>
+              <div class="content-module">
 
-                <h2>This is an H2 heading</h2>
-                <h3>This is an H3 heading</h3>
-                <h4>This is an H4 heading</h4>
-                <h5>This is an H5 heading</h5>
+                <div class="content-module-heading cf">
 
-                <div class="stripe-separator"><!-- --></div>
+                  <h3 class="fl">Current School Name</h3>
+                  <span class="fr expand-collapse-text">Click to collapse</span>
+                  <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
-                <p>The separator above has top and bottom margin set by default, so it will split the content accordingly without
-							any extra tweaks needed from you.</p>
-
-                <div class="stripe-separator"><!-- --></div>
-
-                <blockquote>This is a blockquote followed by a cite tag. And no matter how much text you put in this, it will automatically resize.</blockquote>
-                <cite>- John</cite>
-
-              </div> <!-- end content-module-main -->
-
-            </div> <!-- end content-module -->
-
-          </div> <!--end half-size-column-->
-
-          <div class="half-size-column fr">
-
-            <div class="content-module">
-
-              <div class="content-module-heading cf">
-
-                <h3 class="fl">Ordered Lists</h3>
-                <span class="fr expand-collapse-text">Click to collapse</span>
-                <span class="fr expand-collapse-text initial-expand">Click to expand</span>
-
-              </div> <!-- end content-module-heading -->
+                </div> <!-- end content-module-heading -->
 
 
-              <div class="content-module-main cf">
+                <div class="content-module-main cf">
+                  <% unless @school_name.blank? %>
+                    <a href="#"><%= @school_name.value %></a>
+                  <% else %>
+                    <a href="#">Not set</a>
+                  <% end %>
+                </div> <!-- end content-module-main -->
 
-                <div class="half-size-column fl">
+              </div> <!-- end content-module -->
 
-                  <h2 class="text-upper">A simple ordered list</h2>
+            </div>
 
-                  <ol>
-                    <li>This is list item number 1.</li>
-                    <li>Another list item.</li>
-                    <li>A slightly longer list item. This will probably wrap on the next line.</li>
-                    <li>Another list item.</li>
-                  </ol>
-
-                </div>
-
-                <div class="half-size-column fr">
-
-                  <h2 class="text-upper">An ordered list with links</h2>
-
-                  <ol>
-                    <li><a href="#">Some links go here</a></li>
-                    <li><a href="#">Another link</a></li>
-                    <li><a href="#">And yet another link</a></li>
-                  </ol>
-
-                </div>
-
-              </div> <!-- end content-module-main -->
-
-            </div> <!-- end content-module -->
-
-            <div class="content-module">
-
-              <div class="content-module-heading cf">
-
-                <h3 class="fl">Unordered Lists</h3>
-                <span class="fr expand-collapse-text">Click to collapse</span>
-                <span class="fr expand-collapse-text initial-expand">Click to expand</span>
-
-              </div> <!-- end content-module-heading -->
+          </div> <!-- end content-module -->
 
 
-              <div class="content-module-main cf">
 
-                <div class="half-size-column fl">
-
-                  <h2 class="text-upper">A simple unordered list</h2>
-
-                  <ul class="regular-ul">
-                    <li>This is list item number 1.</li>
-                    <li>Another list item.</li>
-                    <li>A slightly longer list item.</li>
-                    <li>Another list item.</li>
-                  </ul>
-
-                  <p>To add a simple list, make sure you specify <code>class="regular-ul"</code> to the list.</p>
-
-                </div>
-
-                <div class="half-size-column fr">
-
-                  <h2 class="text-upper">A custom unordered list</h2>
-
-                  <ul class="custom-ul">
-                    <li><a href="#">Some links go here</a></li>
-                    <li><a href="#">Another link</a></li>
-                    <li><a href="#">And yet another link</a></li>
-                  </ul>
-
-                  <p>To add a custom list, make sure you specify <code>class="custom-ul"</code> to the list.</p>
-
-                </div>
-
-              </div> <!-- end content-module-main -->
-
-            </div> <!-- end content-module -->
-
-          </div> <!--end half-size-column-->
 
         </div> <!-- end side-content -->
 
@@ -417,5 +264,13 @@
 
     </div> <!-- end footer -->
 
+    <%= javascript_include_tag("bootstrap") %>
+    <%= javascript_include_tag("zebra_datepicker") %>
+    <script>
+      $('.date-picker').Zebra_DatePicker({
+        view : 'years',
+        direction: ['<%=  Date.today.strftime("%Y-%m-%d") %>', '<%=  (Date.today + 1.year).strftime("%Y-%m-%d") %>']
+      });
+    </script>
   </body>
 </html>
