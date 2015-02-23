@@ -52,6 +52,11 @@ class UserController < ApplicationController
     @users = User.find(:all)
     render :layout => false
   end
+
+  def view_users
+    @users = User.find(:all)
+    render :layout => false
+  end
   
   def create
     password = params[:password]

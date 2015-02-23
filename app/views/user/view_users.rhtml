@@ -17,74 +17,7 @@
     <%= stylesheet_link_tag("metallic") %>
     <%= stylesheet_link_tag("gvalidator") %>
     <%= stylesheet_link_tag("bootstrap") %>
-    <script>
-      function selectAll(){
-        selectAllInput = document.getElementById('table-select-all');
-        inputs = document.getElementsByTagName("input");
-        if (selectAllInput.checked){
-          for (var i=0; i<=inputs.length - 1; i++){
-            if (inputs[i] == selectAllInput) continue;
-            if (inputs[i].type == 'checkbox'){
-              inputs[i].checked = true;
-            }
-          }
-        }
-        else{
-          for (var i=0; i<=inputs.length - 1; i++){
-            if (inputs[i] == selectAllInput) continue;
-            if (inputs[i].type == 'checkbox'){
-              inputs[i].checked = false;
-            }
-          }
-        }
-      }
-
-      function deleteUsers(){
-        inputs = document.getElementsByTagName("input");
-        userIDs = []
-        for (var i=0; i<=inputs.length - 1; i++){
-          if (inputs[i].type == 'checkbox'){
-            if (inputs[i].checked){
-              if (inputs[i].hasAttribute("user_id")){
-                userID = inputs[i].getAttribute("user_id");
-                userIDs.push(userID);
-              }
-            }
-          }
-        }
-
-        jQuery.ajax({
-          type: "POST",
-          url: "/user/delete_users",
-          data: "user_ids=" + userIDs,
-          success: function(){
-            for (var x=0; x<= userIDs.length - 1; x++){
-              id = userIDs[x];
-              element = document.getElementById(id);
-              element.parentNode.removeChild(element)
-            }
-          }
-
-        });
-      }
-      var currentUserId = "";
-      function setCurrentUserId(obj){
-        currentUserId = obj.getAttribute("user_id");
-      }
-
-      function deleteSingleEntry(){
-        jQuery.ajax({
-          type: "POST",
-          url: "/user/delete_users",
-          data: "user_id=" + currentUserId + "&mode=single_entry",
-          success: function(){
-            element = document.getElementById(currentUserId);
-            element.parentNode.removeChild(element);
-          }
-
-        });
-      }
-    </script>
+    
     <style>
       .modal-title {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -249,7 +182,7 @@
 
             <div class="content-module-heading cf">
 
-              <h3 class="fl">Remove Users</h3>
+              <h3 class="fl">View Users</h3>
               <span class="fr expand-collapse-text">Click to collapse</span>
               <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -272,28 +205,19 @@
 
                 <thead>
                   <tr>
-                    <th><input type="checkbox" id="table-select-all" onclick="selectAll();"/></th>
-                    <th style="min-width:35%;">Username</th>
+                    <th>#</th>
+                    <th style="min-width:35%; text-align: center;">Username</th>
                     <th style="min-width:35%;"><center>Date created</center></th>
-                    <th>Action</th>
                   </tr>
                 </thead>
-                <tfoot>
-                  <tr>
-                    <td colspan="3" class="table-footer">
-                      <a href="#" class="button round blue image-right ic-delete text-upper delete-multiple">Delete</a>
-                    </td>
-                  </tr>
-                </tfoot>
+ 
                 <tbody id="users">
+                  <% count = 0 %>
                   <% @users.each do |user| %>
-                    <tr id="<%= user.id %>">
-                      <td><input type="checkbox" user_id="<%= user.id %>"/></td>
-                      <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= user.username %></td>
+                    <tr>
+                      <td><%= count = count + 1 %></td>
+                      <td style="text-align:left; padding:4px; text-align: center;"><%= user.username %></td>
                       <td><center><%= user.created_at.to_date.strftime("%d-%b-%Y") %></center></td>
-                      <td>
-                        <a user_id="<%= user.id %>" href="#" onmousedown="setCurrentUserId(this)" class="table-actions-button ic-table-delete confirm"></a>
-                      </td>
                     </tr>
                   <% end %>
                 </tbody>
@@ -326,32 +250,6 @@
 
     </div> <!-- end footer -->
     <%= javascript_include_tag("bootstrap") %>
-    <script>
-
-      $(".delete-multiple").confirm({
-            title:"Delete confirmation",
-            text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
-            confirm: function(button) {
-              deleteUsers();
-            },
-            cancel: function(button) {
-            },
-            confirmButton: "Yes I am",
-            cancelButton: "No"
-        });
-
-        $(".confirm").confirm({
-            title:"Delete confirmation",
-            text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
-            confirm: function(button) {
-              deleteSingleEntry();
-            },
-            cancel: function(button) {
-
-            },
-            confirmButton: "Yes I am",
-            cancelButton: "No"
-        });
-    </script>
+    
   </body>
 </html>
