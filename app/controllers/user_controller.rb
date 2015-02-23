@@ -47,6 +47,11 @@ class UserController < ApplicationController
     @users = User.find(:all)
     render :layout => false
   end
+
+  def void_users
+    @users = User.find(:all)
+    render :layout => false
+  end
   
   def create
     password = params[:password]
@@ -93,5 +98,21 @@ class UserController < ApplicationController
       flash[:error] = "Oops. Something wen't wrong. That's what we know"
       redirect_to :controller => "user", :action => "edit_user" and return
     end
+  end
+
+  def delete_users
+    if (params[:mode] == 'single_entry')
+      user = User.find(params[:user_id])
+      user.delete
+      render :text => "true" and return
+    end
+
+    user_ids = params[:user_ids].split(",")
+    (user_ids || []).each do |user_id|
+      user = User.find(user_id)
+      user.delete
+    end
+
+    render :text => "true" and return
   end
 end
