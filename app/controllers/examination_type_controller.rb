@@ -1,6 +1,6 @@
 class ExaminationTypeController < ApplicationController
   def manage_exam_type_menu
-    render :layout => false
+    
   end
   
   def new_exam_type
@@ -13,12 +13,12 @@ class ExaminationTypeController < ApplicationController
       end
     end
 
-    render :layout => false
+    
   end
 
   def edit_exam_type
     @exam_types = ExaminationType.all
-    render :layout => false
+    
   end
 
   def edit_me
@@ -37,12 +37,12 @@ class ExaminationTypeController < ApplicationController
       end
     end
 
-    render :layout => false
+    
   end
 
   def void_exam_type
     @exam_types = ExaminationType.all
-    render :layout => false
+    
   end
 
   def delete_exam_types
@@ -63,7 +63,7 @@ class ExaminationTypeController < ApplicationController
 
   def view_exam_types
     @exam_types = ExaminationType.all
-    render :layout => false
+    
   end
 
   def manage_exam_type_dashboard
@@ -74,6 +74,6 @@ class ExaminationTypeController < ApplicationController
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
     @females = Student.find_by_sql("SELECT * FROM student WHERE gender = 'FEMALE' AND
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
-    render :layout => false
+    
   end
 end

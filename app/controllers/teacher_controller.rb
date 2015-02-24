@@ -38,21 +38,21 @@ class TeacherController < ApplicationController
       @totals << value["total_teachers"]
     end
     
-    render :layout => false
+    
   end
 
   def add_teacher
-    render :layout => false
+    
   end
 
   def assign_class
     @teachers = Teacher.all
-    render :layout => false
+    
   end
 
   def remove_class
     @teachers = Teacher.all
-    render :layout => false
+    
   end
 
   def remove_my_classes
@@ -98,7 +98,7 @@ class TeacherController < ApplicationController
       render :text => "true" and return
     end
 
-    render :layout => false
+    
   end
   
   def assign_me_class
@@ -106,14 +106,14 @@ class TeacherController < ApplicationController
         params[:teacher_id]]).map(&:class_room_id)
     my_class_room_ids = '' if my_class_room_ids.blank?
     @class_rooms = ClassRoom.find(:all, :conditions => ["class_room_id NOT IN (?)", my_class_room_ids])
-    render :layout => false
+    
   end
 
   def assign_me_subjects_menu
     teacher_id = params[:teacher_id]
     @my_class_rooms = ClassRoomTeacher.find(:all, :conditions => ["teacher_id =?",
         teacher_id]).collect{|crt|crt.class_room}
-    render :layout => false
+    
   end
 
   def assign_edit_my_subjects
@@ -125,7 +125,7 @@ class TeacherController < ApplicationController
     ).collect{|i|i.course }
       
     @courses = ClassRoom.find(class_room_id).class_room_courses.collect{|crc|crc.course}
-    render :layout => false
+    
   end
 
   def assign_optional_courses
@@ -152,7 +152,7 @@ class TeacherController < ApplicationController
   end
   
   def teacher_stats
-    render :layout => false
+    
   end
 
   def create_teacher_class_assignment
@@ -172,7 +172,7 @@ class TeacherController < ApplicationController
   
   def assign_subjects
     @teachers = Teacher.all
-    render :layout => false
+    
   end
 
   def filter_teachers
@@ -231,12 +231,12 @@ class TeacherController < ApplicationController
       render :text => hash.to_json and return
     end
     
-    render :layout => false
+    
   end
 
   def edit_teacher
     @teachers = Teacher.all
-    render :layout => false
+    
   end
 
   def create
@@ -276,7 +276,7 @@ class TeacherController < ApplicationController
       end
     end
 
-    render :layout => false
+    
   end
 
   def search_teachers
@@ -363,7 +363,7 @@ class TeacherController < ApplicationController
       @totals << value["total_teachers"]
     end
     
-    render :layout => false
+    
   end
 
   def manage_teachers_dashboard
@@ -405,10 +405,10 @@ class TeacherController < ApplicationController
       @totals << value["total_teachers"]
     end
 
-    render :layout => false
+    
   end
 
   def select_from_employees
-    render :layout => false
+    
   end
 end

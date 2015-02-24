@@ -7,7 +7,6 @@ class AdminController < ApplicationController
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
     @females = Student.find_by_sql("SELECT * FROM student WHERE gender = 'FEMALE' AND
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
-    render :layout => false
   end
 
   def load_enrollment_by_gender_data
@@ -28,7 +27,7 @@ class AdminController < ApplicationController
   end
   
   def school_enrollment
-    render :layout => false
+
   end
 
   def students_statistics
@@ -50,8 +49,7 @@ class AdminController < ApplicationController
       @years << key
       @enrollments << total
     end
-    
-    render :layout => false
+
   end
 
   def teachers_statistics
@@ -74,7 +72,7 @@ class AdminController < ApplicationController
       @enrollments << total
     end
 
-    render :layout => false
+    
   end
   
   def daily_attendance
@@ -115,7 +113,7 @@ class AdminController < ApplicationController
       @weekly_absenteeism << values["A"]
     end
 
-    render :layout => false
+    
   end
 
   def load_daily_attendance_data
@@ -177,32 +175,32 @@ class AdminController < ApplicationController
   end
   
   def page_full_width
-    render :layout => false
+    
   end
   
   def page_other
-    render :layout => false
+    
   end
 
   def dashboard
-    render :layout => false
+    
   end
 
   def settings
     @school_name = GlobalProperty.find_by_property("school_name") rescue nil
-    render :layout => false
+    
   end
 
   def index
-    render :layout => false
+    
   end
 
   def time_table
-    render :layout => false
+    
   end
 
   def research
-    render :layout => false
+    
   end
 
   def add_property
@@ -219,23 +217,23 @@ class AdminController < ApplicationController
   end
   
   def semester_settings
-    render :layout => false
+    
   end
 
   def set_total_semesters
-    render :layout => false
+    
   end
 
   def set_current_semester
-    render :layout => false
+    
   end
 
   def view_semesters
-    render :layout => false
+    
   end
 
   def time_table_management_menu
-    render :layout => false
+    
   end
 
   def subject_groups_management
@@ -248,7 +246,7 @@ class AdminController < ApplicationController
       @class_room_courses << total_courses
     end
     
-    render :layout => false
+    
   end
 
   def semester_management_menu
@@ -256,31 +254,31 @@ class AdminController < ApplicationController
     @current_semester = GlobalProperty.find_by_property("current_semester").value rescue nil
     @current_semester_start_date = GlobalProperty.find_by_property("current_semester_start_date").value rescue nil
     @current_semester_end_date = GlobalProperty.find_by_property("current_semester_end_date").value rescue nil
-    render :layout => false
+    
   end
 
   def payments_overview_menu
-    render :layout => false
+    
   end
 
   def print_teacher_time_table
-    render :layout => false
+    
   end
 
   def documents_management_menu
-    render :layout => false
+    
   end
 
   def barcode_scanning_menu
-    render :layout => false
+    
   end
 
   def system_configuration_menu
-    render :layout => false
+    
   end
 
   def backup_data_menu
-    render :layout => false
+    
   end
 
   def time_table_dashboard
@@ -291,7 +289,7 @@ class AdminController < ApplicationController
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
     @females = Student.find_by_sql("SELECT * FROM student WHERE gender = 'FEMALE' AND
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
-    render :layout => false
+    
   end
 
   def subject_groups_dashboard
@@ -302,7 +300,7 @@ class AdminController < ApplicationController
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
     @females = Student.find_by_sql("SELECT * FROM student WHERE gender = 'FEMALE' AND
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
-    render :layout => false
+    
   end
 
   def semester_management_dashboard
@@ -313,7 +311,7 @@ class AdminController < ApplicationController
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
     @females = Student.find_by_sql("SELECT * FROM student WHERE gender = 'FEMALE' AND
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
-    render :layout => false
+    
   end
 
   def payments_overview_dashboard
@@ -324,7 +322,7 @@ class AdminController < ApplicationController
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
     @females = Student.find_by_sql("SELECT * FROM student WHERE gender = 'FEMALE' AND
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
-    render :layout => false
+    
   end
 
   def print_teacher_time_table_dashboard
@@ -335,7 +333,7 @@ class AdminController < ApplicationController
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
     @females = Student.find_by_sql("SELECT * FROM student WHERE gender = 'FEMALE' AND
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
-    render :layout => false
+    
   end
 
   def documents_management_dashboard
@@ -346,7 +344,7 @@ class AdminController < ApplicationController
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
     @females = Student.find_by_sql("SELECT * FROM student WHERE gender = 'FEMALE' AND
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
-    render :layout => false
+    
   end
 
   def barcode_scanning_dashboard
@@ -357,7 +355,7 @@ class AdminController < ApplicationController
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
     @females = Student.find_by_sql("SELECT * FROM student WHERE gender = 'FEMALE' AND
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
-    render :layout => false
+    
   end
 
   def system_configuration_dashboard
@@ -368,7 +366,7 @@ class AdminController < ApplicationController
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
     @females = Student.find_by_sql("SELECT * FROM student WHERE gender = 'FEMALE' AND
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
-    render :layout => false
+    
   end
 
   def backup_data_dashboard
@@ -379,7 +377,7 @@ class AdminController < ApplicationController
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
     @females = Student.find_by_sql("SELECT * FROM student WHERE gender = 'FEMALE' AND
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
-    render :layout => false
+    
   end
 
   def class_management_dashboard
@@ -390,11 +388,11 @@ class AdminController < ApplicationController
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
     @females = Student.find_by_sql("SELECT * FROM student WHERE gender = 'FEMALE' AND
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
-    render :layout => false
+    
   end
 
   def document_types_menu
-    render :layout => false
+    
   end
 
   def add_logo
@@ -417,7 +415,7 @@ class AdminController < ApplicationController
         redirect_to :controller => :attachments, :action => :upload_document and return
       end
     end
-    render :layout => false
+    
   end
 
   def code_logo

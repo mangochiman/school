@@ -21,7 +21,7 @@ class UserController < ApplicationController
   end
 
   def user_management_menu
-    render :layout => false
+    
   end
 
   def user_management_dashboard
@@ -32,12 +32,12 @@ class UserController < ApplicationController
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
     @females = Student.find_by_sql("SELECT * FROM student WHERE gender = 'FEMALE' AND
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
-    render :layout => false
+    
   end
 
   def new_user
     @users = User.find(:all)
-    render :layout => false
+    
   end
 
   def edit_user
@@ -45,17 +45,17 @@ class UserController < ApplicationController
       @user = User.find(params[:user_id])
     end
     @users = User.find(:all)
-    render :layout => false
+    
   end
 
   def void_users
     @users = User.find(:all)
-    render :layout => false
+    
   end
 
   def view_users
     @users = User.find(:all)
-    render :layout => false
+    
   end
   
   def create

@@ -44,16 +44,16 @@ class ParentController < ApplicationController
       @students_without_guardians << value["without_guardians"]
     end
     
-    render :layout => false
+    
   end
 
   def new_parent_guardian
-    render :layout => false
+    
   end
   
   def edit_parent_guardian
     @parents = Parent.all
-    render :layout => false
+    
   end
   
   def edit_me
@@ -75,12 +75,12 @@ class ParentController < ApplicationController
         redirect_to :controller => "parent", :action => "edit_parent_guardian" and return
       end
     end
-    render :layout => false
+    
   end
 
   def void_parent_guardian
     @parents = Parent.all
-    render :layout => false
+    
   end
 
   def delete_parents
@@ -144,7 +144,7 @@ class ParentController < ApplicationController
 
       render :text => hash.to_json and return
     end
-    render :layout => false
+    
   end
   
   def create
@@ -291,7 +291,7 @@ class ParentController < ApplicationController
       @students_without_guardians << value["without_guardians"]
     end
 
-    render :layout => false
+    
   end
 
   def parent_management_dashboard
@@ -302,6 +302,6 @@ class ParentController < ApplicationController
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
     @females = Student.find_by_sql("SELECT * FROM student WHERE gender = 'FEMALE' AND
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
-    render :layout => false
+    
   end
 end

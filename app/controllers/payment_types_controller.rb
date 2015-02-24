@@ -1,16 +1,16 @@
 class PaymentTypesController < ApplicationController
 
   def payment_types_menu
-    render :layout => false
+    
   end
 
   def payment_types_management_dashboard
-    render :layout => false
+    
   end
 
   def add_payment_type
     @payment_types = PaymentType.find(:all)
-    render :layout => false
+    
   end
 
   def create
@@ -45,22 +45,22 @@ class PaymentTypesController < ApplicationController
       end
     end
     
-    render :layout => false
+    
   end
   
   def edit_payment_type
     @payment_types = PaymentType.find(:all)
-    render :layout => false
+    
   end
 
   def void_payment_types
     @payment_types = PaymentType.find(:all)
-    render :layout => false
+    
   end
 
   def view_payment_types
     @payment_types = PaymentType.find(:all)
-    render :layout => false
+    
   end
 
   def delete_payment_types

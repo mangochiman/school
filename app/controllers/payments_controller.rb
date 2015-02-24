@@ -1,21 +1,21 @@
 class PaymentsController < ApplicationController
 
   def payments_management_menu
-    render :layout => false
+    
   end
 
   def payments_management_dashboard
-    render :layout => false
+    
   end
 
   def add_payment
     @students = Student.find(:all)
-    render :layout => false
+    
   end
   
   def edit_payment
     @students = Student.find(:all)
-    render :layout => false
+    
   end
 
   def edit_my_payments_menu
@@ -37,7 +37,7 @@ class PaymentsController < ApplicationController
       @payments_hash[payment_type_id][payment_id]["date_paid"] = payment.date.to_date.strftime("%d-%b-%Y")
     end
     
-    render :layout => false
+    
   end
 
   def edit_particular_payment
@@ -77,12 +77,12 @@ class PaymentsController < ApplicationController
       end
     end
     
-    render :layout => false
+    
   end
   
   def void_payments
     @students = Student.find(:all)
-    render :layout => false
+    
   end
 
   def void_my_payments_menu
@@ -104,7 +104,7 @@ class PaymentsController < ApplicationController
       @payments_hash[payment_type_id][payment_id]["date_paid"] = payment.date.to_date.strftime("%d-%b-%Y")
     end
 
-    render :layout => false
+    
   end
 
   def delete_payments
@@ -117,7 +117,7 @@ class PaymentsController < ApplicationController
   
   def view_payments
     @students = Student.find(:all)
-    render :layout => false
+    
   end
 
   def view_my_payments
@@ -140,7 +140,7 @@ class PaymentsController < ApplicationController
       @payments_hash[payment_type_id][payment_id]["date_created"] = payment.created_at.to_date.strftime("%d-%b-%Y")
     end
     
-    render :layout => false
+    
   end
   
   def add_student_payment
@@ -179,7 +179,7 @@ class PaymentsController < ApplicationController
       @payments_hash[payment_type_id]["latest_date_paid"] = latest_payment.date.to_date.strftime("%d-%b-%Y") if latest_payment
     end
     
-    render :layout => false
+    
   end
 
   def create_student_payment

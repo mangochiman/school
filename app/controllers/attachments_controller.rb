@@ -8,18 +8,18 @@ class AttachmentsController < ApplicationController
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
     @females = Student.find_by_sql("SELECT * FROM student WHERE gender = 'FEMALE' AND
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
-    render :layout => false
+    
   end
 
   def documents_management_menu
-    render :layout => false
+    
   end
   
   def upload_document
     @attachment_types = AttachmentType.find(:all)
     @attachment_select = [["[Document Type]", ""]]
     @attachment_select += AttachmentType.find(:all).collect{|a|[a.name, a.id]}
-    render :layout => false
+    
   end
 
   def create_attachment
@@ -41,7 +41,7 @@ class AttachmentsController < ApplicationController
       @attachment_type = AttachmentType.find(params[:attachment_type_id])
     end
     @attachment_types = AttachmentType.find(:all)
-    render :layout => false
+    
   end
 
   def delete_documents
@@ -49,7 +49,7 @@ class AttachmentsController < ApplicationController
       @attachment_type = AttachmentType.find(params[:attachment_type_id])
     end
     @attachment_types = AttachmentType.find(:all)
-    render :layout => false
+    
   end
 
   def view_documents
@@ -57,12 +57,12 @@ class AttachmentsController < ApplicationController
       @attachment_type = AttachmentType.find(params[:attachment_type_id])
     end
     @attachment_types = AttachmentType.find(:all)
-    render :layout => false
+    
   end
 
   def view_raw_file
     @attachment = Attachment.find(params[:attachment_id])
-    render :layout => false
+    
   end
 
   def code_attachment

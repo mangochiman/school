@@ -38,25 +38,25 @@ class StudentController < ApplicationController
       @totals << value["total_students"]
     end
 
-    render :layout => false
+    
   end
 
   def my_results
-    render :layout => false
+    
   end
 
   def add_student
-    render :layout => false
+    
   end
 
   def edit_student
     @students = Student.all
-    render :layout => false
+    
   end
 
   def remove_students
     @students = Student.all
-    render :layout => false
+    
   end
 
   def delete_students
@@ -83,12 +83,12 @@ class StudentController < ApplicationController
     @students = Student.find(:all, :conditions => ["student_id NOT IN (?)",
         student_ids_with_class_rooms]
     )
-    render :layout => false
+    
   end
   
   def assign_me_class
     @class_rooms = ClassRoom.all
-    render :layout => false
+    
   end
 
   def create_student_class_assignment
@@ -137,7 +137,7 @@ class StudentController < ApplicationController
   
   def assign_subjects
     @students = Student.find(:all, :joins => [:class_room_student])
-    render :layout => false
+    
   end
 
   def assign_optional_courses
@@ -169,12 +169,12 @@ class StudentController < ApplicationController
       #redirect_to :action => "assign_optional_courses", :student_id => params[:student_id] and return
     end
     
-    render :layout => false
+    
   end
 
   def edit_subjects
     @students = Student.find(:all, :joins => [:student_courses]).uniq
-    render :layout => false
+    
   end
 
   def edit_my_subjects
@@ -212,13 +212,13 @@ class StudentController < ApplicationController
       end
     end
     
-    render :layout => false
+    
   end
   
   def assign_parent_guardian
     students_with_guardians_ids = StudentParent.find(:all).map(&:student_id).join(', ')
     @students = Student.find(:all, :conditions => ["student_id NOT IN (?)", students_with_guardians_ids])
-    render :layout => false
+    
   end
 
   def delete_student_guardian
@@ -229,7 +229,7 @@ class StudentController < ApplicationController
   
   def edit_parent_guardian
     @students = Student.find(:all, :joins => [:student_parent])
-    render :layout => false
+    
   end
   
   def select_guardian
@@ -241,7 +241,7 @@ class StudentController < ApplicationController
     end
     
     @parents = Parent.all
-    render :layout => false
+    
   end
 
   def create_student_guardian
@@ -277,7 +277,7 @@ class StudentController < ApplicationController
   def filter_students
     @class_rooms = [["---Select Class---", ""]]
     @class_rooms += ClassRoom.find(:all).collect{|c|[c.name, c.id]}
-    render :layout => false
+    
   end
 
   def filter_students_by_params
@@ -416,7 +416,7 @@ class StudentController < ApplicationController
         redirect_to :controller => "student", :action => "edit_student" and return
       end
     end
-    render :layout => false
+    
   end
   
   def create
@@ -485,11 +485,11 @@ class StudentController < ApplicationController
       @totals << value["total_students"]
     end
 
-    render :layout => false
+    
   end
 
   def behavior_management_menu
-    render :layout => false
+    
   end
 
   def examination_results_menu
@@ -552,23 +552,23 @@ class StudentController < ApplicationController
     end
 
     @class_courses = hash.to_json
-    render :layout => false
+    
   end
 
   def payments_management_menu
-    render :layout => false
+    
   end
 
   def id_cards_menu
-    render :layout => false
+    
   end
 
   def semester_statement_menu
-    render :layout => false
+    
   end
 
   def warning_letters_menu
-    render :layout => false
+    
   end
 
   def student_dashboard
@@ -579,7 +579,7 @@ class StudentController < ApplicationController
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
     @females = Student.find_by_sql("SELECT * FROM student WHERE gender = 'FEMALE' AND
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
-    render :layout => false
+    
   end
 
   def behavior_management_dashboard
@@ -590,7 +590,7 @@ class StudentController < ApplicationController
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
     @females = Student.find_by_sql("SELECT * FROM student WHERE gender = 'FEMALE' AND
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
-    render :layout => false
+    
   end
 
   def examination_results_dashboard
@@ -601,7 +601,7 @@ class StudentController < ApplicationController
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
     @females = Student.find_by_sql("SELECT * FROM student WHERE gender = 'FEMALE' AND
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
-    render :layout => false
+    
   end
 
   def payments_management_dashboard
@@ -612,7 +612,7 @@ class StudentController < ApplicationController
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
     @females = Student.find_by_sql("SELECT * FROM student WHERE gender = 'FEMALE' AND
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
-    render :layout => false
+    
   end
 
   def id_cards_dashboard
@@ -623,7 +623,7 @@ class StudentController < ApplicationController
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
     @females = Student.find_by_sql("SELECT * FROM student WHERE gender = 'FEMALE' AND
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
-    render :layout => false
+    
   end
 
   def semester_statement_dashboard
@@ -634,7 +634,7 @@ class StudentController < ApplicationController
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
     @females = Student.find_by_sql("SELECT * FROM student WHERE gender = 'FEMALE' AND
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
-    render :layout => false
+    
   end
 
   def warning_letters_dashboard
@@ -645,22 +645,22 @@ class StudentController < ApplicationController
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
     @females = Student.find_by_sql("SELECT * FROM student WHERE gender = 'FEMALE' AND
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
-    render :layout => false
+    
   end
 
   def take_picture
     @students = Student.find(:all)
-    render :layout => false
+    
   end
 
   def add_student_photo
     @student = Student.find(params[:student_id])
-    render :layout => false
+    
   end
 
   def view_student_pictures
     @students = Student.find(:all)
-    render :layout => false
+    
   end
 
   def view_my_pictures
@@ -672,7 +672,7 @@ class StudentController < ApplicationController
       next if student_photo.student.blank?
       @students_with_photos << student_photo.student
     end
-    render :layout => false
+    
   end
   
 end

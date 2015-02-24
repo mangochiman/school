@@ -38,16 +38,16 @@ class ClassRoomController < ApplicationController
       @totals << value["total_students"]
     end
 
-    render :layout => false
+    
   end
 
   def add_class
-    render :layout => false
+    
   end
 
   def edit_class
     @class_rooms = ClassRoom.all
-    render :layout => false
+    
   end
 
   def edit_me
@@ -65,11 +65,11 @@ class ClassRoomController < ApplicationController
         redirect_to :action => "edit_class" and return
       end
     end
-    render :layout => false
+    
   end
   def remove_class
     @class_rooms = ClassRoom.all
-    render :layout => false
+    
   end
 
   def delete_class_rooms
@@ -91,7 +91,7 @@ class ClassRoomController < ApplicationController
   
   def assign_subjects
     @class_rooms = ClassRoom.all
-    render :layout => false
+    
   end
 
   def assign_me_subjects
@@ -115,12 +115,12 @@ class ClassRoomController < ApplicationController
       redirect_to :controller => "class_room", :action => "assign_me_teachers", :class_room_id => params[:class_room_id] and return
       #redirect_to :action => "assign_me_subjects", :class_room_id => params[:class_room_id] and return
     end
-    render :layout => false
+    
   end
   
   def edit_subjects
     @class_rooms = ClassRoom.all
-    render :layout => false
+    
   end
   
   def edit_my_subjects
@@ -147,12 +147,12 @@ class ClassRoomController < ApplicationController
         redirect_to :action => "edit_my_subjects", :class_room_id => params[:class_room_id] and return
       end
     end
-    render :layout => false
+    
   end
   
   def assign_teacher
     @class_rooms = ClassRoom.all
-    render :layout => false
+    
   end
 
   def assign_me_teachers
@@ -176,12 +176,12 @@ class ClassRoomController < ApplicationController
       redirect_to :controller => "class_room", :action => "index" and return
       #redirect_to :action => "assign_me_teachers", :class_room_id => params[:class_room_id] and return
     end
-    render :layout => false
+    
   end
   
   def edit_teacher
     @class_rooms = ClassRoom.all
-    render :layout => false
+    
   end
 
   def edit_my_teachers
@@ -220,7 +220,7 @@ class ClassRoomController < ApplicationController
         redirect_to :action => "edit_my_teachers", :class_room_id => params[:class_room_id] and return
       end
     end
-    render :layout => false
+    
   end
   
   def create_class_rooms
@@ -244,7 +244,7 @@ class ClassRoomController < ApplicationController
 
   def view_classes
     @class_rooms = ClassRoom.all
-    render :layout => false
+    
   end
   
   def render_courses

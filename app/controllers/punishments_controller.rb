@@ -1,6 +1,6 @@
 class PunishmentsController < ApplicationController
   def behavior_management_menu
-    render :layout => false
+    
   end
   
   def behavior_management_dashboard
@@ -11,7 +11,7 @@ class PunishmentsController < ApplicationController
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
     @females = Student.find_by_sql("SELECT * FROM student WHERE gender = 'FEMALE' AND
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
-    render :layout => false
+    
   end
 
   def add_punishment
@@ -32,12 +32,12 @@ class PunishmentsController < ApplicationController
     }
     @punishment_types_select_tag += '</select>'
     
-    render :layout => false
+    
   end
 
   def edit_punishment
     @punishments = Punishment.find(:all)
-    render :layout => false
+    
   end
 
   def edit_me_punishment
@@ -79,21 +79,21 @@ class PunishmentsController < ApplicationController
       end
     end
     
-    render :layout => false
+    
   end
   
   def remove_punishments
     @punishments = Punishment.find(:all)
-    render :layout => false
+    
   end
 
   def view_punishments
     @punishments = Punishment.find(:all)
-    render :layout => false
+    
   end
 
   def punishment_types_menu
-    render :layout => false
+    
   end
 
   def add_punishment_type
@@ -107,12 +107,12 @@ class PunishmentsController < ApplicationController
         render  :action => "add_punishment_type" and return
       end
     end
-    render :layout => false
+    
   end
   
   def edit_punishment_type
     @punishment_types = PunishmentType.all
-    render :layout => false
+    
   end
 
   def edit_me_punishment_type
@@ -128,17 +128,17 @@ class PunishmentsController < ApplicationController
       end
     end
     
-    render :layout => false
+    
   end
 
   def remove_punishment_types
     @punishment_types = PunishmentType.all
-    render :layout => false
+    
   end
 
   def view_punishment_types
     @punishment_types = PunishmentType.all
-    render :layout => false
+    
   end
 
   def delete_punishment_types
@@ -221,7 +221,7 @@ class PunishmentsController < ApplicationController
   def punishment_students_edit
     punishment_id = params[:punishment_id]
     @punishment_students = StudentPunishment.find(:all, :conditions => ["punishment_id =?", punishment_id])
-    render :layout => false
+    
   end
 
   def student_punishment_delete
@@ -236,6 +236,6 @@ class PunishmentsController < ApplicationController
   def show_student_punishments
     student_id = params[:student_id]
     @student_punishments = StudentPunishment.find(:all, :conditions => ["student_id =?", student_id])
-    render :layout => false
+    
   end
 end

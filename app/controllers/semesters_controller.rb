@@ -4,16 +4,16 @@ class SemestersController < ApplicationController
     @current_semester = GlobalProperty.find_by_property("current_semester").value rescue nil
     @current_semester_start_date = GlobalProperty.find_by_property("current_semester_start_date").value rescue nil
     @current_semester_end_date = GlobalProperty.find_by_property("current_semester_end_date").value rescue nil
-    render :layout => false
+    
   end
 
   def semester_settings
     @total_semesters = Semester.all.count
-    render :layout => false
+    
   end
 
   def set_total_semesters
-     render :layout => false
+     
   end
 
   def set_current_semester
@@ -41,7 +41,7 @@ class SemestersController < ApplicationController
       flash[:notice] = "Operation successful"
       redirect_to :action => "index" and return
     end
-    render :layout => false
+    
   end
 
   def view_semesters
@@ -86,7 +86,7 @@ class SemestersController < ApplicationController
 
     end
 
-    render :layout => false
+    
   end
 
   def load_semester_data

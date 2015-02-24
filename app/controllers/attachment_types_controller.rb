@@ -1,12 +1,12 @@
 class AttachmentTypesController < ApplicationController
 
   def document_types_menu
-    render :layout => false
+    
   end
   
   def new_document_type
     @attachment_types = AttachmentType.find(:all)
-    render :layout => false
+    
   end
 
   def create
@@ -45,22 +45,22 @@ class AttachmentTypesController < ApplicationController
       end
     end
     
-    render :layout => false
+    
   end
   
   def edit_document_type
     @attachment_types = AttachmentType.find(:all)
-    render :layout => false
+    
   end
 
   def void_document_types
     @attachment_types = AttachmentType.find(:all)
-    render :layout => false
+    
   end
 
   def view_document_types
     @attachment_types = AttachmentType.find(:all)
-    render :layout => false
+    
   end
 
   def delete_attachment_types

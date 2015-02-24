@@ -17,150 +17,150 @@
     <%= stylesheet_link_tag("bootstrap") %>
     <script>
 
-        function assignSubjects(obj){
-          classRoomId = obj.getAttribute("class_room_id");
-          window.location = "/class_room/assign_me_subjects?class_room_id=" + classRoomId;
-        }
+      function assignSubjects(obj){
+        classRoomId = obj.getAttribute("class_room_id");
+        window.location = "/class_room/assign_me_subjects?class_room_id=" + classRoomId;
+      }
 
-        var currentClassRoomID = "";
-        html = "";
-        htmlHeader = ""
-        function setcurrentClassRoomID(obj){
-          currentClassRoomID = obj.getAttribute("class_room_id");
-          loadClassRoomCourses()
-        }
+      var currentClassRoomID = "";
+      html = "";
+      htmlHeader = ""
+      function setcurrentClassRoomID(obj){
+        currentClassRoomID = obj.getAttribute("class_room_id");
+        loadClassRoomCourses()
+      }
         
-        function loadClassRoomCourses(obj){
-            jQuery.ajax({
-            type: "POST",
-            url: "/class_room/render_courses",
-            data: "class_room_id=" + obj.getAttribute("class_room_id"),
-            success: function(results){
-              table = "<table>";
-              table+="<tr>";
-              table+="<th>#</th>";
-              table+="<th>Course Name</th>";
+      function loadClassRoomCourses(obj){
+        jQuery.ajax({
+          type: "POST",
+          url: "/class_room/render_courses",
+          data: "class_room_id=" + obj.getAttribute("class_room_id"),
+          success: function(results){
+            table = "<table>";
+            table+="<tr>";
+            table+="<th>#</th>";
+            table+="<th>Course Name</th>";
+            table+="</tr>";
+            var pos = 0
+            className = results[0];
+            results = eval(results[1]);
+            for (var i=0; i<=results.length - 1; i++){
+              courseName = results[i];
+              table+="<tr style='background-color:white;'>";
+              table+="<td>" + (pos = pos + 1) + "</td>";
+              table+="<td style='text-align:left;'>" + courseName + "</td>";
               table+="</tr>";
-              var pos = 0
-              className = results[0];
-              results = eval(results[1]);
-              for (var i=0; i<=results.length - 1; i++){
-                courseName = results[i];
-                table+="<tr style='background-color:white;'>";
-                table+="<td>" + (pos = pos + 1) + "</td>";
-                table+="<td style='text-align:left;'>" + courseName + "</td>";
-                table+="</tr>";
-              }
+            }
 
-              table += "</table>";
-              courses = table;
+            table += "</table>";
+            courses = table;
 
-              jQuery.confirm({
-                title:className,
-                text:courses,
-                confirm: function(button) {
-                },
-                cancel: function(button) {
-                },
-                confirmButton: "Done"
-              });
-            }});
-        };
+            jQuery.confirm({
+              title:className,
+              text:courses,
+              confirm: function(button) {
+              },
+              cancel: function(button) {
+              },
+              confirmButton: "Done"
+            });
+          }});
+      };
 
-        function loadClassRoomStudents(obj){
-            jQuery.ajax({
-            type: "POST",
-            url: "/class_room/render_students",
-            data: "class_room_id=" + obj.getAttribute("class_room_id"),
-            success: function(results){
-              table = "<table>";
-              table+="<tr>";
-              table+="<th>#</th>";
-              table+="<th>Student Name</th>";
+      function loadClassRoomStudents(obj){
+        jQuery.ajax({
+          type: "POST",
+          url: "/class_room/render_students",
+          data: "class_room_id=" + obj.getAttribute("class_room_id"),
+          success: function(results){
+            table = "<table>";
+            table+="<tr>";
+            table+="<th>#</th>";
+            table+="<th>Student Name</th>";
+            table+="</tr>";
+            var pos = 0
+            className = results[0]
+            results = results[1];
+            for (var i=0; i<=results.length - 1; i++){
+              studentName = results[i];
+              table+="<tr style='background-color:white;'>";
+              table+="<td>" + (pos = pos + 1) + "</td>";
+              table+="<td style='text-align:left;'>" + studentName + "</td>";
               table+="</tr>";
-              var pos = 0
-              className = results[0]
-              results = results[1];
-              for (var i=0; i<=results.length - 1; i++){
-                studentName = results[i];
-                table+="<tr style='background-color:white;'>";
-                table+="<td>" + (pos = pos + 1) + "</td>";
-                table+="<td style='text-align:left;'>" + studentName + "</td>";
-                table+="</tr>";
-              }
+            }
 
-              table += "</table>";
-              students = table;
+            table += "</table>";
+            students = table;
 
-              jQuery.confirm({
-                title:className,
-                text:students,
-                confirm: function(button) {
-                },
-                cancel: function(button) {
-                },
-                confirmButton: "Done"
-              });
-            }});
-        }
+            jQuery.confirm({
+              title:className,
+              text:students,
+              confirm: function(button) {
+              },
+              cancel: function(button) {
+              },
+              confirmButton: "Done"
+            });
+          }});
+      }
 
-       function loadClassRoomTeachers(obj){
-            jQuery.ajax({
-            type: "POST",
-            url: "/class_room/render_teachers",
-            data: "class_room_id=" + obj.getAttribute("class_room_id"),
-            success: function(results){
-              table = "<table>";
-              table+="<tr>";
-              table+="<th>#</th>";
-              table+="<th>Teacher's Name</th>";
+      function loadClassRoomTeachers(obj){
+        jQuery.ajax({
+          type: "POST",
+          url: "/class_room/render_teachers",
+          data: "class_room_id=" + obj.getAttribute("class_room_id"),
+          success: function(results){
+            table = "<table>";
+            table+="<tr>";
+            table+="<th>#</th>";
+            table+="<th>Teacher's Name</th>";
+            table+="</tr>";
+            var pos = 0
+            className = results[0]
+            results = results[1];
+            for (var i=0; i<=results.length - 1; i++){
+              teacherName = results[i];
+              table+="<tr style='background-color:white;'>";
+              table+="<td>" + (pos = pos + 1) + "</td>";
+              table+="<td style='text-align:left;'>" + teacherName + "</td>";
               table+="</tr>";
-              var pos = 0
-              className = results[0]
-              results = results[1];
-              for (var i=0; i<=results.length - 1; i++){
-                teacherName = results[i];
-                table+="<tr style='background-color:white;'>";
-                table+="<td>" + (pos = pos + 1) + "</td>";
-                table+="<td style='text-align:left;'>" + teacherName + "</td>";
-                table+="</tr>";
-              }
+            }
 
-              table += "</table>";
-              teachers = table;
+            table += "</table>";
+            teachers = table;
 
-              jQuery.confirm({
-                title:className,
-                text:teachers,
-                confirm: function(button) {
-                },
-                cancel: function(button) {
-                },
-                confirmButton: "Done"
-              });
-            }});
-        }
+            jQuery.confirm({
+              title:className,
+              text:teachers,
+              confirm: function(button) {
+              },
+              cancel: function(button) {
+              },
+              confirmButton: "Done"
+            });
+          }});
+      }
         
     </script>
     <style>
       .label {
-          border-radius: 1.5em;
-          color: #fff;
-          display: inline;
-          background-color: #5bc0de;
-          font-size: 1.2em;
-          font-weight: bold;
-          line-height: 1;
-          padding-left: 20%;
-          padding-right: 20%;
-          padding-top:2%;
-          padding-bottom:2%;
-          text-align: center;
-          vertical-align: baseline;
-          white-space: nowrap;
-          cursor: pointer;
+        border-radius: 1.5em;
+        color: #fff;
+        display: inline;
+        background-color: #5bc0de;
+        font-size: 1.2em;
+        font-weight: bold;
+        line-height: 1;
+        padding-left: 20%;
+        padding-right: 20%;
+        padding-top:2%;
+        padding-bottom:2%;
+        text-align: center;
+        vertical-align: baseline;
+        white-space: nowrap;
+        cursor: pointer;
       }
-      
+
       table{
         margin-left:15%;
         width: 60%;
@@ -186,108 +186,29 @@
       }
       table th:first-child {
         border-style: none none none !important;
-    }
+      }
 
-    .classes{
+      .classes{
         position: relative;
         margin-left: 0%;
         width: 100%;
-     }
+      }
 
-    .classes th, tbody{
+      .classes th, tbody{
         text-align: center;
-    }
+      }
 
-    .modal-title {
+      .modal-title {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         font-weight: 500;
         line-height: 1.1;
         font-size: 1.2em;
         color: #317eac;
-    }
-    
+      }
+
     </style>
   </head>
-  <body>
-
-    <!-- TOP BAR -->
-    <div id="top-bar">
-
-      <div class="page-full-width cf">
-
-        <ul id="nav" class="fl">
-          <li class="v-sep"><a href="#" class="round button dark menu-user image-left">Logged in as <strong>admin</strong></a>
-            <ul>
-              <li><a href="#">My Profile</a></li>
-              <li><a href="/admin/settings">Settings</a></li>
-              <li><a href="#">Change Password</a></li>
-              <li><a href="/user/login">Log out</a></li>
-            </ul>
-          </li>
-          <li class="v-sep"><a href="#" class="round button dark menu-settings image-left">Student Management</a>
-            <ul>
-              <li><a href="/student/registration_menu">Registration/Admission</a></li>
-              <li><a href="/punishments/behavior_management_menu">Behavior Management</a></li>
-              <li><a href="/student/examination_results_menu">Examination results</a></li>
-              <li><a href="/student/payments_management_menu">Payments Management</a></li>
-              <li><a href="/student/id_cards_menu">Student ID cards</a></li>
-              <li><a href="/student/semester_statement_menu">Student semester statement</a></li>
-              <li><a href="/student/semester_statement_menu">Student semester statement</a></li>
-              <li><a href="/student/warning_letters_menu">Warning letters for overdue students</a></li>
-              <li><a href="/student/examination_results_menu">Examination Registration</a></li>
-            </ul>
-          </li>
-          <li class="v-sep"><a href="#" class="round button dark menu-settings image-left">School Administration</a>
-            <ul>
-              <li><a href="/admin/time_table_management_menu">Timetable management</a></li>
-              <li><a href="/admin/subject_groups_management">Subject groups’ management</a></li>
-              <li><a href="/admin/semester_management_menu">Semester/Term management </a></li>
-              <li><a href="/admin/payments_overview_menu">Payments Overview</a></li>
-              <li><a href="/admin/print_teacher_time_table">Print teacher's timetable</a></li>
-              <li><a href="/attachments/documents_management_menu">Documents management</a></li>
-              <li><a href="/admin/barcode_scanning_menu">Barcode scanning functions (Ids)</a></li>
-              <li><a href="#">Email functions</a></li>
-            </ul>
-          </li>
-          <li class="v-sep"><a href="#" class="round button dark menu-settings image-left">Employee Management</a>
-            <ul>
-              <li><a href="/employees/employee_registration_menu">Employee registration</a></li>
-              <li><a href="/employees/employee_management_menu">Employee management</a></li>
-              <li><a href="/employees/position_management_menu">Position management</a></li>
-              <li><a href="#">Mini payroll</a></li>
-            </ul>
-          </li>
-          <li class="v-sep"><a href="#" class="round button dark menu-settings image-left">System Administration</a>
-            <ul>
-              <li><a href="/user/user_management_menu">User management</a></li>
-              <li><a href="/parent/parents_menu">Parents management</a></li>
-              <li><a href="/class_room/index">Class management</a></li>
-              <li><a href="/teacher/manage_teachers_menu">Manage Lecturers/teachers</a></li>
-              <li><a href="/examination_type/manage_exam_type_menu">Exam Type Management</a></li>
-              <li><a href="/admin/system_configuration_menu">System configuration/Administration</a></li>
-              <li><a href="/payments/payments_management_menu">Fees management</a></li>
-              <li><a href="/report/reports_generator_menu">Supper reports generator</a></li>
-              <li><a href="/admin/backup_data_menu">Backup Settings</a></li>
-            </ul>
-          </li>
-          <li><a href="#" class="round button dark menu-logoff image-left">Log out</a></li>
-
-        </ul> <!-- end nav -->
-
-
-        <form action="#" method="POST" id="search-form" class="fr">
-          <fieldset>
-            <input type="text" id="search-keyword" class="round button dark ic-search image-right" placeholder="Search..." />
-            <input type="hidden" value="SUBMIT" />
-          </fieldset>
-        </form>
-
-      </div> <!-- end full-width -->
-
-    </div> <!-- end top-bar -->
-
-
-
+  <body>  
     <!-- HEADER -->
     <div id="header-with-tabs">
 
@@ -366,26 +287,26 @@
                     <th style="min-width:12%;">Total Teachers</th>
                   </tr>
                 </thead>
-           
+
                 <tbody id="class_rooms">
                   <% @class_rooms.each do |class_room| %>
-                  <tr id="<%= class_room.id %>">
-                    <td><%= class_room.name%></td>
-                    <td><%=  class_room.year %></td>
-                    <td><%= class_room.grade %></td>
-                    <td>
-                      <span class_room_id="<%= class_room.id %>" class="label view-courses" onmousedown="loadClassRoomCourses(this);" style="margin-left:0%;"><%= class_room.class_room_courses.count %></span>
-                    </td>
-                    <td>
-                      <span class_room_id="<%= class_room.id %>" class="label view-students" onmousedown="loadClassRoomStudents(this)" style="margin-left:0%;"><%= class_room.class_room_students.count %></span>
-                    </td>
-                    <td>
-                      <span class_room_id="<%= class_room.id %>" class="label view-teachers" onmousedown="loadClassRoomTeachers(this);" style="margin-left:0%;"><%= class_room.class_room_teachers.count %></span>
-                    </td>
-                  </tr>
+                    <tr id="<%= class_room.id %>">
+                      <td><%= class_room.name%></td>
+                      <td><%=  class_room.year %></td>
+                      <td><%= class_room.grade %></td>
+                      <td>
+                        <span class_room_id="<%= class_room.id %>" class="label view-courses" onmousedown="loadClassRoomCourses(this);" style="margin-left:0%;"><%= class_room.class_room_courses.count %></span>
+                      </td>
+                      <td>
+                        <span class_room_id="<%= class_room.id %>" class="label view-students" onmousedown="loadClassRoomStudents(this)" style="margin-left:0%;"><%= class_room.class_room_students.count %></span>
+                      </td>
+                      <td>
+                        <span class_room_id="<%= class_room.id %>" class="label view-teachers" onmousedown="loadClassRoomTeachers(this);" style="margin-left:0%;"><%= class_room.class_room_teachers.count %></span>
+                      </td>
+                    </tr>
                   <% end %>
                 </tbody>
-                
+
               </table>
 
             </div> <!-- end content-module-main -->
@@ -398,26 +319,17 @@
 
     </div> <!-- end content -->
 
-
-
-    <!-- FOOTER -->
-    <div id="footer">
-
-      <p>&copy; Copyright 2012 <a href="#">BlueHosting, LLC</a>. All rights reserved.</p>
-      <p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
-
-    </div> <!-- end footer -->
     <%= javascript_include_tag("bootstrap") %>
 
     <script>
 
  
-        function hideCancelButton(){
-          if ($("button.cancel")[0]){
-            $("button.cancel")[0].style.display='none';
-          }
+      function hideCancelButton(){
+        if ($("button.cancel")[0]){
+          $("button.cancel")[0].style.display='none';
         }
-        window.setInterval("hideCancelButton();", 300);
+      }
+      window.setInterval("hideCancelButton();", 300);
     </script>
   </body>
 </html>

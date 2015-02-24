@@ -1,6 +1,6 @@
 class ReportController < ApplicationController
   def index
-    render :layout => false
+    
   end
 
   def students_per_semester_report
@@ -59,7 +59,7 @@ class ReportController < ApplicationController
     @years += (start_year..end_year).to_a.reverse
     @semesters = ["ALL"]
     @semesters += Semester.find(:all).collect{|s|[s.semester_number, s.semester_id]}
-    render :layout => false
+    
   end
 
   def students_per_year_report
@@ -114,7 +114,7 @@ class ReportController < ApplicationController
     @years += (start_year..end_year).to_a.reverse
     @semesters = ["ALL"]
     @semesters += Semester.find(:all).collect{|s|[s.semester_number, s.semester_id]}
-    render :layout => false
+    
   end
 
   def students_per_class_report
@@ -232,7 +232,7 @@ class ReportController < ApplicationController
     @semesters += Semester.find(:all).collect{|s|[s.semester_number, s.semester_id]}
     @class_rooms = ["All"]
     @class_rooms += ClassRoom.all.collect{|cr|[cr.name, cr.class_room_id]}
-    render :layout => false
+    
   end
 
   def courses_report
@@ -263,7 +263,7 @@ class ReportController < ApplicationController
     @semesters += Semester.find(:all).collect{|s|[s.semester_number, s.semester_id]}
     @class_rooms = ["All"]
     @class_rooms += ClassRoom.all.collect{|cr|[cr.name, cr.class_room_id]}
-    render :layout => false
+    
   end
   
   def courses_per_class_report
@@ -389,7 +389,7 @@ class ReportController < ApplicationController
     (ClassRoom.all || []).each do |class_room|
       @class_room_hash[class_room.id] = class_room.name
     end
-    render :layout => false
+    
   end
 
   def teachers_report
@@ -410,7 +410,7 @@ class ReportController < ApplicationController
       end
       render :text => hash.to_json and return
     end
-    render :layout => false
+    
   end
 
   def teachers_per_subjects_report
@@ -493,7 +493,7 @@ class ReportController < ApplicationController
       @teachers_hash[teacher_id] = name
     end
     
-    render :layout => false
+    
   end
 
   def results_per_class_report
@@ -507,7 +507,7 @@ class ReportController < ApplicationController
     
     @courses = ["All"]
     @courses += Course.all.collect{|c|[c.name, c.course_id]}
-    render :layout => false
+    
   end
 
   def subject_pass_rate_report
@@ -516,15 +516,15 @@ class ReportController < ApplicationController
 
     @courses = ["All"]
     @courses += Course.all.collect{|c|[c.name, c.course_id]}
-    render :layout => false
+    
   end
 
   def employees_report
-    render :layout => false
+    
   end
 
   def reports_generator_menu
-    render :layout => false
+    
   end
 
   def reports_generator_dashboard
@@ -535,6 +535,6 @@ class ReportController < ApplicationController
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
     @females = Student.find_by_sql("SELECT * FROM student WHERE gender = 'FEMALE' AND
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
-    render :layout => false
+    
   end
 end

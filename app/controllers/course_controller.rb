@@ -9,22 +9,22 @@ class CourseController < ApplicationController
       @class_room_courses << total_courses
     end
     
-    render :layout => false
+    
   end
 
   def add_course
     @courses = Course.all
-    render :layout => false
+    
   end
 
   def edit_course
     @courses = Course.all
-    render :layout => false
+    
   end
 
   def remove_course
     @courses = Course.all
-    render :layout => false
+    
   end
 
   def delete_courses
@@ -71,7 +71,7 @@ class CourseController < ApplicationController
       render :text => hash.to_json and return
     end
     
-    render :layout => false
+    
   end
 
   def edit_me
@@ -90,7 +90,7 @@ class CourseController < ApplicationController
         redirect_to :action => "edit_course" and return
       end
     end
-    render :layout => false
+    
   end
   
   def create

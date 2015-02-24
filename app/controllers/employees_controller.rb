@@ -1,14 +1,14 @@
 class EmployeesController < ApplicationController
   def employee_registration_menu
-    render :layout => false
+    
   end
   
   def employee_management_menu
-    render :layout => false
+    
   end
   
   def position_management_menu
-    render :layout => false
+    
   end
 
   def employee_registration_dashboard
@@ -19,7 +19,7 @@ class EmployeesController < ApplicationController
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
     @females = Student.find_by_sql("SELECT * FROM student WHERE gender = 'FEMALE' AND
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
-    render :layout => false
+    
   end
 
   def employee_management_dashboard
@@ -30,7 +30,7 @@ class EmployeesController < ApplicationController
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
     @females = Student.find_by_sql("SELECT * FROM student WHERE gender = 'FEMALE' AND
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
-    render :layout => false
+    
   end
 
   def position_management_dashboard
@@ -41,7 +41,7 @@ class EmployeesController < ApplicationController
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
     @females = Student.find_by_sql("SELECT * FROM student WHERE gender = 'FEMALE' AND
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
-    render :layout => false    
+        
   end
 
   def add_position
@@ -56,12 +56,12 @@ class EmployeesController < ApplicationController
       end
       redirect_to :action => "add_position" and return
     end
-    render :layout => false
+    
   end
 
   def edit_position
     @positions = Position.all
-    render :layout => false
+    
   end
 
   def edit_me_position
@@ -78,17 +78,17 @@ class EmployeesController < ApplicationController
       end
       redirect_to :action => "edit_position" and return
     end
-    render :layout => false
+    
   end
   
   def remove_positions
     @positions = Position.all
-    render :layout => false
+    
   end
 
   def view_positions
     @positions = Position.all
-    render :layout => false
+    
   end
 
   def delete_positions
@@ -138,12 +138,12 @@ class EmployeesController < ApplicationController
       redirect_to :action => "add_employee" and return
     end
     
-    render :layout => false
+    
   end
   
   def edit_employee
     @employees = Employee.all
-    render :layout => false
+    
   end
 
   def edit_me_employee
@@ -178,17 +178,17 @@ class EmployeesController < ApplicationController
       flash[:notice] = "Operation successful"
       redirect_to :action => "edit_employee" and return
     end
-    render :layout => false
+    
   end
   
   def remove_employees
     @employees = Employee.all
-    render :layout => false
+    
   end
 
   def view_employees
     @employees = Employee.all
-    render :layout => false
+    
   end
 
   def delete_employees
@@ -237,7 +237,7 @@ class EmployeesController < ApplicationController
       render :text => "true" and return
     end
     
-    render :layout => false
+    
   end
 
   def suspend_employee
@@ -263,7 +263,7 @@ class EmployeesController < ApplicationController
       render :text => "true" and return
     end
     
-    render :layout => false
+    
   end
 
   def stop_employees
@@ -289,7 +289,7 @@ class EmployeesController < ApplicationController
       render :text => "true" and return
     end
     
-    render :layout => false
+    
   end
 
   def end_contract
@@ -315,7 +315,7 @@ class EmployeesController < ApplicationController
       render :text => "true" and return
     end
 
-    render :layout => false
+    
   end
   
 end

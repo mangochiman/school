@@ -59,7 +59,7 @@ class ExaminationController < ApplicationController
     end
     
     @class_courses = hash.to_json
-    render :layout => false
+    
   end
 
   def plot_graph
@@ -115,12 +115,12 @@ class ExaminationController < ApplicationController
         end
     end
 
-    render :layout => false
+    
   end
 
   def edit_exam_type
     @exam_types = ExaminationType.all
-    render :layout => false
+    
   end
 
   def edit_me
@@ -139,7 +139,7 @@ class ExaminationController < ApplicationController
         end
     end
 
-    render :layout => false
+    
   end
 
   def exam_edit
@@ -159,7 +159,7 @@ class ExaminationController < ApplicationController
     courses = exam.class_room.class_room_courses.collect{|crc|crc.course}
     @courses += courses.collect{|c|[c.name, c.id]}
 
-    render :layout => false
+    
   end
 
   def update_exams
@@ -197,7 +197,7 @@ class ExaminationController < ApplicationController
   
   def void_exam_type
     @exam_types = ExaminationType.all
-    render :layout => false
+    
   end
   
   def assign_exam
@@ -209,7 +209,7 @@ class ExaminationController < ApplicationController
     
     @courses = [["---Select Course---", ""]]
     @courses += Course.all.collect{|c|[c.name, c.id]}
-    render :layout => false
+    
   end
 
   def create_exam_assignment
@@ -239,12 +239,12 @@ class ExaminationController < ApplicationController
   
   def edit_exam_assignment
     @exams = Examination.all
-    render :layout => false
+    
   end
 
   def void_exam
     @exams = Examination.all
-    render :layout => false
+    
   end
 
   def delete_exams
@@ -343,7 +343,7 @@ class ExaminationController < ApplicationController
     @courses += Course.all.collect{|c|[c.name, c.id]}
     @exam_types = [["---Select Exam Type---", ""]]
     @exam_types += ExaminationType.all.collect{|et|[et.name, et.id]}
-    render :layout => false
+    
   end
 
   def edit_exam_results
@@ -355,7 +355,7 @@ class ExaminationController < ApplicationController
     @courses += Course.all.collect{|c|[c.name, c.id]}
     @exam_types = [["---Select Exam Type---", ""]]
     @exam_types += ExaminationType.all.collect{|et|[et.name, et.id]}
-    render :layout => false
+    
   end
 
   def edit_exam_result_entry
@@ -383,13 +383,13 @@ class ExaminationController < ApplicationController
       redirect_to :controller => "examination", :action => "edit_exam_results" and return
     end
 
-    render :layout => false
+    
   end
   
   def exam_result_entry
     @exam = Examination.find(params[:exam_id])
     @students = @exam.students
-    render :layout => false
+    
   end
 
   def create_exam_result
@@ -417,7 +417,7 @@ class ExaminationController < ApplicationController
     @courses += Course.all.collect{|c|[c.name, c.id]}
     @exam_types = [["---Select Exam Type---", ""]]
     @exam_types += ExaminationType.all.collect{|et|[et.name, et.id]}
-    render :layout => false
+    
   end
 
   def delete_exam_results

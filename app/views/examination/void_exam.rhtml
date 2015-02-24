@@ -22,18 +22,18 @@
           for (var i=0; i<=inputs.length - 1; i++){
             if (inputs[i] == selectAllInput) continue;
             if (inputs[i].type == 'checkbox'){
-                inputs[i].checked = true;
+              inputs[i].checked = true;
             }
           }
-         }
-         else{
-           for (var i=0; i<=inputs.length - 1; i++){
+        }
+        else{
+          for (var i=0; i<=inputs.length - 1; i++){
             if (inputs[i] == selectAllInput) continue;
             if (inputs[i].type == 'checkbox'){
-                inputs[i].checked = false;
+              inputs[i].checked = false;
             }
           }
-         }
+        }
       }
 
       function deleteSingleEntry(obj){
@@ -43,13 +43,13 @@
           text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
           confirm: function(button) {
             jQuery.ajax({
-            type: "POST",
-            url: "/examination/delete_exams",
-            data: "exam_id=" + examID + "&mode=single_entry",
-            success: function(){
-              element = document.getElementById(examID);
-              element.parentNode.removeChild(element);
-            }
+              type: "POST",
+              url: "/examination/delete_exams",
+              data: "exam_id=" + examID + "&mode=single_entry",
+              success: function(){
+                element = document.getElementById(examID);
+                element.parentNode.removeChild(element);
+              }
 
             });
           },
@@ -58,7 +58,7 @@
           },
           confirmButton: "Yes I am",
           cancelButton: "No"
-       });
+        });
       }
       
       function deleteExams(){
@@ -91,44 +91,44 @@
       }
       
       function loadExamStudents(obj){
-            jQuery.ajax({
-            type: "POST",
-            url: "/examination/render_students",
-            data: "exam_id=" + obj.getAttribute("exam_id"),
-            success: function(results){
-              table = "<table>";
-              table+="<tr>";
-              table+="<th>#</th>";
-              table+="<th>Student Name</th>";
+        jQuery.ajax({
+          type: "POST",
+          url: "/examination/render_students",
+          data: "exam_id=" + obj.getAttribute("exam_id"),
+          success: function(results){
+            table = "<table>";
+            table+="<tr>";
+            table+="<th>#</th>";
+            table+="<th>Student Name</th>";
+            table+="</tr>";
+            var pos = 0
+            className = results[0]
+            results = results[1];
+            for (var i=0; i<=results.length - 1; i++){
+              studentName = results[i];
+              table+="<tr style='background-color:white;'>";
+              table+="<td>" + (pos = pos + 1) + "</td>";
+              table+="<td style='text-align:left;'>" + studentName + "</td>";
               table+="</tr>";
-              var pos = 0
-              className = results[0]
-              results = results[1];
-              for (var i=0; i<=results.length - 1; i++){
-                studentName = results[i];
-                table+="<tr style='background-color:white;'>";
-                table+="<td>" + (pos = pos + 1) + "</td>";
-                table+="<td style='text-align:left;'>" + studentName + "</td>";
-                table+="</tr>";
-              }
+            }
 
-              table += "</table>";
-              students = table;
+            table += "</table>";
+            students = table;
 
-              jQuery.confirm({
-                title:className,
-                text:students,
-                confirm: function(button) {
-                },
-                cancel: function(button) {
-                },
-                confirmButton: "Done"
-              });
-              if ($("button.cancel")[0]){
-                $("button.cancel")[0].style.display='none';
-              }
-            }});
-        }
+            jQuery.confirm({
+              title:className,
+              text:students,
+              confirm: function(button) {
+              },
+              cancel: function(button) {
+              },
+              confirmButton: "Done"
+            });
+            if ($("button.cancel")[0]){
+              $("button.cancel")[0].style.display='none';
+            }
+          }});
+      }
     </script>
     <style>
       .modal-title {
@@ -139,21 +139,21 @@
         color: #317eac;
       }
       .label {
-          border-radius: 1.5em;
-          color: #fff;
-          display: inline;
-          background-color: #5bc0de;
-          font-size: 1.2em;
-          font-weight: bold;
-          line-height: 1;
-          padding-left: 20%;
-          padding-right: 20%;
-          padding-top:2%;
-          padding-bottom:2%;
-          text-align: center;
-          vertical-align: baseline;
-          white-space: nowrap;
-          cursor: pointer;
+        border-radius: 1.5em;
+        color: #fff;
+        display: inline;
+        background-color: #5bc0de;
+        font-size: 1.2em;
+        font-weight: bold;
+        line-height: 1;
+        padding-left: 20%;
+        padding-right: 20%;
+        padding-top:2%;
+        padding-bottom:2%;
+        text-align: center;
+        vertical-align: baseline;
+        white-space: nowrap;
+        cursor: pointer;
       }
 
       table th:first-child {
@@ -162,86 +162,7 @@
 
     </style>
   </head>
-  <body>
-
-    <!-- TOP BAR -->
-    <div id="top-bar">
-
-      <div class="page-full-width cf">
-
-        <ul id="nav" class="fl">
-          <li class="v-sep"><a href="#" class="round button dark menu-user image-left">Logged in as <strong>admin</strong></a>
-            <ul>
-              <li><a href="#">My Profile</a></li>
-              <li><a href="/admin/settings">Settings</a></li>
-              <li><a href="#">Change Password</a></li>
-              <li><a href="/user/login">Log out</a></li>
-            </ul>
-          </li>
-          <li class="v-sep"><a href="#" class="round button dark menu-settings image-left">Student Management</a>
-            <ul>
-              <li><a href="/student/registration_menu">Registration/Admission</a></li>
-              <li><a href="/punishments/behavior_management_menu">Behavior Management</a></li>
-              <li><a href="/student/examination_results_menu">Examination results</a></li>
-              <li><a href="/student/payments_management_menu">Payments Management</a></li>
-              <li><a href="/student/id_cards_menu">Student ID cards</a></li>
-              <li><a href="/student/semester_statement_menu">Student semester statement</a></li>
-              <li><a href="/student/semester_statement_menu">Student semester statement</a></li>
-              <li><a href="/student/warning_letters_menu">Warning letters for overdue students</a></li>
-              <li><a href="/student/examination_results_menu">Examination Registration</a></li>
-            </ul>
-          </li>
-          <li class="v-sep"><a href="#" class="round button dark menu-settings image-left">School Administration</a>
-            <ul>
-              <li><a href="/admin/time_table_management_menu">Timetable management</a></li>
-              <li><a href="/admin/subject_groups_management">Subject groups’ management</a></li>
-              <li><a href="/admin/semester_management_menu">Semester/Term management </a></li>
-              <li><a href="/admin/payments_overview_menu">Payments Overview</a></li>
-              <li><a href="/admin/print_teacher_time_table">Print teacher's timetable</a></li>
-              <li><a href="/attachments/documents_management_menu">Documents management</a></li>
-              <li><a href="/admin/barcode_scanning_menu">Barcode scanning functions (Ids)</a></li>
-              <li><a href="#">Email functions</a></li>
-            </ul>
-          </li>
-          <li class="v-sep"><a href="#" class="round button dark menu-settings image-left">Employee Management</a>
-            <ul>
-              <li><a href="/employees/employee_registration_menu">Employee registration</a></li>
-              <li><a href="/employees/employee_management_menu">Employee management</a></li>
-              <li><a href="/employees/position_management_menu">Position management</a></li>
-              <li><a href="#">Mini payroll</a></li>
-            </ul>
-          </li>
-          <li class="v-sep"><a href="#" class="round button dark menu-settings image-left">System Administration</a>
-            <ul>
-              <li><a href="/user/user_management_menu">User management</a></li>
-              <li><a href="/parent/parents_menu">Parents management</a></li>
-              <li><a href="/class_room/index">Class management</a></li>
-              <li><a href="/teacher/manage_teachers_menu">Manage Lecturers/teachers</a></li>
-              <li><a href="/examination_type/manage_exam_type_menu">Exam Type Management</a></li>
-              <li><a href="/admin/system_configuration_menu">System configuration/Administration</a></li>
-              <li><a href="/payments/payments_management_menu">Fees management</a></li>
-              <li><a href="/report/reports_generator_menu">Supper reports generator</a></li>
-              <li><a href="/admin/backup_data_menu">Backup Settings</a></li>
-            </ul>
-          </li>
-          <li><a href="#" class="round button dark menu-logoff image-left">Log out</a></li>
-
-        </ul> <!-- end nav -->
-
-
-        <form action="#" method="POST" id="search-form" class="fr">
-          <fieldset>
-            <input type="text" id="search-keyword" class="round button dark ic-search image-right" placeholder="Search..." />
-            <input type="hidden" value="SUBMIT" />
-          </fieldset>
-        </form>
-
-      </div> <!-- end full-width -->
-
-    </div> <!-- end top-bar -->
-
-
-
+  <body>  
     <!-- HEADER -->
     <div id="header-with-tabs">
 
@@ -319,24 +240,24 @@
                     </td>
                   </tr>
                 </tfoot>
-                
+
                 <tbody id="exams">
                   <% @exams.each do |exam| %>
-                  <tr id="<%= exam.id %>">
-                    <td><input type="checkbox" exam_id="<%= exam.id %>"/></td>
-                    <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= exam.class_room.name %></td>
-                    <td><%=  exam.examination_type.name.titleize %></td>
-                    <td><%=  exam.course.name %></td>
-                    <td><%=  exam.start_date.to_date.strftime("%d/%b/%Y")%></td>
-                    <td>
-                      <span exam_id="<%= exam.id %>" class="label" onmousedown="loadExamStudents(this);" style="margin-left:20%;">
+                    <tr id="<%= exam.id %>">
+                      <td><input type="checkbox" exam_id="<%= exam.id %>"/></td>
+                      <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= exam.class_room.name %></td>
+                      <td><%=  exam.examination_type.name.titleize %></td>
+                      <td><%=  exam.course.name %></td>
+                      <td><%=  exam.start_date.to_date.strftime("%d/%b/%Y")%></td>
+                      <td>
+                        <span exam_id="<%= exam.id %>" class="label" onmousedown="loadExamStudents(this);" style="margin-left:20%;">
                           <%=  exam.students.count %>
-                      </span>
-                    </td>
-                    <td>
-                      <a exam_id="<%= exam.id %>" onmousedown="deleteSingleEntry(this)" href="#" class="table-actions-button ic-table-delete"></a>
-                    </td>
-                  </tr>
+                        </span>
+                      </td>
+                      <td>
+                        <a exam_id="<%= exam.id %>" onmousedown="deleteSingleEntry(this)" href="#" class="table-actions-button ic-table-delete"></a>
+                      </td>
+                    </tr>
                   <% end %>
                 </tbody>
 
@@ -352,30 +273,21 @@
 
     </div> <!-- end content -->
 
-
-
-    <!-- FOOTER -->
-    <div id="footer">
-
-      <p>&copy; Copyright 2012 <a href="#">BlueHosting, LLC</a>. All rights reserved.</p>
-      <p><strong>SimpleAdmin</strong> theme by <a href="http://www.adipurdila.com">Adi Purdila</a></p>
-
-    </div> <!-- end footer -->
-  <%= javascript_include_tag("bootstrap") %>
+    <%= javascript_include_tag("bootstrap") %>
 
     <script>
-        $(".delete-multiple").confirm({
-            title:"Delete confirmation",
-            text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
-            confirm: function(button) {
-              deleteExams();
-            },
-            cancel: function(button) {
+      $(".delete-multiple").confirm({
+        title:"Delete confirmation",
+        text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+        confirm: function(button) {
+          deleteExams();
+        },
+        cancel: function(button) {
               
-            },
-            confirmButton: "Yes I am",
-            cancelButton: "No"
-        });
+        },
+        confirmButton: "Yes I am",
+        cancelButton: "No"
+      });
 
     </script>
   </body>

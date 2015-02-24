@@ -35,7 +35,7 @@ class AttendanceController < ApplicationController
       @weekly_absenteeism << values["A"]
     end
 
-    render :layout => false
+    
   end
 
   def class_room_register
@@ -45,7 +45,7 @@ class AttendanceController < ApplicationController
       ON c.class_room_id=crs.class_room_id INNER JOIN student s ON crs.student_id=s.student_id
       WHERE c.class_room_id=#{class_room_id}")
     
-    render :layout => false
+    
   end
 
   def create_daily_attendance_register
