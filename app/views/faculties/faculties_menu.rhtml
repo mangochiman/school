@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Department Management</title>
+    <!-- Optimize for mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!-- jQuery & JS files -->
+
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("highcharts") %>
+    <%= javascript_include_tag("script") %>
+
+    <%= javascript_include_tag("exporting") %>
+    <%= stylesheet_link_tag("style") %>
+
+    <script>
+
+    </script>
+  </head>
+  <body>    
+    <!-- HEADER -->
+    <div id="header-with-tabs">
+
+      <div class="page-full-width cf">
+
+        <ul id="tabs" class="fl">
+          <li><a href="/faculties/faculties_menu" class="active-tab">Faculties</a></li>
+        </ul> <!-- end tabs -->
+
+        <!-- Change this image to your own company's logo -->
+        <!-- The logo will automatically be resized to 30px height. -->
+        <a href="#" id="company-branding-small" class="fr"><%= image_tag("/admin/school_logo", :alt => 'Logo Missing')%></a>
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end header -->
+
+
+
+    <!-- MAIN CONTENT -->
+    <div id="content">
+
+      <div class="page-full-width cf">
+
+        <div class="side-menu fl">
+
+          <h3>Task</h3>
+          <ul>
+            <li><a href="/faculties/add_faculty">Add Faculty</a></li>
+            <li><a href="/faculties/edit_faculty">Edit Faculty</a></li>
+            <li><a href="/faculties/void_faculty">Void Faculties</a></li>
+            <li><a href="/faculties/view_faculty">View Faculties</a></li>
+            <li><a href="/departments/department_management_menu">Departments</a></li>
+          </ul>
+
+        </div> <!-- end side-menu -->
+
+        <div class="side-content fr">
+
+          <div class="content-module">
+
+            <div class="content-module-heading cf">
+
+              <h3 class="fl">Faculty Management</h3>
+              <span class="fr expand-collapse-text">Click to collapse</span>
+              <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+            </div> <!-- end content-module-heading -->
+
+
+            <div class="content-module-main">
+              <div id="container">
+              </div>
+            </div> <!-- end content-module-main -->
+
+          </div> <!-- end content-module -->
+
+          <!-- end content-module -->
+
+        </div> <!-- end side-content -->
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end content -->
+
+  </body>
+</html>
