@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Faculty Management</title>
+    <title>Payments Management</title>
     <!-- Optimize for mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
@@ -44,8 +44,7 @@
         font-weight: bold;
       }
       form.autoform input, select{
-        font-size: 0.8em !important;
-        font-weight: bold;
+ 
       }
 
       #departments input[type="text"]{
@@ -81,6 +80,10 @@
 
       a{
         cursor: pointer;
+      }
+
+      #department_code, #department_name{
+        text-align: center;
       }
     </style>
   </head>
@@ -132,7 +135,7 @@
 
                 <div class="content-module-heading cf">
 
-                  <h3 class="fl">New Faculty</h3>
+                  <h3 class="fl">Edit Faculty</h3>
                   <span class="fr expand-collapse-text">Click to collapse</span>
                   <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -150,14 +153,24 @@
                       <%= flash[:error] %>
                     </div>
                   <% end %>
-                  <form id="departments" class="autoform" action="/faculties/create_faculty" method="POST">
+
+                  <% if params[:faculty_id].blank? %>
+                    <div class="error-box round">
+                      Select Faculty to your right first
+                    </div>
+                  <% end %>
+
+                  <form id="faculties" class="autoform" action="/faculties/edit_faculty" method="POST">
 
                     <div>
-                      <label for="faculty_name" style="width:106px;">Faculty Name</label><input type="text" name="faculty_name" id="faculty_name" class="text required"/>
+                      <label for="faculty_name" style="width:101px;">Faculty Name</label><input type="text" value="<%= @faculty.name rescue '' %>" name="faculty_name" id="faculty_name" class="text required"/>
                     </div>
 
-                    <div class="stripe-separator"><!--  --></div>
-                    <input type="submit" value="Submit" class="round blue ic-right-arrow" />
+                    <% unless params[:faculty_id].blank? %>
+                      <%= hidden_field_tag("faculty_id", params[:faculty_id]) %>
+                      <div class="stripe-separator"><!--  --></div>
+                      <input type="submit" value="Submit" class="round blue ic-right-arrow" />
+                    <% end %>
                   </form>
                 </div> <!-- end content-module-main -->
 
