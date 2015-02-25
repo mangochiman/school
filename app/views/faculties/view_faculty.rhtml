@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Faculty Management</title>
+    <!-- Optimize for mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!-- jQuery & JS files -->
+    <%= javascript_include_tag("jquery") %>
+    <%= javascript_include_tag("script") %>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("jquery.confirm") %>
+    <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("bootstrap") %>
+
+    <script>
+      function loadDepartments(obj){
+        facultyName = obj.getAttribute('faculty_name');
+        jQuery.ajax({
+          type: "POST",
+          url: "/departments/render_departments_by_faculty",
+          data: "faculty_id=" + obj.getAttribute("faculty_id"),
+          success: function(results){
+            table = "<table>";
+            table+="<tr>";
+            table+="<th>#</th>";
+            table+="<th>Department Name</th>";
+            table+="<th>Department Code</th>";
+            table+="</tr>";
+            var pos = 0;
+
+            results = eval('(' + results + ')');
+            count = 0;
+            for (var department in results){
+              count = count + 1;
+              departmentName = results[department]["department_name"];
+              departmentCode = results[department]["department_code"];
+              table += "<tr>";
+              table += "<td>" + count + "</td>";
+              table += "<td style='text-align:left; padding: 2px;'>" + departmentName + "</td>";
+              table += "<td style='text-align:center;'>" + departmentCode + "</td>";
+              table += "</tr>";
+            }
+
+
+            table += "</table>";
+
+            jQuery.confirm({
+              title:facultyName,
+              text:table,
+              confirm: function(button) {
+              },
+              cancel: function(button) {
+              },
+              confirmButton: "Done"
+            });
+          }});
+      }
+    </script>
+
+    <style>
+      .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: #317eac;
+      }
+
+      table th:first-child {
+        border-style: none none none !important;
+      }
+      
+      .label {
+        border-radius: 1.5em;
+        color: #fff;
+        display: inline;
+        background-color: #5bc0de;
+        font-size: 1.2em;
+        font-weight: bold;
+        line-height: 1;
+        padding-left: 20%;
+        padding-right: 20%;
+        padding-top:2%;
+        padding-bottom:2%;
+        text-align: center;
+        vertical-align: baseline;
+        white-space: nowrap;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>  
+    <!-- HEADER -->
+    <div id="header-with-tabs">
+
+      <div class="page-full-width cf">
+
+        <ul id="tabs" class="fl">
+          <li><a href="/faculties/faculties_menu" class="active-tab">Faculties</a></li>
+        </ul> <!-- end tabs -->
+
+        <!-- Change this image to your own company's logo -->
+        <!-- The logo will automatically be resized to 30px height. -->
+        <a href="#" id="company-branding-small" class="fr"><%= image_tag("/admin/school_logo", :alt => 'Logo Missing')%></a>
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end header -->
+
+
+
+    <!-- MAIN CONTENT -->
+    <div id="content">
+
+      <div class="page-full-width cf">
+
+        <div class="side-menu fl">
+
+          <h3>Task</h3>
+          <ul>
+            <li><a href="/faculties/add_faculty">Add Faculty</a></li>
+            <li><a href="/faculties/edit_faculty">Edit Faculty</a></li>
+            <li><a href="/faculties/void_faculty">Void Faculties</a></li>
+            <li><a href="/faculties/view_faculty">View Faculties</a></li>
+            <li><a href="/departments/department_management_menu">Departments</a></li>
+          </ul>
+
+        </div> <!-- end side-menu -->
+
+        <div class="side-content fr">
+
+          <div class="content-module">
+
+            <div class="content-module-heading cf">
+
+              <h3 class="fl">View Faculties</h3>
+              <span class="fr expand-collapse-text">Click to collapse</span>
+              <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+            </div> <!-- end content-module-heading -->
+
+
+            <div class="content-module-main">
+
+              <table>
+
+                <thead>
+
+                  <tr>
+                    <th>#</th>
+                    <th style="width:40%;">Faculty Name</th>
+                    <th style="width:15%;">Total Departments</th>
+                    <th><center>Date Created</center></th>
+                  </tr>
+
+                </thead>
+
+                <tbody>
+                  <% count = 0 %>
+                  <% @faculties.each do |faculty| %>
+                    <tr id="<%= faculty.id %>">
+                      <td><%= count = count + 1 %></td>
+                      <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%=  faculty.name %></td>
+                      <td style="text-align: center;"><span faculty_id="<%= faculty.id %>" faculty_name="<%= faculty.name %>" onmousedown="loadDepartments(this);"class="label"><%= faculty.departments.count %></span></td>
+                      <td><%= faculty.created_at.to_date.strftime("%d-%b-%Y") %></td>
+                    </tr>
+                  <% end %>
+
+                </tbody>
+
+              </table>
+
+            </div> <!-- end content-module-main -->
+
+          </div> <!-- end content-module -->
+
+        </div> <!-- end side-content -->
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end content -->
+
+    <%= javascript_include_tag("bootstrap") %>
+    <script>
+
+      $(".delete-multiple").confirm({
+        title:"Delete confirmation",
+        text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+        confirm: function(button) {
+          deleteFaculties();
+        },
+        cancel: function(button) {
+
+        },
+        confirmButton: "Yes I am",
+        cancelButton: "No"
+      });
+
+      $(".confirm").confirm({
+        title:"Delete confirmation",
+        text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+        confirm: function(button) {
+          deleteSingleEntry();
+        },
+        cancel: function(button) {
+              
+        },
+        confirmButton: "Yes I am",
+        cancelButton: "No"
+      });
+    </script>
+  </body>
+</html>

@@ -10,6 +10,11 @@ class DepartmentsController < ApplicationController
   end
 
   def create_department
+    department_exists = Department.find_by_name(params[:department_name])
+    unless department_exists.blank?
+      flash[:error]  = "Unable to save. Department of <b>#{params[:department_name]}</b> already exists"
+      redirect_to :controller => "departments", :action => "add_department" and return
+    end
     if (Department.create({
             :faculty_id => params[:faculty_id],
             :name => params[:department_name],

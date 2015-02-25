@@ -9,6 +9,11 @@ class FacultiesController < ApplicationController
   end
 
   def create_faculty
+    faculty_exists = Faculty.find_by_name(params[:faculty_name])
+    unless faculty_exists.blank?
+      flash[:error]  = "Unable to save. Faculty of <b>#{params[:faculty_name]}</b> already exists"
+      redirect_to :controller => "faculties", :action => "add_faculty" and return
+    end
     if (Faculty.create({
             :name => params[:faculty_name]
           }))
@@ -42,7 +47,7 @@ class FacultiesController < ApplicationController
     @faculties = Faculty.find(:all)
   end
 
-  def view_faculties
+  def view_faculty
     @faculties = Faculty.find(:all)
   end
 

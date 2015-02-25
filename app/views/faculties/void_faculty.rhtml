@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Faculty Management</title>
+    <!-- Optimize for mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!-- jQuery & JS files -->
+    <%= javascript_include_tag("jquery") %>
+    <%= javascript_include_tag("script") %>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("jquery.confirm") %>
+    <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("bootstrap") %>
+
+    <script>
+      function selectAll(){
+        selectAllInput = document.getElementById('table-select-all');
+        inputs = document.getElementsByTagName("input");
+        if (selectAllInput.checked){
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+              inputs[i].checked = true;
+            }
+          }
+        }
+        else{
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+              inputs[i].checked = false;
+            }
+          }
+        }
+      }
+
+      function deleteFaculties(){
+        inputs = document.getElementsByTagName("input");
+        facultyIDs = []
+        for (var i=0; i<=inputs.length - 1; i++){
+          if (inputs[i].type == 'checkbox'){
+            if (inputs[i].checked){
+              if (inputs[i].hasAttribute("faculty_id")){
+                facultyId = inputs[i].getAttribute("faculty_id");
+                facultyIDs.push(facultyId);
+              }
+            }
+          }
+        }
+        
+        jQuery.ajax({
+          type: "POST",
+          url: "/faculties/delete_faculties",
+          data: "faculty_ids=" + facultyIDs,
+          success: function(){
+            for (var x=0; x<= facultyIDs.length - 1; x++){
+              id = facultyIDs[x];
+              element = document.getElementById(id);
+              element.parentNode.removeChild(element)
+            }
+          }
+
+        });
+      }
+      var currentFacultyId = "";
+      function setCurrentFacultyId(obj){
+        currentFacultyId = obj.getAttribute("faculty_id");
+      }
+      
+      function deleteSingleEntry(){
+        jQuery.ajax({
+          type: "POST",
+          url: "/faculties/delete_faculties",
+          data: "faculty_id=" + currentFacultyId + "&mode=single_entry",
+          success: function(){
+            element = document.getElementById(currentFacultyId);
+            element.parentNode.removeChild(element);
+          }
+
+        });
+      }
+    </script>
+
+    <style>
+      .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: #317eac;
+      }
+
+      table th:first-child {
+        border-style: none none none !important;
+      }
+    </style>
+  </head>
+  <body>  
+    <!-- HEADER -->
+    <div id="header-with-tabs">
+
+      <div class="page-full-width cf">
+
+        <ul id="tabs" class="fl">
+          <li><a href="/faculties/faculties_menu" class="active-tab">Faculties</a></li>
+        </ul> <!-- end tabs -->
+
+        <!-- Change this image to your own company's logo -->
+        <!-- The logo will automatically be resized to 30px height. -->
+        <a href="#" id="company-branding-small" class="fr"><%= image_tag("/admin/school_logo", :alt => 'Logo Missing')%></a>
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end header -->
+
+
+
+    <!-- MAIN CONTENT -->
+    <div id="content">
+
+      <div class="page-full-width cf">
+
+        <div class="side-menu fl">
+
+          <h3>Task</h3>
+          <ul>
+            <li><a href="/faculties/add_faculty">Add Faculty</a></li>
+            <li><a href="/faculties/edit_faculty">Edit Faculty</a></li>
+            <li><a href="/faculties/void_faculty">Void Faculties</a></li>
+            <li><a href="/faculties/view_faculty">View Faculties</a></li>
+            <li><a href="/departments/department_management_menu">Departments</a></li>
+          </ul>
+
+        </div> <!-- end side-menu -->
+
+        <div class="side-content fr">
+
+          <div class="content-module">
+
+            <div class="content-module-heading cf">
+
+              <h3 class="fl">Void Departments</h3>
+              <span class="fr expand-collapse-text">Click to collapse</span>
+              <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+            </div> <!-- end content-module-heading -->
+
+
+            <div class="content-module-main">
+
+              <table>
+
+                <thead>
+
+                  <tr>
+                    <th><input type="checkbox" id="table-select-all" onclick="selectAll();"/></th>
+                    <th style="min-width:30%;">Faculty Name</th>
+                    <th><center>Date Created</center></th>
+                    <th>Actions</th>
+                  </tr>
+
+                </thead>
+
+                <tfoot>
+                  <tr>
+                    <td colspan="3" class="table-footer">
+                      <a href="#" class="button round blue image-right ic-delete text-upper delete-multiple">Delete</a>
+                    </td>
+                  </tr>
+                </tfoot>
+
+                <tbody>
+
+                  <% @faculties.each do |faculty| %>
+                    <tr id="<%= faculty.id %>">
+                      <td><input type="checkbox" faculty_id="<%= faculty.id %>"/></td>
+                      <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%=  faculty.name %></td>
+                      <td><center><%= faculty.created_at.to_date.strftime("%d-%b-%Y") %></center></td>
+                      <td><a href="#" faculty_id="<%= faculty.id %>" onmousedown="setCurrentFacultyId(this)" class="table-actions-button ic-table-delete confirm"></a></td>
+                    </tr>
+                  <% end %>
+
+                </tbody>
+
+              </table>
+
+            </div> <!-- end content-module-main -->
+
+          </div> <!-- end content-module -->
+
+        </div> <!-- end side-content -->
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end content -->
+
+    <%= javascript_include_tag("bootstrap") %>
+    <script>
+
+      $(".delete-multiple").confirm({
+        title:"Delete confirmation",
+        text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+        confirm: function(button) {
+          deleteFaculties();
+        },
+        cancel: function(button) {
+
+        },
+        confirmButton: "Yes I am",
+        cancelButton: "No"
+      });
+
+      $(".confirm").confirm({
+        title:"Delete confirmation",
+        text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+        confirm: function(button) {
+          deleteSingleEntry();
+        },
+        cancel: function(button) {
+              
+        },
+        confirmButton: "Yes I am",
+        cancelButton: "No"
+      });
+    </script>
+  </body>
+</html>
