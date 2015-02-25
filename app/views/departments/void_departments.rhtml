@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>SimpleAdmin - Dashboard</title>
+    <!-- Optimize for mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!-- jQuery & JS files -->
+    <%= javascript_include_tag("jquery") %>
+    <%= javascript_include_tag("script") %>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("jquery.confirm") %>
+    <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("bootstrap") %>
+
+    <script>
+      function selectAll(){
+        selectAllInput = document.getElementById('table-select-all');
+        inputs = document.getElementsByTagName("input");
+        if (selectAllInput.checked){
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+              inputs[i].checked = true;
+            }
+          }
+        }
+        else{
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+              inputs[i].checked = false;
+            }
+          }
+        }
+      }
+
+      function deleteDepartments(){
+        inputs = document.getElementsByTagName("input");
+        departmentIDs = []
+        for (var i=0; i<=inputs.length - 1; i++){
+          if (inputs[i].type == 'checkbox'){
+            if (inputs[i].checked){
+              if (inputs[i].hasAttribute("department_id")){
+                departmentId = inputs[i].getAttribute("department_id");
+                departmentIDs.push(departmentId);
+              }
+            }
+          }
+        }
+        
+        jQuery.ajax({
+          type: "POST",
+          url: "/departments/delete_departments",
+          data: "department_ids=" + departmentIDs,
+          success: function(){
+            for (var x=0; x<= departmentIDs.length - 1; x++){
+              id = departmentIDs[x];
+              element = document.getElementById(id);
+              element.parentNode.removeChild(element)
+            }
+          }
+
+        });
+      }
+      var currentDepartmentId = "";
+      function setCurrentDepartmentId(obj){
+        currentDepartmentId = obj.getAttribute("department_id");
+      }
+      
+      function deleteSingleEntry(){
+        jQuery.ajax({
+          type: "POST",
+          url: "/departments/delete_departments",
+          data: "department_id=" + currentDepartmentId + "&mode=single_entry",
+          success: function(){
+            element = document.getElementById(currentDepartmentId);
+            element.parentNode.removeChild(element);
+          }
+
+        });
+      }
+    </script>
+
+    <style>
+      .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: #317eac;
+      }
+
+      table th:first-child {
+        border-style: none none none !important;
+      }
+    </style>
+  </head>
+  <body>  
+    <!-- HEADER -->
+    <div id="header-with-tabs">
+
+      <div class="page-full-width cf">
+
+        <ul id="tabs" class="fl">
+          <li><a href="/departments/department_management_menu" class="active-tab">Departments</a></li>
+        </ul> <!-- end tabs -->
+
+        <!-- Change this image to your own company's logo -->
+        <!-- The logo will automatically be resized to 30px height. -->
+        <a href="#" id="company-branding-small" class="fr"><%= image_tag("/admin/school_logo", :alt => 'Logo Missing')%></a>
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end header -->
+
+
+
+    <!-- MAIN CONTENT -->
+    <div id="content">
+
+      <div class="page-full-width cf">
+
+        <div class="side-menu fl">
+
+          <h3>Task</h3>
+          <ul>
+            <li><a href="/departments/add_department">Add Department</a></li>
+            <li><a href="/departments/edit_department">Edit Department</a></li>
+            <li><a href="/departments/void_departments">Void Departments</a></li>
+            <li><a href="/departments/view_department">View Departments</a></li>
+            <li><a href="/faculties/faculties_menu">Faculties</a></li>
+          </ul>
+
+        </div> <!-- end side-menu -->
+
+        <div class="side-content fr">
+
+          <div class="content-module">
+
+            <div class="content-module-heading cf">
+
+              <h3 class="fl">Void Departments</h3>
+              <span class="fr expand-collapse-text">Click to collapse</span>
+              <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+            </div> <!-- end content-module-heading -->
+
+
+            <div class="content-module-main">
+
+              <table>
+
+                <thead>
+
+                  <tr>
+                    <th><input type="checkbox" id="table-select-all" onclick="selectAll();"/></th>
+                    <th style="min-width:30%;">Department Name</th>
+                    <th><center>Department Code</center></th>
+                    <th style="min-width:35%;"><center>Faculty</center></th>
+                    <th>Actions</th>
+                  </tr>
+
+                </thead>
+
+                <tfoot>
+                  <tr>
+                    <td colspan="3" class="table-footer">
+                      <a href="#" class="button round blue image-right ic-delete text-upper delete-multiple">Delete</a>
+                    </td>
+                  </tr>
+                </tfoot>
+
+                <tbody>
+
+                  <% @departments.each do |department| %>
+                    <tr id="<%= department.id %>">
+                      <td><input type="checkbox" department_id="<%= department.id %>"/></td>
+                      <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%=  department.name %></td>
+                      <td><center><%= department.code %></center></td>
+                      <td><center><%= department.faculty.name %></center></td>
+                      <td><a href="#" department_id="<%= department.id %>" onmousedown="setCurrentDepartmentId(this)" class="table-actions-button ic-table-delete confirm"></a></td>
+                    </tr>
+                  <% end %>
+
+                </tbody>
+
+              </table>
+
+            </div> <!-- end content-module-main -->
+
+          </div> <!-- end content-module -->
+
+        </div> <!-- end side-content -->
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end content -->
+
+    <%= javascript_include_tag("bootstrap") %>
+    <script>
+
+      $(".delete-multiple").confirm({
+        title:"Delete confirmation",
+        text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+        confirm: function(button) {
+          deleteDepartments();
+        },
+        cancel: function(button) {
+
+        },
+        confirmButton: "Yes I am",
+        cancelButton: "No"
+      });
+
+      $(".confirm").confirm({
+        title:"Delete confirmation",
+        text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+        confirm: function(button) {
+          deleteSingleEntry();
+        },
+        cancel: function(button) {
+              
+        },
+        confirmButton: "Yes I am",
+        cancelButton: "No"
+      });
+    </script>
+  </body>
+</html>

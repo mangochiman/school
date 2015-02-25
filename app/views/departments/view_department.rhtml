@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Payments Management</title>
+    <!-- Optimize for mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!-- jQuery & JS files -->
+
+    <%= javascript_include_tag("jquery") %>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("jquery.confirm") %>
+    <%= javascript_include_tag("script") %>
+    <%= javascript_include_tag("gvalidator") %>
+    <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("metallic") %>
+    <%= stylesheet_link_tag("gvalidator") %>
+    <%= stylesheet_link_tag("bootstrap") %>
+
+    <script type="text/javascript">
+      function filterDepartmentsByFaculty(){
+        facultyId = document.getElementById('faculty_id').value;
+        jQuery.ajax({
+          type: "POST",
+          url: "/departments/render_departments_by_faculty",
+          data: "faculty_id=" + facultyId,
+          success: function(results){
+            results = eval('(' + results + ')');
+            count = 0;
+            html = ""
+            for (var department in results){
+              count = count + 1;
+              departmentName = results[department]["department_name"];
+              departmentCode = results[department]["department_code"];
+              departmentFaculty = results[department]["department_faculty"];
+              html += "<tr>";
+              html += "<td>" + count + "</td>";
+              html += "<td style='text-align:left; padding: 0.833em 0 0.833em 1.25em;'>" + departmentName + "</td>";
+              html += "<td style='text-align:center;'>" + departmentCode + "</td>";
+              html += "<td>" + departmentFaculty + "</td>";
+              html += "</tr>";
+            }
+            document.getElementById('departments').innerHTML = html;
+          }
+
+        });
+      }
+    </script>
+
+    <style>
+      .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: red;
+      }
+
+      form.autoform .msg.icon {
+        margin: 0 10px;
+        padding: 5px 5px 5px 30px;
+        position: unset;
+        font-size: 8.99pt;
+      }
+
+      form label {
+        font-size: 0.9em;
+        font-weight: bold;
+      }
+      form.autoform input, select{
+
+      }
+
+      #filter-graph-form fieldset {
+        border: 1px solid gray;
+        padding: 0px;
+        width: 98.7%;
+      }
+      #filter-graph-form legend {
+        color: #abda0f;
+        font-size: 14px;
+        font-weight: 100;
+        margin-left: 14px;
+        padding: 2px;
+        width: initial;
+        margin-bottom: 0;
+        border-style: none;
+      }
+      #filter-graph-form fieldset input {
+        color: #505050;
+        float: left;
+        margin-right: 5px;
+        width: 140px;
+        padding: 0px;
+        font-size: 14px;
+      }
+
+      #departments input[type="text"]{
+        border: 1px solid #d9dbdd;
+        outline: medium none;
+        width: 187px;
+      }
+
+      input[type="submit"] {
+        margin-left: 31%;
+      }
+
+      #faculty_id{
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        color: #555;
+        font-size: 14px;
+        text-align: center;
+        height: 34px;
+        line-height: 1.42857;
+        margin-left: 0;
+        width: 199px;
+        padding: 6px 12px;
+        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+      }
+
+      table th:first-child {
+        border-style: none none none !important;
+      }
+
+      a{
+        cursor: pointer;
+      }
+
+      #department_code, #department_name{
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>    
+    <!-- HEADER -->
+    <div id="header-with-tabs">
+
+      <div class="page-full-width cf">
+
+        <ul id="tabs" class="fl">
+          <li><a href="/departments/department_management_menu" class="active-tab">Departments</a></li>
+        </ul> <!-- end tabs -->
+
+        <!-- Change this image to your own company's logo -->
+        <!-- The logo will automatically be resized to 30px height. -->
+        <a href="#" id="company-branding-small" class="fr"><%= image_tag("/admin/school_logo", :alt => 'Logo Missing')%></a>
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end header -->
+
+
+
+    <!-- MAIN CONTENT -->
+    <div id="content">
+
+      <div class="page-full-width cf">
+
+        <div class="side-menu fl">
+
+          <h3>Task</h3>
+          <ul>
+            <li><a href="/departments/add_department">Add Department</a></li>
+            <li><a href="/departments/edit_department">Edit Department</a></li>
+            <li><a href="/departments/void_departments">Void Departments</a></li>
+            <li><a href="/departments/view_department">View Departments</a></li>
+            <li><a href="/faculties/faculties_menu">Faculties</a></li>
+          </ul>
+
+        </div> <!-- end side-menu -->
+
+        <div class="side-content fr">
+
+          <div class="content-module">
+
+            <div class="half-size-column fl" style="width:67%;">
+
+              <div class="content-module">
+
+                <div class="content-module-heading cf">
+
+                  <h3 class="fl">View Departments</h3>
+                  <span class="fr expand-collapse-text">Click to collapse</span>
+                  <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+                </div> <!-- end content-module-heading -->
+
+
+                <div class="content-module-main">
+                  <% if flash[:notice] %>
+                    <div class="confirmation-box round">
+                      <%= flash[:notice] %>
+                    </div>
+                  <% end %>
+                  <% if flash[:error] %>
+                    <div class="error-box round">
+                      <%= flash[:error] %>
+                    </div>
+                  <% end %>
+                  <form id="filter-graph-form" action="#">
+                    <fieldset>
+                      <legend>Search</legend>
+                      <div style="margin-right:2%;">
+                        <table style="width:22%; float: right;">
+                          <tr style="background-color: white;">
+                            <td style="text-align: left; font-size: 1.2em; min-width: 2em;"><span>Faculty</span></td>
+                            <td><%= select_tag("faculty_id", options_for_select(@faculties),{:style=>'text-align:center'})%></td>
+                            <td><a onclick="filterDepartmentsByFaculty();" class="button round blue image-right ic-refresh text-upper">Filter</a></td>
+                          </tr>
+                        </table>
+                      </div>
+                    </fieldset>
+                  </form><br />
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th style="width:35%;">Department Name</th>
+                        <th style="width:20%; text-align: center;">Department Code</th>
+                        <th style="width:30%; text-align: center;">Faculty</th>
+                      </tr>
+                    </thead>
+                    <tbody id="departments">
+                      <% count = 0 %>
+                      <% (@departments || []).each do |department| %>
+                        <tr>
+                          <td><%= count = count + 1 %></td>
+                          <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= department.name %></td>
+                          <td style="text-align:center;"><%= department.code %></td>
+                          <td><%= department.faculty.name %></td>
+                        </tr>
+                      <% end %>
+                    </tbody>
+                  </table>
+                </div> <!-- end content-module-main -->
+
+              </div> <!-- end content-module -->
+
+            </div>
+            <div class="half-size-column fr" style="width:32%">
+
+              <div class="content-module">
+
+                <div class="content-module-heading cf">
+
+                  <h3 class="fl">Available Departments (<%= @departments.count %>)</h3>
+                  <span class="fr expand-collapse-text">Click to collapse</span>
+                  <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+                </div> <!-- end content-module-heading -->
+
+
+                <div class="content-module-main cf">
+                  <% unless @departments.blank? %>
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Department Name</th>
+                          <th>Code</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% count = 0 %>
+                        <% (@departments || []).each do |department| %>
+                          <tr>
+                            <td><%= count = count + 1 %></td>
+                            <td style="padding:2px;"><a href="/departments/edit_department?department_id=<%= department.id %>"><%= department.name %></a></td>
+                            <td><%= department.code %></td>
+                          </tr>
+                        <% end %>
+                      </tbody>
+                    </table>
+                  <% else %>
+                    <div class="error-box round">
+                      No Departments found
+                    </div>
+                  <% end %>
+                </div> <!-- end content-module-main -->
+
+              </div> <!-- end content-module -->
+
+            </div>
+
+          </div> <!-- end content-module -->
+
+
+
+
+        </div> <!-- end side-content -->
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end content -->
+
+    <%= javascript_include_tag("bootstrap") %>
+    <%= javascript_include_tag("zebra_datepicker") %>
+    <script>
+      $('.date-picker').Zebra_DatePicker({
+        view : 'years',
+        direction: ['<%=  (Date.today - 10.years).strftime("%Y-%m-%d") %>', '<%=  Date.today.strftime("%Y-%m-%d") %>']
+      });
+    </script>
+  </body>
+</html>
