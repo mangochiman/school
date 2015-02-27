@@ -1,25 +1,29 @@
 class UserController < ApplicationController
-
+  skip_before_filter :authenticate_user, :only => [:login, :authenticate]
   def login
     @school_name = GlobalProperty.find_by_property("school_name") rescue nil
-    if request.get?
-      reset_session
-    else
-      raise params['username'].to_yaml
+   # @settings = school_setting
+    render :layout => false
+  end
+
+  def logout
+    session[:current_user_id] = nil
+    flash[:notice] = "You have been logged out"
+    redirect_to :controller => "user", :action => "login" and return
+  end
+  
+  def authenticate
       user = User.find_by_username(params['username'])
-      logged_in_user = user.try_to_login(params['password'])
-      if not logged_in_user.blank?
-        reset_session
+      logged_in_user = User.authenticate(params[:username], params[:password])
+      if logged_in_user
         session[:current_user_id] = user.id
         redirect_to("/")
       else
         flash[:error] = "Invalid username or password"
+        redirect_to :controller => "user", :action => "login" and return
       end
-    end
-    @settings = school_setting
-    render :layout => false
   end
-
+  
   def user_management_menu
     
   end

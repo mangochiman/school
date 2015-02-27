@@ -18,12 +18,12 @@
       <div class="page-full-width cf">
 
         <ul id="nav" class="fl">
-          <li class="v-sep"><a href="#" class="round button dark menu-user image-left">Logged in as <strong>admin</strong></a>
+          <li class="v-sep"><a href="#" class="round button dark menu-user image-left">Logged in as <strong><%= User.find(session[:current_user_id]).username %></strong></a>
             <ul>
               <li><a href="#">My Profile</a></li>
               <li><a href="/admin/settings">Settings</a></li>
               <li><a href="#">Change Password</a></li>
-              <li><a href="/user/login">Log out</a></li>
+              <li><a href="/user/logout">Log out</a></li>
             </ul>
           </li>
           <li class="v-sep"><a href="#" class="round button dark menu-settings image-left">Student Management</a>

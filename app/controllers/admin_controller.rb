@@ -1,4 +1,5 @@
 class AdminController < ApplicationController
+  skip_before_filter :authenticate_user, :only => [:school_logo]
   def home
     start_year = Date.today.year - 5
     end_year = Date.today.year
