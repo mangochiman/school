@@ -124,4 +124,8 @@ class UserController < ApplicationController
 
     render :text => "true" and return
   end
+
+  def user_account_settings_menu
+    @user = User.find(session[:current_user_id])
+  end
 end

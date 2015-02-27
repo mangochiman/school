@@ -20,9 +20,9 @@
         <ul id="nav" class="fl">
           <li class="v-sep"><a href="#" class="round button dark menu-user image-left">Logged in as <strong><%= User.find(session[:current_user_id]).username %></strong></a>
             <ul>
-              <li><a href="#">My Profile</a></li>
-              <li><a href="/admin/settings">Settings</a></li>
-              <li><a href="#">Change Password</a></li>
+              <li><a href="/user/user_account_settings_menu?edit_mode=username">Edit my username</a></li>
+              <li><a href="/user/user_account_settings_menu?edit_mode=password">Edit my password</a></li>
+              <li><a href="/user/user_account_settings_menu">My Profile</a></li>
               <li><a href="/user/logout">Log out</a></li>
             </ul>
           </li>
@@ -67,7 +67,7 @@
               <li><a href="/parent/parents_menu">Parents Management</a></li>
               <li><a href="/departments/department_management_menu">Departments Management</a></li>
               <li><a href="#">ID Barcode Configuration</a></li>
-              <li><a href="/admin/system_configuration_menu">System Settings</a></li>
+              <li><a href="/admin/settings">System Settings</a></li>
               <li><a href="/report/reports_generator_menu">Supper reports generator</a></li>
               <li><a href="/admin/backup_data_menu">Backup Settings</a></li>
             </ul>
