@@ -128,4 +128,45 @@ class UserController < ApplicationController
   def user_account_settings_menu
     @user = User.find(session[:current_user_id])
   end
+
+  def update_account
+    @user = User.find(session[:current_user_id])
+    
+    if params[:edit_mode] == 'username'
+      user = User.find_by_username(params[:username])
+      unless user.blank?
+        unless (user.id == @user.id)
+          flash[:error] = "Unable to save. Username is already in use."
+          redirect_to :controller => "user", :action => "user_account_settings_menu", :edit_mode => "username" and return
+        end
+      end
+      if @user.update_attributes({
+          :username => params[:username]
+          })
+        flash[:notice] = "Operation successful"
+        redirect_to :controller => "user", :action => "user_account_settings_menu" and return
+      end
+    end
+    
+    if params[:edit_mode] == 'password'
+      if (User.authenticate(@user.username, params[:password]))
+        if (params[:new_password] == params[:repeat_password])
+          @user.password = params[:new_password]
+          @user.save
+          flash[:notice] = "Operation successful"
+          redirect_to :controller => "user", :action => "user_account_settings_menu" and return
+        else
+          flash[:error] = "Unable to save. New Password and Repeat password mismatch"
+          redirect_to :controller => "user", :action => "user_account_settings_menu" and return
+        end
+      else
+        flash[:error] = "Unable to save. Old password is not correct"
+        redirect_to :controller => "user", :action => "/user_account_settings_menu", :edit_mode => "password" and return
+      end
+    end
+    
+    if params[:edit_mode] == 'names'
+
+    end
+  end
 end

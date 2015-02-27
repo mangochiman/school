@@ -250,6 +250,7 @@
                           <label for="username">username</label><input type="text" value="<%= @user.username %>" name="username" class="text required" id="username" maxlength="30"/>
                         </div>
                         <div class="stripe-separator"><!--  --></div>
+                        <%= hidden_field_tag("edit_mode", 'username') %>
                         <input type="submit" value="Submit" class="round blue ic-right-arrow" />
                       </form>
                     <% end %>
@@ -266,6 +267,7 @@
                           <label for="repeat_password">Retype Password</label><input type="password" name="repeat_password" class="text required" id="repeat_password" maxlength="30"/>
                         </div>
                         <div class="stripe-separator"><!--  --></div>
+                        <%= hidden_field_tag("edit_mode", 'password') %>
                         <input type="submit" value="Submit" class="round blue ic-right-arrow" />
                       </form>
                     <% end %>
@@ -279,6 +281,7 @@
                           <label for="last_name">Last Name</label><input type="text" name="last_name" class="text required" id="last_name" maxlength="30"/>
                         </div>
                         <div class="stripe-separator"><!--  --></div>
+                        <%= hidden_field_tag("edit_mode", 'names') %>
                         <input type="submit" value="Submit" class="round blue ic-right-arrow" />
                       </form>
                     <% end %>
