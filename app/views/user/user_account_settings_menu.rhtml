@@ -254,7 +254,7 @@
                         <input type="submit" value="Submit" class="round blue ic-right-arrow" />
                       </form>
                     <% end %>
-                  
+
                     <% if params[:edit_mode] == 'password' %>
                       <form id="user_update" class="autoform" action="/user/update_account" method="POST">
                         <div>
@@ -271,21 +271,44 @@
                         <input type="submit" value="Submit" class="round blue ic-right-arrow" />
                       </form>
                     <% end %>
-                  
+
+                    <% if params[:edit_mode] == 'first_name' %>
+                      <form id="user_update" class="autoform" action="/user/update_account" method="POST">
+                        <div>
+                          <label for="first_name">First Name</label><input type="text" value="<%= @user.first_name %>" name="first_name" class="text required" id="first_name" maxlength="30"/>
+                        </div>
+
+                        <div class="stripe-separator"><!--  --></div>
+                        <%= hidden_field_tag("edit_mode", 'first_name') %>
+                        <input type="submit" value="Submit" class="round blue ic-right-arrow" />
+                      </form>
+                    <% end %>
+
+                    <% if params[:edit_mode] == 'last_name' %>
+                      <form id="user_update" class="autoform" action="/user/update_account" method="POST">
+                        <div>
+                          <label for="last_name">Last Name</label><input type="text" value="<%= @user.last_name %>" name="last_name" class="text required" id="last_name" maxlength="30"/>
+                        </div>
+                        <div class="stripe-separator"><!--  --></div>
+                        <%= hidden_field_tag("edit_mode", 'last_name') %>
+                        <input type="submit" value="Submit" class="round blue ic-right-arrow" />
+                      </form>
+                    <% end %>
+
                     <% if params[:edit_mode] == 'names' %>
                       <form id="user_update" class="autoform" action="/user/update_account" method="POST">
                         <div>
-                          <label for="first_name">First Name</label><input type="text" name="first_name" class="text required" id="first_name" maxlength="30"/>
+                          <label for="first_name">First Name</label><input type="text" value="<%= @user.first_name %>" name="first_name" class="text required" id="first_name" maxlength="30"/>
                         </div>
                         <div>
-                          <label for="last_name">Last Name</label><input type="text" name="last_name" class="text required" id="last_name" maxlength="30"/>
+                          <label for="last_name">Last Name</label><input type="text" value="<%= @user.last_name %>" name="last_name" class="text required" id="last_name" maxlength="30"/>
                         </div>
                         <div class="stripe-separator"><!--  --></div>
                         <%= hidden_field_tag("edit_mode", 'names') %>
                         <input type="submit" value="Submit" class="round blue ic-right-arrow" />
                       </form>
                     <% end %>
-                  
+
                   <% end %>
                 </div> <!-- end content-module-main -->
 
@@ -309,15 +332,15 @@
                   <table style="margin-left:10%; width:70%;">
                     <tr>
                       <td style="text-align: left; padding-left: 10%;">Username</td>
-                      <td style="text-align: left; padding-left: 20%;"><a href="#"><%= @user.username %></a></td>
+                      <td style="text-align: left; padding-left: 20%;"><a href="/user/user_account_settings_menu?edit_mode=username"><%= @user.username %></a></td>
                     </tr>
                     <tr>
                       <td style="text-align: left; padding-left: 10%;">First Name</td>
-                      <td style="text-align: left; padding-left: 20%;"><a href="#"><%= 'abcdef' %></a></td>
+                      <td style="text-align: left; padding-left: 20%;"><a href="/user/user_account_settings_menu?edit_mode=first_name"><%= @user.first_name %></a></td>
                     </tr>
                     <tr>
                       <td style="text-align: left; padding-left: 10%;">Last Name</td>
-                      <td style="text-align: left; padding-left: 20%;"><a href="#"><%= 'fedcba' %></a></td>
+                      <td style="text-align: left; padding-left: 20%;"><a href="/user/user_account_settings_menu?edit_mode=last_name"><%= @user.last_name %></a></td>
                     </tr>
                     <tr>
                       <td style="text-align: right;">Created On</td>

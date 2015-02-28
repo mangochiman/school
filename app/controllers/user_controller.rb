@@ -2,7 +2,7 @@ class UserController < ApplicationController
   skip_before_filter :authenticate_user, :only => [:login, :authenticate]
   def login
     @school_name = GlobalProperty.find_by_property("school_name") rescue nil
-   # @settings = school_setting
+    # @settings = school_setting
     render :layout => false
   end
 
@@ -13,15 +13,15 @@ class UserController < ApplicationController
   end
   
   def authenticate
-      user = User.find_by_username(params['username'])
-      logged_in_user = User.authenticate(params[:username], params[:password])
-      if logged_in_user
-        session[:current_user_id] = user.id
-        redirect_to("/")
-      else
-        flash[:error] = "Invalid username or password"
-        redirect_to :controller => "user", :action => "login" and return
-      end
+    user = User.find_by_username(params['username'])
+    logged_in_user = User.authenticate(params[:username], params[:password])
+    if logged_in_user
+      session[:current_user_id] = user.id
+      redirect_to("/")
+    else
+      flash[:error] = "Invalid username or password"
+      redirect_to :controller => "user", :action => "login" and return
+    end
   end
   
   def user_management_menu
@@ -141,7 +141,7 @@ class UserController < ApplicationController
         end
       end
       if @user.update_attributes({
-          :username => params[:username]
+            :username => params[:username]
           })
         flash[:notice] = "Operation successful"
         redirect_to :controller => "user", :action => "user_account_settings_menu" and return
@@ -164,9 +164,42 @@ class UserController < ApplicationController
         redirect_to :controller => "user", :action => "/user_account_settings_menu", :edit_mode => "password" and return
       end
     end
+
+    if params[:edit_mode] == 'first_name'
+      if @user.update_attributes({
+            :first_name => params[:first_name]
+          })
+        flash[:notice] = "Operation successful"
+        redirect_to :controller => "user", :action => "user_account_settings_menu" and return
+      else
+        flash[:error] = "Unable to save. Check for erros and try again"
+        redirect_to :controller => "user", :action => "user_account_settings_menu" and return
+      end
+    end
+
+    if params[:edit_mode] == 'last_name'
+      if @user.update_attributes({
+            :last_name => params[:last_name]
+          })
+        flash[:notice] = "Operation successful"
+        redirect_to :controller => "user", :action => "user_account_settings_menu" and return
+      else
+        flash[:error] = "Unable to save. Check for erros and try again"
+        redirect_to :controller => "user", :action => "user_account_settings_menu" and return
+      end
+    end
     
     if params[:edit_mode] == 'names'
-
+      if @user.update_attributes({
+            :first_name => params[:first_name],
+            :last_name => params[:last_name]
+          })
+        flash[:notice] = "Operation successful"
+        redirect_to :controller => "user", :action => "user_account_settings_menu" and return
+      else
+        flash[:error] = "Unable to save. Check for erros and try again"
+        redirect_to :controller => "user", :action => "user_account_settings_menu" and return
+      end
     end
   end
 end

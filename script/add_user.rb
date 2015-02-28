@@ -3,7 +3,9 @@ def add_user
   if admin.blank?
     User.create({
         :username => 'admin',
-        :password => 'admin'
+        :password => 'admin',
+        :first_name => 'User',
+        :last_name => 'Account'
       })
     puts "Account Created"
     puts "Username : admin"
