@@ -86,7 +86,16 @@
       </div> <!-- end full-width -->
 
     </div> <!-- end top-bar -->
-
+    <div class="search_results" style="position: absolute; display: none; z-index: 1000; right: 89px; top: 55px;">
+      <div style="box-shadow: 3px 3px 10px rgb(136, 136, 136); border: 1px solid rgb(160, 160, 160); background: none repeat scroll 0% 0% rgb(255, 255, 255); padding: 5px 0px;">
+        <div style="cursor: pointer; padding: 0px 10px; background: none repeat scroll 0% 0% transparent; color: rgb(48, 48, 48); font-size: 11px;">Results</div>
+        <hr></hr>
+        <div class="result_row"style="cursor: pointer; padding: 0px 10px; background: none repeat scroll 0% 0% transparent; color: rgb(48, 48, 48); font-size: 11px;">Download PNG image</div>
+        <div style="cursor: pointer; padding: 0px 10px; background: none repeat scroll 0% 0% transparent; color: rgb(48, 48, 48); font-size: 11px;">Download JPEG image</div>
+        <div style="cursor: pointer; padding: 0px 10px; background: none repeat scroll 0% 0% transparent; color: rgb(48, 48, 48); font-size: 11px;">Download PDF document</div>
+        <div style="cursor: pointer; padding: 0px 10px; background: none repeat scroll 0% 0% transparent; color: rgb(48, 48, 48); font-size: 11px;">Download SVG vector image</div>
+      </div>
+    </div>
     <%= yield %>
 
     <!-- FOOTER -->
