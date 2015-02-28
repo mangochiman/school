@@ -41,9 +41,10 @@
               }
         <% end %>
       }
-      
+
       window.setTimeout("selectGender(); selectPosition();", 100);
     </script>
+    
     <style>
       .modal-title {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -67,16 +68,19 @@
         font-size: 0.8em !important;
         font-weight: bold;
       }
+
+      form.autoform .msg.icon {
+        font-size: 10pt;
+        margin: 0 10px;
+        padding: 5px 5px 5px 30px;
+        position: unset;
+      }
+
       #registration input[type="text"], input[type="password"], textarea {
         border: 1px solid #d9dbdd;
         outline: medium none;
         padding: 0.5em 0.225em;
       }
-
-      #simple-input {
-        font-size: 10pt !important;
-      }
-
       #gender, #position{
         background-color: #fff;
         background-image: none;
@@ -92,9 +96,18 @@
         padding: 6px 12px;
         transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
       }
+
+      input[type="submit"] {
+        margin-left: 31%;
+      }
+
+      #optional{
+        position: relative;
+        left: 3%;
+      }
     </style>
   </head>
-  <body> 
+  <body>
     <!-- HEADER -->
     <div id="header-with-tabs">
 
@@ -136,60 +149,101 @@
 
           <div class="content-module">
 
-            <div class="content-module-heading cf">
+            <div class="half-size-column fl" style="width:69%;">
 
-              <h3 class="fl">Add Employee</h3>
-              <span class="fr expand-collapse-text">Click to collapse</span>
-              <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+              <div class="content-module">
 
-            </div> <!-- end content-module-heading -->
+                <div class="content-module-heading cf">
+
+                  <h3 class="fl">New Employee</h3>
+                  <span class="fr expand-collapse-text">Click to collapse</span>
+                  <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+                </div> <!-- end content-module-heading -->
 
 
-            <div class="content-module-main">
+                <div class="content-module-main">
+                  <% if flash[:notice] %>
+                    <div class="confirmation-box round">
+                      <%= flash[:notice] %>
+                    </div>
+                  <% end %>
+                  <% if flash[:error] %>
+                    <div class="error-box round">
+                      <%= flash[:error] %>
+                    </div>
+                  <% end %>
+                  <form id="registration" class="autoform" action="/employees/edit_me_employee" method="POST" >
 
-              <% if flash[:notice] %>
-                <div class="confirmation-box round">
-                  <%= flash[:notice] %>
-                </div>
-              <% end %>
-              <% if flash[:error] %>
-                <div class="error-box round">
-                  <%= flash[:error] %>
-                </div>
-              <% end %>
-              <form id="registration" class="autoform" action="/employees/edit_me_employee" method="POST" >
+                    <div><label for="firstname" style="width:100px;">First Name</label><input type="text" value="<%= @employee.fname %>" name="firstname" class="firstname required" id="firstname" maxlength="30"/></div>
+                    <div><label for="lastname" style="width:100px;">Last Name</label><input type="text" value="<%= @employee.lname %>" name="lastname" class="lastname required" id="lastname" maxlength="30"/></div>
+                    <div><label for="phone" style="width:100px;">Phone</label><input type="text" value="<%= @employee.phone %>" name="phone" class="phone required" id="phone" maxlength="12"/></div>
+                    <div><label for="email" style="width:100px;">Email</label><input type="text" value="<%= @employee.email %>" name="email" class="email required" id="email" maxlength="60"/></div>
 
-                <div><label for="firstname">First Name</label><input type="text" value="<%= @employee.fname %>" name="firstname" class="firstname required" id="firstname" maxlength="30"/></div>
-                <div><label for="lastname">Last Name</label><input type="text" value="<%= @employee.lname %>" name="lastname" class="lastname required" id="lastname" maxlength="30"/></div>
-                <div><label for="phone">Phone</label><input type="text" value="<%= @employee.phone %>" name="phone" class="phone required" id="phone" maxlength="12"/></div>
-                <div><label for="email">Email</label><input type="text" value="<%= @employee.email %>" name="email" class="email required" id="email" maxlength="60"/></div>
+                    <div>
+                      <label for="gender" style="width:100px;">Gender</label>
+                      <select id="gender" name="gender" class="select required">
+                        <option value="">[select Gender]</option>
+                        <option value="Male" id="male">Male</option>
+                        <option value="Female" id="female">Female</option>
+                      </select>
+                    </div>
 
-                <div>
-                  <label for="gender">Gender</label>
-                  <select id="gender" name="gender" class="select required">
-                    <option value="">[select Gender]</option>
-                    <option value="Male" id="male">Male</option>
-                    <option value="Female" id="female">Female</option>
-                  </select>
-                </div>
+                    <div>
+                      <label for="position" style="width:100px;">Position</label>
+                      <td><%= select_tag("position", options_for_select(@positions), {:class => 'select required'})%></td>
+                    </div>
+                    <div><label for="dob" style="width:100px;">Date of Birth</label><input id="dob" type="text" value="<%= @employee.dob %>" name="dob" class="text required date-picker"/></div>
 
-                <div>
-                  <label for="position">Position</label>
-                  <td><%= select_tag("position", options_for_select(@positions), {:class => 'select required'})%></td>
-                </div>
-                <div><label for="dob">Date of Birth</label><input id="dob" type="text" value="<%= @employee.dob %>" name="dob" class="text required date-picker"/></div>
+                    <div class="stripe-separator"><!--  --></div>
+                    <%= hidden_field_tag("employee_id", params[:employee_id]) %>
+                    <input type="submit" value="Submit" class="round blue ic-right-arrow" />
+                  </form>
+                </div> <!-- end content-module-main -->
 
-                <div class="stripe-separator"><!--  --></div>
-                <%= hidden_field_tag("employee_id", params[:employee_id]) %>
-                <input type="submit" value="Submit" class="round blue ic-right-arrow" />
-              </form>
+              </div> <!-- end content-module -->
 
-            </div> <!-- end content-module-main -->
+            </div>
+            <div class="half-size-column fr" style="width:30%">
+
+              <div class="content-module">
+
+                <div class="content-module-heading cf">
+
+                  <h3 class="fl">Existing Employees (<%= @employees.count %>)</h3>
+                  <span class="fr expand-collapse-text">Click to collapse</span>
+                  <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+                </div> <!-- end content-module-heading -->
+
+
+                <div class="content-module-main cf">
+                  <table class="existing_employees">
+                    <% count = 0 %>
+                    <thead>
+                      <tr>
+                        <th style="border-style: none;">#</th>
+                        <th style="padding:2px;">Employee Name</th>
+                        <th>Position</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% @employees.each do |employee| %>
+                        <tr>
+                          <td><%= count = count + 1 %></td>
+                          <td style="padding:2px;"><%= "<a href='/employees/edit_me_employee?employee_id=#{employee.id}'>" + employee.name_and_gender.to_s + '</a>'%></td>
+                          <td><%= employee.employee_position.position.name rescue 'unknown' %></td>
+                        </tr>
+                      <% end %>
+                    </tbody>
+                  </table>
+                </div> <!-- end content-module-main -->
+
+              </div> <!-- end content-module -->
+
+            </div>
 
           </div> <!-- end content-module -->
-
-
-
 
 
 
@@ -205,7 +259,7 @@
     <script>
       $('.date-picker').Zebra_DatePicker({
         view : 'years',
-        direction: ['<%=  (Date.today - 30.years).strftime("%Y-%m-%d") %>', '<%=  (Date.today - 12.years).strftime("%Y-%m-%d") %>']
+        direction: ['<%=  (Date.today - 100.years).strftime("%Y-%m-%d") %>', '<%=  (Date.today - 10.year).strftime("%Y-%m-%d") %>']
       });
     </script>
   </body>

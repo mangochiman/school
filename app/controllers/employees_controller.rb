@@ -154,6 +154,7 @@ class EmployeesController < ApplicationController
     employee_id = params[:employee_id]
     @employee = Employee.find(employee_id)
     @my_position = @employee.employee_position.position
+    @employees = Employee.find(:all)
     if (request.method == :post)
 
       ActiveRecord::Base.transaction do
