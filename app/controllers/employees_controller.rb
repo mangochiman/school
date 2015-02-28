@@ -109,6 +109,7 @@ class EmployeesController < ApplicationController
   def add_employee
     @positions = [["[select Position]", ""]]
     @positions += Position.find(:all).collect{|p|[p.name, p.id]}
+    @employees = Employee.find(:all)
     if (request.method == :post)
       first_name = params[:firstname]
       last_name = params[:lastname]

@@ -65,5 +65,24 @@ class Employee < ActiveRecord::Base
     return true unless status.blank?
     return false
   end
+
+  def name
+    first_name = self.fname.to_s rescue ''
+    last_name = self.lname.to_s rescue ''
+    first_name + ' ' + last_name
+  end
   
+  def name_and_gender
+    first_name = self.fname.to_s rescue ''
+    last_name = self.lname.to_s rescue ''
+    gender = self.gender.first.to_s rescue 'unknown'
+    first_name + ' ' + last_name + ' (' + gender + ')'
+  end
+
+  def name_and_position
+    first_name = self.fname.to_s rescue ''
+    last_name = self.lname.to_s rescue ''
+    position = self.employee_position.position.name rescue 'unknown'
+    first_name + ' ' + last_name + ' (' + position + ')'
+  end
 end
