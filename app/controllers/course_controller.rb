@@ -76,6 +76,7 @@ class CourseController < ApplicationController
 
   def edit_me
     @course = Course.find(params[:course_id])
+    @courses = Course.find(:all)
     if request.method == :post
       optional = false
       optional = true if params[:optional]

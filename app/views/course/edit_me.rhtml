@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>SimpleAdmin - Dashboard</title>
+    <title>Course Management</title>
     <!-- Optimize for mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
@@ -19,7 +19,6 @@
     <%= stylesheet_link_tag("bootstrap") %>
 
     <script>
-
       function checkIfOptional(){
         optional = "<%=@course.optional%>"
         console.log(optional)
@@ -28,9 +27,7 @@
         }
       }
       window.setTimeout("checkIfOptional();", 250);
-      
     </script>
-    
     <style>
       .modal-title {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -64,12 +61,22 @@
       #simple-input {
         font-size: 10pt !important;
       }
+
       input[type="submit"] {
         margin-left: 31%;
       }
+
+      table td:first-child, table td:last-child{
+        text-align: left;
+      }
+
+      #optional{
+        position: relative;
+        left: 3%;
+      }
     </style>
   </head>
-  <body>    
+  <body>
     <!-- HEADER -->
     <div id="header-with-tabs">
 
@@ -111,38 +118,75 @@
 
           <div class="content-module">
 
-            <div class="content-module-heading cf">
+            <div class="half-size-column fl" style="width:69%;">
 
-              <h3 class="fl">Add course</h3>
-              <span class="fr expand-collapse-text">Click to collapse</span>
-              <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+              <div class="content-module">
 
-            </div> <!-- end content-module-heading -->
+                <div class="content-module-heading cf">
+
+                  <h3 class="fl">Edit Course</h3>
+                  <span class="fr expand-collapse-text">Click to collapse</span>
+                  <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+                </div> <!-- end content-module-heading -->
 
 
-            <div class="content-module-main">
+                <div class="content-module-main">
+                  <% if flash[:notice] %>
+                    <div class="confirmation-box round">
+                      <%= flash[:notice] %>
+                    </div>
+                  <% end %>
+                  <% if flash[:error] %>
+                    <div class="error-box round">
+                      <%= flash[:error] %>
+                    </div>
+                  <% end %>
+                  <form id="course" class="autoform" method="POST" action="/course/edit_me">
 
-              <% if flash[:notice] %>
-                <div class="confirmation-box round">
-                  <%= flash[:notice] %>
-                </div>
-              <% end %>
-              <% if flash[:error] %>
-                <div class="error-box round">
-                  <%= flash[:error] %>
-                </div>
-              <% end %>
-              <form id="course" class="autoform" method="POST" action="/course/edit_me">
+                    <div><label for="text">Course Name</label><input type="text" name="course_name" class="text required" value="<%= @course.name %>" /></div>
+                    <div><label for="text" style="width:239px;">Optional?</label><input type="checkbox" name="optional" id="optional" /></div>
 
-                <div><label for="text">Course Name</label><input type="text" name="course_name" class="text required" value="<%= @course.name %>" /></div>
-                <div><label for="text" style="width:239px;">Optional?</label><input type="checkbox" name="optional" id="optional" /></div>
+                    <div class="stripe-separator"><!--  --></div>
+                    <input type="hidden" name="course_id" value="<%= params[:course_id] %>" />
+                    <input type="submit" value="Submit" class="round blue ic-right-arrow" />
+                  </form>
+                </div> <!-- end content-module-main -->
 
-                <div class="stripe-separator"><!--  --></div>
-                <input type="hidden" name="course_id" value="<%= params[:course_id] %>" />
-                <input type="submit" value="Submit" class="round blue ic-right-arrow" />
-              </form>
+              </div> <!-- end content-module -->
 
-            </div> <!-- end content-module-main -->
+            </div>
+            <div class="half-size-column fr" style="width:30%">
+
+              <div class="content-module">
+
+                <div class="content-module-heading cf">
+
+                  <h3 class="fl">Existing Courses (<%= @courses.count %>)</h3>
+                  <span class="fr expand-collapse-text">Click to collapse</span>
+                  <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+                </div> <!-- end content-module-heading -->
+
+
+                <div class="content-module-main cf">
+                  <table>
+                    <% count = 0 %>
+                    <% @courses.in_groups_of(2).each do |row| %>
+                      <tr>
+                        <% row.each do |course| %>
+                          <% next if course.blank? %>
+                          <% count = count + 1 %>
+                          <td><%= '<span style=font-weight:bold>' + count.to_s + '.</span> '.to_s + "<a href='/course/edit_me?course_id=#{course.course_id}'>" + course.name.to_s + '</a>'%></td>
+                        <% end %>
+                      </tr>
+                    <% end %>
+                  </table>
+                </div> <!-- end content-module-main -->
+
+              </div> <!-- end content-module -->
+
+            </div>
 
           </div> <!-- end content-module -->
 
