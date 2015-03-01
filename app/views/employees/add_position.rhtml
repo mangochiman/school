@@ -17,6 +17,7 @@
     <%= stylesheet_link_tag("metallic") %>
     <%= stylesheet_link_tag("gvalidator") %>
     <%= stylesheet_link_tag("bootstrap") %>
+
     <style>
       .modal-title {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -40,14 +41,42 @@
         font-size: 0.8em !important;
         font-weight: bold;
       }
-      #add_position input[type="text"], input[type="password"], textarea {
+
+      form.autoform .msg.icon {
+        font-size: 10pt;
+        margin: 0 10px;
+        padding: 5px 5px 5px 30px;
+        position: unset;
+      }
+
+      #registration input[type="text"], input[type="password"], textarea {
         border: 1px solid #d9dbdd;
         outline: medium none;
         padding: 0.5em 0.225em;
       }
+      #gender, #position{
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        color: #555;
+        font-size: 14px;
+        height: 34px;
+        line-height: 1.42857;
+        width: 205px;
+        text-align: center;
+        padding: 6px 12px;
+        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+      }
 
-      #simple-input {
-        font-size: 10pt !important;
+      input[type="submit"] {
+        margin-left: 31%;
+      }
+
+      #optional{
+        position: relative;
+        left: 3%;
       }
     </style>
   </head>
@@ -93,36 +122,81 @@
 
           <div class="content-module">
 
-            <div class="content-module-heading cf">
+            <div class="half-size-column fl" style="width:69%;">
 
-              <h3 class="fl">Add Position</h3>
-              <span class="fr expand-collapse-text">Click to collapse</span>
-              <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+              <div class="content-module">
 
-            </div> <!-- end content-module-heading -->
+                <div class="content-module-heading cf">
+
+                  <h3 class="fl">New Position</h3>
+                  <span class="fr expand-collapse-text">Click to collapse</span>
+                  <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+                </div> <!-- end content-module-heading -->
 
 
-            <div class="content-module-main">
-
-              <% if flash[:notice] %>
-                  <div class="confirmation-box round">
-                    <%= flash[:notice] %>
-                  </div>
-                <% end %>
-                <% if flash[:error] %>
-                  <div class="error-box round">
+                <div class="content-module-main">
+                  <% if flash[:notice] %>
+                    <div class="confirmation-box round">
+                      <%= flash[:notice] %>
+                    </div>
+                  <% end %>
+                  <% if flash[:error] %>
+                    <div class="error-box round">
                       <%= flash[:error] %>
-                  </div>
-                <% end %>
-              <form id="add_position" class="autoform" action="/employees/add_position" method="POST">
-                <div><label for="text">Position Name</label><input type="text" name="position_name" class="text required" /></div>
-                <div class="stripe-separator"><!--  --></div>
-                <input type="submit" value="Submit" class="round blue ic-right-arrow" />
-              </form>
+                    </div>
+                  <% end %>
+                  <form id="add_position" class="autoform" action="/employees/add_position" method="POST">
+                    <div><label for="position_name" style="width:100px;">Position Name</label><input type="text" id="position_name" name="position_name" class="text required" /></div>
+                    <div class="stripe-separator"><!--  --></div>
+                    <input type="submit" value="Submit" class="round blue ic-right-arrow" />
+                  </form>
+                </div> <!-- end content-module-main -->
 
-            </div> <!-- end content-module-main -->
+              </div> <!-- end content-module -->
+
+            </div>
+            <div class="half-size-column fr" style="width:30%">
+
+              <div class="content-module">
+
+                <div class="content-module-heading cf">
+
+                  <h3 class="fl">Existing Positions (<%= @positions.count %>)</h3>
+                  <span class="fr expand-collapse-text">Click to collapse</span>
+                  <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+                </div> <!-- end content-module-heading -->
+
+
+                <div class="content-module-main cf">
+                  <table class="existing_employees">
+                    <% count = 0 %>
+                    <thead>
+                      <tr>
+                        <th style="border-style: none;">#</th>
+                        <th>Position</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% @positions.each do |position| %>
+                        <tr>
+                          <td><%= count = count + 1 %></td>
+                          <td style="text-align: left; padding-left: 4em;"><%= "<a href='/employees/edit_me_position?position_id=#{position.id}'>" + position.name.to_s + '</a>'%></td>
+                        </tr>
+                      <% end %>
+                    </tbody>
+                  </table>
+                </div> <!-- end content-module-main -->
+
+              </div> <!-- end content-module -->
+
+            </div>
 
           </div> <!-- end content-module -->
+
+
+
 
         </div> <!-- end side-content -->
 
@@ -130,6 +204,13 @@
 
     </div> <!-- end content -->
 
-     <%= javascript_include_tag("bootstrap") %>
+    <%= javascript_include_tag("bootstrap") %>
+    <%= javascript_include_tag("zebra_datepicker") %>
+    <script>
+      $('.date-picker').Zebra_DatePicker({
+        view : 'years',
+        direction: ['<%=  (Date.today - 100.years).strftime("%Y-%m-%d") %>', '<%=  (Date.today - 10.year).strftime("%Y-%m-%d") %>']
+      });
+    </script>
   </body>
 </html>

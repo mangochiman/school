@@ -45,8 +45,13 @@ class EmployeesController < ApplicationController
   end
 
   def add_position
+    @positions = Position.find(:all)
     if (request.method == :post)
-
+      position_exists = Position.find_by_name(params[:position_name])
+      if (position_exists)
+        flash[:error] = "Unable to save. Position <b>#{params[:position_name]}</b> already exists"
+        redirect_to :controller => "employees",:action => "add_position" and return
+      end
       if (Position.create({
               :name => params[:position_name]
             }))
@@ -67,6 +72,7 @@ class EmployeesController < ApplicationController
   def edit_me_position
     position_id = params[:position_id]
     @position = Position.find(position_id)
+    @positions = Position.all
     if (request.method == :post)
 
       if (@position.update_attributes({
