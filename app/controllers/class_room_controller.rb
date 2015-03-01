@@ -162,6 +162,12 @@ class ClassRoomController < ApplicationController
   def assign_me_teachers
     @class_room = ClassRoom.find(params[:class_room_id])
     @teachers = Teacher.all
+    
+    @class_room_teachers = []
+    @class_room.class_room_teachers.each do |crt|
+        @class_room_teachers << crt.teacher
+    end
+    
     unless (@class_room.class_room_teachers.blank?)
       assigned_teacher_ids = @class_room.class_room_teachers.collect{|t| t.teacher_id}
       @teachers = Teacher.find(:all, :conditions => ["teacher_id NOT IN (?)", assigned_teacher_ids] )

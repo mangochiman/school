@@ -3,79 +3,78 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>SimpleAdmin - Dashboard</title>
+    <title>Course Management</title>
     <!-- Optimize for mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <!-- jQuery & JS files -->
-
     <%= javascript_include_tag("jquery") %>
-    <%= javascript_include_tag("script") %>
     <%= javascript_include_tag("jquery-1.9.1.min") %>
     <%= javascript_include_tag("jquery.confirm") %>
+    <%= javascript_include_tag("script") %>
+    <%= javascript_include_tag("gvalidator") %>
     <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("metallic") %>
+    <%= stylesheet_link_tag("gvalidator") %>
     <%= stylesheet_link_tag("bootstrap") %>
+
     <script>
       function checkPreviousSelectedCourses(){
         inputs = document.getElementsByTagName("input");
         for (var i=0; i<=inputs.length - 1; i++){
           if (inputs[i].type == 'checkbox'){
-              inputs[i].checked = false;
+            inputs[i].checked = false;
           }
         }
-        
-        <% (@assigned_courses || []).each do |course| %>
-              document.getElementById("<%= course.id %>").checked = true;
-        <% end %>
-      }
-        
+
+<% (@assigned_courses || []).each do |course| %>
+      document.getElementById("<%= course.id %>").checked = true;
+<% end %>
+  }
+
     </script>
     <style>
-      table{
-        margin-left:15%;
-        width: 60%;
-      }
-      table td #simple-input{
-        float: right;
-      }
-
-      table label{
-        text-align: left;
-      }
-      #simple-input{
-        font-size: 10pt !important;
-      }
-
-      #registration input[type="text"], input[type="password"], textarea {
-        border: 1px solid #d9dbdd;
-        outline: medium none;
-        padding: 0.5em 0.225em;
-      }
-      input[type="submit"] {
-        margin-left: 37%;
-      }
-      table th:first-child {
-        border-style: none none none !important;
-    }
-
-    .classes{
-        position: relative;
-        margin-left: 0%;
-        width: 100%;
-     }
-
-    .classes th, tbody{
-        text-align: center;
-    }
-
-    .modal-title {
+      .modal-title {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         font-weight: 500;
         line-height: 1.1;
         font-size: 1.2em;
-        color: #317eac;
-    }
-    
+        color: red;
+      }
+
+      form.autoform .msg.icon {
+        margin: 0 10px;
+        padding: 5px 5px 5px 30px;
+        position: unset;
+      }
+
+      form label {
+        font-size: 0.9em;
+        font-weight: bold;
+      }
+      form.autoform input, select{
+        font-size: 0.8em !important;
+        font-weight: bold;
+      }
+
+      #course input[type="text"], input[type="password"], textarea {
+        border: 1px solid #d9dbdd;
+        outline: medium none;
+        padding: 0.5em 0.225em;
+      }
+
+      table th:first-child {
+        border-style: none none none !important;
+      }
+
+      input[type="submit"] {
+        margin-left: 31%;
+      }
+
+      #optional{
+        position: relative;
+        left: 3%;
+      }
     </style>
   </head>
   <body onload="checkPreviousSelectedCourses();">
@@ -86,7 +85,6 @@
 
         <ul id="tabs" class="fl">
           <li><a href="/admin/subject_groups_dashboard" class="dashboard-tab">Dashboard</a></li>
-          <li><a href="/course/index">Courses</a></li>
           <li><a href="/class_room/index" class="active-tab">Classes</a></li>
         </ul> <!-- end tabs -->
 
@@ -125,59 +123,101 @@
 
           <div class="content-module">
 
-            <div class="content-module-heading cf">
+            <div class="half-size-column fl" style="width:69%;">
 
-              <h3 class="fl">Subjects Edit</h3>
-              <span class="fr expand-collapse-text">Click to collapse</span>
-              <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+              <div class="content-module">
 
-            </div> <!-- end content-module-heading -->
+                <div class="content-module-heading cf">
+
+                  <h3 class="fl">Subjects Edit</h3>
+                  <span class="fr expand-collapse-text">Click to collapse</span>
+                  <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+                </div> <!-- end content-module-heading -->
 
 
-            <div class="content-module-main">
-              <% if flash[:notice] %>
-                <div class="confirmation-box round">
-                  <%= flash[:notice] %>
-                </div>
-              <% end %>
-              <% if flash[:error] %>
-                <div class="error-box round">
-                  <%= flash[:error] %>
-                </div>
-              <% end %>
-              <form method="post" action="edit_my_subjects">
-              <table class="classes" style="">
-
-                <thead>
-                  <tr>
-                    <th colspan="6" style=" padding: 1.25em 0 1.25em 1.25em;">Select courses</th>
-                  </tr>
-                </thead>
-           
-                <tbody id="class_rooms">
-                  <% @all_courses.in_groups_of(3).each do |row| %>
-                    <tr>
-                        <% row.each do |subject| %>
-                            <% unless subject.blank? %>
-                                  <td><input type="checkbox" id="<%= subject.id %>" name="subjects[<%= subject.name.titlecase %>]"/></td>
-                                  <td style="border-left: none; text-align: left;"><%= subject.name.titlecase %></td>
-                              <% else %>
-                                  <td style="border-left: none;">&nbsp;</td>
-                                  <td style="border-left: none;">&nbsp;</td>
-                            <% end %>
-                        <% end %>
-                    </tr>
+                <div class="content-module-main">
+                  <% if flash[:notice] %>
+                    <div class="confirmation-box round">
+                      <%= flash[:notice] %>
+                    </div>
                   <% end %>
-                </tbody>
-                
-              </table>
-              <div class="stripe-separator"><!--  --></div>
-                <%= hidden_field_tag("class_room_id", params[:class_room_id]) %>
-                <input type="submit" value="Submit" class="round blue ic-right-arrow" />
-              </form>
-            </div> <!-- end content-module-main -->
+                  <% if flash[:error] %>
+                    <div class="error-box round">
+                      <%= flash[:error] %>
+                    </div>
+                  <% end %>
+                  <form method="post" action="edit_my_subjects">
+                    <table class="classes" style="">
+
+                      <thead>
+                        <tr>
+                          <th colspan="6" style=" padding: 1.25em 0 1.25em 1.25em;">Select courses</th>
+                        </tr>
+                      </thead>
+
+                      <tbody id="class_rooms">
+                        <% @all_courses.in_groups_of(3).each do |row| %>
+                          <tr>
+                            <% row.each do |subject| %>
+                              <% unless subject.blank? %>
+                                <td><input type="checkbox" id="<%= subject.id %>" name="subjects[<%= subject.name.titlecase %>]"/></td>
+                                <td style="border-left: none; text-align: left;"><%= subject.name.titlecase %></td>
+                              <% else %>
+                                <td style="border-left: none;">&nbsp;</td>
+                                <td style="border-left: none;">&nbsp;</td>
+                              <% end %>
+                            <% end %>
+                          </tr>
+                        <% end %>
+                      </tbody>
+
+                    </table>
+                    <div class="stripe-separator"><!--  --></div>
+                    <%= hidden_field_tag("class_room_id", params[:class_room_id]) %>
+                    <input type="submit" value="Submit" class="round blue ic-right-arrow" />
+                  </form>
+                </div> <!-- end content-module-main -->
+
+              </div> <!-- end content-module -->
+
+            </div>
+            <div class="half-size-column fr" style="width:30%">
+
+              <div class="content-module">
+
+                <div class="content-module-heading cf">
+
+                  <h3 class="fl"><%= @class_room.name %> (<%= @assigned_courses.count %> courses)</h3>
+                  <span class="fr expand-collapse-text">Click to collapse</span>
+                  <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+                </div> <!-- end content-module-heading -->
+
+
+                <div class="content-module-main cf">
+                  <table>
+                    <% count = 0 %>
+                    <% @assigned_courses.in_groups_of(2).each do |row| %>
+                      <tr>
+                        <% row.each do |course| %>
+                          <% next if course.blank? %>
+                          <% count = count + 1 %>
+                          <td style="text-align:left;"><%= '<span style=font-weight:bold>' + count.to_s + '.</span> '.to_s + "<a href='#'>" + course.name.to_s + '</a>'%></td>
+                        <% end %>
+                      </tr>
+                    <% end %>
+                  </table>
+                </div> <!-- end content-module-main -->
+
+              </div> <!-- end content-module -->
+
+            </div>
 
           </div> <!-- end content-module -->
+
+
+
 
         </div> <!-- end side-content -->
 
@@ -185,5 +225,13 @@
 
     </div> <!-- end content -->
 
+    <%= javascript_include_tag("bootstrap") %>
+    <%= javascript_include_tag("zebra_datepicker") %>
+    <script>
+      $('.date-picker').Zebra_DatePicker({
+        view : 'years',
+        direction: ['<%=  Date.today.strftime("%Y-%m-%d") %>', '<%=  (Date.today + 1.year).strftime("%Y-%m-%d") %>']
+      });
+    </script>
   </body>
 </html>
