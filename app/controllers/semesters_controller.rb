@@ -192,7 +192,7 @@ class SemestersController < ApplicationController
     end
     
     flash[:notice] = "Operation successful"
-    redirect_to :action => "index" and return
+    redirect_to :controller =>"semesters",:action => "set_semester_dates" and return
   end
 
 end
