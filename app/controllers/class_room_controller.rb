@@ -42,7 +42,7 @@ class ClassRoomController < ApplicationController
   end
 
   def add_class
-    
+    @class_rooms = ClassRoom.find(:all)
   end
 
   def edit_class
@@ -52,6 +52,7 @@ class ClassRoomController < ApplicationController
 
   def edit_me
     @class_room = ClassRoom.find(params[:class_room_id])
+    @class_rooms = ClassRoom.find(:all)
     if request.method == :post
       if (@class_room.update_attributes({
           :name => params[:class_name],
@@ -97,7 +98,10 @@ class ClassRoomController < ApplicationController
   def assign_me_subjects
     @class_room = ClassRoom.find(params[:class_room_id])
     @courses = Course.all
-    
+    @my_courses = []
+    (@class_room.class_room_courses || []).each do |cc|
+      @my_courses << cc.course
+    end
     unless (@class_room.class_room_courses.blank?)
       assigned_course_ids = @class_room.class_room_courses.collect{|c| c.course_id}
       @courses = Course.find(:all, :conditions => ["course_id NOT IN (?)", assigned_course_ids] )
@@ -227,6 +231,11 @@ class ClassRoomController < ApplicationController
     class_name = params[:class_name]
     year = params[:year]
     grade = params[:grade]
+    class_name_exists = ClassRoom.find_by_name(params[:class_name])
+    if (class_name_exists)
+      flash[:error] = "Unable to save. Class room <b>#{params[:class_name]} already exists</b>"
+      redirect_to :controller => "class_room", :action => "add_class" and return
+    end
     class_room = ClassRoom.create({
         :year => year,
         :grade => grade,

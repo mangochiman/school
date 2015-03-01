@@ -3,12 +3,11 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>SimpleAdmin - Dashboard</title>
+    <title>Course Management</title>
     <!-- Optimize for mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <!-- jQuery & JS files -->
-
     <%= javascript_include_tag("jquery") %>
     <%= javascript_include_tag("jquery-1.9.1.min") %>
     <%= javascript_include_tag("jquery.confirm") %>
@@ -18,7 +17,7 @@
     <%= stylesheet_link_tag("metallic") %>
     <%= stylesheet_link_tag("gvalidator") %>
     <%= stylesheet_link_tag("bootstrap") %>
-    
+
     <style>
       .modal-title {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -42,41 +41,39 @@
         font-size: 0.8em !important;
         font-weight: bold;
       }
-      
-      table{
-        margin-left:15%;
-        width: 60%;
-      }
-      table td #simple-input{
-        float: right;
-      }
 
-      table label{
-        text-align: left;
-      }
-      #simple-input{
-        font-size: 10pt !important;
-      }
-
-      #registration input[type="text"], input[type="password"], textarea {
+      #course input[type="text"], input[type="password"], textarea {
         border: 1px solid #d9dbdd;
         outline: medium none;
         padding: 0.5em 0.225em;
       }
+
+      #simple-input {
+        font-size: 10pt !important;
+      }
+
       input[type="submit"] {
-        margin-left: 33%;
+        margin-left: 31%;
+      }
+
+      table td:first-child, table td:last-child{
+        text-align: left;
+      }
+
+      #optional{
+        position: relative;
+        left: 3%;
       }
     </style>
   </head>
-  <body> 
+  <body>
     <!-- HEADER -->
     <div id="header-with-tabs">
 
       <div class="page-full-width cf">
 
         <ul id="tabs" class="fl">
-          <li><a href="/admin/subject_groups_dashboard" class="dashboard-tab">Dashboard</a></li>
-          <li><a href="/course/index">Courses</a></li>
+          <li><a href="/admin/class_management_dashboard" class="dashboard-tab">Dashboard</a></li>
           <li><a href="/class_room/index" class="active-tab">Classes</a></li>
         </ul> <!-- end tabs -->
 
@@ -115,40 +112,81 @@
 
           <div class="content-module">
 
-            <div class="content-module-heading cf">
+            <div class="half-size-column fl" style="width:69%;">
 
-              <h3 class="fl">ClassRoom Edit</h3>
-              <span class="fr expand-collapse-text">Click to collapse</span>
-              <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+              <div class="content-module">
 
-            </div> <!-- end content-module-heading -->
+                <div class="content-module-heading cf">
+
+                  <h3 class="fl">ClassRoom Edit</h3>
+                  <span class="fr expand-collapse-text">Click to collapse</span>
+                  <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+                </div> <!-- end content-module-heading -->
 
 
-            <div class="content-module-main">
-              <% if flash[:notice] %>
-                <div class="confirmation-box round">
-                  <%= flash[:notice] %>
-                </div>
-              <% end %>
-              <% if flash[:error] %>
-                <div class="error-box round">
-                  <%= flash[:error] %>
-                </div>
-              <% end %>
-              <form id="registration" class="autoform" action="/class_room/edit_me" method="post">
+                <div class="content-module-main">
+                  <% if flash[:notice] %>
+                    <div class="confirmation-box round">
+                      <%= flash[:notice] %>
+                    </div>
+                  <% end %>
+                  <% if flash[:error] %>
+                    <div class="error-box round">
+                      <%= flash[:error] %>
+                    </div>
+                  <% end %>
+                  <form id="registration" class="autoform" action="/class_room/edit_me" method="post">
 
-                <div><label for="text">Class Name</label><input type="text" name="class_name" class="text required" value="<%= @class_room.name %>"/></div>
-                <div><label for="text">Year</label><input type="text" name="year" class="text required" value="<%= @class_room.year %>"/></div>
-                <div><label for="text">Grade</label><input type="text" name="grade" class="text required" value="<%= @class_room.grade %>"/></div>
-                
-                <div class="stripe-separator"><!--  --></div>
-                <input type="hidden" name="class_room_id" value="<%= params[:class_room_id] %>" />
-                <input type="submit" value="Submit" class="round blue ic-right-arrow" />
-              </form>
+                    <div><label for="text">Class Name</label><input type="text" name="class_name" class="text required" value="<%= @class_room.name %>"/></div>
+                    <div><label for="text">Year</label><input type="text" name="year" class="text required" value="<%= @class_room.year %>"/></div>
+                    <div><label for="text">Grade</label><input type="text" name="grade" class="text required" value="<%= @class_room.grade %>"/></div>
 
-            </div> <!-- end content-module-main -->
+                    <div class="stripe-separator"><!--  --></div>
+                    <input type="hidden" name="class_room_id" value="<%= params[:class_room_id] %>" />
+                    <input type="submit" value="Submit" class="round blue ic-right-arrow" />
+                  </form>
+                </div> <!-- end content-module-main -->
+
+              </div> <!-- end content-module -->
+
+            </div>
+            <div class="half-size-column fr" style="width:30%">
+
+              <div class="content-module">
+
+                <div class="content-module-heading cf">
+
+                  <h3 class="fl">Existing ClassRooms (<%= @class_rooms.count %>)</h3>
+                  <span class="fr expand-collapse-text">Click to collapse</span>
+                  <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+                </div> <!-- end content-module-heading -->
+
+
+                <div class="content-module-main cf">
+                  <table>
+                    <% count = 0 %>
+                    <% @class_rooms.in_groups_of(2).each do |row| %>
+                      <tr>
+                        <% row.each do |class_room| %>
+                          <% next if class_room.blank? %>
+                          <% count = count + 1 %>
+                          <td><%= '<span style=font-weight:bold>' + count.to_s + '.</span> '.to_s + "<a href='/class_room/edit_me?class_room_id=#{class_room.id}'>" + class_room.name.to_s + '</a>'%></td>
+                        <% end %>
+                      </tr>
+                    <% end %>
+                  </table>
+                </div> <!-- end content-module-main -->
+
+              </div> <!-- end content-module -->
+
+            </div>
 
           </div> <!-- end content-module -->
+
+
+
 
         </div> <!-- end side-content -->
 
