@@ -131,7 +131,7 @@
                   <tr>
                     <td style="text-align: left;"><span>Date Started</span></td>
                     <td>
-                      <span class="label" style="margin-left:0%;"><%= @current_semester_start_date %></span>
+                      <span class="label" style="margin-left:0%;"><%= @current_semester_start_date || 'Not Set' %></span>
                     </td>
                   </tr>
                   <tr>
@@ -140,7 +140,7 @@
                   <tr>
                     <td style="text-align: left;"><span>End Date</span></td>
                     <td>
-                      <span class="label" style="margin-left:0%;"><%= @current_semester_end_date %></span>
+                      <span class="label" style="margin-left:0%;"><%= @current_semester_end_date || 'Not Set' %></span>
                     </td>
                   </tr>
               </table>
