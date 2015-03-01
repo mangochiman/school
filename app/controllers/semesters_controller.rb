@@ -17,6 +17,7 @@ class SemestersController < ApplicationController
 
   def set_current_semester
     @total_semesters = Semester.all.count
+    @current_semester_number = GlobalProperty.find_by_property("current_semester").value rescue 0
     @semesters = Semester.find(:all)
     if (request.method == :post)
       semester = Semester.find(params[:semester_id])

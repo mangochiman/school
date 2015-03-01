@@ -19,6 +19,12 @@
     <%= stylesheet_link_tag("bootstrap") %>
 
     <script type="text/javascript">
+      function showCurrentActiveSemester(){
+        $("button[semester_number='<%= @current_semester_number%>']")[0].id = 'active-semester-button';
+        $("button[semester_number='<%= @current_semester_number%>']")[0].innerHTML='Active Semester'
+      }
+      window.setTimeout("showCurrentActiveSemester();", 50);
+        
       function setCurrentSemester(obj){
         semesterID = obj.getAttribute("semester_id")
         semesterNumber = obj.getAttribute("semester_number")
