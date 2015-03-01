@@ -122,8 +122,12 @@
                     <% @semesters.each do |semester| %>
                       <tr style="background-color:white;">
                         <td style="text-align:right; padding-right: 1em; font-weight: bold;">Semester <%= semester.semester_number %></td>
-                        <td style="text-align:center;"><input type="text" name="semesters[<%= semester.id %>][start_date]" class="date-picker"  style="text-align:center;" /></td>
-                        <td><input type="text" name="semesters[<%= semester.id %>][end_date]"  class="date-picker" style="text-align:center;" /></td>
+                        <td style="text-align:center;">
+                          <input type="text" value="<%= semester.start_date %>" name="semesters[<%= semester.id %>][start_date]" class="date-picker"  style="text-align:center;" />
+                        </td>
+                        <td>
+                          <input type="text" value="<%= semester.end_date %>"name="semesters[<%= semester.id %>][end_date]"  class="date-picker" style="text-align:center;" />
+                        </td>
                       </tr>
                     <% end %>
                   </tbody>

@@ -81,7 +81,16 @@ class SemestersController < ApplicationController
         flash[:error] = errors
         redirect_to :controller => "semesters", :action => "set_semester_dates" and return
       else
-        flash[:notice] = "No errors found"
+        params[:semesters].each do |semester_id, dates|
+          semester = Semester.find(semester_id)
+          start_date = dates[:start_date].to_date
+          end_date = dates[:end_date].to_date
+          semester.start_date = start_date
+          semester.end_date = end_date
+          semester.save
+        end
+        flash[:notice] = "Operation successful"
+        redirect_to :controller => "semesters", :action => "set_semester_dates" and return
       end
     end
   end
