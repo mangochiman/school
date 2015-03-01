@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <!-- jQuery & JS files -->
-    <%= javascript_include_tag("jquery") %>
+
     <%= javascript_include_tag("jquery-1.9.1.min") %>
     <%= javascript_include_tag("jquery.confirm") %>
     <%= javascript_include_tag("script") %>
@@ -18,7 +18,50 @@
     <%= stylesheet_link_tag("gvalidator") %>
     <%= stylesheet_link_tag("bootstrap") %>
 
+    <script type="text/javascript">
+      function setCurrentSemester(obj){
+        semesterID = obj.getAttribute("semester_id")
+        semesterNumber = obj.getAttribute("semester_number")
+        jQuery.confirm({
+          title:"Current Semester Confirmation",
+          text:"Are you sure you want to set <b>semester " + semesterNumber + "</b> as your current semester?",
+          confirm: function(button) {
+            jQuery.ajax({
+              type: "POST",
+              url: "/semesters/set_current_semester",
+              data: "semester_id=" + semesterID,
+              success: function(){
+                activeButtton = document.getElementById("active-semester-button");
+                if (activeButtton){
+                  activeButtton.innerHTML = 'Set As Active'
+                  activeButtton.removeAttribute("id");
+                }
+                obj.setAttribute("id", "active-semester-button")
+                obj.innerHTML = 'Active Semester'
+              }
+
+            });
+          },
+          cancel: function(button) {
+
+          },
+          confirmButton: "Yes I am",
+          cancelButton: "No"
+        });
+      }
+    </script>
     <style>
+      .btn{
+        width: 120px;
+      }
+      #active-semester-button {
+        background-color: #faa732;
+        background-image: linear-gradient(to bottom, #fbb450, #f89406);
+        background-repeat: repeat-x;
+        border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+        color: #fff;
+        text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+      }
       .modal-title {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         font-weight: 500;
@@ -41,7 +84,7 @@
         font-size: 0.8em !important;
         font-weight: bold;
       }
-      
+
       #semester{
         background-color: #fff;
         background-image: none;
@@ -116,28 +159,41 @@
 
             <div class="content-module-main">
               <% if flash[:notice] %>
-                  <div class="confirmation-box round">
-                    <%= flash[:notice] %>
-                  </div>
+                <div class="confirmation-box round">
+                  <%= flash[:notice] %>
+                </div>
+              <% end %>
+              <% if flash[:error] %>
+                <div class="error-box round">
+                  <%= flash[:error] %>
+                </div>
+              <% end %>
+              <table>
+                <thead>
+                  <tr>
+                    <th style="background-color:white; border-style: none; width:10%;">&nbsp;</th>
+                    <th style="text-align: center;">Start Date</th>
+                    <th style="text-align: center;">End Date</th>
+                    <th>&nbsp;</th>
+                  </tr>
+                </thead>
+                <% @semesters.each do |semester| %>
+                  <tr style="background-color:white;">
+                    <td style="text-align:right; padding-right: 1em; font-weight: bold;">
+                      Semester <%= semester.semester_number %>
+                    </td>
+                    <td style="text-align:center;">
+                      <%= semester.start_date || 'Not Set' %>
+                    </td>
+                    <td style="text-align: center;">
+                      <%= semester.end_date || 'Not Set' %>
+                    </td>
+                    <td>
+                      <button semester_id="<%= semester.id %>" onmousedown="setCurrentSemester(this);" class="btn btn-primary" semester_number="<%= semester.semester_number %>">Set As Active</button>
+                    </td>
+                  </tr>
                 <% end %>
-                <% if flash[:error] %>
-                  <div class="error-box round">
-                      <%= flash[:error] %>
-                  </div>
-                <% end %>
-                <form class="autoform" method="POST" action="/semesters/set_current_semester">
-                  
-                  <div>
-                    <label for="text">Current Semester</label>
-                    <%= select_tag("semester", options_for_select((1..@total_semesters).to_a),{:class => "text required"})%>
-                  </div>
-                  <div><label for="text">Start Date</label><input type="text" name="start_date" class="text required date-picker" /></div>
-                  <div><label for="text">End Date</label><input type="text" name="end_date" class="text required date-picker" /></div>
-
-                  <div class="stripe-separator"><!--  --></div>
-                  <input type="submit" value="Submit" class="round blue ic-right-arrow" />
-                </form>
-                
+              </table>
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->

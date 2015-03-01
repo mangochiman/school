@@ -17,10 +17,12 @@ class SemestersController < ApplicationController
 
   def set_current_semester
     @total_semesters = Semester.all.count
+    @semesters = Semester.find(:all)
     if (request.method == :post)
-      current_semester = params[:semester]
-      current_semester_start_date = params[:start_date]
-      current_semester_end_date = params[:end_date]
+      semester = Semester.find(params[:semester_id])
+      current_semester = semester.semester_number
+      current_semester_start_date = semester.start_date
+      current_semester_end_date = semester.end_date
 
       ActiveRecord::Base.transaction do
         cs = GlobalProperty.find_by_property("current_semester")
@@ -37,8 +39,7 @@ class SemestersController < ApplicationController
         GlobalProperty.create({:property => "current_semester_end_date",:value => current_semester_end_date})
       end
 
-      flash[:notice] = "Operation successful"
-      redirect_to :action => "index" and return
+      render :text => "true and return"
     end
     
   end
