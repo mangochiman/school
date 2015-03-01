@@ -1,15 +1,14 @@
 class SemestersController < ApplicationController
   def index
     @current_year = Date.today.year
-    @current_semester = GlobalProperty.find_by_property("current_semester").value rescue nil
-    @current_semester_start_date = GlobalProperty.find_by_property("current_semester_start_date").value rescue nil
-    @current_semester_end_date = GlobalProperty.find_by_property("current_semester_end_date").value rescue nil
+    @current_semester = GlobalProperty.find_by_property("current_semester").value rescue 'Not Set'
+    @current_semester_start_date = GlobalProperty.find_by_property("current_semester_start_date").value rescue 'Not Set'
+    @current_semester_end_date = GlobalProperty.find_by_property("current_semester_end_date").value rescue 'Not Set'
     
   end
 
   def semester_settings
-    @total_semesters = Semester.all.count
-    
+    @total_semesters = Semester.all.count   
   end
 
   def set_total_semesters
@@ -44,6 +43,49 @@ class SemestersController < ApplicationController
     
   end
 
+  def set_semester_dates
+    @semesters = Semester.find(:all)
+    if (request.method == :post)
+      errors = ""
+      tab = '&nbsp;' * 10
+      params[:semesters].each do |semester_id, dates|
+        semester = Semester.find(semester_id)
+        start_date = dates[:start_date].to_date rescue nil
+        end_date = dates[:end_date].to_date rescue nil
+        error_header = true
+        if (!start_date.blank? && !end_date.blank?)
+          if start_date == end_date
+            if error_header
+              errors += "<b>Semester #{semester.semester_number}</b><br />"
+              error_header = false
+            end
+            errors += "#{tab}has start date = end_date<br />"
+          end
+          if start_date > end_date
+            if error_header
+              errors += "<b>Semester #{semester.semester_number}</b><br />"
+              error_header = false
+            end
+            errors += "#{tab}has start date > end_date<br />"
+          end
+        else
+          if error_header
+            errors += "<b>Semester #{semester.semester_number}</b><br />"
+            error_header = false
+          end
+          errors += "#{tab}has no start date <br />" if start_date.blank?
+          errors += " #{tab}has no end date <br />" if end_date.blank?
+        end
+      end
+      unless errors.blank?
+        flash[:error] = errors
+        redirect_to :controller => "semesters", :action => "set_semester_dates" and return
+      else
+        flash[:notice] = "No errors found"
+      end
+    end
+  end
+  
   def view_semesters
     semesters = Semester.find(:all)
     @class_room_hash = {}
@@ -65,7 +107,7 @@ class SemestersController < ApplicationController
         class_room_id = crs.class_room.id
         @hash[semester_id][class_room_id] = {} if @hash[semester_id][class_room_id].blank?
         total_students_per_class = ClassRoomStudent.find(:all, :conditions => ["semester_id =? AND class_room_id =?",
-          semester_id, class_room_id])
+            semester_id, class_room_id])
       
         total_males = 0
         total_females = 0
@@ -103,7 +145,7 @@ class SemestersController < ApplicationController
         class_room_id = crs.class_room.id
         @hash[semester_id][class_room_id] = {} if @hash[semester_id][class_room_id].blank?
         total_students_per_class = ClassRoomStudent.find(:all, :conditions => ["semester_id =? AND class_room_id =?",
-          semester_id, class_room_id])
+            semester_id, class_room_id])
 
         total_males = 0
         total_females = 0
@@ -133,8 +175,8 @@ class SemestersController < ApplicationController
       Semester.delete_all
       (1..total_semesters).each do |semester|
         Semester.create({
-          :semester_number => semester
-        })
+            :semester_number => semester
+          })
       end
     end
     

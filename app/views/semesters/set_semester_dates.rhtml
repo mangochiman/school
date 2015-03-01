@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>SimpleAdmin - Dashboard</title>
+    <title>Semester Settings</title>
     <!-- Optimize for mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
@@ -27,31 +27,20 @@
         color: red;
       }
 
-      form.autoform .msg.icon {
-        margin: 0 10px;
-        padding: 5px 5px 5px 30px;
-        position: unset;
-      }
-
-      form label {
-        font-size: 0.9em;
-        font-weight: bold;
-      }
-      form.autoform input, select{
-        font-size: 0.8em !important;
-        font-weight: bold;
-      }
-
-      #semester input[type="text"], input[type="password"], textarea {
+      form.semester_dates input[type="text"]{
+        background-color: #f5ffb0;
         border: 1px solid #d9dbdd;
         outline: medium none;
-        padding: 0.5em 0.225em;
+        width: 200px;
+        font-size: 0.9em;
+        font-weight: bold;
+        height: 1.2em;
       }
 
-      #simple-input {
-        font-size: 10pt !important;
-        width: 150px;
+      form.semester_dates table td{
+        border-bottom: none;
       }
+      
       input[type="submit"] {
         margin-left: 31%;
       }
@@ -101,7 +90,7 @@
 
             <div class="content-module-heading cf">
 
-              <h3 class="fl">Set Semester Settings</h3>
+              <h3 class="fl">Set Semester Dates</h3>
               <span class="fr expand-collapse-text">Click to collapse</span>
               <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -119,10 +108,26 @@
                   <%= flash[:error] %>
                 </div>
               <% end %>
-              <form id="semester" class="autoform" action="/semesters/create_semester" method="POST">
+              <form class="semester_dates" action="/semesters/set_semester_dates" method="POST">
 
-                <div><label for="text">Total Semesters</label><input type="text" name="total_semesters" class="text required" value="<%= @total_semesters %>" style="text-align:center;" /></div>
-
+                <table style="width:70%; margin-left:7%;" cellspacing='0'>
+                  <thead>
+                    <tr>
+                      <th style="background-color:white; border-style: none; width:20%;">&nbsp;</th>
+                      <th style="padding:2px; text-align: center;">Start Date</th>
+                      <th style="width:40%;">End Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% @semesters.each do |semester| %>
+                      <tr style="background-color:white;">
+                        <td style="text-align:right; padding-right: 1em; font-weight: bold;">Semester <%= semester.semester_number %></td>
+                        <td style="text-align:center;"><input type="text" name="semesters[<%= semester.id %>][start_date]" class="date-picker"  style="text-align:center;" /></td>
+                        <td><input type="text" name="semesters[<%= semester.id %>][end_date]"  class="date-picker" style="text-align:center;" /></td>
+                      </tr>
+                    <% end %>
+                  </tbody>
+                </table>
                 <div class="stripe-separator"><!--  --></div>
                 <input type="submit" value="Submit" class="round blue ic-right-arrow" />
               </form>
@@ -141,7 +146,7 @@
     <script>
       $('.date-picker').Zebra_DatePicker({
         view : 'years',
-        direction: ['<%=  Date.today.strftime("%Y-%m-%d") %>', '<%=  (Date.today + 1.year).strftime("%Y-%m-%d") %>']
+        direction: ['<%=  (Date.today - 20.years).strftime("%Y-%m-%d") %>', '<%=  (Date.today + 10.years).strftime("%Y-%m-%d") %>']
       });
     </script>
   </body>
