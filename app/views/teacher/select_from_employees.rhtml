@@ -248,7 +248,7 @@
                           <td><%=  employee.gender %></td>
                           <td><%=  employee.phone %></td>
                           <td>
-                            <a employee_id="<%= employee.id %>" href="#" class="button round blue image-right ic-right-arrow text-upper confirm">Select</a>
+                            <a employee_id="<%= employee.id %>" onmousedown="setCurrentEmployeeId(this)" href="#" class="button round blue image-right ic-right-arrow text-upper confirm">Select</a>
                           </td>
                         </tr>
                       <% end %>
