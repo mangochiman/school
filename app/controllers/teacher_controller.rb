@@ -344,10 +344,10 @@ class TeacherController < ApplicationController
 
       (class_room.class_room_teachers || []).each do |crt|
         next if crt.teacher.blank?
-        if (crt.teacher.gender.upcase == 'MALE')
+        if ((crt.teacher.gender.upcase rescue '') == 'MALE')
           total_males += 1
         end
-        if (crt.teacher.gender.upcase == 'FEMALE')
+        if ((crt.teacher.gender.upcase rescue '') == 'FEMALE')
           total_females += 1
         end
       end
@@ -409,6 +409,46 @@ class TeacherController < ApplicationController
   end
 
   def select_from_employees
-    
+    @teachers = Teacher.find(:all)
+    employee_ids = EmployeeTeacher.find(:all).map(&:employee_id)
+    employee_ids = '0' if employee_ids.blank?
+    @employees = Employee.find(:all, :conditions => ["employee_id NOT IN (?)", employee_ids])#Employees that are not teachers
+  end
+
+  def set_employee_as_teacher
+    if (params[:mode] == 'single_entry')
+      employee = Employee.find(params[:employee_id])
+      teacher = Teacher.create({
+          :fname => employee.fname,
+          :lname => employee.lname,
+          :email => employee.email,
+          :gender => employee.gender,
+          :dob => employee.dob
+        })
+      EmployeeTeacher.create({
+          :employee_id => params[:employee_id],
+          :teacher_id => teacher.id
+        })
+      render :text => "true" and return
+    end
+
+    employee_ids = params[:employee_ids].split(",")
+
+    (employee_ids || []).each do |employee_id|
+      employee = Employee.find(employee_id)
+      teacher = Teacher.create({
+          :fname => employee.fname,
+          :lname => employee.lname,
+          :email => employee.email,
+          :gender => employee.gender,
+          :dob => employee.dob
+        })
+      EmployeeTeacher.create({
+          :employee_id => employee_id,
+          :teacher_id => teacher.id
+        })
+    end
+
+    render :text => "true" and return
   end
 end
