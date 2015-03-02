@@ -26,5 +26,16 @@ class Student < ActiveRecord::Base
   def name
     self.fname.to_s + ' ' + self.lname.to_s
   end
-  
+
+  def guardian_details
+    unless (self.student_parent.blank?)
+      fname = self.student_parent.parent.fname
+      lname = self.student_parent.parent.lname
+      phone = self.student_parent.parent.phone
+      phone = 'No phone' if phone.blank?
+      return fname.to_s + ' ' + lname.to_s + ' (' +  phone + ')'
+    else
+      return 'No Guardian'
+    end
+  end
 end
