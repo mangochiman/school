@@ -4,6 +4,7 @@ class ExaminationTypeController < ApplicationController
   end
   
   def new_exam_type
+    @exam_types = ExaminationType.find(:all)
     if (request.method == :post)
       if (ExaminationType.create({
               :name => params[:exam_type]
