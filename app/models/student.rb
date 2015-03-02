@@ -22,4 +22,9 @@ class Student < ActiveRecord::Base
   def age
     ((Date.today - (self.dob.to_date rescue nil)).to_i/365) rescue 'Error'
   end
+
+  def name
+    self.fname.to_s + ' ' + self.lname.to_s
+  end
+  
 end

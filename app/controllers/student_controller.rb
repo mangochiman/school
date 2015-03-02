@@ -148,6 +148,10 @@ class StudentController < ApplicationController
     class_room_courses.each do |class_room_course|
       @courses << class_room_course.course if (class_room_course.course.optional == true)
     end
+    if @courses.blank?#if no optional courses
+      flash[:notice] = "We have skipped assigning optional courses bacause no optional course is available for this class"
+      redirect_to :controller => "student", :action => "select_guardian", :student_id => params[:student_id]
+    end
     @my_class_room_id = student.student_class_room_adjustments.last.class_room.class_room_id
     
     if (request.method == :post)
@@ -235,6 +239,7 @@ class StudentController < ApplicationController
   def select_guardian
     student_id = params[:student_id]
     student_parent = StudentParent.find(:last, :conditions => ["student_id =?", student_id])
+    @student = Student.find(params[:student_id])
     unless student_parent.blank?
       flash[:error] = "This student already has a guardian registered in the system"
       redirect_to :controller => "payments", :action => "add_student_payment", :student_id => params[:student_id] and return
