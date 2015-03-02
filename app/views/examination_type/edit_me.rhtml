@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>SimpleAdmin - Dashboard</title>
+    <title>Exam Type Management</title>
     <!-- Optimize for mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
@@ -17,6 +17,7 @@
     <%= stylesheet_link_tag("metallic") %>
     <%= stylesheet_link_tag("gvalidator") %>
     <%= stylesheet_link_tag("bootstrap") %>
+
     <style>
       .modal-title {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -30,28 +31,31 @@
         margin: 0 10px;
         padding: 5px 5px 5px 30px;
         position: unset;
+        font-size: 10pt;
       }
 
       form label {
         font-size: 0.9em;
         font-weight: bold;
       }
+
       form.autoform input, select{
         font-size: 0.8em !important;
         font-weight: bold;
       }
-      #exam_type input[type="text"], input[type="password"], textarea {
+
+      #exam_type input[type="text"]{
         border: 1px solid #d9dbdd;
         outline: medium none;
         padding: 0.5em 0.225em;
       }
 
-      #simple-input {
-        font-size: 10pt !important;
+      input[type="submit"] {
+        margin-left: 31%;
       }
     </style>
   </head>
-  <body>   
+  <body>
     <!-- HEADER -->
     <div id="header-with-tabs">
 
@@ -93,37 +97,77 @@
 
           <div class="content-module">
 
-            <div class="content-module-heading cf">
+            <div class="half-size-column fl" style="width:69%;">
 
-              <h3 class="fl">Table design</h3>
-              <span class="fr expand-collapse-text">Click to collapse</span>
-              <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+              <div class="content-module">
 
-            </div> <!-- end content-module-heading -->
+                <div class="content-module-heading cf">
+
+                  <h3 class="fl">Edit Exam Type</h3>
+                  <span class="fr expand-collapse-text">Click to collapse</span>
+                  <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+                </div> <!-- end content-module-heading -->
 
 
-            <div class="content-module-main">
+                <div class="content-module-main">
+                  <% if flash[:notice] %>
+                    <div class="confirmation-box round">
+                      <%= flash[:notice] %>
+                    </div>
+                  <% end %>
+                  <% if flash[:error] %>
+                    <div class="error-box round">
+                      <%= flash[:error] %>
+                    </div>
+                  <% end %>
+                  <form id="exam_type" class="autoform" action="/examination_type/edit_me" method="POST">
+                    <div><label for="text" style="width:100px;">Exam Name</label><input type="text" name="exam_type" class="text required" value="<%=  @exam_type.name %>" /></div>
+                    <div class="stripe-separator"><!--  --></div>
+                    <%= hidden_field_tag("exam_type_id", params[:exam_type_id]) %>
+                    <input type="submit" value="Submit" class="round blue ic-right-arrow" />
+                  </form>
+                </div> <!-- end content-module-main -->
 
-              <% if flash[:notice] %>
-                <div class="confirmation-box round">
-                  <%= flash[:notice] %>
-                </div>
-              <% end %>
-              <% if flash[:error] %>
-                <div class="error-box round">
-                  <%= flash[:error] %>
-                </div>
-              <% end %>
-              <form id="exam_type" class="autoform" action="/examination_type/edit_me" method="POST">
-                <div><label for="text">Exam Name</label><input type="text" name="exam_type" class="text required" value="<%=  @exam_type.name %>" /></div>
-                <div class="stripe-separator"><!--  --></div>
-                <%= hidden_field_tag("exam_type_id", params[:exam_type_id]) %>
-                <input type="submit" value="Submit" class="round blue ic-right-arrow" />
-              </form>
+              </div> <!-- end content-module -->
 
-            </div> <!-- end content-module-main -->
+            </div>
+            <div class="half-size-column fr" style="width:30%">
+
+              <div class="content-module">
+
+                <div class="content-module-heading cf">
+
+                  <h3 class="fl">Existing Exam Types (<%= @exam_types.count %>)</h3>
+                  <span class="fr expand-collapse-text">Click to collapse</span>
+                  <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+                </div> <!-- end content-module-heading -->
+
+
+                <div class="content-module-main cf">
+                  <table>
+                    <% count = 0 %>
+                    <% @exam_types.in_groups_of(2).each do |row| %>
+                      <tr>
+                        <% row.each do |exam_type| %>
+                          <% next if exam_type.blank? %>
+                          <% count = count + 1 %>
+                          <td style="text-align: left; width:50%;"><%= '<span style=font-weight:bold>' + count.to_s + '.</span> '.to_s + "<a href='/examination_type/edit_me?exam_type_id=#{exam_type.id}'>" + exam_type.name.to_s + '</a>'%></td>
+                        <% end %>
+                      </tr>
+                    <% end %>
+                  </table>
+                </div> <!-- end content-module-main -->
+
+              </div> <!-- end content-module -->
+
+            </div>
 
           </div> <!-- end content-module -->
+
+
+
 
         </div> <!-- end side-content -->
 
@@ -132,5 +176,12 @@
     </div> <!-- end content -->
 
     <%= javascript_include_tag("bootstrap") %>
+    <%= javascript_include_tag("zebra_datepicker") %>
+    <script>
+      $('.date-picker').Zebra_DatePicker({
+        view : 'years',
+        direction: ['<%=  Date.today.strftime("%Y-%m-%d") %>', '<%=  (Date.today + 1.year).strftime("%Y-%m-%d") %>']
+      });
+    </script>
   </body>
 </html>

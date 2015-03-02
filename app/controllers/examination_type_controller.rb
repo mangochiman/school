@@ -24,7 +24,7 @@ class ExaminationTypeController < ApplicationController
 
   def edit_me
     @exam_type = ExaminationType.find(params[:exam_type_id])
-
+    @exam_types = ExaminationType.find(:all)
     if (request.method == :post)
       if (@exam_type.update_attributes({
               :name => params[:exam_type]
