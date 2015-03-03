@@ -98,6 +98,45 @@
 
         });
       }
+
+
+      function loadExamStudents(obj){
+        jQuery.ajax({
+          type: "POST",
+          url: "/examination/render_students",
+          data: "exam_id=" + obj.getAttribute("exam_id"),
+          success: function(results){
+            table = "<table>";
+            table+="<tr>";
+            table+="<th style='border:none;'>#</th>";
+            table+="<th>Student Name</th>";
+            table+="</tr>";
+            var pos = 0
+            className = results[0]
+            results = results[1];
+            for (var i=0; i<=results.length - 1; i++){
+              studentName = results[i];
+              table+="<tr style='background-color:white;'>";
+              table+="<td>" + (pos = pos + 1) + "</td>";
+              table+="<td style='text-align:left; padding-left:20px;'>" + studentName + "</td>";
+              table+="</tr>";
+            }
+
+            table += "</table>";
+            students = table;
+
+            jQuery.confirm({
+              title:className,
+              text:students,
+              confirm: function(button) {
+              },
+              cancel: function(button) {
+              },
+              confirmButton: "Done"
+            });
+          }});
+      }
+      
     </script>
     <style>
       .modal-title {
@@ -105,7 +144,7 @@
         font-weight: 500;
         line-height: 1.1;
         font-size: 1.2em;
-        color: red;
+        color: #317eac;
       }
 
       form.autoform .msg.icon {
@@ -149,20 +188,6 @@
         padding: 0.5em 0.225em;
       }
 
-      #simple-input{
-        font-size: 10pt !important;
-        padding: 6px 12px;
-        background-color: #fff;
-        background-image: none;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
-        display: block;
-        margin-left: 30%;
-        max-width: 200px;
-        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
-      }
-
       #class_room, #exam_type, #course{
         background-color: #fff;
         background-image: none;
@@ -178,6 +203,10 @@
         transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
       }
 
+      .badge{
+        cursor: pointer;
+      }
+      
       input[type="submit"] {
         margin-left: 31%;
       }
@@ -319,7 +348,7 @@
                         <td><%= examination.examination_type.name %></td>
                         <td style="padding:2px; text-align: center;"><%= examination.class_room.name %></td>
                         <td style="padding:2px; text-align: center;"><%= examination.course.name %></td>
-                        <td><span class="badge label badge-info label-info"><%= examination.students.count %></span></td>
+                        <td><span exam_id="<%= examination.id %>"onmousedown="loadExamStudents(this)" class="badge label badge-info label-info"><%= examination.students.count %></span></td>
                       </tr>
                     <% end %>
                   </table>
