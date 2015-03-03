@@ -42,7 +42,7 @@
           url: "/examination/render_students",
           data: "exam_id=" + obj.getAttribute("exam_id"),
           success: function(results){
-            table = "<table>";
+            table = "<table style='width:60%; margin-left:10%;'>";
             table+="<tr>";
             table+="<th>#</th>";
             table+="<th>Student Name</th>";
@@ -54,7 +54,7 @@
               studentName = results[i];
               table+="<tr style='background-color:white;'>";
               table+="<td>" + (pos = pos + 1) + "</td>";
-              table+="<td style='text-align:left;'>" + studentName + "</td>";
+              table+="<td style='text-align:left; padding-left:18%;'>" + studentName + "</td>";
               table+="</tr>";
             }
 
@@ -79,9 +79,9 @@
           url: "/examination/render_exam_results",
           data: "exam_id=" + obj.getAttribute("exam_id"),
           success: function(results){
-            table = "<table>";
+            table = "<table style='width:60%; margin-left:10%;'>";
             table+="<tr>";
-            table+="<th>Student Name</th>";
+            table+="<th style='width:60%;'>Student Name</th>";
             table+="<th>Marks</th>";
             table+="</tr>";
             className = results[0]
@@ -90,8 +90,8 @@
               studentName = results[i];
               console.log(studentName)
               table+="<tr style='background-color:white;'>";
-              table+="<td style='text-align:left;'>" + results[i].name + "</td>";
-              table+="<td style='text-align:center;'>" + results[i].marks + "</td>";
+              table+="<td style='text-align:left; padding-left:15%;'>" + results[i].name + "</td>";
+              table+="<td style='text-align:center; font-weight:bold;'>" + results[i].marks + "</td>";
               table+="</tr>";
             }
 
@@ -366,11 +366,11 @@
                   <tr>
                     <th><input type="checkbox" id="table-select-all" onclick="selectAll();"/></th>
                     <th style="min-width:15%;">Class</th>
-                    <th>Exam Type</th>
-                    <th>Course</th>
-                    <th>Exam Date</th>
-                    <th style="max-width:10%;">Exam Attendees</th>
-                    <th style="max-width:5%;">Exam Results</th>
+                    <th style="text-align: center;">Exam Type</th>
+                    <th style="text-align: center;">Course</th>
+                    <th style="text-align: center;">Exam Date</th>
+                    <th style="max-width:10%; text-align: center;">Exam Attendees</th>
+                    <th style="max-width:5%; text-align: center;">Exam Results</th>
                     <th style="min-width:100px;">Action</th>
                   </tr>
 
@@ -389,9 +389,9 @@
                     <tr id="<%= exam.id %>">
                       <td><input type="checkbox" exam_id="<%= exam.id %>"/></td>
                       <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= exam.class_room.name %></td>
-                      <td><%=  exam.examination_type.name.titleize %></td>
-                      <td><%=  exam.course.name rescue nil %></td>
-                      <td><%=  exam.start_date.to_date.strftime("%d/%b/%Y")%></td>
+                      <td style="text-align: center;"><%=  exam.examination_type.name.titleize %></td>
+                      <td style="text-align: center;"><%=  exam.course.name rescue nil %></td>
+                      <td style="text-align: center;"><%=  exam.start_date.to_date.strftime("%d/%b/%Y")%></td>
                       <td>
                         <span exam_id="<%= exam.id %>" class="label" onmousedown="loadExamStudents(this);" style="margin-left:20%;">
                           <%=  exam.students.count %>

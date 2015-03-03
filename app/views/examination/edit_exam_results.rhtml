@@ -26,7 +26,7 @@
           url: "/examination/render_students",
           data: "exam_id=" + obj.getAttribute("exam_id"),
           success: function(results){
-            table = "<table>";
+            table = "<table style='width:60%; margin-left:10%;'>";
             table+="<tr>";
             table+="<th>#</th>";
             table+="<th>Student Name</th>";
@@ -38,7 +38,7 @@
               studentName = results[i];
               table+="<tr style='background-color:white;'>";
               table+="<td>" + (pos = pos + 1) + "</td>";
-              table+="<td style='text-align:left;'>" + studentName + "</td>";
+              table+="<td style='text-align:left; padding-left:18%;'>" + studentName + "</td>";
               table+="</tr>";
             }
 
