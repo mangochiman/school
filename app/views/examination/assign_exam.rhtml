@@ -317,8 +317,8 @@
                       <tr>
                         <% count = count + 1 %>
                         <td><%= examination.examination_type.name %></td>
-                        <td style="padding:2px;"><%= examination.class_room.name %></td>
-                        <td style="padding:2px;"><%= examination.course.name %></td>
+                        <td style="padding:2px; text-align: center;"><%= examination.class_room.name %></td>
+                        <td style="padding:2px; text-align: center;"><%= examination.course.name %></td>
                         <td><span class="badge label badge-info label-info"><%= examination.students.count %></span></td>
                       </tr>
                     <% end %>
