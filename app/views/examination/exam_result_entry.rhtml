@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Examination Management</title>
+    <title>Exam Type Management</title>
     <!-- Optimize for mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
@@ -207,6 +207,7 @@
                       <%= flash[:error] %>
                     </div>
                   <% end %>
+
                   <form id="results_entry" action="/examination/create_exam_result">
                     <table>
 
@@ -302,12 +303,14 @@
     </div> <!-- end content -->
 
     <%= javascript_include_tag("bootstrap") %>
-    <%= javascript_include_tag("zebra_datepicker") %>
+
     <script>
-      $('.date-picker').Zebra_DatePicker({
-        view : 'years',
-        direction: ['<%=  Date.today.strftime("%Y-%m-%d") %>', '<%=  (Date.today + 1.year).strftime("%Y-%m-%d") %>']
-      });
+      function hideCancelButton(){
+        if ($("button.cancel")[0]){
+          $("button.cancel")[0].style.display='none';
+        }
+      }
+      window.setInterval("hideCancelButton();", 300);
     </script>
   </body>
 </html>

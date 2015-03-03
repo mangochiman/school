@@ -373,7 +373,9 @@ class ExaminationController < ApplicationController
   def edit_exam_result_entry
     @exam = Examination.find(params[:exam_id])
     @students = @exam.students
-    
+    exam_with_results_ids = ExaminationResult.find(:all).map(&:exam_id)
+    exam_with_results_ids = '' if exam_with_results_ids.blank?
+    @exams_with_results = Examination.find(:all, :conditions => ["exam_id IN (?)", exam_with_results_ids])
     if (request.method == :post)
       ActiveRecord::Base.transaction do
         

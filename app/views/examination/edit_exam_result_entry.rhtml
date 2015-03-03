@@ -3,19 +3,21 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>SimpleAdmin - Dashboard</title>
+    <title>Exam Type Management</title>
     <!-- Optimize for mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <!-- jQuery & JS files -->
     <%= javascript_include_tag("jquery") %>
-    <%= javascript_include_tag("script") %>
     <%= javascript_include_tag("jquery-1.9.1.min") %>
     <%= javascript_include_tag("jquery.confirm") %>
+    <%= javascript_include_tag("script") %>
+    <%= javascript_include_tag("gvalidator") %>
     <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("metallic") %>
+    <%= stylesheet_link_tag("gvalidator") %>
     <%= stylesheet_link_tag("bootstrap") %>
-    <script>
-    </script>
+
     <style>
       #results_entry #exams input{
         padding: 3px 3px 5px 3px;
@@ -137,7 +139,7 @@
       }
     </style>
   </head>
-  <body>   
+  <body>
     <!-- HEADER -->
     <div id="header-with-tabs">
 
@@ -181,67 +183,119 @@
 
           <div class="content-module">
 
-            <div class="content-module-heading cf">
+            <div class="half-size-column fl" style="width:69%;">
 
-              <h3 class="fl">Table design</h3>
-              <span class="fr expand-collapse-text">Click to collapse</span>
-              <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+              <div class="content-module">
 
-            </div> <!-- end content-module-heading -->
+                <div class="content-module-heading cf">
+
+                  <h3 class="fl">Edit Exam Results</h3>
+                  <span class="fr expand-collapse-text">Click to collapse</span>
+                  <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+                </div> <!-- end content-module-heading -->
 
 
-            <div class="content-module-main">
-              <% if flash[:notice] %>
-                <div class="confirmation-box round">
-                  <%= flash[:notice] %>
-                </div>
-              <% end %>
-              <% if flash[:error] %>
-                <div class="error-box round">
-                  <%= flash[:error] %>
-                </div>
-              <% end %>
-              <form id="results_entry" action="/examination/edit_exam_result_entry" method="post">
-                <table>
+                <div class="content-module-main">
+                  <% if flash[:notice] %>
+                    <div class="confirmation-box round">
+                      <%= flash[:notice] %>
+                    </div>
+                  <% end %>
+                  <% if flash[:error] %>
+                    <div class="error-box round">
+                      <%= flash[:error] %>
+                    </div>
+                  <% end %>
 
-                  <thead>
+                  <form id="results_entry" action="/examination/edit_exam_result_entry" method="post">
+                    <table>
 
-                    <tr>
-                      <th style="min-width:15%;">Name</th>
-                      <th>Email</th>
-                      <th>Gender</th>
-                      <th>Course</th>
-                      <th>Exam Date</th>
-                      <th style="min-width:20%;">Marks (out of 100)</th>
-                    </tr>
+                      <thead>
 
-                  </thead>
+                        <tr>
+                          <th style="min-width:15%;">Name</th>
+                          <th>Email</th>
+                          <th>Gender</th>
+                          <th>Course</th>
+                          <th>Exam Date</th>
+                          <th style="min-width:20%;">Marks (out of 100)</th>
+                        </tr>
 
-                  <tbody id="exams">
-                    <% @students.each do |student| %>
-                      <% exam_result = @exam.examination_results.find_by_student_id(student.id) %>
+                      </thead>
+
+                      <tbody id="exams">
+                        <% @students.each do |student| %>
+                          <% exam_result = @exam.examination_results.find_by_student_id(student.id) %>
+                          <tr>
+                            <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= student.fname.capitalize.to_s + ' ' + student.lname.capitalize.to_s %></td>
+                            <td><a href="#"><%=  student.email %></a></td>
+                            <td><%=  student.gender %></td>
+                            <td><%=  @exam.course.name %></td>
+                            <td><%=  @exam.start_date.to_date.strftime("%d-%b-%Y") %></td>
+                            <td>
+                              <input type="text" value="<%= exam_result.marks.to_i rescue ''%>" name="students[<%= student.id %>]" class="results" />
+                            </td>
+                          </tr>
+                        <% end %>
+                      </tbody>
+
+                    </table>
+                    <div class="stripe-separator"><!--  --></div>
+                    <%= hidden_field_tag("exam_id", params[:exam_id]) %>
+                    <input type="submit" value="Submit" class="round blue ic-right-arrow" />
+                  </form>
+                </div> <!-- end content-module-main -->
+
+              </div> <!-- end content-module -->
+
+            </div>
+            <div class="half-size-column fr" style="width:30%">
+
+              <div class="content-module">
+
+                <div class="content-module-heading cf">
+
+                  <h3 class="fl">Exams With Results (<%= @exams_with_results.count %>)</h3>
+                  <span class="fr expand-collapse-text">Click to collapse</span>
+                  <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+                </div> <!-- end content-module-heading -->
+
+
+                <div class="content-module-main cf">
+                  <table>
+                    <thead>
                       <tr>
-                        <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= student.fname.capitalize.to_s + ' ' + student.lname.capitalize.to_s %></td>
-                        <td><a href="#"><%=  student.email %></a></td>
-                        <td><%=  student.gender %></td>
-                        <td><%=  @exam.course.name %></td>
-                        <td><%=  @exam.start_date.to_date.strftime("%d-%b-%Y") %></td>
-                        <td>
-                          <input type="text" value="<%= exam_result.marks.to_i rescue ''%>" name="students[<%= student.id %>]" class="results" />
-                        </td>
+                        <th style="font-weight: bold;">Class</th>
+                        <th style="padding: 4px; text-align: center; font-weight: bold;">Course</th>
+                        <th style="padding: 4px; text-align: center; font-weight: bold;">Exam Date</th>
+                        <th style="font-weight: bold; width:20%;">Results</th>
                       </tr>
-                    <% end %>
-                  </tbody>
+                    </thead>
+                    <tbody>
+                      <% @exams_with_results.each do |exam| %>
+                        <tr>
+                          <td><%= exam.class_room.name %></td>
+                          <td style="padding:2px; text-align: center;"><%= exam.course.name %></td>
+                          <td style="padding:2px; text-align: center;"><%= exam.start_date.to_date.strftime("%d/%b/%Y") %></td>
+                          <td style="padding:2px;">
+                            <a href="/examination/edit_exam_result_entry?exam_id=<%= exam.id %>" class="table-actions-button ic-table-edit"></a>
+                          </td>
+                        </tr>
+                      <% end %>
+                    </tbody>
+                  </table>
+                </div> <!-- end content-module-main -->
 
-                </table>
-                <div class="stripe-separator"><!--  --></div>
-                <%= hidden_field_tag("exam_id", params[:exam_id]) %>
-                <input type="submit" value="Submit" class="round blue ic-right-arrow" />
-              </form>
+              </div> <!-- end content-module -->
 
-            </div> <!-- end content-module-main -->
+            </div>
 
           </div> <!-- end content-module -->
+
+
+
 
         </div> <!-- end side-content -->
 
