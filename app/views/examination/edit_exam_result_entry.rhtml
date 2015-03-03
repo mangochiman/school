@@ -226,7 +226,7 @@
                           </th>
                         </tr>
                         <tr>
-                          <th style="min-width:15%;">Name</th>
+                          <th style="width:30%;">Name</th>
                           <th style="text-align:center;">Email</th>
                           <th style="text-align:center;">Gender</th>
                           <th style="min-width:20%;">Marks (out of 100)</th>
@@ -238,7 +238,7 @@
                         <% @students.each do |student| %>
                           <% exam_result = @exam.examination_results.find_by_student_id(student.id) %>
                           <tr>
-                            <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= student.fname.capitalize.to_s + ' ' + student.lname.capitalize.to_s %></td>
+                            <td style="text-align:left; padding: 0.833em 0 0.833em 4.25em;"><%= student.fname.capitalize.to_s + ' ' + student.lname.capitalize.to_s %></td>
                             <td style="text-align:center;"><a href="#"><%=  student.email %></a></td>
                             <td style="text-align:center;"><%=  student.gender %></td>
                             <td>
