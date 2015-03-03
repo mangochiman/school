@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>SimpleAdmin - Dashboard</title>
+    <title>Exam Type Management</title>
     <!-- Optimize for mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
@@ -17,17 +17,40 @@
     <%= stylesheet_link_tag("metallic") %>
     <%= stylesheet_link_tag("gvalidator") %>
     <%= stylesheet_link_tag("bootstrap") %>
+
     <script>
+      function selectAll(){
+        selectAllInput = document.getElementById('table-select-all');
+        inputs = document.getElementsByTagName("input");
+        if (selectAllInput.checked){
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+              inputs[i].checked = true;
+            }
+          }
+        }
+        else{
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+              inputs[i].checked = false;
+            }
+          }
+        }
+      }
+      
       function loadClassStudents(obj){
+        classRoomId = obj.value
         jQuery.ajax({
           type: "POST",
           url: "/examination/class_room_students",
-          data: "class_room_id=" + obj.value,
+          data: "class_room_id=" + classRoomId,
           success: function(result){
             result = eval(result);
-            html = "<div style='font-size: 0.75em; margin-left: 20%;'> Select Students </div><br />"
-            html += "<table style='width:500px; margin-left: 20%;'>";
-            html += "<tr style='background-color:white;'><td colspan='6' style='border-bottom:1px solid black;'><span style='margin-left:11%;'><input type='checkbox'>Select All</span></td></tr>"
+            html = "<table style='width:500px; margin-left: 8%;'>";
+            html += "<tr><td colspan='4' style='font-weight:bold; font-size: 1.1em;'>SELECT STUDENTS</td></tr>"
+            html += "<tr style='background-color:white;'><td colspan='6' style='border-bottom:1px solid black;'><span style='margin-left:11%;'><input type='checkbox' id='table-select-all' onclick='selectAll();'>Select All</span></td></tr>"
             for (var x=0; x<= (result.length - 1); x++){
               html += "<tr>";
               for(y=0; y<=(result[x].length - 1); y++){
@@ -44,6 +67,12 @@
             html+="</table>";
             document.getElementById("class_courses").innerHTML = html;
             loadClassCourses(obj.value);
+            selectAllCheckBox = document.getElementById('table-select-all');
+            if (selectAllCheckBox){
+              selectAllCheckBox.checked = true;
+              selectAll();
+            }
+            
           }
 
         });
@@ -83,17 +112,19 @@
         margin: 0 10px;
         padding: 5px 5px 5px 30px;
         position: unset;
+        font-size: 10pt;
       }
 
       form label {
         font-size: 0.9em;
         font-weight: bold;
       }
+
       form.autoform input, select{
         font-size: 0.8em !important;
         font-weight: bold;
       }
-      
+
       #course option{
         padding-left: 40px;
       }
@@ -147,9 +178,12 @@
         transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
       }
 
+      input[type="submit"] {
+        margin-left: 31%;
+      }
     </style>
   </head>
-  <body>   
+  <body>
     <!-- HEADER -->
     <div id="header-with-tabs">
 
@@ -193,64 +227,109 @@
 
           <div class="content-module">
 
-            <div class="content-module-heading cf">
+            <div class="half-size-column fl" style="width:65%;">
 
-              <h3 class="fl">Exam Assignment</h3>
-              <span class="fr expand-collapse-text">Click to collapse</span>
-              <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+              <div class="content-module">
 
-            </div> <!-- end content-module-heading -->
+                <div class="content-module-heading cf">
+
+                  <h3 class="fl">Exam Assignment</h3>
+                  <span class="fr expand-collapse-text">Click to collapse</span>
+                  <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+                </div> <!-- end content-module-heading -->
 
 
-            <div class="content-module-main">
-              <% if flash[:notice] %>
-                <div class="confirmation-box round">
-                  <%= flash[:notice] %>
-                </div>
-              <% end %>
-              <% if flash[:error] %>
-                <div class="error-box round">
-                  <%= flash[:error] %>
-                </div>
-              <% end %>
-              <form id="exam_assignment" class="autoform" method="POST" action="/examination/create_exam_assignment">
-                
-                <div>
-                  <label for="text">Class</label>
-                  <%= select_tag("class_room", options_for_select(@class_rooms), {
+                <div class="content-module-main">
+                  <% if flash[:notice] %>
+                    <div class="confirmation-box round">
+                      <%= flash[:notice] %>
+                    </div>
+                  <% end %>
+                  <% if flash[:error] %>
+                    <div class="error-box round">
+                      <%= flash[:error] %>
+                    </div>
+                  <% end %>
+                  <form id="exam_assignment" class="autoform" method="POST" action="/examination/create_exam_assignment">
+
+                    <div>
+                      <label for="class_room" style="width:100px;">Class</label>
+                      <%= select_tag("class_room", options_for_select(@class_rooms), {
                           :onchange=>"loadClassStudents(this);",
                           :class => "text required"})
-                  %>
-                </div>
-                <div>
-                  <label for="text">Exam Type</label>
-                  <%= select_tag("exam_type", options_for_select(@exam_types), {
+                    %>
+                    </div>
+                    <div>
+                      <label for="exam_type" style="width:100px;">Exam Type</label>
+                      <%= select_tag("exam_type", options_for_select(@exam_types), {
                           :class => "text required"})
-                  %>
-                </div>
-                <div>
-                  <label for="text">Course</label>
-                  <%= select_tag("course", options_for_select(@courses), {
+                    %>
+                    </div>
+                    <div>
+                      <label for="course" style="width:100px;">Course</label>
+                      <%= select_tag("course", options_for_select(@courses), {
                           :class => "text required"})
-                  %>
-                </div>
-                <div><label for="text">Exam Date</label><input type="text" name="exam_date" class="text required date-picker"/></div>
+                    %>
+                    </div>
+                    <div>
+                      <label for="exam_date" style="width:100px;">Exam Date</label><input type="text" id="exam_date" name="exam_date" class="text required date-picker"/>
+                    </div>
 
-                <div id="class_courses">
+                    <div id="class_courses">
 
-                </div>
+                    </div>
 
-                <div class="stripe-separator"><!--  --></div>
-                <input type="submit" value="Submit" class="round blue ic-right-arrow" style="" />
+                    <div class="stripe-separator"><!--  --></div>
+                    <input type="submit" value="Submit" class="round blue ic-right-arrow" style="" />
 
-              </form>
+                  </form>
+                </div> <!-- end content-module-main -->
 
-            </div> <!-- end content-module-main -->
+              </div> <!-- end content-module -->
+
+            </div>
+            <div class="half-size-column fr" style="width:34.5%">
+
+              <div class="content-module">
+
+                <div class="content-module-heading cf">
+
+                  <h3 class="fl">Previous Exams (<%= @examinations.count %>)</h3>
+                  <span class="fr expand-collapse-text">Click to collapse</span>
+                  <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+                </div> <!-- end content-module-heading -->
+
+
+                <div class="content-module-main cf">
+                  <table>
+                    <% count = 0 %>
+                    <thead>
+                      <tr>
+                        <th style="border:none; width:30%;">Exam</th>
+                        <th style="padding: 2px; text-align: center;">Class</th>
+                        <th style="padding: 2px; text-align: center;">Course</th>
+                        <th style="width:15%; padding-left: 5px; padding-right: 5px;">Attendees</th>
+                      </tr>
+                    </thead>
+                    <% @examinations.each do |examination| %>
+                      <tr>
+                        <% count = count + 1 %>
+                        <td><%= examination.examination_type.name %></td>
+                        <td style="padding:2px;"><%= examination.class_room.name %></td>
+                        <td style="padding:2px;"><%= examination.course.name %></td>
+                        <td><span class="badge label badge-info label-info"><%= examination.students.count %></span></td>
+                      </tr>
+                    <% end %>
+                  </table>
+                </div> <!-- end content-module-main -->
+
+              </div> <!-- end content-module -->
+
+            </div>
 
           </div> <!-- end content-module -->
-
-
-
 
 
 

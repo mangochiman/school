@@ -28,13 +28,13 @@ class ExaminationController < ApplicationController
       without_results = 0
       with_results = 0
       (course_exams || []).each do |course_exam|
-          if (course_exam.examination_results.blank?)
-            without_results += 1
-          end
+        if (course_exam.examination_results.blank?)
+          without_results += 1
+        end
 
-          unless (course_exam.examination_results.blank?)
-            with_results += 1
-          end        
+        unless (course_exam.examination_results.blank?)
+          with_results += 1
+        end
       end
 
       total_exams_per_month = course_exams.count
@@ -84,13 +84,13 @@ class ExaminationController < ApplicationController
       without_results = 0
       with_results = 0
       (course_exams || []).each do |course_exam|
-          if (course_exam.examination_results.blank?)
-            without_results += 1
-          end
+        if (course_exam.examination_results.blank?)
+          without_results += 1
+        end
 
-          unless (course_exam.examination_results.blank?)
-            with_results += 1
-          end
+        unless (course_exam.examination_results.blank?)
+          with_results += 1
+        end
       end
 
       total_exams_per_month = course_exams.count
@@ -107,12 +107,12 @@ class ExaminationController < ApplicationController
   
   def new_exam_type
     if (request.method == :post)
-        if (ExaminationType.create({
-          :name => params[:exam_type]
-        }))
-          flash[:notice] = "You have successfully added exam type"
-          redirect_to :action => "new_exam_type" and return
-        end
+      if (ExaminationType.create({
+              :name => params[:exam_type]
+            }))
+        flash[:notice] = "You have successfully added exam type"
+        redirect_to :action => "new_exam_type" and return
+      end
     end
 
     
@@ -127,16 +127,16 @@ class ExaminationController < ApplicationController
     @exam_type = ExaminationType.find(params[:exam_type_id])
     
     if (request.method == :post)
-        if (@exam_type.update_attributes({
-          :name => params[:exam_type]
-        }))
+      if (@exam_type.update_attributes({
+              :name => params[:exam_type]
+            }))
 
-          flash[:notice] = "You have successfully edited exam type"
-          redirect_to :action => "edit_exam_type" and return
-        else
-          flash[:error] = "Operation aborted"
-          redirect_to :action => "edit_me", :exam_type_id => params[:exam_type_id]
-        end
+        flash[:notice] = "You have successfully edited exam type"
+        redirect_to :action => "edit_exam_type" and return
+      else
+        flash[:error] = "Operation aborted"
+        redirect_to :action => "edit_me", :exam_type_id => params[:exam_type_id]
+      end
     end
 
     
@@ -172,11 +172,11 @@ class ExaminationController < ApplicationController
 
     ActiveRecord::Base.transaction do
       exam.update_attributes({
-        :class_room_id => class_room_id,
-        :exam_type_id => exam_type,
-        :course_id => course_id,
-        :start_date => exam_date
-      })
+          :class_room_id => class_room_id,
+          :exam_type_id => exam_type,
+          :course_id => course_id,
+          :start_date => exam_date
+        })
 
 
       exam.exam_attendees.each do |exam_attend|
@@ -189,10 +189,10 @@ class ExaminationController < ApplicationController
         exam_attendee.student_id = student_id
         exam_attendee.save!
       end
-   end
+    end
    
-   flash[:notice] = "Operation successful"
-   redirect_to :controller => "examination", :action => "edit_exam_assignment" and return
+    flash[:notice] = "Operation successful"
+    redirect_to :controller => "examination", :action => "edit_exam_assignment" and return
   end
   
   def void_exam_type
@@ -209,7 +209,8 @@ class ExaminationController < ApplicationController
     
     @courses = [["---Select Course---", ""]]
     @courses += Course.all.collect{|c|[c.name, c.id]}
-    
+
+    @examinations = Examination.find(:all)
   end
 
   def create_exam_assignment
@@ -256,8 +257,8 @@ class ExaminationController < ApplicationController
 
     exam_ids = params[:exam_ids].split(",")
     (exam_ids || []).each do |exam_id|
-        exam_id = Examination.find(exam_id)
-        exam_id.delete
+      exam_id = Examination.find(exam_id)
+      exam_id.delete
     end
 
     render :text => "true" and return
@@ -271,27 +272,37 @@ class ExaminationController < ApplicationController
     end
 
     exam_type_ids = params[:exam_type_ids].split(",")
-      (exam_type_ids || []).each do |exam_type_id|
-       exam_type = ExaminationType.find(exam_type_id)
-       exam_type.delete
+    (exam_type_ids || []).each do |exam_type_id|
+      exam_type = ExaminationType.find(exam_type_id)
+      exam_type.delete
     end
     
     render :text => "true" and return
   end
 
   def class_room_students
-    class_room = ClassRoom.find(params[:class_room_id])
-    students = class_room.class_room_students.collect{|crs|crs.student}.compact
-
+    students = []
+    class_room_adjustments = StudentClassRoomAdjustment.find(:all,
+      :conditions => ["status =? AND new_class_room_id =?", 'active', params[:class_room_id]])
+    
+    class_room_adjustments.each do |adjustment|
+      next if adjustment.student.blank?
+      students << adjustment.student
+    end
+    
     students = (students || []).collect{|s|[s.id, s.fname + ' ' + s.lname]}.in_groups_of(3)
     render :json => students and return
   end
 
   def class_room_courses
-    class_room = ClassRoom.find(params[:class_room_id])
-    options = [["", "---Select Course---"]]
-    courses = class_room.class_room_courses.collect{|crc| crc.course}.compact
-    options += (courses || []).collect{|c|[c.id, c.name]}
+    unless params[:class_room_id].blank?
+      class_room = ClassRoom.find(params[:class_room_id])
+      options = [["", "---Select Course---"]]
+      courses = class_room.class_room_courses.collect{|crc| crc.course}.compact
+      options += (courses || []).collect{|c|[c.id, c.name]}
+    else
+      options = []
+    end
     render :json => options and return
   end
 
@@ -320,14 +331,14 @@ class ExaminationController < ApplicationController
     student_data[class_name] = []
 
     (exam_results || []).each do |er|
-        student_name = (er.student.fname.to_s + ' ' + er.student.lname.to_s)
-        gender = er.student.gender.first.capitalize.to_s
-        gender = '??' if gender.blank?
+      student_name = (er.student.fname.to_s + ' ' + er.student.lname.to_s)
+      gender = er.student.gender.first.capitalize.to_s
+      gender = '??' if gender.blank?
 
-        student_data[class_name] << ({
-                                      :name => student_name + ' (' + gender + ')'.to_s,
-                                      :marks => er.marks
-                                    })
+      student_data[class_name] << ({
+          :name => student_name + ' (' + gender + ')'.to_s,
+          :marks => er.marks
+        })
     end
 
     render :json => student_data.first and return
@@ -372,10 +383,10 @@ class ExaminationController < ApplicationController
         (params[:students] || []).each do |student_id, result|
           next if result.blank?
           ExaminationResult.create({
-            :exam_id => params[:exam_id],
-            :student_id => student_id,
-            :marks => result.to_i
-          })       
+              :exam_id => params[:exam_id],
+              :student_id => student_id,
+              :marks => result.to_i
+            })
         end
       end
 
@@ -397,10 +408,10 @@ class ExaminationController < ApplicationController
       (params[:students] || []).each do |student_id, result|
         next if result.blank?
         ExaminationResult.create({
-          :exam_id => params[:exam_id],
-          :student_id => student_id,
-          :marks => result.to_i
-        })
+            :exam_id => params[:exam_id],
+            :student_id => student_id,
+            :marks => result.to_i
+          })
       end
     end
     
@@ -436,12 +447,12 @@ class ExaminationController < ApplicationController
     exam_ids = params[:exam_ids].split(",")
 
     (exam_ids || []).each do |exam_id|
-        exam = Examination.find(exam_id)
-        exam_results = exam.examination_results
-        (exam_results || []).each do |er|
-          examination_result = ExaminationResult.find(er.id)
-          examination_result.delete
-        end
+      exam = Examination.find(exam_id)
+      exam_results = exam.examination_results
+      (exam_results || []).each do |er|
+        examination_result = ExaminationResult.find(er.id)
+        examination_result.delete
+      end
     end
 
     render :text => "true" and return
