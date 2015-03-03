@@ -401,7 +401,10 @@ class ExaminationController < ApplicationController
   def exam_result_entry
     @exam = Examination.find(params[:exam_id])
     @students = @exam.students
-    
+
+    exam_with_results_ids = ExaminationResult.find(:all).map(&:exam_id)
+    exam_with_results_ids = '' if exam_with_results_ids.blank?
+    @exams = Examination.find(:all, :conditions => ["exam_id NOT IN (?)", exam_with_results_ids])
   end
 
   def create_exam_result

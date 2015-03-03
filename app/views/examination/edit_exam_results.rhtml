@@ -149,6 +149,10 @@
         white-space: nowrap;
         cursor: pointer;
       }
+
+      a{
+        cursor: pointer;
+      }
     </style>
   </head>
   <body>   
@@ -273,7 +277,7 @@
                         </span>
                       </td>
                       <td>
-                        <a exam_id="<%= exam.id %>" onclick="editExamResult(this)" href="#" class="table-actions-button ic-table-edit"></a>
+                        <a exam_id="<%= exam.id %>" onclick="editExamResult(this)" class="table-actions-button ic-table-edit"></a>
                       </td>
                     </tr>
                   <% end %>
