@@ -159,6 +159,7 @@ class ExaminationController < ApplicationController
     courses = exam.class_room.class_room_courses.collect{|crc|crc.course}
     @courses += courses.collect{|c|[c.name, c.id]}
 
+    @examinations = Examination.find(:all)
     
   end
 
