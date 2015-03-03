@@ -349,23 +349,23 @@ class ExaminationController < ApplicationController
     exam_with_results_ids = ExaminationResult.find(:all).map(&:exam_id)
     exam_with_results_ids = '' if exam_with_results_ids.blank?
     @exams = Examination.find(:all, :conditions => ["exam_id NOT IN (?)", exam_with_results_ids])
-    @class_rooms = [["---Select Class---", ""]]
+    @class_rooms = [["[Select Class]", ""]]
     @class_rooms += ClassRoom.all.collect{|cr|[cr.name, cr.id]}
-    @courses = [["---Select Course---", ""]]
+    @courses = [["[Select Course]", ""]]
     @courses += Course.all.collect{|c|[c.name, c.id]}
-    @exam_types = [["---Select Exam Type---", ""]]
+    @exam_types = [["[Select Exam Type]", ""]]
     @exam_types += ExaminationType.all.collect{|et|[et.name, et.id]}
-    
+    @exams_with_results = Examination.find(:all, :conditions => ["exam_id IN (?)", exam_with_results_ids])
   end
 
   def edit_exam_results
     exam_with_results_ids = ExaminationResult.find(:all).map(&:exam_id)
     @exams = Examination.find(:all, :conditions => ["exam_id IN (?)", exam_with_results_ids])
-    @class_rooms = [["---Select Class---", ""]]
+    @class_rooms = [["[Select Class]", ""]]
     @class_rooms += ClassRoom.all.collect{|cr|[cr.name, cr.id]}
-    @courses = [["---Select Course---", ""]]
+    @courses = [["[Select Course]", ""]]
     @courses += Course.all.collect{|c|[c.name, c.id]}
-    @exam_types = [["---Select Exam Type---", ""]]
+    @exam_types = [["[Select Exam Type]", ""]]
     @exam_types += ExaminationType.all.collect{|et|[et.name, et.id]}
     
   end
