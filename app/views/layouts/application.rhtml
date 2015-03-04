@@ -8,7 +8,95 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <!-- jQuery & JS files -->
+    <%= javascript_include_tag("jquery") %>
     <%= stylesheet_link_tag("style") %>
+    <script type="text/javascript">
+      function searchEverything(){
+        var container = $('.search_results');
+        container.show();
+        names = document.getElementById('search-keyword').value.split(/\W+/);
+        firstName = names[0];
+        fnameCopy = firstName.toUpperCase();
+        lastName = names[1];
+        if (typeof lastName == 'undefined')lastName = '';
+        lnameCopy = lastName.toUpperCase();
+        jQuery.ajax({
+          type: "POST",
+          url: "/admin/search_everything",
+          data: "first_name=" + firstName + "&last_name=" + lastName,
+          success: function(results){
+            results = eval("(" + results  + ")");
+            students = results["students"];
+            students_count = 0;
+            my_results_div = document.getElementById('my_results');
+            students_count_id = document.getElementById('students_count')
+            html = "";
+            for (var student_id in students){
+              students_count = students_count + 1
+              firstName = students[student_id]["fname"];
+              firstName = hiliter(fnameCopy, firstName)
+              console.log(firstName)
+              lastName = students[student_id]["lname"];
+              lastName = hiliter(lnameCopy, lastName)
+              html+="<div class='result_row'>" + firstName + ' ' + lastName + "</div>";
+            }
+            students_count_id.innerHTML = '<b>' + students_count + '</b>';
+            my_results_div.innerHTML = html;
+          }
+
+        });
+      }
+
+      function hiliter(word, element){
+        var rgxp = new RegExp(word, 'g');
+        var repl = "<span class='match'>" + word + "</span>";
+        element = element.replace(rgxp, repl)
+        return element
+      }
+      
+      $(document).mouseup(function (e){
+        var container = $('.search_results');
+        if (!container.is(e.target) && container.has(e.target).length == 0){
+          {
+            container.hide();
+          }
+        }
+      })
+
+      String.prototype.capitalize = function(){
+        return this.charAt(0).toUpperCase() + this.slice(1)
+      }
+    </script>
+    <style>
+      .search_results_container{
+        box-shadow: 3px 3px 10px rgb(136, 136, 136);
+        border: 1px solid rgb(160, 160, 160);
+        background: none repeat scroll 0% 0% rgb(255, 255, 255);
+        padding: 5px 0px;
+      }
+
+      .results_header{
+        cursor: pointer;
+        padding: 0px 10px;
+        background: none repeat scroll 0% 0% transparent;
+        color: rgb(48, 48, 48);
+        font-size: 12px;
+      }
+
+      .result_row{
+        cursor: pointer;
+        padding: 0px 10px;
+        background: none repeat scroll 0% 0% transparent;
+        color: rgb(48, 48, 48); font-size: 11px;
+      }
+
+      .result_row:hover{
+        background-color: #f89406;
+      }
+      .match{
+        font-weight: bold !important;
+      }
+    </style>
   </head>
   <body>
 
@@ -78,7 +166,7 @@
 
         <form action="#" method="POST" id="search-form" class="fr">
           <fieldset>
-            <input type="text" id="search-keyword" class="round button dark ic-search image-right" placeholder="Search..." />
+            <input type="text" autocomplete="off" onkeyup="searchEverything();" id="search-keyword" class="round button dark ic-search image-right" placeholder="Search..." />
             <input type="hidden" value="SUBMIT" />
           </fieldset>
         </form>
@@ -86,14 +174,12 @@
       </div> <!-- end full-width -->
 
     </div> <!-- end top-bar -->
-    <div class="search_results" style="position: absolute; display: none; z-index: 1000; right: 89px; top: 55px;">
-      <div style="box-shadow: 3px 3px 10px rgb(136, 136, 136); border: 1px solid rgb(160, 160, 160); background: none repeat scroll 0% 0% rgb(255, 255, 255); padding: 5px 0px;">
-        <div style="cursor: pointer; padding: 0px 10px; background: none repeat scroll 0% 0% transparent; color: rgb(48, 48, 48); font-size: 11px;">Results</div>
+    <div class="search_results" style="position: fixed; display:none; z-index: 1000; right: 0px; padding-right: 30px; top: 54px; width:218px;">
+      <div class="search_results_container">
+        <div class="results_header">Students (<span id="students_count"></span>)</div>
         <hr></hr>
-        <div class="result_row"style="cursor: pointer; padding: 0px 10px; background: none repeat scroll 0% 0% transparent; color: rgb(48, 48, 48); font-size: 11px;">Download PNG image</div>
-        <div style="cursor: pointer; padding: 0px 10px; background: none repeat scroll 0% 0% transparent; color: rgb(48, 48, 48); font-size: 11px;">Download JPEG image</div>
-        <div style="cursor: pointer; padding: 0px 10px; background: none repeat scroll 0% 0% transparent; color: rgb(48, 48, 48); font-size: 11px;">Download PDF document</div>
-        <div style="cursor: pointer; padding: 0px 10px; background: none repeat scroll 0% 0% transparent; color: rgb(48, 48, 48); font-size: 11px;">Download SVG vector image</div>
+        <div id="my_results">
+        </div>
       </div>
     </div>
     <%= yield %>

@@ -430,5 +430,44 @@ class AdminController < ApplicationController
       send_data school_logo.data, :filename => school_logo.property, :disposition => "inline" and return
     end
   end
-  
+
+  def search_everything
+    first_name = params[:first_name]
+    last_name = params[:last_name]
+    students = Student.find(:all, :conditions => ["fname LIKE ? AND lname LIKE ?",
+        '%' + first_name + '%', '%' + last_name + '%'])
+    
+    teachers = Teacher.find(:all, :conditions => ["fname LIKE ? AND lname LIKE ?",
+        '%' + first_name + '%', '%' + last_name + '%'])
+
+    guardians = Parent.find(:all, :conditions => ["fname LIKE ? AND lname LIKE ?",
+        '%' + first_name + '%', '%' + last_name + '%'])
+    hash = {}
+    hash["students"] = {}
+    hash["teachers"] = {}
+    hash["guardians"] = {}
+    
+    students.each do |student|
+      student_id = student.id
+      hash["students"][student_id] = {}
+      hash["students"][student_id]["fname"] = student.fname.upcase
+      hash["students"][student_id]["lname"] = student.lname.upcase
+    end
+    
+    teachers.each do |teacher|
+      teacher_id = teacher.id
+      hash["teachers"][teacher_id] = {}
+      hash["teachers"][teacher_id]["fname"] = teacher.fname.upcase
+      hash["teachers"][teacher_id]["lname"] = teacher.lname.upcase
+    end
+
+    guardians.each do |guardian|
+      guardian_id = guardian.id
+      hash["guardians"][guardian_id] = {}
+      hash["guardians"][guardian_id]["fname"] = guardian.fname.upcase
+      hash["guardians"][guardian_id]["lname"] = guardian.lname.upcase
+    end
+
+    render :text => hash.to_json and return
+  end
 end
