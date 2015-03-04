@@ -56,6 +56,39 @@
             });
           }});
       }
+
+      function loadSearchResults(){
+        classRoomID = $('.class_room')[0].value;
+        courseID = $('.course')[0].value;
+        examTypeID = $('.exam_type')[0].value;
+        jQuery.ajax({
+          type: "POST",
+          url: "/examination/filter_exams_with_results",
+          data: "class_room_id=" + classRoomID + '&course_id=' + courseID + '&exam_type_id=' + examTypeID,
+          success: function(results){
+            results = eval("(" + results  + ")");
+            html = "";
+            tbody = document.getElementById("exams");
+            for (var exam_id in results){
+              class_room = results[exam_id]["class_room"];
+              exam_type = results[exam_id]["exam_type"];
+              course = results[exam_id]["course"];
+              exam_date = results[exam_id]["exam_date"];
+              exam_attendees = results[exam_id]["exam_attendees"];
+
+              html+="<tr>";
+              html+="<td style='text-align:left; padding: 0.833em 0 0.833em 1.25em;'>" + class_room +  "</td>";
+              html+="<td>" + exam_type +  "</td>";
+              html+="<td>" + course +  "</td>";
+              html+="<td>" + exam_date +  "</td>";
+              html+="<td><span style='margin-left:20%;' onmousedown='loadExamStudents(this);' class='label' exam_id= " + exam_id + ">" + exam_attendees +  "</span></td>";
+              html+="<td><a class='table-actions-button ic-table-edit' onclick='editExamResult(this)' exam_id=" + exam_id + "></a></td>";
+              html+="</tr>";
+            }
+            tbody.innerHTML = html
+
+          }});
+      }
     </script>
     <style>
       #filter td{
@@ -109,9 +142,8 @@
         margin-bottom: 0px;
         padding: 0;
         width: auto;
-
-
       }
+      
       #search-student-form fieldset input {
         color: #505050;
         float: left;
@@ -229,20 +261,20 @@
                         <td style="">
 
                           <%= select_tag:class_name, options_for_select(@class_rooms), {
-                            :id => "dropdown-actions", :class => "class_room_search"} %>
+                            :id => "dropdown-actions", :class => "class_room"} %>
                         </td>
                         <td style="text-align:right;">Select Course</td>
                         <td style="">
                           <%= select_tag:class_name, options_for_select(@courses), {
-                            :id => "dropdown-actions", :class => "class_room_search"} %>
+                            :id => "dropdown-actions", :class => "course"} %>
                         </td>
                         <td style="text-align:right;">Select Exam Type</td>
                         <td>
                           <%= select_tag:class_name, options_for_select(@exam_types), {
-                            :id => "dropdown-actions", :class => "class_room_search"} %>
+                            :id => "dropdown-actions", :class => "exam_type"} %>
                         </td>
                         <td>
-                          <a href="#" onclick="loadSearchResults();" class="button round blue image-right ic-search text-upper">Filter</a>
+                          <a onclick="loadSearchResults();" class="button round blue image-right ic-search text-upper">Filter</a>
                         </td>
                       </tr>            
                     </table>

@@ -504,5 +504,45 @@ class ExaminationController < ApplicationController
     end
     render :text => hash.to_json and return
   end
-  
+
+  def filter_exams_with_results
+    class_room_ids = params[:class_room_id]
+    if params[:class_room_id].blank?
+      class_room_ids = ClassRoom.find(:all).map(&:id)
+      class_room_ids = '0' if class_room_ids.blank?
+    end
+    course_ids = params[:course_id]
+    if params[:course_id].blank?
+      course_ids = Course.find(:all).map(&:id)
+      course_ids = '0' if course_ids.blank?
+    end
+    exam_type_ids = params[:exam_type_id]
+    if params[:exam_type_id].blank?
+      exam_type_ids = ExaminationType.find(:all).map(&:id)
+      exam_type_ids = '0' if exam_type_ids.blank?
+    end
+    exam_with_results_ids = ExaminationResult.find(:all).map(&:exam_id)
+    exam_with_results_ids = '0' if exam_with_results_ids.blank?
+
+    examinations = Examination.find(:all, :conditions => ["class_room_id IN (?) AND
+        exam_type_id IN (?) AND course_id IN (?) AND exam_id IN (?)", class_room_ids,
+        exam_type_ids, course_ids, exam_with_results_ids])
+
+    hash = {}
+    examinations.each do |examination|
+      examination_id = examination.id
+      class_room = examination.class_room.name
+      exam_type = examination.examination_type.name
+      course = examination.course.name
+      exam_date = examination.start_date.to_date.strftime("%d/%b/%Y")
+      exam_attendees = examination.students.count
+      hash[examination_id] = {}
+      hash[examination_id]["class_room"] = class_room
+      hash[examination_id]["exam_type"] = exam_type
+      hash[examination_id]["course"] = course
+      hash[examination_id]["exam_date"] = exam_date
+      hash[examination_id]["exam_attendees"] = exam_attendees
+    end
+    render :text => hash.to_json and return
+  end
 end
