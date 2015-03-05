@@ -11,6 +11,11 @@
     <%= javascript_include_tag("jquery") %>
     <%= stylesheet_link_tag("style") %>
     <script type="text/javascript">
+      function gotoStudentPage(studentID){
+        console.log(studentID);
+        window.location = "/student/my_page?student_id=" + studentID;
+      }
+      
       function searchEverything(){
         var container = $('.search_results');
         container.show();
@@ -35,10 +40,9 @@
               students_count = students_count + 1
               firstName = students[student_id]["fname"];
               firstName = hiliter(fnameCopy, firstName)
-              console.log(firstName)
               lastName = students[student_id]["lname"];
               lastName = hiliter(lnameCopy, lastName)
-              html+="<div class='result_row'>" + firstName + ' ' + lastName + "</div>";
+              html+="<div class='result_row' onclick='gotoStudentPage(" + student_id + ")'>" + firstName + ' ' + lastName + "</div>";
             }
             students_count_id.innerHTML = '<b>' + students_count + '</b>';
             my_results_div.innerHTML = html;

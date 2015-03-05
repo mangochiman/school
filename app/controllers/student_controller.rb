@@ -679,5 +679,8 @@ class StudentController < ApplicationController
     end
     
   end
-  
+
+  def my_page
+    @student = Student.find(params[:student_id])
+  end
 end

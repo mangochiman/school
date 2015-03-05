@@ -24,7 +24,7 @@ class Student < ActiveRecord::Base
   end
 
   def name
-    self.fname.to_s + ' ' + self.lname.to_s
+    self.fname.capitalize.to_s + ' ' + self.lname.capitalize.to_s
   end
 
   def guardian_details
