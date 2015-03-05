@@ -683,4 +683,32 @@ class StudentController < ApplicationController
   def my_page
     @student = Student.find(params[:student_id])
   end
+  
+  def my_class
+    @student = Student.find(params[:student_id])
+  end
+
+  def my_courses
+    @student = Student.find(params[:student_id])
+  end
+
+  def my_performance
+    @student = Student.find(params[:student_id])
+  end
+
+  def my_department
+    @student = Student.find(params[:student_id])
+  end
+
+  def my_punishments
+    @student = Student.find(params[:student_id])
+  end
+
+  def my_payments
+    @student = Student.find(params[:student_id])
+  end
+
+  def my_guardian
+    @student = Student.find(params[:student_id])
+  end
 end
