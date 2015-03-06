@@ -120,6 +120,7 @@
             <li><a href="/student/my_punishments?student_id=<%= @student.id %>">My Punishments</a></li>
             <li><a href="/student/my_payments?student_id=<%= @student.id %>">My Payments</a></li>
             <li><a href="/student/my_guardian?student_id=<%= @student.id %>">My Guardian</a></li>
+            <li><a href="/student/my_photos?student_id=<%= @student.id %>">My Photos</a></li>
           </ul>
 
         </div> <!-- end side-menu -->
@@ -134,7 +135,7 @@
 
                 <div class="content-module-heading cf">
 
-                  <h3 class="fl">My Class</h3>
+                  <h3 class="fl">My Classes</h3>
                   <span class="fr expand-collapse-text">Click to collapse</span>
                   <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -152,7 +153,51 @@
                       <%= flash[:error] %>
                     </div>
                   <% end %>
-                
+
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>
+                          <input type="checkbox" onclick="selectAll();" id="table-select-all"/>
+                        </th>
+                        <th style="width:15%;">Semester #</th>
+                        <th>Class</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tfoot>
+                      <tr>
+                        <td class="table-footer" colspan="5">
+                          <a class="button round blue image-right ic-delete text-upper delete-multiple" href="#">Delete Class</a>
+                          <a class="button round blue image-right ic-add text-upper delete-multiple" href="#">Add Class</a>
+                        </td>
+                      </tr>
+                    </tfoot>
+                    <tbody>
+                      <% @class_rooms_hash.each do |key, values| %>
+                        <tr>
+                          <td>
+                            <input type="checkbox"/>
+                          </td>
+                          <td><%= values["semester"] %></td>
+                          <td><%= values["class_name"] %></td>
+                          <td><%= values["start_date"] %></td>
+                          <td><%= values["end_date"] %></td>
+                          <td><%= values["status"] %></td>
+                          <td style="padding:3.5px;">
+                            <%  if values["status"] == 'active' %>
+                              <button disabled="true" class="btn btn-primary">Set As Active</button>
+                            <% else %>
+                              <button class="btn btn-primary">Set As Active</button>
+                            <% end %>
+                          </td>
+                        </tr>
+                      <% end %>
+                    </tbody>
+                  </table>
                 </div> <!-- end content-module-main -->
 
               </div> <!-- end content-module -->

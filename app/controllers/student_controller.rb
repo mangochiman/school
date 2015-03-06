@@ -686,6 +686,16 @@ class StudentController < ApplicationController
   
   def my_class
     @student = Student.find(params[:student_id])
+    @class_rooms_hash = {}
+    @student.student_class_room_adjustments.each do |adjustment|
+      adjustment_id = adjustment.id
+      @class_rooms_hash[adjustment_id] = {}
+      @class_rooms_hash[adjustment_id]["semester"] = adjustment.semester
+      @class_rooms_hash[adjustment_id]["class_name"] = adjustment.class_room.name
+      @class_rooms_hash[adjustment_id]["start_date"] = adjustment.start_date
+      @class_rooms_hash[adjustment_id]["end_date"] = adjustment.end_date
+      @class_rooms_hash[adjustment_id]["status"] = adjustment.status
+    end
   end
 
   def my_courses
@@ -709,6 +719,10 @@ class StudentController < ApplicationController
   end
 
   def my_guardian
+    @student = Student.find(params[:student_id])
+  end
+
+  def my_photos
     @student = Student.find(params[:student_id])
   end
 end
