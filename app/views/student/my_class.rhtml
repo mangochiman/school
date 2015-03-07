@@ -61,6 +61,64 @@
        
       }
 
+      function assignMyActiveClass(obj){
+        studentID = '<%= params[:student_id] %>';
+        classRoomAdjustmentId = obj.getAttribute("class_room_adjustment_id");
+
+        jQuery.confirm({
+          title:"Active Class confirmation",
+          text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+          confirm: function() {
+            jQuery.ajax({
+              type: "POST",
+              url: "/student/set_my_active_class",
+              data: "class_room_adjustment_id=" + classRoomAdjustmentId + '&student_id=<%=params[:student_id]%>',
+              success: function(results){
+                results = eval("(" + results  + ")");
+                html = "";
+                tbody = document.getElementById('my_classes');
+                for (var adjustment_id in results){
+                  semester = results[adjustment_id]["semester"];
+                  if (semester == null)semester = '';
+                  class_name = results[adjustment_id]["class_name"];
+                  start_date = results[adjustment_id]["start_date"];
+                  if (start_date == null)start_date = ''
+                  end_date = results[adjustment_id]["end_date"];
+                  if (end_date == null)end_date = ''
+                  status = results[adjustment_id]["status"];
+                  html+="<tr>";
+                  html+="<td><input type='checkbox' class_room_adjustment_id=" + adjustment_id + "></td>"
+                  html+="<td>" + semester + "</td>";
+                  html+="<td>" + class_name + "</td>";
+                  html+="<td>" + start_date + "</td>";
+                  html+="<td>" + end_date + "</td>";
+                  html+="<td>" + status + "</td>";
+                  html+="<td style='padding:3.5px;'>";
+                  button = "";
+                  if (status.toUpperCase() == 'ACTIVE'){
+                    button = "<button disabled='true' class='btn btn-primary'>Set As Active</button>"
+                  }
+                  if (status.toUpperCase() == 'PASSIVE'){
+                    button = "<button class_room_adjustment_id=" + adjustment_id + " class='btn btn-primary' onmousedown='assignMyActiveClass(this)'>Set As Active</button>"
+                  }
+                  html+= button;
+                  html+= "</td>";
+                  html+="</tr>";
+                }
+                tbody.innerHTML = html;
+              }
+
+            });
+          },
+          cancel: function() {
+
+          },
+          confirmButton: "Yes I am",
+          cancelButton: "No"
+        });
+
+      }
+      
       function deleteMyClassRooms(){
         inputs = document.getElementsByTagName("input");
         adjustmentIds = []
@@ -74,7 +132,7 @@
             }
           }
         }
-        console.log(adjustmentIds)
+
         jQuery.ajax({
           type: "POST",
           url: "/student/delete_my_classes",
@@ -278,7 +336,7 @@
                           </td>
                         </tr>
                       </tfoot>
-                      <tbody>
+                      <tbody id="my_classes">
                         <% @class_rooms_hash.each do |key, values| %>
                           <tr id="<%= key %>">
                             <td>
@@ -290,10 +348,10 @@
                             <td><%= values["end_date"] %></td>
                             <td><%= values["status"] %></td>
                             <td style="padding:3.5px;">
-                              <%  if values["status"] == 'active' %>
+                              <%  if values["status"].upcase == 'ACTIVE' %>
                                 <button disabled="true" class="btn btn-primary">Set As Active</button>
                               <% else %>
-                                <button class="btn btn-primary">Set As Active</button>
+                                <button class_room_adjustment_id="<%= key %>" class="btn btn-primary" onmousedown="assignMyActiveClass(this)">Set As Active</button>
                               <% end %>
                             </td>
                           </tr>

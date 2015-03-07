@@ -705,7 +705,7 @@ class StudentController < ApplicationController
       @class_rooms_hash[adjustment_id]["class_name"] = adjustment.class_room.name
       @class_rooms_hash[adjustment_id]["start_date"] = adjustment.start_date
       @class_rooms_hash[adjustment_id]["end_date"] = adjustment.end_date
-      @class_rooms_hash[adjustment_id]["status"] = adjustment.status
+      @class_rooms_hash[adjustment_id]["status"] = adjustment.status.capitalize
     end
   end
 
@@ -727,6 +727,34 @@ class StudentController < ApplicationController
     render :text => "true" and return
   end
 
+  def set_my_active_class
+    student = Student.find(params[:student_id])
+    class_rooms_hash = {}
+    ActiveRecord::Base.transaction do
+      student_class_room_adjustment = StudentClassRoomAdjustment.find(params[:class_room_adjustment_id])
+      student_class_room_adjustment.status = 'active'
+      student_class_room_adjustment.save
+
+      (student.student_class_room_adjustments || []).each do |adjustment|
+        next if adjustment.id == student_class_room_adjustment.id
+        adjustment.status = 'passive'
+        adjustment.save
+      end
+      
+      student.student_class_room_adjustments.each do |adjustment|
+        adjustment_id = adjustment.id
+        class_rooms_hash[adjustment_id] = {}
+        class_rooms_hash[adjustment_id]["semester"] = adjustment.semester
+        class_rooms_hash[adjustment_id]["class_name"] = adjustment.class_room.name
+        class_rooms_hash[adjustment_id]["start_date"] = adjustment.start_date
+        class_rooms_hash[adjustment_id]["end_date"] = adjustment.end_date
+        class_rooms_hash[adjustment_id]["status"] = adjustment.status.capitalize
+      end
+    end
+
+    render :text => class_rooms_hash.to_json and return
+  end
+  
   def my_courses
     @student = Student.find(params[:student_id])
   end
