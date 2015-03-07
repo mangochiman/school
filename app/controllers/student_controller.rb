@@ -757,6 +757,40 @@ class StudentController < ApplicationController
   
   def my_courses
     @student = Student.find(params[:student_id])
+    @active_courses = []
+    @previous_class_course_hash = {}
+    @class_room_hash = {}
+    class_rooms = ClassRoom.find(:all)
+    class_rooms.each do |c|
+      @class_room_hash[c.id] = c.name
+    end
+    @current_active_class = ""
+    active_class_adjustment = @student.student_class_room_adjustments.find(:last,
+      :conditions => ["status =?", 'active'])
+    unless active_class_adjustment.blank?
+      @current_active_class = active_class_adjustment.class_room.name
+      active_class_room_courses = @student.student_class_room_courses.find(:all,
+        :conditions => ["class_room_id =?", active_class_adjustment.new_class_room_id])
+      active_class_room_courses.each do |active_class_room_course|
+        next if active_class_room_course.course.blank?
+        @active_courses << active_class_room_course.course
+      end
+    end
+
+    (@student.student_class_room_adjustments || []).each do |sca|
+      unless active_class_adjustment.blank?
+        next if sca.id == active_class_adjustment.id
+      end
+      class_room_id = sca.new_class_room_id
+      @previous_class_course_hash[class_room_id] = {}
+      @previous_class_course_hash[class_room_id]["courses"] = []
+      previous_class_room_courses = @student.student_class_room_courses.find(:all,
+        :conditions => ["class_room_id =?",class_room_id])
+      previous_class_room_courses.each do |previous_class_room_course|
+        course = previous_class_room_course.course
+        @previous_class_course_hash[class_room_id]["courses"] << course
+      end
+    end
   end
 
   def my_performance

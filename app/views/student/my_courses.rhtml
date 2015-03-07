@@ -82,6 +82,14 @@
       a{
         cursor: pointer;
       }
+
+      .locked{
+        background-position: center center;
+        display: inline-block;
+        height: 1.3em;
+        width: 1.3em;
+        background-image: url("../images/icons/message-boxes/information.png");
+      }
     </style>
   </head>
   <body>    
@@ -153,7 +161,70 @@
                       <%= flash[:error] %>
                     </div>
                   <% end %>
-                
+                  <% unless @current_active_class.blank? %>
+                    <table>
+                      <thead>
+                      <th colspan="3" style="text-align:center; border-bottom: 2px solid white !important; background-color: #f89406;">
+                        Current Class: <span style="font-weight:bold;"><%= @current_active_class %></span>
+                      </th>
+                      <tr>
+                        <th>#</th>
+                        <th style="padding:8px; text-align: center;">Course Name</th>
+                        <th>Action</th>
+                      </tr>
+                      </thead>
+                      <tfoot>
+                        <tr>
+                          <td class="table-footer" colspan="3" style="text-align:right;">
+                            <a class="button round blue image-right ic-add text-upper delete-multiple" href="#">Add Course</a>
+                          </td>
+                        </tr>
+                      </tfoot>
+                      <tbody>
+                        <% count = 0 %>
+                        <% @active_courses.each do |course| %>
+                          <tr>
+                            <td><%= count = count + 1 %></td>
+                            <td style="padding:4px; padding-left: 14px;"><%= course.name %></td>
+                            <td>
+                              <a hre="#" class="table-actions-button ic-table-delete confirm"></a>
+                            </td>
+                          </tr>
+                        <% end %>
+                      </tbody>
+                    </table><br />
+                  <% end %>
+                  <% unless @previous_class_course_hash.blank? %>
+                    <table>
+                      <thead>
+                        <tr>
+                          <th style="text-align:center; border-bottom: 2px solid white !important; background-color: #006dcc;" colspan="3">
+                            Previous Classes and Courses
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% @previous_class_course_hash.each do |class_room_id, values| %>
+                          <tr>
+                            <th colspan="3"><%= @class_room_hash[class_room_id] %></th>
+                          </tr>
+                          <% count = 0 %>
+                          <% (values["courses"] || []).each do |course| %>
+                            <tr>
+                              <td><%= count = count + 1 %></td>
+                              <td style="padding:4px;"><%= course.name %></td>
+                              <td><span title="Read only information" href="#" class="locked"></span></td>
+                            </tr>
+                          <% end %>
+                          <% if values["courses"].blank? %>
+                            <tr class="error-box round" style="font-size:10pt;">
+                              <td colspan="3" style="text-align:center;">(Oops!! Are you sure there is any course associated to this class???)</td>
+                            </tr>
+                          <% end %>
+                        <% end %>
+                      </tbody>
+                    </table>
+                  <% end %>
                 </div> <!-- end content-module-main -->
 
               </div> <!-- end content-module -->
