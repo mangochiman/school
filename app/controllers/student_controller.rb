@@ -131,6 +131,9 @@ class StudentController < ApplicationController
           })
       end
       flash[:notice] = "You have successfully assigned a class"
+      if params[:return_uri]
+        redirect_to :controller => "student", :action => params[:return_uri], :student_id => params[:student_id] and return
+      end
       redirect_to :controller => "student", :action => "assign_optional_courses", :student_id => params[:student_id] and return
     end
   end
@@ -686,6 +689,14 @@ class StudentController < ApplicationController
   
   def my_class
     @student = Student.find(params[:student_id])
+    @class_rooms = ClassRoom.all
+    
+    class_adjustments = @student.student_class_room_adjustments.find(:all, :conditions => ["status =?", 'active'])
+    unless class_adjustments.blank?
+      class_room_ids = class_adjustments.map(&:new_class_room_id)
+      @class_rooms = ClassRoom.find(:all, :conditions => ["class_room_id NOT IN (?)", class_room_ids])
+    end
+    
     @class_rooms_hash = {}
     @student.student_class_room_adjustments.each do |adjustment|
       adjustment_id = adjustment.id
