@@ -21,6 +21,27 @@
 
     <script type="text/javascript">
 
+      function selectAll(){
+        selectAllInput = document.getElementById('table-select-all');
+        inputs = document.getElementsByTagName("input");
+        if (selectAllInput.checked){
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+              inputs[i].checked = true;
+            }
+          }
+        }
+        else{
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+              inputs[i].checked = false;
+            }
+          }
+        }
+      }
+      
       function assignMeClass(obj){
         studentID = '<%= params[:student_id] %>';
         classRoomId = obj.getAttribute("class_room_id");
@@ -29,7 +50,7 @@
           title:"Class Assignment confirmation",
           text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
           confirm: function() {
-             window.location = "/student/create_student_class_assignment?return_uri=my_class&student_id= " + studentID + "&class_room_id=" + classRoomId;
+            window.location = "/student/create_student_class_assignment?return_uri=my_class&student_id= " + studentID + "&class_room_id=" + classRoomId;
           },
           cancel: function() {
             
@@ -39,7 +60,35 @@
         });
        
       }
-      
+
+      function deleteMyClassRooms(){
+        inputs = document.getElementsByTagName("input");
+        adjustmentIds = []
+        for (var i=0; i<=inputs.length - 1; i++){
+          if (inputs[i].type == 'checkbox'){
+            if (inputs[i].checked){
+              if (inputs[i].hasAttribute("class_room_adjustment_id")){
+                adjustmentId = inputs[i].getAttribute("class_room_adjustment_id");
+                adjustmentIds.push(adjustmentId);
+              }
+            }
+          }
+        }
+        console.log(adjustmentIds)
+        jQuery.ajax({
+          type: "POST",
+          url: "/student/delete_my_classes",
+          data: "class_room_adjustment_ids=" + adjustmentIds + '&student_id=<%=params[:student_id]%>',
+          success: function(){
+            for (var x=0; x<= adjustmentIds.length - 1; x++){
+              id = adjustmentIds[x];
+              element = document.getElementById(id);
+              element.parentNode.removeChild(element)
+            }
+          }
+
+        });
+      }
     </script>
 
     <style>
@@ -225,15 +274,15 @@
                         <tr>
                           <td class="table-footer" colspan="5">
                             <a class="button round blue image-right ic-delete text-upper delete-multiple" href="#">Delete Class</a>
-                            <a href="/student/my_class?add_class=true&student_id=<%=  params[:student_id] %>" class="button round blue image-right ic-add text-upper delete-multiple">Add Class</a>
+                            <a href="/student/my_class?add_class=true&student_id=<%=  params[:student_id] %>" class="button round blue image-right ic-add text-upper">Add Class</a>
                           </td>
                         </tr>
                       </tfoot>
                       <tbody>
                         <% @class_rooms_hash.each do |key, values| %>
-                          <tr>
+                          <tr id="<%= key %>">
                             <td>
-                              <input type="checkbox"/>
+                              <input type="checkbox" class_room_adjustment_id="<%= key %>"/>
                             </td>
                             <td><%= values["semester"] %></td>
                             <td><%= values["class_name"] %></td>
@@ -290,5 +339,19 @@
     </div> <!-- end content -->
 
     <%= javascript_include_tag("bootstrap") %>
+    <script type="text/javascript">
+      $(".delete-multiple").confirm({
+        title:"Delete confirmation",
+        text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+        confirm: function(button) {
+          deleteMyClassRooms();
+        },
+        cancel: function(button) {
+
+        },
+        confirmButton: "Yes I am",
+        cancelButton: "No"
+      });
+    </script>
   </body>
 </html>

@@ -709,6 +709,24 @@ class StudentController < ApplicationController
     end
   end
 
+  def delete_my_classes
+    class_room_adjustment_ids = params[:class_room_adjustment_ids].split(",")
+    (class_room_adjustment_ids || []).each do |adjustment_id|
+      ActiveRecord::Base.transaction do
+        student_adjustment = StudentClassRoomAdjustment.find(adjustment_id)
+        
+        student_class_room_courses = StudentClassRoomCourse.find(:all, :conditions => ["
+          student_id =? AND class_room_id =?", params[:student_id], student_adjustment.new_class_room_id])        
+        (student_class_room_courses || []).each do |scrc|
+          scrc.delete
+        end
+      
+        student_adjustment.delete
+      end
+    end
+    render :text => "true" and return
+  end
+
   def my_courses
     @student = Student.find(params[:student_id])
   end
