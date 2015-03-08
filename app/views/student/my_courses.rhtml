@@ -20,7 +20,34 @@
     <%= stylesheet_link_tag("bootstrap") %>
 
     <script type="text/javascript">
+      function deleteMyClassRoomCourses(obj){
+        studentID = '<%= params[:student_id] %>';
+        classRoomID = '<%= @current_class_room_id %>'
+        courseID = obj.getAttribute("course_id");
 
+        jQuery.confirm({
+          title:"Course Delete confirmation",
+          text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+          confirm: function() {
+            jQuery.ajax({
+              type: "POST",
+              url: "/student/delete_my_courses",
+              data: "student_id=" + studentID + '&class_room_id=' + classRoomID + '&course_id=' + courseID,
+              success: function(results){
+                element = document.getElementById(courseID);
+                element.parentNode.removeChild(element)
+              }
+
+            });
+          },
+          cancel: function() {
+
+          },
+          confirmButton: "Yes I am",
+          cancelButton: "No"
+        });
+
+      }
     </script>
 
     <style>
@@ -161,69 +188,111 @@
                       <%= flash[:error] %>
                     </div>
                   <% end %>
-                  <% unless @current_active_class.blank? %>
-                    <table>
-                      <thead>
-                      <th colspan="3" style="text-align:center; border-bottom: 2px solid white !important; background-color: #f89406;">
-                        Current Class: <span style="font-weight:bold;"><%= @current_active_class %></span>
-                      </th>
-                      <tr>
-                        <th>#</th>
-                        <th style="padding:8px; text-align: center;">Course Name</th>
-                        <th>Action</th>
-                      </tr>
-                      </thead>
-                      <tfoot>
+                  <% if (params[:class_room_id]) %>
+                    <form method="post" action="/student/my_courses">
+                      <% unless @class_room_courses.blank? %>
+                        <table class="classes" style="">
+
+                          <thead>
+                            <tr>
+                              <th><input type="checkbox" id="table-select-all" onclick="selectAll();"/></th>
+                              <th colspan="5" style=" padding: 1.25em 0 1.25em 1.25em;">Select courses</th>
+                            </tr>
+                          </thead>
+
+                          <tbody id="class_rooms">
+                            <% @class_room_courses.in_groups_of(3).each do |row| %>
+                              <tr>
+                                <% row.each do |subject| %>
+                                  <% unless subject.blank? %>
+                                    <td><input type="checkbox" id="<%= subject.id %>" name="subjects[<%= subject.name.titlecase %>]"/></td>
+                                    <td style="border-left: none; text-align: left;"><%= subject.name.titlecase %></td>
+                                  <% else %>
+                                    <td style="border-left: none;">&nbsp;</td>
+                                    <td style="border-left: none;">&nbsp;</td>
+                                  <% end %>
+                                <% end %>
+                              </tr>
+                            <% end %>
+                          </tbody>
+
+                        </table>
+
+                        <div class="stripe-separator"><!--  --></div>
+                        <%= hidden_field_tag("class_room_id", params[:class_room_id]) %>
+                        <input type="submit" value="Submit" class="round blue ic-right-arrow" />
+                      <% else %>
+                        <div class="error-box round">
+                          No course available for assignment
+                        </div>
+                      <% end %>
+                      <a href="/student/my_courses?student_id=<%=  params[:student_id] %>" class="button round blue image-right ic-cancel text-upper">Cancel</a>
+                    </form>
+                  <% else %>
+                    <% unless @current_active_class.blank? %>
+                      <table>
+                        <thead>
+                        <th colspan="3" style="text-align:center; border-bottom: 2px solid white !important; background-color: #f89406;">
+                          Current Class: <span style="font-weight:bold;"><%= @current_active_class %></span>
+                        </th>
                         <tr>
-                          <td class="table-footer" colspan="3" style="text-align:right;">
-                            <a class="button round blue image-right ic-add text-upper delete-multiple" href="#">Add Course</a>
-                          </td>
+                          <th>#</th>
+                          <th style="padding:8px; text-align: center;">Course Name</th>
+                          <th>Action</th>
                         </tr>
-                      </tfoot>
-                      <tbody>
-                        <% count = 0 %>
-                        <% @active_courses.each do |course| %>
+                        </thead>
+                        <tfoot>
                           <tr>
-                            <td><%= count = count + 1 %></td>
-                            <td style="padding:4px; padding-left: 14px;"><%= course.name %></td>
-                            <td>
-                              <a hre="#" class="table-actions-button ic-table-delete confirm"></a>
+                            <td class="table-footer" colspan="3" style="text-align:right;">
+                              <a class="button round blue image-right ic-add text-upper delete-multiple" href="/student/my_courses?student_id=<%= params[:student_id] %>&class_room_id=<%= @current_class_room_id %>">Add Course</a>
                             </td>
                           </tr>
-                        <% end %>
-                      </tbody>
-                    </table><br />
-                  <% end %>
-                  <% unless @previous_class_course_hash.blank? %>
-                    <table>
-                      <thead>
-                        <tr>
-                          <th style="text-align:center; border-bottom: 2px solid white !important; background-color: #006dcc;" colspan="3">
-                            Previous Classes and Courses
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <% @previous_class_course_hash.each do |class_room_id, values| %>
-                          <tr>
-                            <th colspan="3"><%= @class_room_hash[class_room_id] %></th>
-                          </tr>
+                        </tfoot>
+                        <tbody>
                           <% count = 0 %>
-                          <% (values["courses"] || []).each do |course| %>
-                            <tr>
+                          <% @active_courses.each do |course| %>
+                            <tr id="<%= course.id %>">
                               <td><%= count = count + 1 %></td>
-                              <td style="padding:4px;"><%= course.name %></td>
-                              <td><span title="Read only information" href="#" class="locked"></span></td>
+                              <td style="padding:4px; padding-left: 14px;"><%= course.name %></td>
+                              <td>
+                                <a course_id="<%= course.id %>" onmousedown="deleteMyClassRoomCourses(this)" class="table-actions-button ic-table-delete"></a>
+                              </td>
                             </tr>
                           <% end %>
-                          <% if values["courses"].blank? %>
-                            <tr class="error-box round" style="font-size:10pt;">
-                              <td colspan="3" style="text-align:center;">(Oops!! Are you sure there is any course associated to this class???)</td>
+                        </tbody>
+                      </table><br />
+                    <% end %>
+                    <% unless @previous_class_course_hash.blank? %>
+                      <table>
+                        <thead>
+                          <tr>
+                            <th style="text-align:center; border-bottom: 2px solid white !important; background-color: #006dcc;" colspan="3">
+                              Previous Classes and Courses
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <% @previous_class_course_hash.each do |class_room_id, values| %>
+                            <tr>
+                              <th colspan="3"><%= @class_room_hash[class_room_id] %></th>
                             </tr>
+                            <% count = 0 %>
+                            <% (values["courses"] || []).each do |course| %>
+                              <tr>
+                                <td><%= count = count + 1 %></td>
+                                <td style="padding:4px;"><%= course.name %></td>
+                                <td><span title="Read only information" href="#" class="locked"></span></td>
+                              </tr>
+                            <% end %>
+                            <% if values["courses"].blank? %>
+                              <tr class="error-box round" style="font-size:10pt;">
+                                <td colspan="3" style="text-align:center;">(Oops!! Are you sure there is any course associated to this class???)</td>
+                              </tr>
+                            <% end %>
                           <% end %>
-                        <% end %>
-                      </tbody>
-                    </table>
+                        </tbody>
+                      </table>
+                    <% end %>
                   <% end %>
                 </div> <!-- end content-module-main -->
 
@@ -263,12 +332,8 @@
     </div> <!-- end content -->
 
     <%= javascript_include_tag("bootstrap") %>
-    <%= javascript_include_tag("zebra_datepicker") %>
-    <script>
-      $('.date-picker').Zebra_DatePicker({
-        view : 'years',
-        direction: ['<%=  (Date.today - 10.years).strftime("%Y-%m-%d") %>', '<%=  Date.today.strftime("%Y-%m-%d") %>']
-      });
+    <script type="text/javascript">
+
     </script>
   </body>
 </html>

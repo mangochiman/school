@@ -765,10 +765,12 @@ class StudentController < ApplicationController
       @class_room_hash[c.id] = c.name
     end
     @current_active_class = ""
+    @current_class_room_id = ""
     active_class_adjustment = @student.student_class_room_adjustments.find(:last,
       :conditions => ["status =?", 'active'])
     unless active_class_adjustment.blank?
       @current_active_class = active_class_adjustment.class_room.name
+      @current_class_room_id = active_class_adjustment.new_class_room_id
       active_class_room_courses = @student.student_class_room_courses.find(:all,
         :conditions => ["class_room_id =?", active_class_adjustment.new_class_room_id])
       active_class_room_courses.each do |active_class_room_course|
@@ -791,8 +793,44 @@ class StudentController < ApplicationController
         @previous_class_course_hash[class_room_id]["courses"] << course
       end
     end
+    @class_room_courses = []
+    if (params[:class_room_id])
+      class_room = ClassRoom.find(params[:class_room_id])
+      (class_room.class_room_courses || []).each do |class_room_course|
+        next if class_room_course.course.blank?
+        unless active_class_adjustment.blank?
+          active_class_room_courses_ids = active_class_room_courses.map(&:course_id)
+          next if active_class_room_courses_ids.include?(class_room_course.course.id)
+          @class_room_courses << class_room_course.course
+        end
+      end
+    end
+
+    if (request.method == :post)
+      (params[:subjects] || []).each do |subject_id, details|
+        student_class_room_course = StudentClassRoomCourse.find(:last, :conditions => ["
+          student_id =? AND class_room_id =? AND course_id =?", params[:student_id],
+            params[:class_room_id], subject_id])
+        StudentClassRoomCourse.create({
+            :student_id => params[:student_id],
+            :class_room_id => params[:class_room_id],
+            :course_id => subject_id
+          }) if student_class_room_course.blank?
+      end
+
+      flash[:notice] = "You have successfully assigned courses"
+      redirect_to :controller => "student", :action => "my_courses", :student_id => params[:student_id] and return
+    end
   end
 
+  def delete_my_courses
+    student_class_room_course = StudentClassRoomCourse.find(:last, :conditions => ["student_id =? 
+      AND class_room_id =? AND course_id =?", params[:student_id], params[:class_room_id],
+        params[:course_id]])
+    student_class_room_course.delete
+    render :text => "true" and return
+  end
+  
   def my_performance
     @student = Student.find(params[:student_id])
   end
