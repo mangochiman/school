@@ -20,6 +20,27 @@
     <%= stylesheet_link_tag("bootstrap") %>
 
     <script type="text/javascript">
+      function selectAll(){
+        selectAllInput = document.getElementById('table-select-all');
+        inputs = document.getElementsByTagName("input");
+        if (selectAllInput.checked){
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+              inputs[i].checked = true;
+            }
+          }
+        }
+        else{
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+              inputs[i].checked = false;
+            }
+          }
+        }
+      }
+      
       function deleteMyClassRoomCourses(obj){
         studentID = '<%= params[:student_id] %>';
         classRoomID = '<%= @current_class_room_id %>'
@@ -148,7 +169,7 @@
 
           <h3>Task</h3>
           <ul>
-            <li><a href="/student/my_class?student_id=<%= @student.id %>">My Class</a></li>
+            <li><a href="/student/my_class?student_id=<%= @student.id %>">My Classes</a></li>
             <li><a href="/student/my_courses?student_id=<%= @student.id %>">My Courses</a></li>
             <li><a href="/student/my_performance?student_id=<%= @student.id %>">My Performance</a></li>
             <li><a href="/student/my_department?student_id=<%= @student.id %>">My Department</a></li>
@@ -205,7 +226,7 @@
                               <tr>
                                 <% row.each do |subject| %>
                                   <% unless subject.blank? %>
-                                    <td><input type="checkbox" id="<%= subject.id %>" name="subjects[<%= subject.name.titlecase %>]"/></td>
+                                    <td><input type="checkbox" id="<%= subject.id %>" name="subjects[<%= subject.id %>]"/></td>
                                     <td style="border-left: none; text-align: left;"><%= subject.name.titlecase %></td>
                                   <% else %>
                                     <td style="border-left: none;">&nbsp;</td>
@@ -220,6 +241,7 @@
 
                         <div class="stripe-separator"><!--  --></div>
                         <%= hidden_field_tag("class_room_id", params[:class_room_id]) %>
+                        <%= hidden_field_tag("student_id", params[:student_id]) %>
                         <input type="submit" value="Submit" class="round blue ic-right-arrow" />
                       <% else %>
                         <div class="error-box round">
