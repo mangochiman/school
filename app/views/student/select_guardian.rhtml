@@ -30,8 +30,13 @@
   }
 
   function newGuardian(){
-    fname = document.getElementById('fname_search').value;
-    lname =  document.getElementById('lname_search').value;
+    names = document.getElementById('name_search').value.split(/\W+/);
+    fname = names[0];
+    lname = names[1];
+    if (typeof lname == 'undefined'){
+      lname = '';
+    }
+
     gender = document.getElementsByClassName('gender_search')[0].value;
 <% unless (params[:mode] == 'guardian_edit')%>
       window.location = "/parent/new_parent_guardian?student_id=<%= params[:student_id] %>&first_name=" + fname + "&last_name=" + lname + "&gender=" + gender;

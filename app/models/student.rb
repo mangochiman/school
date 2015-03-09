@@ -6,7 +6,7 @@ class Student < ActiveRecord::Base
   has_many :student_courses, :foreign_key => :student_id
   has_many :student_class_room_courses, :foreign_key => :student_id
   has_many :student_class_room_adjustments, :foreign_key => :student_id
-  has_one :student_parent, :foreign_key => :student_id
+  has_many :student_parents, :foreign_key => :student_id
   has_many :exam_attendees, :foreign_key => :student_id
   has_many :student_punishments, :foreign_key => :student_id
   has_many :punishments, :through => :student_punishments
@@ -37,5 +37,9 @@ class Student < ActiveRecord::Base
     else
       return 'No Guardian'
     end
+  end
+
+  def student_parent
+    self.student_parents.last
   end
 end

@@ -273,6 +273,9 @@ class StudentController < ApplicationController
             :parent_id => params[:parent_id]
           }))
       flash[:notice] = "Operation successful"
+      if (params[:return_uri])
+        redirect_to :controller => "student", :action => params[:return_uri], :student_id => params[:student_id] and return
+      end
       redirect_to :controller => "payments", :action => "add_student_payment", :student_id => params[:student_id] and return
       #redirect_to :action => "assign_parent_guardian" and return
     else
@@ -849,8 +852,16 @@ class StudentController < ApplicationController
 
   def my_guardian
     @student = Student.find(params[:student_id])
+    @my_guardians = @student.student_parents
+    @parents = Parent.all
   end
 
+  def delete_my_guardians
+    student_parent = StudentParent.find(params[:student_parent_id])
+    student_parent.delete
+    render :text => "true" and return
+  end
+  
   def my_photos
     @student = Student.find(params[:student_id])
   end

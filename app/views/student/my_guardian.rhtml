@@ -20,45 +20,160 @@
     <%= stylesheet_link_tag("bootstrap") %>
 
     <script type="text/javascript">
+      function selectAll(){
+        selectAllInput = document.getElementById('table-select-all');
+        inputs = document.getElementsByTagName("input");
+        if (selectAllInput.checked){
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+              inputs[i].checked = true;
+            }
+          }
+        }
+        else{
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+              inputs[i].checked = false;
+            }
+          }
+        }
+      }
 
+      function deleteMyGuardians(obj){
+        studentID = '<%= params[:student_id] %>';
+        studentParentID = obj.getAttribute("student_parent_id");
+
+        jQuery.confirm({
+          title:"Guardian Delete confirmation",
+          text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+          confirm: function() {
+            jQuery.ajax({
+              type: "POST",
+              url: "/student/delete_my_guardians",
+              data: "student_id=" + studentID + '&student_parent_id=' + studentParentID,
+              success: function(results){
+                element = document.getElementById(studentParentID);
+                element.parentNode.removeChild(element)
+              }
+
+            });
+          },
+          cancel: function() {
+
+          },
+          confirmButton: "Yes I am",
+          cancelButton: "No"
+        });
+
+      }
+
+      function selectGuardian(obj){
+        parentId = obj.getAttribute("parent_id");
+        window.location = "/student/create_student_guardian?return_uri=my_guardian&parent_id=" + parentId + "&student_id=<%= params[:student_id] %>";
+      }
+
+      function newGuardian(){
+        names = document.getElementById('name_search').value.split(/\W+/);
+        fname = names[0];
+        lname = names[1];
+        if (typeof lname == 'undefined'){
+          lname = '';
+        }
+
+        gender = document.getElementsByClassName('gender_search')[0].value;
+<% unless (params[:mode] == 'guardian_edit')%>
+      window.location = "/parent/new_parent_guardian?student_id=<%= params[:student_id] %>&first_name=" + fname + "&last_name=" + lname + "&gender=" + gender;
+<% else %>
+      window.location = "/parent/new_parent_guardian?student_id=<%= params[:student_id] %>&first_name=" + fname + "&last_name=" + lname + "&gender=" + gender + "&mode=guardian_edit";
+<% end %>
+  }
+  function loadSearchResults(){
+    names = document.getElementById('name_search').value.split(/\W+/);
+    console.log(names)
+    firstName = names[0];
+    lastName = names[1];
+    if (typeof lastName == 'undefined'){
+      lastName = '';
+    }
+    gender = document.getElementsByClassName('gender_search')[0].value;
+    jQuery.ajax({
+      type: "POST",
+      url: "/parent/search_parents",
+      data: "first_name=" + firstName + "&last_name=" + lastName + "&gender=" + gender,
+      success: function(results){
+        //results = eval("(" + results  + ")");
+        html = "";
+        tbody = document.getElementById("parents");
+
+        for (var parent_id in results){
+          firstName = results[parent_id]["fname"];
+          lastName = results[parent_id]["lname"];
+          gender = results[parent_id]["gender"];
+          phone = results[parent_id]["phone"];
+          email = results[parent_id]["email"];
+          dob = results[parent_id]["dob"];
+          join_date = results[parent_id]["join_date"];
+          html+="<tr>";
+          html+="<td style='text-align:left; padding: 0.833em 0 0.833em 1.25em;'>" + firstName + ' ' + lastName +  "</td>";
+          html+="<td><a href='#'>" + email +  "</a></td>";
+          html+="<td>" + gender +  "</td>";
+          html+="<td>" + dob +  "</td>";
+          html+="<td>" + phone +  "</td>";
+          html+="<td><a parent_id=" + parent_id + " onclick='selectGuardian(this)' href='#' class='button round blue image-right text-upper ic-right-arrow'>Select</a></td>";
+          html+="</tr>";
+        }
+
+        tbody.innerHTML = html
+      }
+
+    });
+
+  }
     </script>
 
     <style>
-      .modal-title {
-        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-        font-weight: 500;
-        line-height: 1.1;
-        font-size: 1.2em;
-        color: red;
+      #search-student-form fieldset {
+        border: 1px solid gray;
+        float: left;
+        margin-bottom: 15px;
+        padding: 5px;
+        width: 98.7%;
       }
-
-      form.autoform .msg.icon {
-        margin: 0 10px;
-        padding: 5px 5px 5px 30px;
-        position: unset;
-        font-size: 8.99pt;
+      #search-student-form legend {
+        color: #abda0f;
+        font-size: 14px;
+        font-weight: 100;
+        margin-left: 14px;
+        padding: 2px;
+        width: initial;
+        margin-bottom: initial;
+        border-style: none;
       }
-
-      form label {
-        font-size: 0.9em;
-        font-weight: bold;
-      }
-      form.autoform input, select{
-        font-size: 0.8em !important;
-        font-weight: bold;
-      }
-
-      #departments input[type="text"]{
+      #search-student-form fieldset input {
         border: 1px solid #d9dbdd;
+        color: #505050;
+        float: left;
+        font-size: 14px;
+        margin-right: 5px;
         outline: medium none;
-        width: 187px;
+        padding: 6px;
+        width: 180px;
       }
 
-      input[type="submit"] {
-        margin-left: 31%;
+      table th:first-child {
+        border-style: none none none !important;
       }
-
-      #faculty_id{
+      .green {
+        background-color: #458B00;
+        color: white;
+      }
+      .green:hover{
+        background-color: #556B2F;
+        color: white;
+      }
+      #dropdown-actions{
         background-color: #fff;
         background-image: none;
         border: 1px solid #ccc;
@@ -66,17 +181,12 @@
         box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
         color: #555;
         font-size: 14px;
-        text-align: center;
         height: 34px;
         line-height: 1.42857;
-        margin-left: 0;
-        width: 199px;
+        width: 145px;
+        text-align: center;
         padding: 6px 12px;
         transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
-      }
-
-      table th:first-child {
-        border-style: none none none !important;
       }
 
       a{
@@ -113,7 +223,7 @@
 
           <h3>Task</h3>
           <ul>
-            <li><a href="/student/my_class?student_id=<%= @student.id %>">My Class</a></li>
+            <li><a href="/student/my_class?student_id=<%= @student.id %>">My Classes</a></li>
             <li><a href="/student/my_courses?student_id=<%= @student.id %>">My Courses</a></li>
             <li><a href="/student/my_performance?student_id=<%= @student.id %>">My Performance</a></li>
             <li><a href="/student/my_department?student_id=<%= @student.id %>">My Department</a></li>
@@ -135,7 +245,7 @@
 
                 <div class="content-module-heading cf">
 
-                  <h3 class="fl">My Guardian</h3>
+                  <h3 class="fl">My Guardians</h3>
                   <span class="fr expand-collapse-text">Click to collapse</span>
                   <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -153,7 +263,107 @@
                       <%= flash[:error] %>
                     </div>
                   <% end %>
-                
+
+                  <% if params[:add_guardian] %>
+                    <form id="search-student-form" action="#">
+                      <fieldset>
+                        <legend>Search</legend>
+                        <div style="margin-left:2%;">
+                          <table>
+                            <tr>
+                              <td style="padding:2px; width:10%; font-size: 13pt;">Name</td>
+                              <td style="padding:2px; width:20%;"><input type="text" id="name_search"/></td>
+                              <td style="padding:2px; width:80px; text-align: right; font-size: 13pt; padding-right:10px;"><span>Gender</span></td>
+                              <td style="padding:2px; width:24%">
+                                <select id="dropdown-actions" class="gender_search">
+                                  <option value="">[Select Gender]</option>
+                                  <option value="Male">Male</option>
+                                  <option value="Female">Female</option>
+                                </select>
+                              </td>
+                              <td style=""><a onclick="loadSearchResults();" class="button round blue image-right ic-search text-upper">Search</a></td>
+                            </tr>
+                            <tr>
+                              <td colspan="5" style="padding-top:10px; border:none;"><a onclick="newGuardian();" href="#" class="button round green image-right ic-add text-upper">New Guardian</a></td>
+                            </tr>
+                          </table>
+                        </div>
+                      </fieldset>
+                    </form>
+
+                    <table>
+                      <thead>
+                        <tr>
+                          <th style="min-width:15%;">Name</th>
+                          <th>Email</th>
+                          <th>Gender</th>
+                          <th>Date Of Birth</th>
+                          <th>Phone #</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tfoot>
+                        <tr>
+                          <td style="text-align:left; font-size: 12pt;" colspan="6" class="table-footer">
+                            <a href="/student/my_guardian?student_id=<%= params[:student_id] %>" class="button round blue image-right ic-cancel text-upper">Cancel</a>
+                          </td>
+                        </tr>
+                      </tfoot>
+                      <tbody id="parents">
+                        <% @parents.each do |parent| %>
+                          <tr>
+                            <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= parent.fname.capitalize.to_s + ' ' + parent.lname.capitalize.to_s %></td>
+                            <td><a href="#"><%=  parent.email %></a></td>
+                            <td><%=  parent.gender %></td>
+                            <td><%=  parent.dob.to_date.strftime("%d-%b-%Y") %></td>
+                            <td><%=  parent.phone %></td>
+                            <td>
+                              <a parent_id="<%= parent.id %>" onclick="selectGuardian(this)" href="#" class="button round blue image-right text-upper ic-right-arrow">Select</a>
+                            </td>
+                          </tr>
+                        <% end %>
+                      </tbody>
+                    </table>
+                  <% else %>
+                    <table>
+                      <thead>
+                        <tr>
+                          <th style="width:15%;">First Name</th>
+                          <th style="text-align:center;">Last Name</th>
+                          <th style="text-align:center;">E-mail</th>
+                          <th style="text-align:center;">Phone</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tfoot>
+                        <tr>
+                          <td style="text-align:right;" colspan="5" class="table-footer">
+                            <a href="/student/my_guardian?student_id=<%= params[:student_id] %>&add_guardian=true" class="button round blue image-right ic-add text-upper">Add Guardian</a>
+                          </td>
+                        </tr>
+                      </tfoot>
+                      <tbody>
+                        <% (@my_guardians || []).each do |my_guardian| %>
+                          <% next if my_guardian.parent.blank? %>
+                          <% guardian = my_guardian.parent %>
+                          <tr id="<%= my_guardian.id %>">
+                            <td><%= guardian.fname.capitalize %></td>
+                            <td style="padding:4px; text-align: center;"><%= guardian.lname.capitalize %></td>
+                            <td style="padding:4px; text-align: center;"><a href="#"><%= guardian.email %></a></td>
+                            <td style="padding:4px; text-align: center;"><%= guardian.phone %></td>
+                            <td>
+                              <a student_parent_id="<%= my_guardian.id %>" class="table-actions-button ic-table-delete" onmousedown="deleteMyGuardians(this)"></a>
+                            </td>
+                          </tr>
+                        <%  end %>
+                        <% if @my_guardians.blank? %>
+                          <tr style="line-height:2.5em;">
+                            <td colspan="5"><span class="error-box round" style="font-size:8pt;">No guardian found</span></td>
+                          </tr>
+                        <% end %>
+                      </tbody>
+                    </table>
+                  <% end %>
                 </div> <!-- end content-module-main -->
 
               </div> <!-- end content-module -->
