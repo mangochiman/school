@@ -853,7 +853,9 @@ class StudentController < ApplicationController
   def my_guardian
     @student = Student.find(params[:student_id])
     @my_guardians = @student.student_parents
-    @parents = Parent.all
+    my_parent_ids = @student.student_parents.map(&:parent_id)
+    my_parent_ids = '0' if my_parent_ids.blank?
+    @parents = Parent.find(:all, :conditions => ["parent_id NOT IN (?)", my_parent_ids])
   end
 
   def delete_my_guardians

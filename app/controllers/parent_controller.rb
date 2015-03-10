@@ -186,9 +186,15 @@ class ParentController < ApplicationController
                 :parent_id => Parent.last.id
               }))
             flash[:notice] = "Operation successful"
+            if params[:return_uri]
+              redirect_to :controller => "student" ,:action => params[:return_uri], :student_id => params[:student_id] and return
+            end
             redirect_to :controller => "student" ,:action => "assign_parent_guardian" and return
           else
             flash[:error] = "Unable to save. Check for errors and try again"
+            if params[:return_uri]
+              redirect_to :controller => "student" ,:action => params[:return_uri], :student_id => params[:student_id] and return
+            end
             redirect_to :controller => "parent", :action => "new_parent_guardian", :first_name => params[:first_name],
               :last_name => params[:last_name], :gender => params[:gender] and return
           end
