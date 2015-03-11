@@ -922,6 +922,25 @@ class StudentController < ApplicationController
 
   def my_payments
     @student = Student.find(params[:student_id])
+    @payment_hash = {}
+    (@student.payments || []).each do |payment|
+      semester_id = payment.semester_id
+      payment_id = payment.id
+      payment_type = payment.payment_type_id
+      date_paid = payment.date
+      amount_paid = payment.amount_paid
+      amount_required = payment.payment_type.amount_required
+      @payment_hash[semester_id] = {} if @payment_hash[semester_id].blank?
+      @payment_hash[semester_id][payment_type] = {} if @payment_hash[semester_id][payment_type].blank?
+      @payment_hash[semester_id][payment_type][payment_id] = {} if @payment_hash[semester_id][payment_type][payment_id].blank?
+      @payment_hash[semester_id][payment_type][payment_id]["date_paid"] = date_paid
+      @payment_hash[semester_id][payment_type][payment_id]["amount_paid"] = amount_paid
+      @payment_hash[semester_id][payment_type]["balance"] = amount_required.to_i if @payment_hash[semester_id][payment_type]["balance"].blank?
+      @payment_hash[semester_id][payment_type]["balance"] -= amount_paid.to_i
+      @payment_hash[semester_id][payment_type]["amount_required"] = amount_required.to_i
+      @payment_hash[semester_id][payment_type]["total_payments"] = 0 if @payment_hash[semester_id][payment_type]["total_payments"].blank?
+      @payment_hash[semester_id][payment_type]["total_payments"] += amount_paid.to_i
+    end
   end
 
   def my_guardian
