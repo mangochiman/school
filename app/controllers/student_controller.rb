@@ -874,8 +874,27 @@ class StudentController < ApplicationController
       @exams_hash[class_room_id][exam_id]["exam_results"] = exam_results
       @exams_hash[class_room_id][exam_id]["status"] = status
     end
+
+    if (params[:edit_exam_results])
+      @exam_result = ExaminationResult.find(:last, :conditions => ["exam_id =? AND student_id =?",
+        params[:exam_id], params[:student_id]])
+    end
+    
   end
 
+  def update_exam_result
+    exam_result = ExaminationResult.find(:last, :conditions => ["exam_id =? AND student_id =?",
+        params[:exam_id], params[:student_id]])
+    exam_result.marks = params[:exam_results]
+    if exam_result.save
+      flash[:notice] = "Operation successful"
+      redirect_to :controller => "student", :action => "my_performance", :student_id => params[:student_id] and return
+    else
+      flash[:error] = "Operation aborted."
+      redirect_to :controller => "student", :action => "my_performance", :student_id => params[:student_id] and return
+    end
+  end
+  
   def my_department
     @student = Student.find(params[:student_id])
   end
