@@ -177,9 +177,9 @@
                           <td><%= exam_data["course"] %></td>
                           <td><%= exam_data["exam_type"] %></td>
                           <% unless exam_data["exam_results"].blank? %>
-                          <td><a style="font-weight:bold; font-size: 12pt; padding-right: 15px;"><%= exam_data["exam_results"] %></a><a class="button round blue image-right ic-edit text-upper" href="#">Edit</a></td>
+                          <td style="text-align: right; padding-right: 5px;"><a style="font-weight:bold; font-size: 12pt; padding-right: 15px;"><%= exam_data["exam_results"] %></a><a class="button round blue image-right ic-edit text-upper" href="#">Edit</a></td>
                           <% else %>
-                            <td style="padding-left:12px; text-align: left;"><span>(Not Available) <a class="button round blue image-right ic-add text-upper" href="#">Add</a></span></td>
+                            <td style="padding-left:12px; padding-right: 5px; text-align: right"><a style="font-weight:bold; font-size: 8pt; padding-right:5px;">(Not Available)</a> <a class="button round blue image-right ic-add text-upper" href="#">Add</a></td>
                           <% end %>
                         </tr>
                       <% end %>
