@@ -877,11 +877,28 @@ class StudentController < ApplicationController
 
     if (params[:edit_exam_results])
       @exam_result = ExaminationResult.find(:last, :conditions => ["exam_id =? AND student_id =?",
-        params[:exam_id], params[:student_id]])
+          params[:exam_id], params[:student_id]])
     end
-    
+
+    if (params[:add_exam_results])
+      @exam = Examination.find(params[:exam_id])
+    end
   end
 
+  def create_exam_result
+    student = Student.find(params[:student_id])
+    if (student.examination_results.create({
+            :exam_id => params[:exam_id],
+            :marks => params[:exam_results]
+          }))
+      flash[:notice] = "Operation successful"
+      redirect_to :controller => "student", :action => "my_performance", :student_id => params[:student_id] and return
+    else
+      flash[:error] = "Operation aborted."
+      redirect_to :controller => "student", :action => "my_performance", :student_id => params[:student_id] and return
+    end
+  end
+  
   def update_exam_result
     exam_result = ExaminationResult.find(:last, :conditions => ["exam_id =? AND student_id =?",
         params[:exam_id], params[:student_id]])

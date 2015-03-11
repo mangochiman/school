@@ -182,6 +182,30 @@
                     </div>
                   <% end %>
 
+                  <% if (params[:add_exam_results]) %>
+                    <form action="/student/create_exam_result" method="POST">
+                      <table>
+                        <tr>
+                          <th style="width:20%;">Exam Date</th>
+                          <th style="padding:6px; text-align: center;">Course</th>
+                          <th style="padding:6px; text-align: center;">Exam Type</th>
+                          <th style="padding:6px; width:24%;">Exam Results</th>
+                        </tr>
+                        <tr>
+                          <td><%= @exam.start_date %></td>
+                          <td><%= @exam.course.name %></td>
+                          <td><%= @exam.examination_type.name %></td>
+                          <td><input id="results_entry" type="text" required="required" name="exam_results"/></td>
+                        </tr>
+                      </table>
+                      <%= hidden_field_tag("student_id", params[:student_id]) %>
+                      <%= hidden_field_tag("exam_id", params[:exam_id]) %>
+                      <a class="button round blue image-right ic-cancel text-upper" href="/student/my_performance?student_id=<%= params[:student_id] %>">Cancel</a>
+                      <input type="submit" class="round blue ic-right-arrow" value="Submit"/>
+                      <div class="stripe-separator"><!--  --></div>
+                    </form>
+                  <% end %>
+
                   <% if (params[:edit_exam_results]) %>
                     <form action="/student/update_exam_result" method="POST">
                       <table>
@@ -233,7 +257,7 @@
                           <% else %>
                             <td style="padding-left:12px; padding-right: 5px; text-align: right">
                               <a style="font-weight:bold; font-size: 8pt; padding-right:5px;">(Not Available)</a>
-                              <a class="button round blue image-right ic-add text-upper" href="#">Add</a>
+                              <a href="/student/my_performance?add_exam_results=true&student_id=<%= params[:student_id] %>&exam_id=<%= exam_id %>" class="button round blue image-right ic-add text-upper">Add</a>
                             </td>
                           <% end %>
                         </tr>
