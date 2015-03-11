@@ -421,8 +421,8 @@
                           <% next if my_guardian.parent.blank? %>
                           <% guardian = my_guardian.parent %>
                           <tr id="<%= my_guardian.id %>">
-                            <td><%= guardian.fname.capitalize %></td>
-                            <td style="padding:4px; text-align: center;"><%= guardian.lname.capitalize %></td>
+                            <td style="text-align:left; padding-left: 0.7em;"><%= guardian.fname.capitalize %></td>
+                            <td style="padding:4px; text-align: left; padding-left:1em;"><%= guardian.lname.capitalize %></td>
                             <td style="padding:4px; text-align: center;"><a href="#"><%= guardian.email %></a></td>
                             <td style="padding:4px; text-align: center;"><%= guardian.phone %></td>
                             <td>

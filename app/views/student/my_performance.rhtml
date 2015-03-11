@@ -82,6 +82,10 @@
       a{
         cursor: pointer;
       }
+
+      .round {
+        border-radius: 1.313em;
+      }
     </style>
   </head>
   <body>    
@@ -153,7 +157,34 @@
                       <%= flash[:error] %>
                     </div>
                   <% end %>
-                
+                  <table>
+                    <% @exams_hash.each do |class_room_id, values| %>
+                      <tr>
+                        <th colspan="4" style="text-align:center; border-bottom: 2px solid white !important; background-color: #006dcc;">
+                          <%= @class_room_hash[class_room_id] %>
+                        </th>
+                      </tr>
+                      <tr>
+
+                        <th style="width:20%;">Exam Date</th>
+                        <th style="padding:6px; text-align: center;">Course</th>
+                        <th style="padding:6px; text-align: center;">Exam Type</th>
+                        <th style="padding:6px; width:24%;">Exam Results</th>
+                      </tr>
+                      <% values.each do |exam_id, exam_data| %>
+                        <tr>
+                          <td><%= exam_data["exam_date"] %></td>
+                          <td><%= exam_data["course"] %></td>
+                          <td><%= exam_data["exam_type"] %></td>
+                          <% unless exam_data["exam_results"].blank? %>
+                          <td><a style="font-weight:bold; font-size: 12pt; padding-right: 15px;"><%= exam_data["exam_results"] %></a><a class="button round blue image-right ic-edit text-upper" href="#">Edit</a></td>
+                          <% else %>
+                            <td style="padding-left:12px; text-align: left;"><span>(Not Available) <a class="button round blue image-right ic-add text-upper" href="#">Add</a></span></td>
+                          <% end %>
+                        </tr>
+                      <% end %>
+                    <% end %>
+                  </table>
                 </div> <!-- end content-module-main -->
 
               </div> <!-- end content-module -->
