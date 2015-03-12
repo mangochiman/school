@@ -20,7 +20,60 @@
     <%= stylesheet_link_tag("bootstrap") %>
 
     <script type="text/javascript">
+      function updatePunishment(obj){
+        studentID = '<%= params[:student_id] %>';
+        punishmentID = obj.getAttribute("punishment_id");
+        mode = obj.getAttribute("mode")
+        jQuery.confirm({
+          title:"Punishment Closure",
+          text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+          confirm: function() {
+            jQuery.ajax({
+              type: "POST",
+              url: "/student/update_my_punishment",
+              data: "student_id=" + studentID + '&punishment_id=' + punishmentID + '&mode=' + mode,
+              success: function(results){
+                results = eval("(" + results  + ")");
+                html = "";
+                tbody = document.getElementById("my_punishments");
+                for (var punishment_id in results){
+                  console.log(results[punishment_id])
+                  punishmentType = results[punishment_id]["punishment_type"];
+                  details = results[punishment_id]["details"];
+                  start_date = results[punishment_id]["start_date"];
+                  end_date = results[punishment_id]["end_date"];
+                  completed = results[punishment_id]["completed"];
+                  //console.log(completed)
+                  html+="<tr>";
+                  html+="<td>" + punishmentType +  "</td>";
+                  html+="<td>" + start_date +  "</td>";
+                  html+="<td>" + end_date +  "</td>";
+                  html+="<td>" + details + "</td>";
+                  html+="<td>" + completed + "</td>";
+                  button = ""
+                  if (completed.toUpperCase() == 'NO'){
+                    button = "<button punishment_id=" + punishment_id + " mode='close' class='btn btn-primary' onmousedown='updatePunishment(this)'>Close</button>"
+                  }
+                  if (completed.toUpperCase() == 'YES'){
+                    button = "<button punishment_id=" + punishment_id + " mode='open' class='btn btn-primary' onmousedown='updatePunishment(this)'>Open</button>"
+                  }
+                  html+="<td>" + button + "</td>";
+                  html+="</tr>";
+                }
 
+                tbody.innerHTML = html
+              }
+
+            });
+          },
+          cancel: function() {
+
+          },
+          confirmButton: "Yes I am",
+          cancelButton: "No"
+        });
+
+      }
     </script>
 
     <style>
@@ -153,7 +206,37 @@
                       <%= flash[:error] %>
                     </div>
                   <% end %>
-                
+                  <table>
+                    <thead>
+                      <tr>
+                        <th style="width:20%;">Punishment Type</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Details</th>
+                        <th>Completed?</th>
+                      </tr>
+                    </thead>
+                    <tbody id="my_punishments">
+                      <% @punishment_hash.each do |punishment_id, values| %>
+                        <tr>
+                          <td><%= values["punishment_type"] %></td>
+                          <td><%= values["start_date"] %></td>
+                          <td><%= values["end_date"] %></td>
+                          <td><%= values["details"] %></td>
+                          <td><%= values["completed"] %></td>
+                          <% if values["completed"].upcase == 'NO' %>
+                            <td>
+                              <button punishment_id="<%= punishment_id %>" mode="close" class="btn btn-primary" onmousedown="updatePunishment(this)">Close</button>
+                            </td>
+                          <% else %>
+                            <td>
+                              <button punishment_id="<%= punishment_id %>" mode="open" class="btn btn-primary" onmousedown="updatePunishment(this)">Open</button>
+                            </td>
+                          <% end %>
+                        </tr>
+                      <% end %>
+                    </tbody>
+                  </table>
                 </div> <!-- end content-module-main -->
 
               </div> <!-- end content-module -->
