@@ -914,6 +914,47 @@ class StudentController < ApplicationController
   
   def my_department
     @student = Student.find(params[:student_id])
+    @departments = [["[Department]", ""]]
+    @departments += Department.find(:all).collect{|f|[f.name, f.id]}
+    @departments_hash = {}
+    
+    (@student.student_departments || []).each do |student_department|
+      department_id = student_department.department.id
+      department_name = student_department.department.name
+      department_code = student_department.department.code
+      faculty_name = student_department.department.faculty.name
+      
+      @departments_hash[department_id] = {}
+      @departments_hash[department_id]["department_name"] = department_name
+      @departments_hash[department_id]["department_code"] = department_code
+      @departments_hash[department_id]["faculty_name"] = faculty_name
+    end
+  end
+
+  def create_my_department
+    student_department_exists = StudentDepartment.find(:last, :conditions => ["student_id =? AND
+          department_id =?", params[:student_id], params[:department_id]])
+    if (student_department_exists)
+      flash[:error] = "The selected department is already assigned to this student"
+      redirect_to :controller => "student", :action => "my_department", :student_id => params[:student_id] and return
+    end
+    if (StudentDepartment.create({
+            :student_id => params[:student_id],
+            :department_id => params[:department_id]
+          }))
+      flash[:notice] = "Operation successful"
+      redirect_to :controller => "student", :action => "my_department", :student_id => params[:student_id] and return
+    else
+      flash[:error] = "Operation Aborted. Check for errors and try again"
+      redirect_to :controller => "student", :action => "my_department", :student_id => params[:student_id] and return
+    end
+  end
+
+  def remove_my_department
+    student_department = StudentDepartment.find(:last, :conditions => ["student_id =? AND
+          department_id =?", params[:student_id], params[:department_id]])
+    student_department.delete
+    render :text => "true" and return
   end
 
   def my_punishments

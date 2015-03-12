@@ -7,6 +7,7 @@ class Student < ActiveRecord::Base
   has_many :student_class_room_courses, :foreign_key => :student_id
   has_many :student_class_room_adjustments, :foreign_key => :student_id
   has_many :student_parents, :foreign_key => :student_id
+  has_many :student_departments, :foreign_key => :student_id
   has_many :exam_attendees, :foreign_key => :student_id
   has_many :examination_results, :foreign_key => :student_id
   has_many :student_punishments, :foreign_key => :student_id

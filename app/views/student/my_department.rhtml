@@ -20,7 +20,30 @@
     <%= stylesheet_link_tag("bootstrap") %>
 
     <script type="text/javascript">
+      function removeMyDepartment(obj){
+        studentID = '<%= params[:student_id] %>'
+        departmentID = obj.getAttribute("department_id");
+        jQuery.confirm({
+          title:"Student Department Delete",
+          text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+          confirm: function() {
+            jQuery.ajax({
+              type: "POST",
+              url: "/student/remove_my_department",
+              data: "student_id=" + studentID + '&department_id=' + departmentID,
+              success: function(results){
+                element = document.getElementById(departmentID);
+                element.parentNode.removeChild(element)
+              }
 
+            });
+          },
+          cancel: function() {
+
+          },
+          confirmButton: "Yes I am",
+          cancelButton: "No"
+        })};
     </script>
 
     <style>
@@ -55,10 +78,10 @@
       }
 
       input[type="submit"] {
-        margin-left: 31%;
+        margin-left: 2%;
       }
 
-      #faculty_id{
+      #department_id{
         background-color: #fff;
         background-image: none;
         border: 1px solid #ccc;
@@ -153,7 +176,56 @@
                       <%= flash[:error] %>
                     </div>
                   <% end %>
-                
+                  <% if @departments_hash.blank? %>
+                    <div class="error-box round">
+                      I don't have any departments yet
+                    </div>
+                  <% end %>
+
+                  <% if params[:add_department] %>
+                    <form id="departments" class="autoform" action="/student/create_my_department" method="POST">
+
+                      <div>
+                        <label for="department_id" style="width:101px;">Department</label>
+                        <%= select_tag("department_id", options_for_select(@departments), {:class => "select required"}) %>
+                      </div>
+
+                      <div class="stripe-separator"><!--  --></div>
+                      <%= hidden_field_tag("student_id", params[:student_id]) %>
+                      <a style="margin-left:2%;"class="button round blue image-right ic-cancel text-upper" href="/student/my_department?student_id=<%= params[:student_id] %>">Cancel</a>
+                      <input type="submit" value="Submit" class="round blue ic-right-arrow" />
+                    </form>
+                  <% end %>
+
+                  <table>
+                    <thead>
+                      <tr>
+                        <th style="width:30%;">Department Name</th>
+                        <th>Department Code</th>
+                        <th>Faculty</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tfoot>
+                      <tr>
+                        <td class="table-footer" colspan="5" style="text-align:right;">
+                          <a href="/student/my_department?add_department=true&student_id=<%= params[:student_id] %>" class="button round blue image-right ic-add text-upper">Add Department</a>
+                        </td>
+                      </tr>
+                    </tfoot>
+                    <tbody>
+                      <% @departments_hash.each do |department_id, values|%>
+                        <tr id="<%= department_id %>">
+                          <td style="text-align: left; padding-left: 0.6em;"><%= values["department_name"] %></td>
+                          <td><%= values["department_code"] %></td>
+                          <td style="width:30%;"><%= values["faculty_name"] %></td>
+                          <td>
+                            <a department_id="<%= department_id %>" class="table-actions-button ic-table-delete confirm" onmousedown="removeMyDepartment(this)" href="#"></a>
+                          </td>
+                        </tr>
+                      <% end %>
+                    </tbody>
+                  </table>
                 </div> <!-- end content-module-main -->
 
               </div> <!-- end content-module -->
@@ -194,10 +266,10 @@
     <%= javascript_include_tag("bootstrap") %>
     <%= javascript_include_tag("zebra_datepicker") %>
     <script>
-      $('.date-picker').Zebra_DatePicker({
-        view : 'years',
-        direction: ['<%=  (Date.today - 10.years).strftime("%Y-%m-%d") %>', '<%=  Date.today.strftime("%Y-%m-%d") %>']
-      });
+        $('.date-picker').Zebra_DatePicker({
+          view : 'years',
+          direction: ['<%=  (Date.today - 10.years).strftime("%Y-%m-%d") %>', '<%=  Date.today.strftime("%Y-%m-%d") %>']
+        });
     </script>
   </body>
 </html>

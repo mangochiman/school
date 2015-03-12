@@ -206,6 +206,12 @@
                       <%= flash[:error] %>
                     </div>
                   <% end %>
+
+                  <% if @punishment_hash.blank? %>
+                    <div class="error-box round">
+                      No punishments found
+                    </div>
+                  <% else %>
                   <table>
                     <thead>
                       <tr>
@@ -237,6 +243,7 @@
                       <% end %>
                     </tbody>
                   </table>
+                  <% end %>
                 </div> <!-- end content-module-main -->
 
               </div> <!-- end content-module -->
