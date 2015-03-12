@@ -20,7 +20,22 @@
     <%= stylesheet_link_tag("bootstrap") %>
 
     <script type="text/javascript">
+      var currentStudentPhotoId = "";
+      function setCurrentPhotoId(obj){
+        currentStudentPhotoId = obj.getAttribute("student_photo_id");
+      }
 
+      function deleteSingleEntry(){
+        jQuery.ajax({
+          type: "POST",
+          url: "/student_photos/delete_photos",
+          data: "student_photo_id=" + currentStudentPhotoId + "&mode=single_entry",
+          success: function(){
+            $('.student_photo_id_' + currentStudentPhotoId).remove()
+          }
+
+        });
+      }
     </script>
 
     <style>
@@ -153,7 +168,30 @@
                       <%= flash[:error] %>
                     </div>
                   <% end %>
-                
+
+                  <% if @student.student_photos.blank? %>
+                    <div class="error-box round">
+                      No Photos Available. Click <a href="/student/add_student_photo?student_id=<%= params[:student_id] %>">here</a> to capture photos
+                    </div>
+                  <% end %>
+
+                  <table style="width:90%; margin-left: 7%;" class="student_photos">
+                    <% count = 0 %>
+                    <% (@student.student_photos || []).in_groups_of(2).each do |row| %>
+                      <tr style="background-color:white;">
+                        <% row.each do |student_photo| %>
+                          <% next if student_photo.blank? %>
+                          <% count = count + 1 %>
+                          <td class="student_photo_id_<%= student_photo.id %>">
+                            <%= image_tag("/student_photos/code_by_student_photo_id?student_photo_id=#{student_photo.id}", :class=>'student_photo') %>
+                          </td>
+                          <td class="student_photo_id_<%= student_photo.id %>">
+                            <a student_photo_id="<%= student_photo.id %>" onmousedown="setCurrentPhotoId(this);" class="table-actions-button ic-table-delete confirm"></a>
+                          </td>
+                        <% end %>
+                      </tr>
+                    <% end %>
+                  </table>
                 </div> <!-- end content-module-main -->
 
               </div> <!-- end content-module -->
@@ -192,11 +230,18 @@
     </div> <!-- end content -->
 
     <%= javascript_include_tag("bootstrap") %>
-    <%= javascript_include_tag("zebra_datepicker") %>
     <script>
-      $('.date-picker').Zebra_DatePicker({
-        view : 'years',
-        direction: ['<%=  (Date.today - 10.years).strftime("%Y-%m-%d") %>', '<%=  Date.today.strftime("%Y-%m-%d") %>']
+      $(".confirm").confirm({
+        title:"Delete confirmation",
+        text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+        confirm: function(button) {
+          deleteSingleEntry();
+        },
+        cancel: function(button) {
+
+        },
+        confirmButton: "Yes I am",
+        cancelButton: "No"
       });
     </script>
   </body>
