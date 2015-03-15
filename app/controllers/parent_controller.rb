@@ -249,6 +249,7 @@ class ParentController < ApplicationController
       hash[parent_id]["gender"] = parent.gender
       hash[parent_id]["dob"] = parent.dob.to_date.strftime("%d-%b-%Y")
       hash[parent_id]["join_date"] = parent.created_at.to_date.strftime("%d-%b-%Y")
+      hash[parent_id]["guardian_name"] = parent.name
     end
     render :json => hash and return
   end

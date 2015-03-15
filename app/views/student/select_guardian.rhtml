@@ -29,6 +29,21 @@
 <% end %>
   }
 
+  function confirmGuardianAssignment(obj){
+    guardianName = obj.getAttribute("guardian_name");
+    studentName = "<%= @student.name %>";
+    jQuery.confirm({
+      title:"Confirm Guardian Assignment",
+      text:"Are you really really sure you want to assign <b><i>" + studentName + "(student)</i><b> to <b><i>" + guardianName + "(guardian)</i><b> ?",
+      confirm: function(button) {
+        selectGuardian(obj);
+      },
+      cancel: function(button) {
+      },
+      confirmButton: "Done"
+    });
+  }
+  
   function newGuardian(){
     names = document.getElementById('name_search').value.split(/\W+/);
     fname = names[0];
@@ -47,7 +62,6 @@
 
   function loadSearchResults(){
     names = document.getElementById('name_search').value.split(/\W+/);
-    console.log(names)
     firstName = names[0];
     lastName = names[1];
     if (typeof lastName == 'undefined'){
@@ -70,6 +84,7 @@
           phone = results[parent_id]["phone"];
           email = results[parent_id]["email"];
           dob = results[parent_id]["dob"];
+          guardianName = results[parent_id]["guardian_name"];
           join_date = results[parent_id]["join_date"];
           html+="<tr>";
           html+="<td style='text-align:left; padding: 0.833em 0 0.833em 1.25em;'>" + firstName + ' ' + lastName +  "</td>";
@@ -77,7 +92,7 @@
           html+="<td>" + gender +  "</td>";
           html+="<td>" + dob +  "</td>";
           html+="<td>" + phone +  "</td>";
-          html+="<td><a parent_id=" + parent_id + " onclick='selectGuardian(this)' href='#' class='button round blue image-right text-upper ic-right-arrow'>Select</a></td>";
+          html+="<td><a parent_id=" + parent_id + " guardian_name=" + '"' +  guardianName + '"'+ " onclick='confirmGuardianAssignment(this)' class='button round blue image-right text-upper ic-right-arrow'>Select</a></td>";
           html+="</tr>";
         }
 
@@ -115,7 +130,14 @@
       margin-left: 37%;
     }*/
 
-
+      .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: #317eac;
+      }
+      
       #search-student-form fieldset {
         border: 1px solid gray;
         float: left;
@@ -313,7 +335,7 @@
                           <td><%=  parent.dob.to_date.strftime("%d-%b-%Y") %></td>
                           <td><%=  parent.phone %></td>
                           <td>
-                            <a parent_id="<%= parent.id %>" onclick="selectGuardian(this)" href="#" class="button round blue image-right text-upper ic-right-arrow">Select</a>
+                            <a parent_id="<%= parent.id %>" guardian_name="<%= parent.name %>" onclick="confirmGuardianAssignment(this)" class="button round blue image-right text-upper ic-right-arrow">Select</a>
                           </td>
                         </tr>
                       <% end %>
