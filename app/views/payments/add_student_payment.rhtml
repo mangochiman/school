@@ -103,6 +103,12 @@
         width: 191px !important;
         text-align: center;
       }
+
+      .red{
+        background-color: red;
+        color:white;
+        font-weight: bold;
+      }
     </style>
   </head>
   <body>    
@@ -192,6 +198,7 @@
                     </div>
                     <div class="stripe-separator"><!--  --></div>
                     <%= hidden_field_tag("student_id", params[:student_id]) %>
+                    <a class="button round red image-right ic-right-arrow text-upper" href="/student/my_page?student_id=<%= params[:student_id] %>">Skip</a>
                     <input type="submit" value="Submit" class="round blue ic-right-arrow" />
                   </form>
                 </div> <!-- end content-module-main -->
