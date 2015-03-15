@@ -45,6 +45,22 @@
   }
 
   window.setTimeout("selectCurrentSemester();", 100);
+
+  function confirmSkip(){
+    jQuery.confirm({
+      title:"Skip Payments",
+      text:"Are you really really sure you want to skip this process? But you can do it later",
+      confirm: function() {
+        window.location="/student/my_page?student_id=<%= params[:student_id] %>"
+      },
+      cancel: function() {
+
+      },
+      confirmButton: "Yes I am",
+      cancelButton: "No"
+    });
+  }
+  
     </script>
 
     <style>
@@ -53,7 +69,7 @@
         font-weight: 500;
         line-height: 1.1;
         font-size: 1.2em;
-        color: red;
+        color: #317eac;
       }
 
       form.autoform .msg.icon {
@@ -105,9 +121,18 @@
       }
 
       .red{
-        background-color: red;
+        background-color: #EE0000;
         color:white;
         font-weight: bold;
+      }
+
+      .red:hover{
+        color:white;
+        background-color: #CD0000;
+      }
+      
+      a{
+        cursor: pointer;
       }
     </style>
   </head>
@@ -198,7 +223,7 @@
                     </div>
                     <div class="stripe-separator"><!--  --></div>
                     <%= hidden_field_tag("student_id", params[:student_id]) %>
-                    <a class="button round red image-right ic-right-arrow text-upper" href="/student/my_page?student_id=<%= params[:student_id] %>">Skip</a>
+                    <a onclick="confirmSkip();" class="button round red image-right ic-right-arrow text-upper">Skip</a>
                     <input type="submit" value="Submit" class="round blue ic-right-arrow" />
                   </form>
                 </div> <!-- end content-module-main -->
@@ -228,7 +253,7 @@
                   <span style="font-size:0.9em;">
                     <a href="#"><%= @student.class_room_student.class_room.name rescue 'Unknown Class'%></a>
                   </span><br />
-                  
+
                   <% if @payments_hash.blank? %>
                     <table>
                       <tr>

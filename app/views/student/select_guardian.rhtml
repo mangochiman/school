@@ -60,6 +60,21 @@
 <% end %>
   }
 
+  function confirmSkip(){
+    jQuery.confirm({
+      title:"Skip Guardian Assignment",
+      text:"Are you really really sure you want to skip this process? But you can do it later",
+      confirm: function() {
+        window.location="/payments/add_student_payment?student_id=<%= params[:student_id] %>"
+      },
+      cancel: function() {
+
+      },
+      confirmButton: "Yes I am",
+      cancelButton: "No"
+    });
+  }
+  
   function loadSearchResults(){
     names = document.getElementById('name_search').value.split(/\W+/);
     firstName = names[0];
@@ -210,11 +225,16 @@
       }
 
       .red{
-        background-color: red;
+        background-color: #EE0000;
         color:white;
         font-weight: bold;
       }
-      
+
+      .red:hover{
+        color:white;
+        background-color: #CD0000;
+      }
+
     </style>
   </head>
   <body>
@@ -349,7 +369,7 @@
                     </tbody>
 
                   </table>
-                  <a class="button round red image-right ic-right-arrow text-upper" href="/payments/add_student_payment?student_id=<%= params[:student_id] %>">Skip</a>
+                  <a onclick="confirmSkip();" class="button round red image-right ic-right-arrow text-upper">Skip</a>
                 </div> <!-- end content-module-main -->
 
               </div> <!-- end content-module -->
