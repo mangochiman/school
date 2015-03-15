@@ -133,8 +133,7 @@
                 <thead>
                   <tr>
                     <th style="min-width:20%;">Class Name</th>
-                    <th>Year</th>
-                    <th>Grade</th>
+                    <th>Code</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -143,8 +142,7 @@
                   <% @class_rooms.each do |class_room| %>
                     <tr>
                       <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= class_room.name%></td>
-                      <td><%=  class_room.year %></td>
-                      <td><%= class_room.grade %></td>
+                      <td><%=  class_room.code %></td>
                       <td>
                         <a class_room_id="<%= class_room.id %>" onclick="editMe(this)" class="table-actions-button ic-table-edit"></a>
                       </td>

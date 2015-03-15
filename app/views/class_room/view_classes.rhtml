@@ -280,8 +280,7 @@
                 <thead>
                   <tr>
                     <th style="min-width:20%;">Class Name</th>
-                    <th>Year</th>
-                    <th>Grade</th>
+                    <th>Code</th>
                     <th style="max-width:5px;">Total Subjects</th>
                     <th style="min-width:12%;">Total Students</th>
                     <th style="min-width:12%;">Total Teachers</th>
@@ -292,8 +291,7 @@
                   <% @class_rooms.each do |class_room| %>
                     <tr id="<%= class_room.id %>">
                       <td><%= class_room.name%></td>
-                      <td><%=  class_room.year %></td>
-                      <td><%= class_room.grade %></td>
+                      <td><%=  class_room.code %></td>
                       <td>
                         <span class_room_id="<%= class_room.id %>" class="label view-courses" onmousedown="loadClassRoomCourses(this);" style="margin-left:0%;"><%= class_room.class_room_courses.count %></span>
                       </td>

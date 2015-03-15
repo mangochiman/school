@@ -30,6 +30,7 @@
       form.autoform .msg.icon {
         margin: 0 10px;
         padding: 5px 5px 5px 30px;
+        font-size: 10pt;
         position: unset;
       }
 
@@ -138,9 +139,8 @@
                   <% end %>
                   <form id="registration" class="autoform" action="/class_room/edit_me" method="post">
 
-                    <div><label for="text">Class Name</label><input type="text" name="class_name" class="text required" value="<%= @class_room.name %>"/></div>
-                    <div><label for="text">Year</label><input type="text" name="year" class="text required" value="<%= @class_room.year %>"/></div>
-                    <div><label for="text">Grade</label><input type="text" name="grade" class="text required" value="<%= @class_room.grade %>"/></div>
+                    <div><label for="class_name" style="width:100px;">Class Name</label><input type="text" id="class_name" name="class_name" class="text required" value="<%= @class_room.name %>"/></div>
+                    <div><label for="code" style="width:100px;">Code</label><input type="text" name="code" id="code"class="text required" value="<%= @class_room.code %>"/></div>
 
                     <div class="stripe-separator"><!--  --></div>
                     <input type="hidden" name="class_room_id" value="<%= params[:class_room_id] %>" />

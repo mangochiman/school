@@ -189,7 +189,8 @@ class ParentController < ApplicationController
             if params[:return_uri]
               redirect_to :controller => "student" ,:action => params[:return_uri], :student_id => params[:student_id] and return
             end
-            redirect_to :controller => "student" ,:action => "assign_parent_guardian" and return
+            redirect_to :controller => "payments", :action => "add_student_payment", :student_id => params[:student_id] and return
+            #redirect_to :controller => "student" ,:action => "assign_parent_guardian" and return
           else
             flash[:error] = "Unable to save. Check for errors and try again"
             if params[:return_uri]

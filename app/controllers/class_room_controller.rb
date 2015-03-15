@@ -46,8 +46,7 @@ class ClassRoomController < ApplicationController
   end
 
   def edit_class
-    @class_rooms = ClassRoom.all
-    
+    @class_rooms = ClassRoom.all   
   end
 
   def edit_me
@@ -56,8 +55,7 @@ class ClassRoomController < ApplicationController
     if request.method == :post
       if (@class_room.update_attributes({
           :name => params[:class_name],
-          :year => params[:year],
-          :grade => params[:grade]
+          :code => params[:code]
         }))
         flash[:notice] = "You have successfully edited the details"
         redirect_to :action => "edit_class" and return
@@ -235,16 +233,14 @@ class ClassRoomController < ApplicationController
   
   def create_class_rooms
     class_name = params[:class_name]
-    year = params[:year]
-    grade = params[:grade]
+    code = params[:code]
     class_name_exists = ClassRoom.find_by_name(params[:class_name])
     if (class_name_exists)
       flash[:error] = "Unable to save. Class room <b>#{params[:class_name]} already exists</b>"
       redirect_to :controller => "class_room", :action => "add_class" and return
     end
     class_room = ClassRoom.create({
-        :year => year,
-        :grade => grade,
+        :code => code,
         :name => class_name
       })
     if (class_room)
@@ -292,6 +288,10 @@ class ClassRoomController < ApplicationController
       gender = '??' if gender.blank?
       student_data[class_name] = [] if student_data[class_name].blank?
       student_data[class_name] << student_name + ' (' + gender + ')'.to_s
+    end
+
+    if (class_room_students.blank?)
+      student_data[class_name] = []
     end
     
     render :json => student_data.first and return
