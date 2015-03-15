@@ -87,6 +87,7 @@ class StudentController < ApplicationController
   end
   
   def assign_me_class
+    @student = Student.find(params[:student_id])
     @class_rooms = ClassRoom.all
     
   end
