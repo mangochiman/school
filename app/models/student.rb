@@ -30,10 +30,10 @@ class Student < ActiveRecord::Base
   end
 
   def guardian_details
-    unless (self.student_parent.blank?)
-      fname = self.student_parent.parent.fname
-      lname = self.student_parent.parent.lname
-      phone = self.student_parent.parent.phone
+    unless (self.student_parents.blank?)
+      fname = self.student_parents.last.parent.fname
+      lname = self.student_parents.last.parent.lname
+      phone = self.student_parents.last.parent.phone
       phone = 'No phone' if phone.blank?
       return fname.to_s + ' ' + lname.to_s + ' (' +  phone + ')'
     else
@@ -41,6 +41,16 @@ class Student < ActiveRecord::Base
     end
   end
 
+  def my_guardian
+    guardian_name = ''
+    unless (self.student_parents.blank?)
+      fname = self.student_parents.last.parent.fname
+      lname = self.student_parents.last.parent.lname
+      guardian_name =  (fname.to_s + ' ' + lname.to_s)
+    end
+    return guardian_name
+  end
+  
   def student_parent
     self.student_parents.last
   end
