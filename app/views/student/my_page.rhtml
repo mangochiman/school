@@ -160,30 +160,47 @@
                         <th>TODO LIST</th>
                       </tr>
                     <tbody>
-                      <tr>
-                        <td style="text-align:left; padding-left: 4em; font-weight: bold;"><a href="#">Missing Class</a></td>
-                        <td style="width:30px;">
-                          <a style="width:80%;" href="/student/my_class?add_class=true&student_id=<%= params[:student_id] %>" class="button round blue image-right ic-add text-upper">Add Class</a>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style="text-align:left; padding-left: 4em; font-weight: bold;"><a href="#">Missing Guardian</a></td>
-                        <td style="width:30px;">
-                          <a style="width:80%;" href="/student/my_guardian?student_id=<%= params[:student_id] %>&add_guardian=true" class="button round blue image-right ic-add text-upper">Add Guardian</a>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style="text-align:left; padding-left: 4em; font-weight: bold;"><a href="#">Missing Photos</a></td>
-                        <td style="width:30px;">
-                          <a style="width:80%;" href="/student/add_student_photo?student_id=<%= params[:student_id] %>" class="button round blue image-right ic-add text-upper">Add Photos</a>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style="text-align:left; padding-left: 4em; font-weight: bold;"><a href="#">Missing Department</a></td>
-                        <td style="width:30px;">
-                          <a style="width:80%;" href="/student/my_department?add_department=true&student_id=<%= params[:student_id] %>" class="button round blue image-right ic-add text-upper">Add Department</a>
-                        </td>
-                      </tr>
+
+                      <% if not @class_room_available %>
+                        <tr>
+                          <td style="text-align:left; padding-left: 4em; font-weight: bold;"><a href="#">Missing Class</a></td>
+                          <td style="width:30px;">
+                            <a style="width:80%;" href="/student/my_class?add_class=true&student_id=<%= params[:student_id] %>" class="button round blue image-right ic-add text-upper">Add Class</a>
+                          </td>
+                        </tr>
+                      <% end %>
+
+                      <% if not @guardian_available %>
+                        <tr>
+                          <td style="text-align:left; padding-left: 4em; font-weight: bold;"><a href="#">Missing Guardian</a></td>
+                          <td style="width:30px;">
+                            <a style="width:80%;" href="/student/my_guardian?student_id=<%= params[:student_id] %>&add_guardian=true" class="button round blue image-right ic-add text-upper">Add Guardian</a>
+                          </td>
+                        </tr>
+                      <% end %>
+
+                      <% if not @photos_available %>
+                        <tr>
+                          <td style="text-align:left; padding-left: 4em; font-weight: bold;"><a href="#">Missing Photos</a></td>
+                          <td style="width:30px;">
+                            <a style="width:80%;" href="/student/add_student_photo?student_id=<%= params[:student_id] %>" class="button round blue image-right ic-add text-upper">Add Photos</a>
+                          </td>
+                        </tr>
+                      <% end %>
+
+                      <% if not @department_available %>
+                        <tr>
+                          <td style="text-align:left; padding-left: 4em; font-weight: bold;"><a href="#">Missing Department</a></td>
+                          <td style="width:30px;">
+                            <a style="width:80%;" href="/student/my_department?add_department=true&student_id=<%= params[:student_id] %>" class="button round blue image-right ic-add text-upper">Add Department</a>
+                          </td>
+                        </tr>
+                      <% end %>
+                      <% if @missing_data.blank? %>
+                        <tr>
+                          <td colspan="2" style="color:green; font-weight: bold;">It looks like everything for this student is done!!</td>
+                        </tr>
+                      <% end %>
                     </tbody>
                     </thead>
                   </table>

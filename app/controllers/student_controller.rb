@@ -689,17 +689,22 @@ class StudentController < ApplicationController
 
   def my_page
     @student = Student.find(params[:student_id])
+    @missing_data = []
     @class_room_available = false
     @class_room_available = true unless @student.student_class_room_adjustments.blank?
-    
+    @missing_data << 'class_room' if not @class_room_available
+
     @guardian_available = false
     @guardian_available = true unless @student.student_parents.blank?
+    @missing_data << 'guardian' if not @guardian_available
 
-    @payments_available = false
-    @payments_available = true unless @student.payments.blank?
-
+    @department_available = false
+    @department_available = true unless @student.student_departments.blank?
+    @missing_data << 'department' if not @department_available
+    
     @photos_available = false
     @photos_available = true unless @student.student_photos.blank?
+    @missing_data << 'photos' if not @photos_available
   end
 
   def my_picture
