@@ -10,14 +10,14 @@ class StudentController < ApplicationController
     hash = {}
 
     (class_rooms || []).each do |class_room|
-      total_students = class_room.class_room_students.count
+      total_students = class_room.active_student_class_room_adjustments.count
       class_room_id = class_room.id
       hash[class_room_id] = {}
       hash[class_room_id]["total_students"] = total_students
       total_males = 0
       total_females = 0
 
-      class_room.class_room_students.each do |crs|
+      class_room.active_student_class_room_adjustments.each do |crs|
         next if crs.student.blank?
         if (crs.student.gender.upcase == 'MALE')
           total_males += 1
@@ -37,7 +37,6 @@ class StudentController < ApplicationController
       @females << value["total_females"]
       @totals << value["total_students"]
     end
-
     
   end
 

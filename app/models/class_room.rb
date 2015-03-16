@@ -19,5 +19,9 @@ class ClassRoom < ActiveRecord::Base
     
     return students
   end
-  
+
+  def active_student_class_room_adjustments
+    self.student_class_room_adjustments.find(:all, :conditions => ["status =?", 'Active'])
+  end
+
 end
