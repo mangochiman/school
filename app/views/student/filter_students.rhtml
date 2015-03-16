@@ -13,7 +13,13 @@
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("metallic") %>
 
-    <script>
+    <script type="text/javascript">
+
+      function editMe(obj){
+        studentId = obj.getAttribute("student_id");
+        window.location = "/student/edit_me?student_id=" + studentId;
+      }
+      
       function showHideCustomDateInputs(value){
         console.log(value);
         if (value == 'custom_date'){
@@ -46,6 +52,7 @@
               lastName = results[student_id]["lname"];
               gender = results[student_id]["gender"];
               phone = results[student_id]["phone"];
+              if (phone == null) phone = ''
               email = results[student_id]["email"];
               dob = results[student_id]["dob"];
               join_date = results[student_id]["join_date"];
@@ -56,7 +63,7 @@
               html+="<td>" + dob +  "</td>";
               html+="<td>" + phone +  "</td>";
               html+="<td>" + join_date +  "</td>";
-              html+="<td><a student_id=" + student_id + " onclick='editMe(this)' href='#' class='table-actions-button ic-table-edit'></a></td>";
+              html+="<td><a student_id=" + student_id + " onclick='editMe(this)' class='table-actions-button ic-table-edit'></a></td>";
               html+="</tr>";
             }
 

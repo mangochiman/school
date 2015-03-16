@@ -236,8 +236,9 @@ class StudentController < ApplicationController
   end
   
   def edit_parent_guardian
-    @students = Student.find(:all, :joins => [:student_parent])
-    
+    @students = StudentParent.find(:all).collect{|sp|
+      next if sp.student.blank?
+      sp.student}
   end
   
   def select_guardian
@@ -336,14 +337,14 @@ class StudentController < ApplicationController
     end
 
     unless (start_date.blank? && end_date.blank?)
-      students = ClassRoomStudent.find(:all, :joins => [:student],
-        :conditions => ["class_room_id IN (?) AND gender IN (?) AND
+      students = StudentClassRoomAdjustment.find(:all, :joins => [:student],
+        :conditions => ["new_class_room_id IN (?) AND gender IN (?) AND
                    DATE(date_of_join) >= ? AND DATE(date_of_join) <= ?",
           class_room_id, gender, start_date, end_date]
       ).collect{|cr| cr.student }
     else
-      students = ClassRoomStudent.find(:all, :joins => [:student],
-        :conditions => ["class_room_id IN (?) AND gender IN (?)", class_room_id, gender]
+      students = StudentClassRoomAdjustment.find(:all, :joins => [:student],
+        :conditions => ["new_class_room_id IN (?) AND gender IN (?)", class_room_id, gender]
       ).collect{|cr| cr.student}
     end
     
