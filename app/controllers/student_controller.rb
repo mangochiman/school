@@ -690,6 +690,14 @@ class StudentController < ApplicationController
   def my_page
     @student = Student.find(params[:student_id])
   end
+
+  def my_picture
+    student = Student.find(params[:student_id])
+    student_photo = student.student_photos.last
+    unless student_photo.blank?
+      send_data student_photo.data, :filename => student_photo.filename, :disposition => "inline" and return
+    end
+  end
   
   def my_class
     @student = Student.find(params[:student_id])

@@ -84,7 +84,7 @@
       }
 
       .my_picture img{
-        height: 6em;
+        height: 5em;
       }
 
     </style>
@@ -180,7 +180,15 @@
                 <div class="content-module-main cf">
                   <table>
                     <tr>
-                      <td rowspan="9"><span class="my_picture"><%= image_tag("female.png") %></span></td>
+                      <% unless @student.student_photos.blank? %>
+                        <td rowspan="9" style="width:60px">
+                          <span class="my_picture"><%= image_tag("/student/my_picture?student_id=#{params[:student_id]}", :alt => 'My Photo')%></span>
+                        </td>
+                      <% else %>
+                        <td rowspan="9">
+                          <span class="my_picture"><%= image_tag("#{@student.gender.downcase}.png") %></span>
+                        </td>
+                      <% end %>
                     </tr>
                     <tr>
                       <td style="text-align: center; border-bottom: 1px solid black; font-weight:bold;"><a><%= @student.name %></a></td>
