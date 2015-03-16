@@ -245,7 +245,48 @@
 
 
                 <div class="content-module-main cf">
+                  <table>
+                    <tr>
+                      <% unless @student.student_photos.blank? %>
+                        <td rowspan="9" style="width:60px;">
+                          <span class="my_picture"><%= image_tag("/student/my_picture?student_id=#{params[:student_id]}", :alt => 'My Photo', :style => 'height:5em')%></span>
+                        </td>
+                      <% else %>
+                        <td rowspan="9">
+                          <span class="my_picture"><%= image_tag("#{@student.gender.downcase}.png", :style => 'height:5em') %></span>
+                        </td>
+                      <% end %>
+                    </tr>
+                    <tr>
+                      <td style="text-align: center; border-bottom: 1px solid black; font-weight:bold;"><a><%= @student.name %></a></td>
+                    </tr>
+                    <tr>
+                      <td style="text-align: left; background-color: white;"><span style="font-weight:bold; padding-left: 6px;">Gender</span>: <a><i><%= @student.gender %></i></a></td>
+                    </tr>
+                    <tr>
+                      <td style="text-align: left; background-color: white;"><span style="font-weight:bold; padding-left: 6px;">DOB</span>: <a><i><%= @student.dob.to_date.strftime("%d-%b-%Y") %></i></a></td>
+                    </tr>
+                    <tr>
+                      <td style="text-align: left; background-color: white;"><span style="font-weight:bold; padding-left: 6px;">Phone</span>: <a><i><%= (@student.phone || '??') %></i></a></td>
+                    </tr>
+                    <tr>
+                      <%
+                      guardian =  @student.my_guardian
+                      guardian = '??' if guardian.blank?
+                    %>
 
+                      <td style="text-align: left; background-color: white;"><span style="font-weight:bold; padding-left: 6px;">Guardian</span>: <a><i><%= (guardian) %></i></a></td>
+                    </tr>
+                    <tr>
+                      <td style="text-align: left; background-color: white;"><span style="font-weight:bold; padding-left: 6px;">Class</span>: <a><i><%= (@student.current_class || '??') %></i></a></td>
+                    </tr>
+                    <tr>
+                      <td style="text-align: left; background-color: white; border-bottom: 1px solid black;"><span style="font-weight:bold; padding-left: 6px;">Date of Join</span>: <a><i>01-Jan-2015</i></a></td>
+                    </tr>
+                    <tr>
+                      <td style="background-color: white;">&nbsp;</td>
+                    </tr>
+                  </table>
                 </div> <!-- end content-module-main -->
 
               </div> <!-- end content-module -->

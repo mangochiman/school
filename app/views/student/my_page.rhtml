@@ -83,10 +83,6 @@
         cursor: pointer;
       }
 
-      .my_picture img{
-        height: 5em;
-      }
-
     </style>
   </head>
   <body>    
@@ -181,12 +177,12 @@
                   <table>
                     <tr>
                       <% unless @student.student_photos.blank? %>
-                        <td rowspan="9" style="width:60px">
-                          <span class="my_picture"><%= image_tag("/student/my_picture?student_id=#{params[:student_id]}", :alt => 'My Photo')%></span>
+                        <td rowspan="9" style="width:60px;">
+                          <span class="my_picture"><%= image_tag("/student/my_picture?student_id=#{params[:student_id]}", :alt => 'My Photo', :style => 'height:5em')%></span>
                         </td>
                       <% else %>
                         <td rowspan="9">
-                          <span class="my_picture"><%= image_tag("#{@student.gender.downcase}.png") %></span>
+                          <span class="my_picture"><%= image_tag("#{@student.gender.downcase}.png", :style => 'height:5em') %></span>
                         </td>
                       <% end %>
                     </tr>
