@@ -32,20 +32,57 @@
           success: function(results){
             results = eval("(" + results  + ")");
             students = results["students"];
+            teachers = results["teachers"];
+            guardians = results["guardians"];
+            
             students_count = 0;
-            my_results_div = document.getElementById('my_results');
-            students_count_id = document.getElementById('students_count')
-            html = "";
+            teachers_count = 0;
+            guardians_count = 0;
+
+            student_results_div = document.getElementById('student_results');
+            students_count_id = document.getElementById('students_count');
+
+            teacher_results_div = document.getElementById('teacher_results');
+            teachers_count_id = document.getElementById('teachers_count');
+
+            guardian_results_div = document.getElementById('guardian_results');
+            guardians_count_id = document.getElementById('guardians_count');
+
+            html_students = "";
+            html_teachers = "";
+            html_guardians = "";
             for (var student_id in students){
               students_count = students_count + 1
               firstName = students[student_id]["fname"];
               firstName = hiliter(fnameCopy, firstName)
               lastName = students[student_id]["lname"];
               lastName = hiliter(lnameCopy, lastName)
-              html+="<div class='result_row' onclick='gotoStudentPage(" + student_id + ")'>" + firstName + ' ' + lastName + "</div>";
+              html_students+="<div class='result_row' onclick='gotoStudentPage(" + student_id + ")'>" + firstName + ' ' + lastName + "</div>";
             }
             students_count_id.innerHTML = '<b>' + students_count + '</b>';
-            my_results_div.innerHTML = html;
+            student_results_div.innerHTML = html_students;
+
+            for (var teacher_id in teachers){
+              teachers_count = teachers_count + 1
+              firstName = teachers[teacher_id]["fname"];
+              firstName = hiliter(fnameCopy, firstName)
+              lastName = teachers[teacher_id]["lname"];
+              lastName = hiliter(lnameCopy, lastName)
+              html_teachers+="<div class='result_row' onclick='gotoTeacherPage(" + teacher_id + ")'>" + firstName + ' ' + lastName + "</div>";
+            }
+            teachers_count_id.innerHTML = '<b>' + teachers_count + '</b>';
+            teacher_results_div.innerHTML = html_teachers;
+
+            for (var guardian_id in guardians){
+              guardians_count = guardians_count + 1
+              firstName = guardians[guardian_id]["fname"];
+              firstName = hiliter(fnameCopy, firstName)
+              lastName = guardians[guardian_id]["lname"];
+              lastName = hiliter(lnameCopy, lastName)
+              html_guardians+="<div class='result_row' onclick='gotoGuardianPage(" + guardian_id + ")'>" + firstName + ' ' + lastName + "</div>";
+            }
+            guardians_count_id.innerHTML = '<b>' + guardians_count + '</b>';
+            guardian_results_div.innerHTML = html_guardians;
           }
 
         });
@@ -85,13 +122,17 @@
         background: none repeat scroll 0% 0% transparent;
         color: rgb(48, 48, 48);
         font-size: 12px;
+        font-style: italic;
+        color: green;
+        font-weight: bold;
       }
 
       .result_row{
         cursor: pointer;
-        padding: 0px 10px;
+        padding: 0px 20px;
         background: none repeat scroll 0% 0% transparent;
-        color: rgb(48, 48, 48); font-size: 11px;
+        color: rgb(48, 48, 48); 
+        font-size: 11px;
       }
 
       .result_row:hover{
@@ -182,8 +223,19 @@
       <div class="search_results_container">
         <div class="results_header">Students (<span id="students_count"></span>)</div>
         <hr></hr>
-        <div id="my_results">
+        <div id="student_results">
         </div>
+        <!---------------- !-->
+        <div class="results_header">Teachers (<span id="teachers_count"></span>)</div>
+        <hr></hr>
+        <div id="teacher_results">
+        </div>
+        <!---------------- !-->
+        <div class="results_header">Guardians (<span id="guardians_count"></span>)</div>
+        <hr></hr>
+        <div id="guardian_results">
+        </div>
+        <!---------------- !-->
       </div>
     </div>
     <%= yield %>
