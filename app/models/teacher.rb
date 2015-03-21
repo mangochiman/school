@@ -4,6 +4,12 @@ class Teacher < ActiveRecord::Base
 
   has_many :class_room_teachers
 
+  def name
+    first_name = self.fname.to_s rescue ''
+    last_name = self.lname.to_s rescue ''
+    first_name + ' ' + last_name
+  end
+  
   def name_and_gender
     first_name = self.fname.to_s rescue ''
     last_name = self.lname.to_s rescue ''

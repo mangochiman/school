@@ -57,9 +57,14 @@ class TeacherController < ApplicationController
 
   def remove_my_classes
     teacher_id = params[:teacher_id]
-    @my_class_rooms = ClassRoomTeacher.find(:all, :conditions => ["teacher_id =?",
-        teacher_id]).collect{|crt|crt.class_room}
-              
+    teacher = Teacher.find(teacher_id)
+    @my_class_rooms = []
+
+    teacher.class_room_teachers.each do |crt|
+      next if crt.class_room.blank?
+      @my_class_rooms << crt.class_room
+    end
+    
     if (request.method == :post)
       if (params[:mode] == 'single_entry')
         class_room_teacher = ClassRoomTeacher.find(:last, :conditions => ["teacher_id =? AND
@@ -111,8 +116,13 @@ class TeacherController < ApplicationController
 
   def assign_me_subjects_menu
     teacher_id = params[:teacher_id]
-    @my_class_rooms = ClassRoomTeacher.find(:all, :conditions => ["teacher_id =?",
-        teacher_id]).collect{|crt|crt.class_room}
+    teacher = Teacher.find(teacher_id)
+    @my_class_rooms = []
+
+    teacher.class_room_teachers.each do |crt|
+      next if crt.class_room.blank?
+      @my_class_rooms << crt.class_room
+    end
     
   end
 
@@ -450,5 +460,50 @@ class TeacherController < ApplicationController
     end
 
     render :text => "true" and return
+  end
+
+  def my_page
+    @teacher = Teacher.find(params[:teacher_id])
+  end
+
+  def my_class
+    @teacher = Teacher.find(params[:teacher_id])
+    @my_class_rooms = []
+    @teacher.class_room_teachers.each do |class_room_teacher|
+      next if class_room_teacher.class_room.blank?
+      @my_class_rooms << class_room_teacher.class_room
+    end
+  end
+
+  def delete_my_class
+    raise params.inspect
+    ActiveRecord::Base.transaction do
+      teacher = Teacher.find(params[:teacher_id])
+
+      teacher_class_room_courses = teacher.teacher_class_room_course.find(:all ,
+        :conditions => ["class_room_id =?", params[:class_room_id]])
+      teacher_class_room_courses.each do |tcrc|
+        tcrc.delete
+      end
+      
+      my_class = teacher.class_room_teachers.find(:last, :conditions => ["class_room_id =?",
+          params[:class_room_id]])
+      my_class.delete
+    end
+    render :text => "true" and return
+  end
+
+  def my_courses
+    @teacher = Teacher.find(params[:teacher_id])
+    @class_room_courses_hash = {}
+    teacher_class_room_courses = @teacher.teacher_class_room_course.find(:all)
+    teacher_class_room_courses.each do |tcrc|
+      class_room_id = tcrc.class_room_id
+      course_id = tcrc.course_id
+      course = Course.find(course_id)
+      @class_room_courses_hash[class_room_id]= {} if @class_room_courses_hash[class_room_id].blank?
+      @class_room_courses_hash[class_room_id]["courses"] = [] if @class_room_courses_hash[class_room_id]["courses"].blank?
+      @class_room_courses_hash[class_room_id]["courses"] << course
+    end
   end
 end

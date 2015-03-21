@@ -12,8 +12,15 @@
     <%= stylesheet_link_tag("style") %>
     <script type="text/javascript">
       function gotoStudentPage(studentID){
-        console.log(studentID);
         window.location = "/student/my_page?student_id=" + studentID;
+      }
+
+      function gotoTeacherPage(teacherID){
+        window.location = "/teacher/my_page?teacher_id=" + teacherID;
+      }
+
+      function gotoGuardianPage(guardianID){
+        window.location = "/parent/my_page?guardian_id=" + guardianID;
       }
       
       function searchEverything(){

@@ -241,8 +241,7 @@
                   <tr>
                     <th><input type="checkbox" id="table-select-all" onclick="selectAll();"/></th>
                     <th style="min-width:20%;">Class Name</th>
-                    <th>Year</th>
-                    <th>Grade</th>
+                    <th>Code</th>
                     <th style="max-width:10px;">Total Students</th>
                     <th style="max-width:10px;">Total Teachers</th>
                     <th>Action</th>
@@ -262,9 +261,8 @@
                   <tr id="<%= class_room.id %>">
                     <td><input type="checkbox" class_room_id="<%= class_room.id %>"/></td>
                     <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= class_room.name%></td>
-                    <td><%=  class_room.year %></td>
-                    <td><%= class_room.grade %></td>
-                    <td><span class="label" style="margin-left:20%;"><%= class_room.class_room_students.count %></span></td>
+                    <td><%=  class_room.code %></td>
+                    <td><span class="label" style="margin-left:20%;"><%= class_room.active_student_class_room_adjustments.count %></span></td>
                     <td><span class="label" style="margin-left:20%;"><%= class_room.class_room_teachers.count %></span></td>
                     <td>
                       <a class_room_id="<%= class_room.id %>" onmousedown="deleteSingleEntry(this)" href="#" class="table-actions-button ic-table-delete"></a>

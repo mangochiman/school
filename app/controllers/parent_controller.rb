@@ -312,4 +312,9 @@ class ParentController < ApplicationController
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
     
   end
+
+  def my_page
+    @guardian = Parent.find(params[:guardian_id])
+  end
+  
 end
