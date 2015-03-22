@@ -3,6 +3,7 @@ class Teacher < ActiveRecord::Base
 	set_primary_key :teacher_id
 
   has_many :class_room_teachers
+  has_many :teacher_class_room_courses
 
   def name
     first_name = self.fname.to_s rescue ''

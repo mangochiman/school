@@ -495,8 +495,13 @@ class TeacherController < ApplicationController
 
   def my_courses
     @teacher = Teacher.find(params[:teacher_id])
+    @class_room_hash = {}
+    class_rooms = ClassRoom.find(:all)
+    class_rooms.each do |c|
+      @class_room_hash[c.id] = c.name
+    end
     @class_room_courses_hash = {}
-    teacher_class_room_courses = @teacher.teacher_class_room_course.find(:all)
+    teacher_class_room_courses = @teacher.teacher_class_room_courses
     teacher_class_room_courses.each do |tcrc|
       class_room_id = tcrc.class_room_id
       course_id = tcrc.course_id
