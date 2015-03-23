@@ -501,14 +501,30 @@ class TeacherController < ApplicationController
       @class_room_hash[c.id] = c.name
     end
     @class_room_courses_hash = {}
-    teacher_class_room_courses = @teacher.teacher_class_room_courses
-    teacher_class_room_courses.each do |tcrc|
-      class_room_id = tcrc.class_room_id
-      course_id = tcrc.course_id
-      course = Course.find(course_id)
+    class_room_teachers = @teacher.class_room_teachers
+
+    class_room_teachers.each do |class_room_teacher|
+      next if class_room_teacher.class_room.blank?
+      class_room_id = class_room_teacher.class_room_id
+      teacher_class_room_courses = @teacher.teacher_class_room_courses.find(:all,
+        :conditions => ["class_room_id =?", class_room_id])
+
       @class_room_courses_hash[class_room_id]= {} if @class_room_courses_hash[class_room_id].blank?
       @class_room_courses_hash[class_room_id]["courses"] = [] if @class_room_courses_hash[class_room_id]["courses"].blank?
-      @class_room_courses_hash[class_room_id]["courses"] << course
+      teacher_class_room_courses.each do |tcrc|
+        course_id = tcrc.course_id
+        course = Course.find(course_id)
+        @class_room_courses_hash[class_room_id]["courses"] << course
+      end      
     end
+
+  end
+
+  def assign_teacher_classes
+    @teacher = Teacher.find(params[:teacher_id])
+    my_class_room_ids = ClassRoomTeacher.find(:all, :conditions => ["teacher_id =?",
+        params[:teacher_id]]).map(&:class_room_id)
+    my_class_room_ids = '' if my_class_room_ids.blank?
+    @class_rooms = ClassRoom.find(:all, :conditions => ["class_room_id NOT IN (?)", my_class_room_ids])
   end
 end
