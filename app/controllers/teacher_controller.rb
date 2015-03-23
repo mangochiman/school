@@ -542,4 +542,14 @@ class TeacherController < ApplicationController
     @courses = ClassRoom.find(class_room_id).class_room_courses.find(:all,
       :conditions => ["course_id NOT IN (?)", current_class_course_ids]).collect{|crc|crc.course}
   end
+
+  def delete_my_class_courses
+    class_room_id = params[:class_room_id]
+    course_id = params[:course_id]
+    teacher = Teacher.find(params[:teacher_id])
+    teacher_class_room_course = teacher.teacher_class_room_courses.find(:last,
+      :conditions => ["class_room_id =? AND course_id =?", class_room_id, course_id])
+    teacher_class_room_course.delete
+    render :text => "true" and return
+  end
 end

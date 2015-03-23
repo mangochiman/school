@@ -36,16 +36,17 @@
           title:"Teacher ClassRoom Course De-association",
           text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
           confirm: function() {
-            /*jQuery.ajax({
+            jQuery.ajax({
               type: "POST",
-              url: "/teacher/delete_my_class",
-              data: "teacher_id=" + teacherID + '&class_room_id=' + classRoomID,
+              url: "/teacher/delete_my_class_courses",
+              data: "teacher_id=" + teacherID + '&class_room_id=' + classRoomID + '&course_id=' + courseID,
               success: function(results){
-                element = document.getElementById(classRoomID);
-                element.parentNode.removeChild(element)
+                rowId = classRoomID + '_' + courseID;
+                element = document.getElementById(rowId);
+                element.parentNode.removeChild(element);
               }
 
-            });*/
+            });
           },
           cancel: function() {
 
@@ -190,7 +191,7 @@
                         </tr>
                         <% count = 0 %>
                         <% values["courses"].each do |course| %>
-                          <tr>
+                          <tr id="<%= key.to_s + '_' + course.id.to_s %>">
                             <td style="width:50px;"><%= count = count + 1 %></td>
                             <td style="padding:4px; padding-left:20%;"><%= course.name %></td>
                             <td style="padding-top:1px; width:30px;">
