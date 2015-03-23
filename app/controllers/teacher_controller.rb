@@ -158,6 +158,9 @@ class TeacherController < ApplicationController
       end
     end
     flash[:notice] = "Operation successful"
+    if params[:return_uri]
+      redirect_to :controller => "teacher", :action => params[:return_uri], :teacher_id => params[:teacher_id] and return
+    end
     redirect_to :action => "assign_subjects" and return
   end
   
@@ -173,6 +176,9 @@ class TeacherController < ApplicationController
             :class_room_id => class_room_id
           }))
       flash[:notice] = "You have successfully assigned a class"
+      if params[:return_uri]
+        redirect_to :controller => "teacher", :action => params[:return_uri], :teacher_id => params[:teacher_id] and return
+      end
       redirect_to :action => "assign_class" and return
     else
       flash[:error] = "Oops!!. Operation aborted"
@@ -476,11 +482,10 @@ class TeacherController < ApplicationController
   end
 
   def delete_my_class
-    raise params.inspect
     ActiveRecord::Base.transaction do
       teacher = Teacher.find(params[:teacher_id])
 
-      teacher_class_room_courses = teacher.teacher_class_room_course.find(:all ,
+      teacher_class_room_courses = teacher.teacher_class_room_courses.find(:all ,
         :conditions => ["class_room_id =?", params[:class_room_id]])
       teacher_class_room_courses.each do |tcrc|
         tcrc.delete
@@ -526,5 +531,15 @@ class TeacherController < ApplicationController
         params[:teacher_id]]).map(&:class_room_id)
     my_class_room_ids = '' if my_class_room_ids.blank?
     @class_rooms = ClassRoom.find(:all, :conditions => ["class_room_id NOT IN (?)", my_class_room_ids])
+  end
+
+  def assign_teacher_courses
+    class_room_id = params[:class_room_id]
+    @teacher = Teacher.find(params[:teacher_id])
+    current_class_course_ids = @teacher.teacher_class_room_courses.find(:all,
+      :conditions => ["class_room_id =?", class_room_id]).map(&:course_id)
+    current_class_course_ids = '' if current_class_course_ids.blank?
+    @courses = ClassRoom.find(class_room_id).class_room_courses.find(:all,
+      :conditions => ["course_id NOT IN (?)", current_class_course_ids]).collect{|crc|crc.course}
   end
 end

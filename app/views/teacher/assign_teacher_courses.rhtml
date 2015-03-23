@@ -20,27 +20,8 @@
     <%= stylesheet_link_tag("bootstrap") %>
 
     <script type="text/javascript">
-      function assignMeClass(obj){
-        teacherID = '<%= params[:teacher_id] %>';
-        classRoomId = obj.getAttribute("class_room_id");
-
-        jQuery.confirm({
-          title:"ClassRoom Assignment Confirmation",
-          text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
-          confirm: function() {
-            window.location = "/teacher/create_teacher_class_assignment?teacher_id= " + teacherID + "&class_room_id=" + classRoomId + '&return_uri=my_class';
-          },
-          cancel: function() {
-
-          },
-          confirmButton: "Yes I am",
-          cancelButton: "No"
-        });
-        
-      }
-
       function cancel(){
-        window.location = '/teacher/my_class?teacher_id=<%= params[:teacher_id] %>'
+        window.location="/teacher/my_courses?teacher_id=<%= params[:teacher_id] %>"
       }
     </script>
 
@@ -104,23 +85,6 @@
         cursor: pointer;
       }
 
-      .label {
-        border-radius: 1.5em;
-        color: #fff;
-        font-size: 10pt;
-        display: inline;
-        background-color: #5bc0de;
-        font-weight: bold;
-        line-height: 1;
-        padding-left: 20%;
-        padding-right: 20%;
-        padding-top:2%;
-        padding-bottom:2%;
-        text-align: center;
-        vertical-align: baseline;
-        white-space: nowrap;
-
-      }
     </style>
   </head>
   <body>    
@@ -168,7 +132,7 @@
 
                 <div class="content-module-heading cf">
 
-                  <h3 class="fl">Assign Class</h3>
+                  <h3 class="fl">Assign Courses</h3>
                   <span class="fr expand-collapse-text">Click to collapse</span>
                   <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -186,39 +150,47 @@
                       <%= flash[:error] %>
                     </div>
                   <% end %>
-                  <table class="classes">
+                  <form method="post" action="/teacher/assign_optional_courses">
+                    <table class="classes" style="">
 
-                    <thead>
-                      <tr>
-                        <th style="min-width:20%;">Class Name</th>
-                        <th>Code</th>
-                        <th style="max-width:10px;">Total Students</th>
-                        <th style="max-width:10px;">Total Teachers</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tfoot>
-                      <tr>
-                        <td colspan="5" class="table-footer">
-                          <a style="font-size:9pt;"onmousedown="cancel();" class="button round blue image-right ic-cancel text-upper">Cancel</a>
-                        </td>
-                      </tr>
-                    </tfoot>
-                    <tbody id="class_rooms">
-                      <% @class_rooms.each do |class_room| %>
+                      <thead>
                         <tr>
-                          <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= class_room.name%></td>
-                          <td><%=  class_room.code %></td>
-                          <td><span class="label" style="margin-left:20%;"><%= class_room.active_student_class_room_adjustments.count %></span></td>
-                          <td><span class="label" style="margin-left:20%;"><%= class_room.class_room_teachers.count %></span></td>
-                          <td>
-                            <a class_room_id="<%= class_room.id %>" onclick="assignMeClass(this)" class="button round blue image-right ic-right-arrow text-upper">Select</a>
-                          </td>
+                          <th><input type="checkbox" id="table-select-all" onclick="selectAll();"/></th>
+                          <th colspan="5" style=" padding: 1.25em 0 1.25em 1.25em;">Select courses</th>
                         </tr>
-                      <% end %>
-                    </tbody>
+                      </thead>
 
-                  </table>
+                      <tbody id="class_rooms">
+                        <% @courses.in_groups_of(3).each do |row| %>
+                          <tr>
+                            <% row.each do |subject| %>
+                              <% unless subject.blank? %>
+                                <td><input type="checkbox" id="<%= subject.id %>" name="subjects[<%= subject.id %>]"/></td>
+                                <td style="border-left: none; text-align: left;"><%= subject.name.titlecase %></td>
+                              <% else %>
+                                <td style="border-left: none;">&nbsp;</td>
+                                <td style="border-left: none;">&nbsp;</td>
+                              <% end %>
+                            <% end %>
+                          </tr>
+                        <% end %>
+                      </tbody>
+
+                    </table>
+                    <% if @courses.blank? %>
+                      <div class="error-box round">
+                        No course available for asssignment
+                      </div>
+                    <% end %>
+                    <div class="stripe-separator"><!--  --></div>
+                    <%= hidden_field_tag("teacher_id", params[:teacher_id]) %>
+                    <%= hidden_field_tag("class_room_id", params[:class_room_id]) %>
+                    <%= hidden_field_tag("return_uri", "my_courses") %>
+                    <a class="button round blue image-right ic-cancel text-upper" onmousedown="cancel();">Cancel</a>
+                    <% unless  @courses.blank?%>
+                      <input type="submit" value="Submit" class="round blue ic-right-arrow" />
+                    <% end %>
+                  </form>
                 </div> <!-- end content-module-main -->
 
               </div> <!-- end content-module -->

@@ -20,6 +20,13 @@
     <%= stylesheet_link_tag("bootstrap") %>
 
     <script type="text/javascript">
+
+      function assignTeacherClassCourse(obj){
+        teacherID = '<%= params[:teacher_id] %>';
+        classRoomID = obj.getAttribute("class_room_id");
+        window.location = '/teacher/assign_teacher_courses?teacher_id=' + teacherID + '&class_room_id=' + classRoomID
+      }
+      
       function deAssociate(obj){
         teacherID = '<%= params[:teacher_id] %>';
         classRoomID = obj.getAttribute("class_room_id");
@@ -193,7 +200,7 @@
                         <% end %>
                         <tr>
                           <td colspan="3" style="text-align:left; background-color: white; padding-top: 2px;">
-                            <a class_room_id="<%= key %>" class="button round blue image-right ic-add text-upper" href="#">Add Course</a>
+                            <a onmousedown="assignTeacherClassCourse(this)" class_room_id="<%= key %>" class="button round blue image-right ic-add text-upper">Add Course</a>
                           </td>
                         </tr>
                       <% end %>
