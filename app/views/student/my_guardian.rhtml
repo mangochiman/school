@@ -407,6 +407,11 @@
                       </table>
                     <%end%>
                   <% else %>
+                  <% if @my_guardians.blank? %>
+                        <div class="error-box round">
+                          No guardians found associated with this student
+                        </div>
+                    <% end %>
                     <table>
                       <thead>
                         <tr>
@@ -438,11 +443,6 @@
                             </td>
                           </tr>
                         <%  end %>
-                        <% if @my_guardians.blank? %>
-                          <tr style="line-height:2.5em;">
-                            <td colspan="5"><span class="error-box round" style="font-size:8pt;">No guardian found</span></td>
-                          </tr>
-                        <% end %>
                       </tbody>
                     </table>
                   <% end %>

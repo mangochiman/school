@@ -185,6 +185,11 @@
                       <% end %>
                     <% end %>
                   </table>
+                  <% if @payment_hash.blank? %>
+                  <div class="error-box round">
+                      No Payments found associated with this student
+                    </div>
+                  <% end %>
                 </div> <!-- end content-module-main -->
 
               </div> <!-- end content-module -->

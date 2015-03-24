@@ -264,6 +264,11 @@
                       <% end %>
                     <% end %>
                   </table>
+                  <% if @exams_hash.blank? %>
+                    <div class="error-box round">
+                      No performance found associated with this student
+                    </div>
+                  <% end %>
                 </div> <!-- end content-module-main -->
 
               </div> <!-- end content-module -->
