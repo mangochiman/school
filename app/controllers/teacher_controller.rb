@@ -285,6 +285,9 @@ class TeacherController < ApplicationController
               :dob => params[:dob].to_date
             }))
         flash[:notice] = "You have successfully edited the details"
+        if params[:return_uri]
+          redirect_to :controller => "teacher", :action => params[:return_uri], :teacher_id => params[:teacher_id] and return
+        end
         redirect_to :controller => "teacher", :action => "edit_teacher" and return
       else
         flash[:error] = "Process aborted. Check for errors and try again"
@@ -551,5 +554,13 @@ class TeacherController < ApplicationController
       :conditions => ["class_room_id =? AND course_id =?", class_room_id, course_id])
     teacher_class_room_course.delete
     render :text => "true" and return
+  end
+
+  def my_demographics
+    @teacher = Teacher.find(params[:teacher_id])
+  end
+
+  def remove_teacher
+    @teacher = Teacher.find(params[:teacher_id])
   end
 end
