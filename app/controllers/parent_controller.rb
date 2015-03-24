@@ -61,17 +61,23 @@ class ParentController < ApplicationController
     @parent = Parent.find(parent_id)
     if request.method == :post
       if (@parent.update_attributes({
-          :fname => params[:firstname],
-          :lname => params[:lastname],
-          :gender => params[:gender],
-          :email => params[:email],
-          :phone => params[:phone],
-          :dob => params[:dob].to_date
-        }))
+              :fname => params[:firstname],
+              :lname => params[:lastname],
+              :gender => params[:gender],
+              :email => params[:email],
+              :phone => params[:phone],
+              :dob => params[:dob].to_date
+            }))
         flash[:notice] = "You have successfully edited the details"
+        if params[:return_uri]
+          redirect_to :controller => "parent", :action => "my_demographics", :guardian_id => params[:parent_id] and return
+        end
         redirect_to :controller => "parent", :action => "edit_parent_guardian" and return
       else
         flash[:error] = "Process aborted. Check for errors and try again"
+        if params[:return_uri]
+          redirect_to :controller => "parent", :action => "my_demographics", :guardian_id => params[:parent_id] and return
+        end
         redirect_to :controller => "parent", :action => "edit_parent_guardian" and return
       end
     end
@@ -92,8 +98,8 @@ class ParentController < ApplicationController
 
     parent_ids = params[:parent_ids].split(",")
     (parent_ids || []).each do |parent_id|
-        parent = Parent.find(parent_id)
-        parent.delete
+      parent = Parent.find(parent_id)
+      parent.delete
     end
     render :text => "true" and return
   end
@@ -156,13 +162,13 @@ class ParentController < ApplicationController
     date_of_birth = params[:dob].to_date
 
     if (Parent.create({
-        :fname => first_name,
-        :lname => last_name,
-        :gender => gender,
-        :email => email,
-        :phone => phone,
-        :dob => date_of_birth
-      }))
+            :fname => first_name,
+            :lname => last_name,
+            :gender => gender,
+            :email => email,
+            :phone => phone,
+            :dob => date_of_birth
+          }))
 
       if (params[:mode] == 'guardian_edit')
         ActiveRecord::Base.transaction do
@@ -171,9 +177,9 @@ class ParentController < ApplicationController
           student_parent.delete
 
           StudentParent.create({
-            :student_id => params[:student_id],
-            :parent_id => Parent.last.id
-          })
+              :student_id => params[:student_id],
+              :parent_id => Parent.last.id
+            })
         end
         flash[:notice] = "Operation successful"
         redirect_to :controller => "student", :action => "select_guardian", :student_id => params[:student_id], :mode => params[:mode] and return
@@ -182,9 +188,9 @@ class ParentController < ApplicationController
       if (params[:mode].blank?)
         unless params[:student_id].blank?
           if (StudentParent.create({
-                :student_id => params[:student_id],
-                :parent_id => Parent.last.id
-              }))
+                  :student_id => params[:student_id],
+                  :parent_id => Parent.last.id
+                }))
             flash[:notice] = "Operation successful"
             if params[:return_uri]
               redirect_to :controller => "student" ,:action => params[:return_uri], :student_id => params[:student_id] and return
@@ -316,5 +322,37 @@ class ParentController < ApplicationController
   def my_page
     @guardian = Parent.find(params[:guardian_id])
   end
-  
+
+  def my_students
+    @guardian = Parent.find(params[:guardian_id])
+    @students = []
+    @guardian.student_parents.each do |student_parent|
+      next if student_parent.student.blank?
+      @students << student_parent.student
+    end
+  end
+
+  def my_demographics
+    @guardian = Parent.find(params[:guardian_id])
+    @parent = @guardian
+  end
+
+  def remove_guardian
+    @guardian = Parent.find(params[:guardian_id])
+    if request.method == :post
+      ActiveRecord::Base.transaction do
+        @guardian.student_parents.each do |student_parent|
+          student_parent.delete
+        end
+        @guardian.delete
+      end
+      flash[:notice] = "Operation successful"
+      render :text => "true" and return
+    end
+  end
+
+  def assign_student
+    @guardian = Parent.find(params[:guardian_id])
+    @students = Student.all
+  end
 end
