@@ -562,5 +562,18 @@ class TeacherController < ApplicationController
 
   def remove_teacher
     @teacher = Teacher.find(params[:teacher_id])
+    if request.method == :post
+      ActiveRecord::Base.transaction do
+        @teacher.class_room_teachers.each do |class_room_teacher|
+          class_room_teacher.delete
+        end
+        @teacher.teacher_class_room_courses.each do |teacher_class_room_course|
+          teacher_class_room_course.delete
+        end
+        @teacher.delete
+      end
+      flash[:notice] = "Operation successful"
+      render :text => "true" and return
+    end
   end
 end

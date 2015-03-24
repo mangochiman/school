@@ -20,16 +20,39 @@
     <%= stylesheet_link_tag("bootstrap") %>
 
     <script type="text/javascript">
+      function deleteTeacher(){
+        teacherID = '<%= params[:teacher_id] %>';
+        jQuery.confirm({
+          title:"Delete Confirmation",
+          text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+          confirm: function() {
+            jQuery.ajax({
+              type: "POST",
+              url: "/teacher/remove_teacher",
+              data: "teacher_id=" + teacherID,
+              success: function(results){
+                window.location = '/student/add_student'
+              }
 
+            });
+          },
+          cancel: function() {
+
+          },
+          confirmButton: "Yes I am",
+          cancelButton: "No"
+        });
+
+      }
     </script>
 
     <style>
       .modal-title {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-        font-weight: 500;
+        font-weight: bold;
         line-height: 1.1;
         font-size: 1.2em;
-        color: #317eac;
+        color: red;
       }
 
       form.autoform .msg.icon {
@@ -166,7 +189,7 @@
                   <% end %>
 
                   <div style="margin-top:30px;" class="well">
-                    <button class="btn btn-large btn-block btn-danger" type="button">Click Here To Delete Teacher</button>
+                    <button onmousedown="deleteTeacher();" class="btn btn-large btn-block btn-danger" type="button">Click Here To Delete Teacher</button>
                   </div>
                 </div> <!-- end content-module-main -->
 
