@@ -355,4 +355,26 @@ class ParentController < ApplicationController
     @guardian = Parent.find(params[:guardian_id])
     @students = Student.all
   end
+
+  def create_student_guardian
+    student_parent_exists = StudentParent.find(:last, :conditions => ["student_id =? AND
+        parent_id =?", params[:student_id], params[:parent_id]])
+
+    if student_parent_exists
+      flash[:error] = "The selected student is already assigned to the selected guardian"
+      redirect_to :controller => "parent", :action => "my_students", :guardian_id => params[:parent_id] and return
+    end
+
+    if (StudentParent.create({
+            :student_id => params[:student_id],
+            :parent_id => params[:parent_id]
+          }))
+      flash[:notice] = "Operation successful"
+      redirect_to :controller => "parent", :action => "my_students", :guardian_id => params[:parent_id] and return
+    else
+      flash[:error] = "Process aborted. Check for errors and try again"
+      redirect_to :controller => "parent", :action => "my_students", :guardian_id => params[:parent_id] and return
+    end
+
+  end
 end
