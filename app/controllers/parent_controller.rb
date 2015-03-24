@@ -375,6 +375,12 @@ class ParentController < ApplicationController
       flash[:error] = "Process aborted. Check for errors and try again"
       redirect_to :controller => "parent", :action => "my_students", :guardian_id => params[:parent_id] and return
     end
+  end
 
+  def remove_student_association
+    student_parent = StudentParent.find(:last, :conditions => ["student_id =? AND
+        parent_id =?", params[:student_id], params[:guardian_id]])
+    student_parent.delete
+    render :text => "true" and return
   end
 end
