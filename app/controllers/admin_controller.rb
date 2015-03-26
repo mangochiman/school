@@ -470,4 +470,25 @@ class AdminController < ApplicationController
 
     render :text => hash.to_json and return
   end
+
+  def period_settings
+    
+  end
+
+  def course_settings
+    
+  end
+
+  def teacher_settings
+    
+  end
+
+  def class_bock_settings
+    
+  end
+
+  def view_time_table
+    
+  end
+  
 end
