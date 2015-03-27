@@ -1,0 +1,2 @@
+module ClassBlocksHelper
+end
