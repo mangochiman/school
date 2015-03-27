@@ -33,29 +33,6 @@
         position: unset;
       }
 
-      form label {
-        font-size: 0.9em;
-        font-weight: bold;
-      }
-      form.autoform input, select{
-        font-size: 0.8em !important;
-        font-weight: bold;
-      }
-
-      #course input[type="text"], input[type="password"], textarea {
-        border: 1px solid #d9dbdd;
-        outline: medium none;
-        padding: 0.5em 0.225em;
-      }
-
-      #simple-input {
-        font-size: 10pt !important;
-      }
-
-      input[type="submit"] {
-        margin-left: 31%;
-      }
-
       table td:first-child, table td:last-child{
         text-align: left;
       }
@@ -135,6 +112,24 @@
                     </div>
                   <% end %>
 
+                  <form id="registration" action="#" >
+                    <table>
+                      <tr style="background-color:white;">
+                        <td>Minimum Periods Per week</td>
+                        <td><input type="text" name="minimum_periods"/></td>
+                      </tr>
+                      <tr style="background-color:white;">
+                        <td>Maximum Periods Per week</td>
+                        <td><input type="text" name="maximum_periods"/></td>
+                      </tr>
+                      <tr style="background-color:white;">
+                        <td>Recommended Periods Per week</td>
+                        <td><input type="text" name="recommended_periods"/></td>
+                      </tr>
+                    </table>
+                    <input type="submit" value="Submit" class="round blue ic-right-arrow" />
+                  </form>
+                  
                 </div> <!-- end content-module-main -->
 
               </div> <!-- end content-module -->
