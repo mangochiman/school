@@ -35,6 +35,26 @@ class ClassBlocksController < ApplicationController
     @class_block = ClassBlock.find(params[:class_block_id])
     @class_blocks = ClassBlock.all
   end
+
+  def update_class_block
+    block_name = params[:block_name]
+    min_capacity = params[:min_capacity]
+    max_capacity = params[:max_capacity]
+    class_block = ClassBlock.find(params[:class_block_id])
+    block_exists = ClassBlock.find(:first, :conditions => ["name =? AND class_block_id != ?",
+        block_name, params[:class_block_id]])
+    if block_exists
+      flash[:error] = "Operation aborted.  <b>#{block_name}</b> already exists"
+      redirect_to :controller => "class_blocks", :action => "edit_me", :class_block_id => params[:class_block_id] and return
+    end
+    class_block.update_attributes({
+        :name => block_name,
+        :min_carrying_capacity => min_capacity,
+        :max_carrying_capacity => max_capacity
+      })
+    flash[:notice] = "Operation successful"
+    redirect_to :controller => "class_blocks", :action => "add_class_block" and return
+  end
   
   def void_class_block
     @class_blocks = ClassBlock.all
@@ -42,6 +62,21 @@ class ClassBlocksController < ApplicationController
 
   def view_class_blocks
     
+  end
+
+  def delete_class_blocks
+    if (params[:mode] == 'single_entry')
+      class_block = ClassBlock.find(params[:class_block_id])
+      class_block.delete
+      render :text => "true" and return
+    end
+
+    class_block_ids = params[:class_block_ids].split(",")
+    (class_block_ids || []).each do |class_block_id|
+      class_block = ClassBlock.find(class_block_id)
+      class_block.delete
+    end
+    render :text => "true" and return
   end
   
 end

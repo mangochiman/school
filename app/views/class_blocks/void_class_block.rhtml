@@ -39,15 +39,15 @@
         }
       }
 
-      function deleteCourses(){
+      function deleteClassBlocks(){
         inputs = document.getElementsByTagName("input");
-        courseIDs = []
+        classBlockIDs = []
         for (var i=0; i<=inputs.length - 1; i++){
           if (inputs[i].type == 'checkbox'){
             if (inputs[i].checked){
-              if (inputs[i].hasAttribute("course_id")){
-                courseId = inputs[i].getAttribute("course_id");
-                courseIDs.push(courseId);
+              if (inputs[i].hasAttribute("class_block_id")){
+                classBlockID = inputs[i].getAttribute("class_block_id");
+                classBlockIDs.push(classBlockID);
               }
             }
           }
@@ -55,11 +55,11 @@
 
         jQuery.ajax({
           type: "POST",
-          url: "/course/delete_courses",
-          data: "course_ids=" + courseIDs,
+          url: "/class_blocks/delete_class_blocks",
+          data: "class_block_ids=" + classBlockIDs,
           success: function(){
-            for (var x=0; x<= courseIDs.length - 1; x++){
-              id = courseIDs[x];
+            for (var x=0; x<= classBlockIDs.length - 1; x++){
+              id = classBlockIDs[x];
               element = document.getElementById(id);
               element.parentNode.removeChild(element)
             }
@@ -67,18 +67,18 @@
 
         });
       }
-      var currentCourseId = "";
-      function setCurrentCourseId(obj){
-        currentCourseId = obj.getAttribute("course_id");
+      var currentClassBlockId = "";
+      function setCurrentClassBlockId(obj){
+        currentClassBlockId = obj.getAttribute("class_block_id");
       }
 
       function deleteSingleEntry(){
         jQuery.ajax({
           type: "POST",
-          url: "/course/delete_courses",
-          data: "course_id=" + currentCourseId + "&mode=single_entry",
+          url: "/class_blocks/delete_class_blocks",
+          data: "class_block_id=" + currentClassBlockId + "&mode=single_entry",
           success: function(){
-            element = document.getElementById(currentCourseId);
+            element = document.getElementById(currentClassBlockId);
             element.parentNode.removeChild(element);
           }
 
@@ -193,7 +193,7 @@
                       <td style="text-align:center; padding:6px;"><%= class_block.min_carrying_capacity %></td>
                       <td style="text-align:center; padding:6px;"><%= class_block.max_carrying_capacity %></td>
                       <td>
-                        <a class_block_id="<%= class_block.id %>" onmousedown="setCurrentCourseId(this)" class="table-actions-button ic-table-delete confirm"></a>
+                        <a class_block_id="<%= class_block.id %>" onmousedown="setCurrentClassBlockId(this)" class="table-actions-button ic-table-delete confirm"></a>
                       </td>
                     </tr>
                   <% end %>
@@ -213,7 +213,7 @@
         title:"Delete confirmation",
         text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
         confirm: function(button) {
-          deleteCourses();
+          deleteClassBlocks();
         },
         cancel: function(button) {
           alert("You aborted the operation.");
