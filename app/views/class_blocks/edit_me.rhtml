@@ -106,7 +106,7 @@
 
                 <div class="content-module-heading cf">
 
-                  <h3 class="fl">Add Class Block</h3>
+                  <h3 class="fl">Edit Class Block</h3>
                   <span class="fr expand-collapse-text">Click to collapse</span>
                   <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -125,23 +125,24 @@
                     </div>
                   <% end %>
 
-                  <form id="classBlock" action="/class_blocks/create_class_block" method="POST">
+                  <form id="classBlock" action="/class_blocks/update_class_block" method="POST">
                     <table>
                       <tr style="background-color:white;">
                         <td>Block Name</td>
-                        <td><input type="text" name="block_name" required="required" /></td>
+                        <td><input type="text" value="<%= @class_block.name %>" name="block_name" required="required"/></td>
                       </tr>
                       <tr style="background-color:white;">
                         <td>Min carrying capacity</td>
-                        <td><input type="text" name="min_capacity" required="required" /></td>
+                        <td><input type="text" value="<%= @class_block.min_carrying_capacity %>" name="min_capacity" required="required" /></td>
                       </tr>
                       <tr style="background-color:white;">
                         <td>Max carrying capacity</td>
-                        <td><input type="text" name="max_capacity" required="required" /></td>
+                        <td><input type="text" value="<%= @class_block.max_carrying_capacity %>" name="max_capacity" required="required" /></td>
                       </tr>
                     </table>
 
                     <div class="stripe-separator"><!--  --></div>
+                    <%= hidden_field_tag("class_block_id", params[:class_block_id]) %>
                     <input type="submit" value="Submit" class="round blue ic-right-arrow" />
                   </form>
                 </div> <!-- end content-module-main -->

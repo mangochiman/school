@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Course Management</title>
+    <title>SimpleAdmin - Dashboard</title>
     <!-- Optimize for mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
@@ -17,56 +17,94 @@
     <%= stylesheet_link_tag("metallic") %>
     <%= stylesheet_link_tag("gvalidator") %>
     <%= stylesheet_link_tag("bootstrap") %>
+    <script>
+      function selectAll(){
+        selectAllInput = document.getElementById('table-select-all');
+        inputs = document.getElementsByTagName("input");
+        if (selectAllInput.checked){
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+              inputs[i].checked = true;
+            }
+          }
+        }
+        else{
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+              inputs[i].checked = false;
+            }
+          }
+        }
+      }
 
-    <style>
+      function deleteCourses(){
+        inputs = document.getElementsByTagName("input");
+        courseIDs = []
+        for (var i=0; i<=inputs.length - 1; i++){
+          if (inputs[i].type == 'checkbox'){
+            if (inputs[i].checked){
+              if (inputs[i].hasAttribute("course_id")){
+                courseId = inputs[i].getAttribute("course_id");
+                courseIDs.push(courseId);
+              }
+            }
+          }
+        }
+
+        jQuery.ajax({
+          type: "POST",
+          url: "/course/delete_courses",
+          data: "course_ids=" + courseIDs,
+          success: function(){
+            for (var x=0; x<= courseIDs.length - 1; x++){
+              id = courseIDs[x];
+              element = document.getElementById(id);
+              element.parentNode.removeChild(element)
+            }
+          }
+
+        });
+      }
+      var currentCourseId = "";
+      function setCurrentCourseId(obj){
+        currentCourseId = obj.getAttribute("course_id");
+      }
+
+      function deleteSingleEntry(){
+        jQuery.ajax({
+          type: "POST",
+          url: "/course/delete_courses",
+          data: "course_id=" + currentCourseId + "&mode=single_entry",
+          success: function(){
+            element = document.getElementById(currentCourseId);
+            element.parentNode.removeChild(element);
+          }
+
+        });
+      }
+    </script>
+
+    <style type="text/css">
       .modal-title {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         font-weight: 500;
         line-height: 1.1;
         font-size: 1.2em;
-        color: red;
+        color: #317eac;
       }
 
-      form.autoform .msg.icon {
-        margin: 0 10px;
-        padding: 5px 5px 5px 30px;
-        position: unset;
+      table th:first-child {
+        border-style: none none none !important;
       }
 
-      form label {
-        font-size: 0.9em;
-        font-weight: bold;
-      }
-      form.autoform input, select{
-        font-size: 0.8em !important;
-        font-weight: bold;
-      }
-
-      #course input[type="text"], input[type="password"], textarea {
-        border: 1px solid #d9dbdd;
-        outline: medium none;
-        padding: 0.5em 0.225em;
-      }
-
-      #simple-input {
-        font-size: 10pt !important;
-      }
-
-      input[type="submit"] {
-        margin-left: 31%;
-      }
-
-      table td:first-child, table td:last-child{
-        text-align: left;
-      }
-
-      #optional{
-        position: relative;
-        left: 3%;
+      a{
+        cursor: pointer;
       }
     </style>
   </head>
-  <body> 
+  <body>
     <!-- HEADER -->
     <div id="header-with-tabs">
 
@@ -109,74 +147,92 @@
 
           <div class="content-module">
 
-            <div class="half-size-column fl" style="width:69%;">
+            <div class="content-module-heading cf">
 
-              <div class="content-module">
+              <h3 class="fl">Class Block Void</h3>
+              <span class="fr expand-collapse-text">Click to collapse</span>
+              <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
-                <div class="content-module-heading cf">
-
-                  <h3 class="fl">Class Block Void</h3>
-                  <span class="fr expand-collapse-text">Click to collapse</span>
-                  <span class="fr expand-collapse-text initial-expand">Click to expand</span>
-
-                </div> <!-- end content-module-heading -->
+            </div> <!-- end content-module-heading -->
 
 
-                <div class="content-module-main">
-                  <% if flash[:notice] %>
-                    <div class="confirmation-box round">
-                      <%= flash[:notice] %>
-                    </div>
+            <div class="content-module-main">
+              <% if flash[:notice] %>
+                <div class="confirmation-box round">
+                  <%= flash[:notice] %>
+                </div>
+              <% end %>
+              <% if flash[:error] %>
+                <div class="error-box round">
+                  <%= flash[:error] %>
+                </div>
+              <% end %>
+              <table>
+
+                <thead>
+                  <tr>
+                    <th style="width:12%;"><input type="checkbox" id="table-select-all" onclick="selectAll();"/></th>
+                    <th style="width:30%; text-align: center;">Class Block</th>
+                    <th style="text-align:center; ">Min Carrying Capacity</th>
+                    <th style="text-align:center;">Max Carrying Capacity</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tfoot>
+                  <tr>
+                    <td colspan="3" class="table-footer">
+                      <a href="#" class="button round blue image-right ic-delete text-upper delete-multiple">Delete</a>
+                    </td>
+                  </tr>
+                </tfoot>
+                <tbody id="class_blocks">
+                  <% @class_blocks.each do |class_block| %>
+                    <tr id="<%= class_block.id %>">
+                      <td><input type="checkbox" class_block_id="<%= class_block.id %>"/></td>
+                      <td style="text-align: center;"><%=  class_block.name %></td>
+                      <td style="text-align:center; padding:6px;"><%= class_block.min_carrying_capacity %></td>
+                      <td style="text-align:center; padding:6px;"><%= class_block.max_carrying_capacity %></td>
+                      <td>
+                        <a class_block_id="<%= class_block.id %>" onmousedown="setCurrentCourseId(this)" class="table-actions-button ic-table-delete confirm"></a>
+                      </td>
+                    </tr>
                   <% end %>
-                  <% if flash[:error] %>
-                    <div class="error-box round">
-                      <%= flash[:error] %>
-                    </div>
-                  <% end %>
-
-                </div> <!-- end content-module-main -->
-
-              </div> <!-- end content-module -->
-
-            </div>
-            <div class="half-size-column fr" style="width:30%">
-
-              <div class="content-module">
-
-                <div class="content-module-heading cf">
-
-                  <h3 class="fl">Current Class Blocks</h3>
-                  <span class="fr expand-collapse-text">Click to collapse</span>
-                  <span class="fr expand-collapse-text initial-expand">Click to expand</span>
-
-                </div> <!-- end content-module-heading -->
-
-
-                <div class="content-module-main cf">
-                  
-                </div> <!-- end content-module-main -->
-
-              </div> <!-- end content-module -->
-
-            </div>
-
+                </tbody>
+              </table>
+            </div> <!-- end content-module-main -->
           </div> <!-- end content-module -->
-
-
-
-
         </div> <!-- end side-content -->
 
       </div> <!-- end full-width -->
 
     </div> <!-- end content -->
-
     <%= javascript_include_tag("bootstrap") %>
-    <%= javascript_include_tag("zebra_datepicker") %>
     <script>
-      $('.date-picker').Zebra_DatePicker({
-        view : 'years',
-        direction: ['<%=  Date.today.strftime("%Y-%m-%d") %>', '<%=  (Date.today + 1.year).strftime("%Y-%m-%d") %>']
+
+      $(".delete-multiple").confirm({
+        title:"Delete confirmation",
+        text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+        confirm: function(button) {
+          deleteCourses();
+        },
+        cancel: function(button) {
+          alert("You aborted the operation.");
+        },
+        confirmButton: "Yes I am",
+        cancelButton: "No"
+      });
+
+      $(".confirm").confirm({
+        title:"Delete confirmation",
+        text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+        confirm: function(button) {
+          deleteSingleEntry();
+        },
+        cancel: function(button) {
+
+        },
+        confirmButton: "Yes I am",
+        cancelButton: "No"
       });
     </script>
   </body>
