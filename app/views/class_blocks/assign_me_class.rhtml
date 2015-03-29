@@ -59,7 +59,15 @@
           title:"Class Block Assignment",
           text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
           confirm: function() {
+            jQuery.ajax({
+              type: "POST",
+              url: "/class_blocks/assign_class_to_block",
+              data: "class_room_ids=" + classRoomIDs + '&class_block_id=' + classBlockID,
+              success: function(){
+                window.location = '/class_blocks/assign_me_class?class_block_id=' + classBlockID;
+              }
 
+            });
           },
           cancel: function() {
 
@@ -208,27 +216,29 @@
                 </table>
               <% end %>
 
-              <table>
-                <thead>
-                  <tr>
-                    <th style="width:50%;">Class</th>
-                    <th style="text-align:center;">Code</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <% @assigned_class_rooms.each do |class_room| %>
+              <% if params[:mode].blank? %>
+                <table>
+                  <thead>
                     <tr>
-                      <td><%= class_room.name %></td>
-                      <td style="padding:4px; text-align:center;"><%= class_room.code %></td>
-                      <td>
-                        <a class="table-actions-button ic-table-delete confirm" onmousedown="setCurrentClassRoomId(this)" class_room_id="<%= class_room.id %>"></a>
-                      </td>
+                      <th style="width:50%;">Class</th>
+                      <th style="text-align:center;">Code</th>
+                      <th>Action</th>
                     </tr>
-                  <% end %>
-                </tbody>
-              </table>
-              <a class="button round blue image-right ic-add text-upper" onclick="addClass();">Add Class</a>
+                  </thead>
+                  <tbody>
+                    <% @assigned_class_rooms.each do |class_room| %>
+                      <tr>
+                        <td><%= class_room.name %></td>
+                        <td style="padding:4px; text-align:center;"><%= class_room.code %></td>
+                        <td>
+                          <a class="table-actions-button ic-table-delete confirm" onmousedown="setCurrentClassRoomId(this)" class_room_id="<%= class_room.id %>"></a>
+                        </td>
+                      </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+                <a class="button round blue image-right ic-add text-upper" onclick="addClass();">Add Class</a>
+              <% end %>
             </div> <!-- end content-module-main -->
           </div> <!-- end content-module -->
         </div> <!-- end side-content -->

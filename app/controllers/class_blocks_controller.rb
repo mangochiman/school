@@ -95,5 +95,17 @@ class ClassBlocksController < ApplicationController
         class_room_ids])
     @my_classes_count = @class_block.class_block_class_rooms.count
   end
-  
+
+  def assign_class_to_block
+    class_block_id = params[:class_block_id]
+    class_room_ids = params[:class_room_ids].split(",")
+    class_room_ids.each do |class_room_id|
+      ClassBlockClassRoom.create({
+          :class_block_id => class_block_id,
+          :class_room_id => class_room_id
+        })
+    end
+    flash[:notice] = "Operation successful"
+    redirect_to :controller => "class_blocks", :action => "assign_me_class", :class_block_id => class_block_id and return
+  end
 end
