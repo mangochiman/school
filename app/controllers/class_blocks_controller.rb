@@ -78,5 +78,8 @@ class ClassBlocksController < ApplicationController
     end
     render :text => "true" and return
   end
-  
+
+  def class_block_assignment
+    @class_blocks = ClassBlock.all
+  end
 end
