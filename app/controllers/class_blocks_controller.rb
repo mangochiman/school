@@ -61,7 +61,7 @@ class ClassBlocksController < ApplicationController
   end
 
   def view_class_blocks
-    
+    @class_blocks = ClassBlock.all
   end
 
   def delete_class_blocks
