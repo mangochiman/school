@@ -82,4 +82,10 @@ class ClassBlocksController < ApplicationController
   def class_block_assignment
     @class_blocks = ClassBlock.all
   end
+
+  def assign_me_class
+    class_block_id = params[:class_block_id]
+    @class_block = ClassBlock.find(class_block_id)
+  end
+  
 end
