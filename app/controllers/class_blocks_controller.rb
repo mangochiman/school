@@ -86,6 +86,14 @@ class ClassBlocksController < ApplicationController
   def assign_me_class
     class_block_id = params[:class_block_id]
     @class_block = ClassBlock.find(class_block_id)
+    @class_blocks = ClassBlock.all
+    class_room_ids = @class_block.class_block_class_rooms.map(&:class_room_id)
+    class_room_ids = '0' if class_room_ids.blank?
+    @un_assigned_class_rooms = ClassRoom.find(:all, :conditions => ["class_room_id NOT IN (?)",
+        class_room_ids])
+    @assigned_class_rooms = ClassRoom.find(:all, :conditions => ["class_room_id IN (?)",
+        class_room_ids])
+    @my_classes_count = @class_block.class_block_class_rooms.count
   end
   
 end
