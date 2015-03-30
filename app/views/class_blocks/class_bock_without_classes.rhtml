@@ -18,6 +18,30 @@
     <%= stylesheet_link_tag("gvalidator") %>
     <%= stylesheet_link_tag("bootstrap") %>
 
+    <script type="text/javascript">
+
+      function cancel(){
+        jQuery.confirm({
+          title:"Class Block Assignment",
+          text:"Are you really really sure you want to cancel?",
+          confirm: function() {
+            window.location = "/class_blocks/assign_me_class?class_block_id=<%= params[:class_block_id] %>";
+          },
+          cancel: function() {
+
+          },
+          confirmButton: "Yes I am",
+          cancelButton: "No"
+        });
+      }
+
+      function assignClass(obj){
+        classBlockID = obj.getAttribute("class_block_id")
+        window.location = "/class_blocks/assign_me_class?class_block_id=" + classBlockID + "&mode=add_class"
+      }
+      
+    </script>
+
     <style type="text/css">
       .modal-title {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -82,7 +106,7 @@
 
             <div class="content-module-heading cf">
 
-              <h3 class="fl">Class Block Assignment</h3>
+              <h3 class="fl">Blocks Without Classes</h3>
               <span class="fr expand-collapse-text">Click to collapse</span>
               <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -100,6 +124,31 @@
                   <%= flash[:error] %>
                 </div>
               <% end %>
+              <div style="padding:10px;" class="well">
+                <a href="#"><span class="badge badge-info pull-right"><%= @class_blocks_without_classes.count %></span>Total Blocks without classes</a>
+              </div>
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width:25%;">Block</th>
+                    <th style="text-align:center;">Min Capacity</th>
+                    <th style="text-align:center;">Max Capacity</th>
+                    <th style="width:10%;">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @class_blocks_without_classes.each do |class_block| %>
+                    <tr>
+                      <td><%= class_block.name %></td>
+                      <td style="text-align:center; padding:4px;"><%= class_block.min_carrying_capacity %></td>
+                      <td style="text-align:center; padding:4px;"><%= class_block.max_carrying_capacity %></td>
+                      <td style="padding-top:2px;">
+                        <a class_block_id="<%= class_block.id %>" onclick="assignClass(this);" class="button round blue image-right ic-add text-upper">Assign Class</a>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
             </div> <!-- end content-module-main -->
           </div> <!-- end content-module -->
         </div> <!-- end side-content -->

@@ -121,5 +121,23 @@ class ClassBlocksController < ApplicationController
     my_classes_count = class_block.class_block_class_rooms.count
     render :text => my_classes_count.to_s and return
   end
+
+  def class_bock_without_classes
+    class_block_ids = ClassBlockClassRoom.find(:all).map(&:class_block_id)
+    class_block_ids = '0' if class_block_ids.blank?
+    @class_blocks_without_classes = ClassBlock.find(:all,
+      :conditions => ["class_block_id NOT IN (?)", class_block_ids]
+    )
+    @class_blocks = ClassBlock.all
+  end
+
+  def classes_without_blocks
+    class_room_ids = ClassBlockClassRoom.find(:all).map(&:class_room_id)
+    class_room_ids = '0' if class_room_ids.blank?
+    @classes_without_blocks = ClassRoom.find(:all, 
+      :conditions => ["class_room_id NOT IN (?)", class_room_ids]
+    )
+    @class_blocks = ClassBlock.all
+  end
   
 end
