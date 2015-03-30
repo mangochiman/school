@@ -132,7 +132,7 @@ class ClassBlocksController < ApplicationController
   end
 
   def classes_without_blocks
-    class_room_ids = ClassBlockClassRoom.find(:all).map(&:class_room_id)
+    class_room_ids = ClassBlockClassRoom.find(:all).map(&:class_room_id).uniq
     class_room_ids = '0' if class_room_ids.blank?
     @classes_without_blocks = ClassRoom.find(:all, 
       :conditions => ["class_room_id NOT IN (?)", class_room_ids]
