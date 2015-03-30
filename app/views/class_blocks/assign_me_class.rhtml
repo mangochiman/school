@@ -107,10 +107,11 @@
               type: "POST",
               url: "/class_blocks/remove_class_block_class_room",
               data: "class_room_id=" + classRoomID + '&class_block_id=' + classBlockID,
-              success: function(){
+              success: function(result){
                 id = classBlockID + '_' + classRoomID
                 element = document.getElementById(id);
                 element.parentNode.removeChild(element);
+                document.getElementsByClassName("badge")[0].innerHTML = result;
               }
 
             });

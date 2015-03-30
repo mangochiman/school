@@ -112,11 +112,14 @@ class ClassBlocksController < ApplicationController
   def remove_class_block_class_room
     class_block_id = params[:class_block_id]
     class_room_id = params[:class_room_id]
+    
     class_block_class_room = ClassBlockClassRoom.find(:first,
       :conditions => ["class_block_id =? AND class_room_id =?", class_block_id,
         class_room_id])
     class_block_class_room.delete
-    render :text => "true" and return
+    class_block = ClassBlock.find(class_block_id)
+    my_classes_count = class_block.class_block_class_rooms.count
+    render :text => my_classes_count.to_s and return
   end
   
 end
