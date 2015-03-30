@@ -139,5 +139,21 @@ class ClassBlocksController < ApplicationController
     )
     @class_blocks = ClassBlock.all
   end
-  
+
+  def assign_block_to_class
+    @class_room = ClassRoom.find(params[:class_room_id])
+    @class_blocks = ClassBlock.all
+    if request.method ==:post
+      class_room_id = params[:class_room_id]
+      class_block_ids = params[:class_block_ids].split(",")
+      class_block_ids.each do |class_block_id|
+        ClassBlockClassRoom.create({
+            :class_block_id => class_block_id,
+            :class_room_id => class_room_id
+          })
+      end
+      render :text => "true" and return
+    end
+  end
+
 end

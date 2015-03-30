@@ -19,13 +19,55 @@
     <%= stylesheet_link_tag("bootstrap") %>
 
     <script type="text/javascript">
+      function selectAll(){
+        selectAllInput = document.getElementById('table-select-all');
+        inputs = document.getElementsByTagName("input");
+        if (selectAllInput.checked){
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+              inputs[i].checked = true;
+            }
+          }
+        }
+        else{
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+              inputs[i].checked = false;
+            }
+          }
+        }
+      }
 
-      function cancel(){
+      function submitSelected(){
+        classRoomID = '<%= params[:class_room_id] %>';
+        inputs = document.getElementsByTagName("input");
+        classBlockIDs = [];
+        for (var i=0; i<=inputs.length - 1; i++){
+          if (inputs[i].type == 'checkbox'){
+            if (inputs[i].checked){
+              if (inputs[i].hasAttribute("class_block_id")){
+                classBlockID = inputs[i].getAttribute("class_block_id");
+                classBlockIDs.push(classBlockID);
+              }
+            }
+          }
+        }
+
         jQuery.confirm({
           title:"Class Block Assignment",
-          text:"Are you really really sure you want to cancel?",
+          text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
           confirm: function() {
-            window.location = "/class_blocks/assign_me_class?class_block_id=<%= params[:class_block_id] %>";
+            jQuery.ajax({
+              type: "POST",
+              url: "/class_blocks/assign_block_to_class",
+              data: "class_room_id=" + classRoomID + '&class_block_ids=' + classBlockIDs,
+              success: function(){
+                window.location = '/class_blocks/classes_without_blocks/';
+              }
+
+            });
           },
           cancel: function() {
 
@@ -35,9 +77,19 @@
         });
       }
 
-      function assignBlock(obj){
-        classRoomID = obj.getAttribute("class_room_id")
-        window.location = "/class_blocks/assign_block_to_class?class_room_id=" + classRoomID;
+      function cancel(){
+        jQuery.confirm({
+          title:"Class Block Assignment",
+          text:"Are you really really sure you want to cancel?",
+          confirm: function() {
+            window.location = "/class_blocks/classes_without_blocks";
+          },
+          cancel: function() {
+
+          },
+          confirmButton: "Yes I am",
+          cancelButton: "No"
+        });
       }
       
     </script>
@@ -106,7 +158,7 @@
 
             <div class="content-module-heading cf">
 
-              <h3 class="fl">Classes Without Blocks</h3>
+              <h3 class="fl"><%= @class_room.name %></h3>
               <span class="fr expand-collapse-text">Click to collapse</span>
               <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -124,30 +176,41 @@
                   <%= flash[:error] %>
                 </div>
               <% end %>
-              <div style="padding:10px;" class="well">
-                <a href="#"><span class="badge badge-info pull-right"><%= @classes_without_blocks.count %></span>Total Classes Without Blocks</a>
-              </div>
+
               <table>
+
                 <thead>
                   <tr>
-                    <th style="width:10%; font-weight: bold;">#</th>
-                    <th style="text-align:center;">Class</th>
-                    <th style="width:25%;">Action</th>
+                    <th style="width:10%;">
+                      <input type="checkbox" onclick="selectAll();" id="table-select-all"/>
+                    </th>
+                    <th style="text-align:center;">Block</th>
+                    <th style="text-align:center;">Min Capacity</th>
+                    <th style="text-align:center; width:30%;">Max Capacity</th>
                   </tr>
                 </thead>
+                <tfoot>
+                  <tr>
+                    <td class="table-footer" colspan="8">
+                      <a onmousedown="cancel()" style="font-size: 9pt;" class="button round blue image-right ic-cancel text-upper">Cancel</a>
+                      <a onmousedown="submitSelected()" style="margin-left: 5%; font-size: 9pt;" class="button round blue image-right ic-right-arrow text-upper">Continue</a>
+                    </td>
+                  </tr>
+                </tfoot>
                 <tbody>
-                  <% count = 0 %>
-                  <% @classes_without_blocks.each do |class_room| %>
+                  <% @class_blocks.each do |class_block| %>
                     <tr>
-                      <td><%= count = count + 1 %></td>
-                      <td style="text-align:center; padding:6px;"><%= class_room.name %></td>
-                      <td style="padding-top:2px;">
-                        <a style="width:80%;" class_room_id="<%= class_room.id %>" onclick="assignBlock(this);" class="button round blue image-right ic-add text-upper">Assign Block</a>
-                      </td>
+                      <td><input type="checkbox" class_block_id="<%= class_block.id %>"/></td>
+                      <td style="text-align:center;"><%= class_block.name %></td>
+                      <td style="text-align:center;"><%= class_block.min_carrying_capacity %></td>
+                      <td style="text-align:center;"><%= class_block.max_carrying_capacity %></td>
                     </tr>
                   <% end %>
+
                 </tbody>
+
               </table>
+
             </div> <!-- end content-module-main -->
           </div> <!-- end content-module -->
         </div> <!-- end side-content -->
