@@ -108,4 +108,15 @@ class ClassBlocksController < ApplicationController
     flash[:notice] = "Operation successful"
     redirect_to :controller => "class_blocks", :action => "assign_me_class", :class_block_id => class_block_id and return
   end
+
+  def remove_class_block_class_room
+    class_block_id = params[:class_block_id]
+    class_room_id = params[:class_room_id]
+    class_block_class_room = ClassBlockClassRoom.find(:first,
+      :conditions => ["class_block_id =? AND class_room_id =?", class_block_id,
+        class_room_id])
+    class_block_class_room.delete
+    render :text => "true" and return
+  end
+  
 end

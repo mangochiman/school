@@ -95,6 +95,33 @@
           cancelButton: "No"
         });
       }
+
+      function deleteSelected(obj){
+        classRoomID = obj.getAttribute("class_room_id")
+        classBlockID = "<%= params[:class_block_id] %>"
+        jQuery.confirm({
+          title:"Delete Confirmation",
+          text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+          confirm: function() {
+            jQuery.ajax({
+              type: "POST",
+              url: "/class_blocks/remove_class_block_class_room",
+              data: "class_room_id=" + classRoomID + '&class_block_id=' + classBlockID,
+              success: function(){
+                id = classBlockID + '_' + classRoomID
+                element = document.getElementById(id);
+                element.parentNode.removeChild(element);
+              }
+
+            });
+          },
+          cancel: function() {
+
+          },
+          confirmButton: "Yes I am",
+          cancelButton: "No"
+        });
+      }
     </script>
 
     <style type="text/css">
@@ -227,11 +254,11 @@
                   </thead>
                   <tbody>
                     <% @assigned_class_rooms.each do |class_room| %>
-                      <tr>
+                      <tr id="<%= params[:class_block_id].to_s + '_' + class_room.id.to_s %>">
                         <td><%= class_room.name %></td>
                         <td style="padding:4px; text-align:center;"><%= class_room.code %></td>
                         <td>
-                          <a class="table-actions-button ic-table-delete confirm" onmousedown="setCurrentClassRoomId(this)" class_room_id="<%= class_room.id %>"></a>
+                          <a class="table-actions-button ic-table-delete confirm" onmousedown="deleteSelected(this)" class_room_id="<%= class_room.id %>"></a>
                         </td>
                       </tr>
                     <% end %>
