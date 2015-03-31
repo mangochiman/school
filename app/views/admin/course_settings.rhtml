@@ -49,7 +49,7 @@
       }
 
       .badge{
-        min-width: 100%;
+        min-width: 72%;
         border-radius: 5px;
       }
     </style>
@@ -123,7 +123,7 @@
                     </div>
                   <% end %>
 
-                  <form id="registration" action="/global_properties/create_course_settings/" method="POST" >
+                  <form action="/global_properties/create_course_settings/" method="POST" >
                     <table style="width:60%;">
                       <tr style="background-color:white;">
                         <td>Minimum Periods Per week</td>
@@ -160,7 +160,12 @@
 
 
                 <div class="content-module-main cf">
-                    <table>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th colspan="2">Course Settings</th>
+                      </tr>
+                    </thead>
                     <tr style="background-color:white;">
                       <td style="width:80%; font-size: 11pt;">Min Periods/Week</td>
                       <td style="text-align:center; padding-bottom: 2px;"><span class="badge badge-info"><%= @min_periods_per_week %></span></td>

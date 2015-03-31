@@ -45,10 +45,15 @@
       table td:first-child{
         width:10em;
       }
-      
+
       #optional{
         position: relative;
         left: 3%;
+      }
+
+      .badge{
+        min-width: 72%;
+        border-radius: 5px;
       }
     </style>
   </head>
@@ -121,31 +126,31 @@
                     </div>
                   <% end %>
 
-                  <form id="registration" action="#" >
+                  <form action="/global_properties/create_teacher_settings/" method="POST" >
                     <table>
                       <tr style="background-color:white;">
                         <td>Minimum Periods A Teacher Can Teach Per Week</td>
-                        <td><input type="text" name="minimum_periods_per_week"/></td>
+                        <td><input type="text" name="teacher_min_periods_per_week" required="required"/></td>
                       </tr>
                       <tr style="background-color:white;">
                         <td>Maximum Periods A Teacher Can Teach Per Week</td>
-                        <td><input type="text" name="maximum_periods_per_week"/></td>
+                        <td><input type="text" name="teacher_max_periods_per_week" required="required"/></td>
                       </tr>
                       <tr style="background-color:white;">
                         <td>Recommended Periods A Teacher Can Teach Per Week</td>
-                        <td><input type="text" name="recommended_periods_per_week"/></td>
+                        <td><input type="text" name="teacher_recommended_periods_per_week" required="required"/></td>
                       </tr>
                       <tr style="background-color:white;">
                         <td>Maximum Courses A Teacher Can Teach In A Row</td>
-                        <td><input type="text" name="max_per_row"/></td>
+                        <td><input type="text" name="teacher_max_courses_per_row" required="required"/></td>
                       </tr>
                       <tr style="background-color:white;">
                         <td>Minimum Courses A Teacher Can Teach per Day</td>
-                        <td><input type="text" name="min_per_day"/></td>
+                        <td><input type="text" name="teacher_min_courses_per_day" required="required"/></td>
                       </tr>
                       <tr style="background-color:white;">
                         <td>Maximum Courses A Teacher Can Teach per Day</td>
-                        <td><input type="text" name="max_per_day"/></td>
+                        <td><input type="text" name="teacher_max_courses_per_day" required="required"/></td>
                       </tr>
                     </table>
                     <input type="submit" value="Submit" class="round blue ic-right-arrow" />
@@ -169,7 +174,37 @@
 
 
                 <div class="content-module-main cf">
-
+                  <table>
+                    <thead>
+                      <tr>
+                        <th colspan="2"> Teacher Settings</th>
+                      </tr>
+                    </thead>
+                    <tr style="background-color:white;">
+                      <td style="width:80%; font-size: 11pt;">Min Periods/Week</td>
+                      <td style="text-align:center; padding-bottom: 2px;"><span class="badge badge-info"><%= @teacher_min_periods_per_week %></span></td>
+                    </tr>
+                    <tr style="background-color:white;">
+                      <td style="font-size: 11pt;">Max Periods/Week</td>
+                      <td style="text-align:center; padding-bottom: 2px;"><span class="badge badge-info"><%= @teacher_max_periods_per_week %></span></td>
+                    </tr>
+                    <tr style="background-color:white;">
+                      <td style="font-size: 11pt;">Recommended Periods/Week</td>
+                      <td style="text-align:center; padding-bottom: 2px;"><span class="badge badge-info"><%= @teacher_recommended_periods_per_week %></span></td>
+                    </tr>
+                    <tr style="background-color:white;">
+                      <td style="font-size: 11pt;">Max Courses Per Row</td>
+                      <td style="text-align:center; padding-bottom: 2px;"><span class="badge badge-info"><%= @teacher_max_courses_per_row %></span></td>
+                    </tr>
+                    <tr style="background-color:white;">
+                      <td style="font-size: 11pt;">Min Courses/Day</td>
+                      <td style="text-align:center; padding-bottom: 2px;"><span class="badge badge-info"><%= @teacher_min_courses_per_day %></span></td>
+                    </tr>
+                    <tr style="background-color:white;">
+                      <td style="font-size: 11pt;">Max Courses/Day</td>
+                      <td style="text-align:center; padding-bottom: 2px;"><span class="badge badge-info"><%= @teacher_max_courses_per_day %></span></td>
+                    </tr>
+                  </table>
                 </div> <!-- end content-module-main -->
 
               </div> <!-- end content-module -->

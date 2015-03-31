@@ -44,4 +44,35 @@ class GlobalPropertiesController < ApplicationController
     flash[:notice] = "Operation successful"
     redirect_to :controller => "admin", :action => "course_settings" and return
   end
+
+  def create_teacher_settings
+    ActiveRecord::Base.transaction do
+      teacher_min_periods_per_week = GlobalProperty.find_or_create_by_property("teacher_min_periods_per_week")
+      teacher_min_periods_per_week.value = params[:teacher_min_periods_per_week]
+      teacher_min_periods_per_week.save
+
+      teacher_max_periods_per_week = GlobalProperty.find_or_create_by_property("teacher_max_periods_per_week")
+      teacher_max_periods_per_week.value = params[:teacher_max_periods_per_week]
+      teacher_max_periods_per_week.save
+
+      teacher_recommended_periods_per_week = GlobalProperty.find_or_create_by_property("teacher_recommended_periods_per_week")
+      teacher_recommended_periods_per_week.value = params[:teacher_recommended_periods_per_week]
+      teacher_recommended_periods_per_week.save
+
+      teacher_max_courses_per_row = GlobalProperty.find_or_create_by_property("teacher_max_courses_per_row")
+      teacher_max_courses_per_row.value = params[:teacher_max_courses_per_row]
+      teacher_max_courses_per_row.save
+
+      teacher_min_courses_per_day = GlobalProperty.find_or_create_by_property("teacher_min_courses_per_day")
+      teacher_min_courses_per_day.value = params[:teacher_min_courses_per_day]
+      teacher_min_courses_per_day.save
+
+      teacher_max_courses_per_day = GlobalProperty.find_or_create_by_property("teacher_max_courses_per_day")
+      teacher_max_courses_per_day.value = params[:teacher_max_courses_per_day]
+      teacher_max_courses_per_day.save
+    end
+    flash[:notice] = "Operation successful"
+    redirect_to :controller => "admin", :action => "teacher_settings" and return
+  end
+  
 end

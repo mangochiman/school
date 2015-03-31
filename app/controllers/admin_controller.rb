@@ -517,7 +517,12 @@ class AdminController < ApplicationController
   end
 
   def teacher_settings
-    
+    @teacher_min_periods_per_week = GlobalProperty.find_by_property("teacher_min_periods_per_week").value rescue ''
+    @teacher_max_periods_per_week = GlobalProperty.find_by_property("teacher_max_periods_per_week").value rescue ''
+    @teacher_recommended_periods_per_week = GlobalProperty.find_by_property("teacher_recommended_periods_per_week").value rescue ''
+    @teacher_max_courses_per_row = GlobalProperty.find_by_property("teacher_max_courses_per_row").value rescue ''
+    @teacher_min_courses_per_day = GlobalProperty.find_by_property("teacher_min_courses_per_day").value rescue ''
+    @teacher_max_courses_per_day = GlobalProperty.find_by_property("teacher_max_courses_per_day").value rescue ''
   end
 
   def class_bock_settings
