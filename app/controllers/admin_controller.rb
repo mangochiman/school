@@ -511,7 +511,9 @@ class AdminController < ApplicationController
   end
 
   def course_settings
-    
+    @min_periods_per_week = GlobalProperty.find_by_property("min_periods_per_week").value rescue ''
+    @max_periods_per_week = GlobalProperty.find_by_property("max_periods_per_week").value rescue ''
+    @recommended_periods_per_week = GlobalProperty.find_by_property("recommended_periods_per_week").value rescue ''
   end
 
   def teacher_settings

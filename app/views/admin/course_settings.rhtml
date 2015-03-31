@@ -41,6 +41,17 @@
         position: relative;
         left: 3%;
       }
+
+      table input[type="text"]{
+        font-size: 14px;
+        padding: 6px;
+        width: 70px;
+      }
+
+      .badge{
+        min-width: 100%;
+        border-radius: 5px;
+      }
     </style>
   </head>
   <body> 
@@ -112,24 +123,24 @@
                     </div>
                   <% end %>
 
-                  <form id="registration" action="#" >
-                    <table>
+                  <form id="registration" action="/global_properties/create_course_settings/" method="POST" >
+                    <table style="width:60%;">
                       <tr style="background-color:white;">
                         <td>Minimum Periods Per week</td>
-                        <td><input type="text" name="minimum_periods"/></td>
+                        <td><input type="text" name="min_periods_per_week" required="required"/></td>
                       </tr>
                       <tr style="background-color:white;">
                         <td>Maximum Periods Per week</td>
-                        <td><input type="text" name="maximum_periods"/></td>
+                        <td><input type="text" name="max_periods_per_week" required="required"/></td>
                       </tr>
                       <tr style="background-color:white;">
                         <td>Recommended Periods Per week</td>
-                        <td><input type="text" name="recommended_periods"/></td>
+                        <td><input type="text" name="recommended_periods_per_week" required="required"/></td>
                       </tr>
                     </table>
                     <input type="submit" value="Submit" class="round blue ic-right-arrow" />
                   </form>
-                  
+
                 </div> <!-- end content-module-main -->
 
               </div> <!-- end content-module -->
@@ -149,7 +160,20 @@
 
 
                 <div class="content-module-main cf">
-                  
+                    <table>
+                    <tr style="background-color:white;">
+                      <td style="width:80%; font-size: 11pt;">Min Periods/Week</td>
+                      <td style="text-align:center; padding-bottom: 2px;"><span class="badge badge-info"><%= @min_periods_per_week %></span></td>
+                    </tr>
+                    <tr style="background-color:white;">
+                      <td style="font-size: 11pt;">Max Periods/Week</td>
+                      <td style="text-align:center; padding-bottom: 2px;"><span class="badge badge-info"><%= @max_periods_per_week %></span></td>
+                    </tr>
+                    <tr style="background-color:white;">
+                      <td style="font-size: 11pt;">Recommended Periods/Week</td>
+                      <td style="text-align:center; padding-bottom: 2px;"><span class="badge badge-info"><%= @recommended_periods_per_week %></span></td>
+                    </tr>
+                  </table>
                 </div> <!-- end content-module-main -->
 
               </div> <!-- end content-module -->
