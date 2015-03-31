@@ -501,6 +501,13 @@ class AdminController < ApplicationController
     @lunch_period_length = [['Select Duration', ''], ['15 Min', '15'], ['30 Min', '30'], ['45 Min', '45'], ['1 Hr', '60'],
       ['1Hr 30 Min', '90']
     ]
+
+    @current_period_start_time = GlobalProperty.find_by_property("period_start_time").value rescue ''
+    @current_period_end_time = GlobalProperty.find_by_property("period_end_time").value rescue ''
+    @current_period_length = GlobalProperty.find_by_property("period_length").value rescue ''
+    @current_lunch_start_time = GlobalProperty.find_by_property("lunch_start_time").value rescue ''
+    @current_lunch_period_length = GlobalProperty.find_by_property("lunch_period_length").value rescue ''
+    
   end
 
   def course_settings

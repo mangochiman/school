@@ -46,7 +46,7 @@
         position: relative;
         left: 3%;
       }
-      #start_time, #end_time, #period_length, #lunch_start_time, #lunch_period_length{
+      #period_start_time, #period_end_time, #period_length, #lunch_start_time, #lunch_period_length{
         background-color: #fff;
         background-image: none;
         border: 1px solid #ccc;
@@ -62,6 +62,12 @@
         padding: 6px 12px;
         transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
       }
+
+      .badge{
+        min-width: 100%;
+        border-radius: 5px;
+      }
+      
     </style>
   </head>
   <body> 
@@ -133,15 +139,15 @@
                     </div>
                   <% end %>
 
-                  <form id="registration" action="#" >
+                  <form action="/global_properties/create_period_properties/" method="POST" >
                     <table>
                       <tr style="background-color:white;">
                         <td>Period Starts At?</td>
-                        <td><%= select_tag("start_time", options_for_select(@start_time), {:required => 'required'}) %></td>
+                        <td><%= select_tag("period_start_time", options_for_select(@start_time), {:required => 'required'}) %></td>
                       </tr>
                       <tr style="background-color:white;">
                         <td>Period Ends At?</td>
-                        <td><%= select_tag("end_time", options_for_select(@end_time), {:required => 'required'}) %></td>
+                        <td><%= select_tag("period_end_time", options_for_select(@end_time), {:required => 'required'}) %></td>
                       </tr>
                       <tr style="background-color:white;">
                         <td>Period Length</td>
@@ -177,7 +183,28 @@
 
 
                 <div class="content-module-main cf">
-
+                  <table>
+                    <tr style="background-color:white;">
+                      <td style="width:50%; font-size: 11pt;">Period Starts At</td>
+                      <td style="text-align:center; padding-bottom: 2px;"><span class="badge badge-info"><%= @current_period_start_time %></span></td>
+                    </tr>
+                    <tr style="background-color:white;">
+                      <td style="font-size: 11pt;">Period Ends At</td>
+                      <td style="text-align:center; padding-bottom: 2px;"><span class="badge badge-info"><%= @current_period_end_time %></span></td>
+                    </tr>
+                    <tr style="background-color:white;">
+                      <td style="font-size: 11pt;">Period Length</td>
+                      <td style="text-align:center; padding-bottom: 2px;"><span class="badge badge-info"><%= @current_period_length %> Min</span></td>
+                    </tr>
+                    <tr style="background-color:white;">
+                      <td style="font-size: 11pt;">Lunch Starts At</td>
+                      <td style="text-align:center; padding-bottom: 2px;"><span class="badge badge-info"><%= @current_lunch_start_time %></span></td>
+                    </tr>
+                    <tr style="background-color:white;">
+                      <td style="font-size: 11pt;">Lunch Period</td>
+                      <td style="text-align:center;"><span class="badge badge-info"><%= @current_lunch_period_length %> Min</span></td>
+                    </tr>
+                  </table>
                 </div> <!-- end content-module-main -->
 
               </div> <!-- end content-module -->

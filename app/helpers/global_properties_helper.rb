@@ -1,0 +1,2 @@
+module GlobalPropertiesHelper
+end
