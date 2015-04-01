@@ -18,13 +18,46 @@
     <%= stylesheet_link_tag("gvalidator") %>
     <%= stylesheet_link_tag("bootstrap") %>
 
+    <script type="text/javascript">
+      function editPropertyValue(obj){
+        property = obj.getAttribute("property");
+        value = obj.getAttribute("property_value");
+        jQuery.confirm({
+          title:"Edit confirmation",
+          text:"Are you really really sure you want to edit selected item?",
+          confirm: function() {
+            window.location = '/admin/teacher_settings?mode=edit&property=' + property + '&value=' + value;
+          },
+          cancel: function() {
+
+          },
+          confirmButton: "Yes I am",
+          cancelButton: "No"
+        });
+      }
+
+      function cancel(){
+        jQuery.confirm({
+          title:"Cancel confirmation",
+          text:"Are you really really sure you want to cancel?",
+          confirm: function() {
+            window.location = "/admin/teacher_settings";
+          },
+          cancel: function() {
+
+          },
+          confirmButton: "Yes I am",
+          cancelButton: "No"
+        });
+      }
+    </script>
     <style>
       .modal-title {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         font-weight: 500;
         line-height: 1.1;
         font-size: 1.2em;
-        color: red;
+        color: #317eac;
       }
 
       form.autoform .msg.icon {
@@ -51,9 +84,32 @@
         left: 3%;
       }
 
+      table input[type="text"]{
+        padding: 2px;
+        font-size: 12pt;
+        text-align: center;
+        font-weight: bold;
+        width:50%;
+      }
+      #editProperty input[type="text"]{
+        padding: 6px;
+        font-size: 12pt;
+        text-align: center;
+        font-weight: bold;
+      }
+
       .badge{
         min-width: 72%;
         border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .badge:hover{
+        background-color: #5081b3;
+      }
+
+      a{
+        cursor: pointer
       }
     </style>
   </head>
@@ -126,109 +182,163 @@
                     </div>
                   <% end %>
 
-                  <form action="/global_properties/create_teacher_settings/" method="POST" >
+                  <% if params[:mode].blank? %>
+                    <form action="/global_properties/create_teacher_settings/" method="POST" >
+                      <table>
+                        <tr style="background-color:white;">
+                          <td>Minimum Periods A Teacher Can Teach Per Week</td>
+                          <td><input type="text" name="teacher_min_periods_per_week" required="required"/></td>
+                        </tr>
+                        <tr style="background-color:white;">
+                          <td>Maximum Periods A Teacher Can Teach Per Week</td>
+                          <td><input type="text" name="teacher_max_periods_per_week" required="required"/></td>
+                        </tr>
+                        <tr style="background-color:white;">
+                          <td>Recommended Periods A Teacher Can Teach Per Week</td>
+                          <td><input type="text" name="teacher_recommended_periods_per_week" required="required"/></td>
+                        </tr>
+                        <tr style="background-color:white;">
+                          <td>Maximum Courses A Teacher Can Teach In A  per Day</td>
+                          <td><input type="text" name="teacher_max_courses_per_row" required="required"/></td>
+                        </tr>
+                        <tr style="background-color:white;">
+                          <td>Minimum Courses A Teacher Can Teach per Day</td>
+                          <td><input type="text" name="teacher_min_courses_per_day" required="required"/></td>
+                        </tr>
+                        <tr style="background-color:white;">
+                          <td>Maximum Courses A Teacher Can Teach per Day</td>
+                          <td><input type="text" name="teacher_max_courses_per_day" required="required"/></td>
+                        </tr>
+                      </table>
+                      <input type="submit" value="Submit" class="round blue ic-right-arrow" />
+                    </form>
+                  <% end %>
+
+                  <% unless params[:mode].blank? %>
+                    <form id="editProperty"action="/global_properties/update_properties/" method="POST">
+                      <% if params[:property] == 'teacher_min_periods_per_week'%>
+                        Minimum Periods A Teacher Can Teach Per Week
+                        <input type="text" size="4" name="property_value" value="<%= @teacher_min_periods_per_week %>" required="required"/>
+                      <% end %>
+
+                      <% if params[:property] == 'teacher_max_periods_per_week'%>
+                        Maximum Periods A Teacher Can Teach Per Week
+                        <input type="text" size="4" name="property_value" value="<%= @teacher_max_periods_per_week %>" required="required"/>
+                      <% end %>
+
+                      <% if params[:property] == 'teacher_recommended_periods_per_week'%>
+                        Recommended Periods A Teacher Can Teach Per Week
+                        <input type="text" size="4" name="property_value" value="<%= @teacher_recommended_periods_per_week %>" required="required"/>
+                      <% end %>
+
+                      <% if params[:property] == 'teacher_max_courses_per_row'%>
+                        Maximum Courses A Teacher Can Teach In A Row per Day
+                        <input type="text" size="4" name="property_value" value="<%= @teacher_max_courses_per_row %>" required="required"/>
+                      <% end %>
+
+                      <% if params[:property] == 'teacher_min_courses_per_day'%>
+                        Minimum Courses A Teacher Can Teach per Day
+                        <input type="text" size="4" name="property_value" value="<%= @teacher_min_courses_per_day %>" required="required"/>
+                      <% end %>
+
+                      <% if params[:property] == 'teacher_max_courses_per_day'%>
+                        Maximum Courses A Teacher Can Teach per Day
+                        <input type="text" size="4" name="property_value" value="<%= @teacher_max_courses_per_day %>" required="required"/>
+                      <% end %>
+
+                      <div class="stripe-separator"><!--  --></div>
+                      <%= hidden_field_tag("property", params[:property]) %>
+                      <%= hidden_field_tag("source_uri", "teacher_settings") %>
+                      <a class="button round blue image-right ic-cancel text-upper" onclick="cancel();">Cancel</a>
+                      <input type="submit" value="Submit" class="round blue ic-right-arrow" />
+                    </form>
+                  <% end %>
+                  </div> <!-- end content-module-main -->
+
+                </div> <!-- end content-module -->
+
+              </div>
+              <div class="half-size-column fr" style="width:30%">
+
+                <div class="content-module">
+
+                  <div class="content-module-heading cf">
+
+                    <h3 class="fl">Current Settings</h3>
+                    <span class="fr expand-collapse-text">Click to collapse</span>
+                    <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+                  </div> <!-- end content-module-heading -->
+
+
+                  <div class="content-module-main cf">
                     <table>
+                      <thead>
+                        <tr>
+                          <th colspan="2"> Teacher Settings</th>
+                        </tr>
+                      </thead>
                       <tr style="background-color:white;">
-                        <td>Minimum Periods A Teacher Can Teach Per Week</td>
-                        <td><input type="text" name="teacher_min_periods_per_week" required="required"/></td>
+                        <td style="width:80%; font-size: 11pt;">Min Periods/Week</td>
+                        <td style="text-align:center; padding-bottom: 2px;">
+                          <span property="teacher_min_periods_per_week" property_value="<%= @teacher_min_periods_per_week %>" onmousedown="editPropertyValue(this)" class="badge badge-info"><%= @teacher_min_periods_per_week %></span>
+                        </td>
                       </tr>
                       <tr style="background-color:white;">
-                        <td>Maximum Periods A Teacher Can Teach Per Week</td>
-                        <td><input type="text" name="teacher_max_periods_per_week" required="required"/></td>
+                        <td style="font-size: 11pt;">Max Periods/Week</td>
+                        <td style="text-align:center; padding-bottom: 2px;">
+                          <span property="teacher_max_periods_per_week" property_value="<%= @teacher_max_periods_per_week %>" onmousedown="editPropertyValue(this)" class="badge badge-info"><%= @teacher_max_periods_per_week %></span>
+                        </td>
                       </tr>
                       <tr style="background-color:white;">
-                        <td>Recommended Periods A Teacher Can Teach Per Week</td>
-                        <td><input type="text" name="teacher_recommended_periods_per_week" required="required"/></td>
+                        <td style="font-size: 11pt;">Recommended Periods/Week</td>
+                        <td style="text-align:center; padding-bottom: 2px;">
+                          <span property="teacher_recommended_periods_per_week" property_value="<%= @teacher_recommended_periods_per_week %>" onmousedown="editPropertyValue(this)" class="badge badge-info"><%= @teacher_recommended_periods_per_week %></span>
+                        </td>
                       </tr>
                       <tr style="background-color:white;">
-                        <td>Maximum Courses A Teacher Can Teach In A Row</td>
-                        <td><input type="text" name="teacher_max_courses_per_row" required="required"/></td>
+                        <td style="font-size: 11pt;">Max Courses Per Row</td>
+                        <td style="text-align:center; padding-bottom: 2px;">
+                          <span property="teacher_max_courses_per_row" property_value="<%= @teacher_max_courses_per_row %>" onmousedown="editPropertyValue(this)" class="badge badge-info"><%= @teacher_max_courses_per_row %></span>
+                        </td>
                       </tr>
                       <tr style="background-color:white;">
-                        <td>Minimum Courses A Teacher Can Teach per Day</td>
-                        <td><input type="text" name="teacher_min_courses_per_day" required="required"/></td>
+                        <td style="font-size: 11pt;">Min Courses/Day</td>
+                        <td style="text-align:center; padding-bottom: 2px;">
+                          <span property="teacher_min_courses_per_day" property_value="<%= @teacher_min_courses_per_day %>" onmousedown="editPropertyValue(this)" class="badge badge-info"><%= @teacher_min_courses_per_day %></span>
+                        </td>
                       </tr>
                       <tr style="background-color:white;">
-                        <td>Maximum Courses A Teacher Can Teach per Day</td>
-                        <td><input type="text" name="teacher_max_courses_per_day" required="required"/></td>
+                        <td style="font-size: 11pt;">Max Courses/Day</td>
+                        <td style="text-align:center; padding-bottom: 2px;">
+                          <span property="teacher_max_courses_per_day" property_value="<%= @teacher_max_courses_per_day %>" onmousedown="editPropertyValue(this)" class="badge badge-info"><%= @teacher_max_courses_per_day %></span>
+                        </td>
                       </tr>
                     </table>
-                    <input type="submit" value="Submit" class="round blue ic-right-arrow" />
-                  </form>
-                </div> <!-- end content-module-main -->
+                  </div> <!-- end content-module-main -->
 
-              </div> <!-- end content-module -->
+                </div> <!-- end content-module -->
 
-            </div>
-            <div class="half-size-column fr" style="width:30%">
+              </div>
 
-              <div class="content-module">
-
-                <div class="content-module-heading cf">
-
-                  <h3 class="fl">Current Settings</h3>
-                  <span class="fr expand-collapse-text">Click to collapse</span>
-                  <span class="fr expand-collapse-text initial-expand">Click to expand</span>
-
-                </div> <!-- end content-module-heading -->
-
-
-                <div class="content-module-main cf">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th colspan="2"> Teacher Settings</th>
-                      </tr>
-                    </thead>
-                    <tr style="background-color:white;">
-                      <td style="width:80%; font-size: 11pt;">Min Periods/Week</td>
-                      <td style="text-align:center; padding-bottom: 2px;"><span class="badge badge-info"><%= @teacher_min_periods_per_week %></span></td>
-                    </tr>
-                    <tr style="background-color:white;">
-                      <td style="font-size: 11pt;">Max Periods/Week</td>
-                      <td style="text-align:center; padding-bottom: 2px;"><span class="badge badge-info"><%= @teacher_max_periods_per_week %></span></td>
-                    </tr>
-                    <tr style="background-color:white;">
-                      <td style="font-size: 11pt;">Recommended Periods/Week</td>
-                      <td style="text-align:center; padding-bottom: 2px;"><span class="badge badge-info"><%= @teacher_recommended_periods_per_week %></span></td>
-                    </tr>
-                    <tr style="background-color:white;">
-                      <td style="font-size: 11pt;">Max Courses Per Row</td>
-                      <td style="text-align:center; padding-bottom: 2px;"><span class="badge badge-info"><%= @teacher_max_courses_per_row %></span></td>
-                    </tr>
-                    <tr style="background-color:white;">
-                      <td style="font-size: 11pt;">Min Courses/Day</td>
-                      <td style="text-align:center; padding-bottom: 2px;"><span class="badge badge-info"><%= @teacher_min_courses_per_day %></span></td>
-                    </tr>
-                    <tr style="background-color:white;">
-                      <td style="font-size: 11pt;">Max Courses/Day</td>
-                      <td style="text-align:center; padding-bottom: 2px;"><span class="badge badge-info"><%= @teacher_max_courses_per_day %></span></td>
-                    </tr>
-                  </table>
-                </div> <!-- end content-module-main -->
-
-              </div> <!-- end content-module -->
-
-            </div>
-
-          </div> <!-- end content-module -->
+            </div> <!-- end content-module -->
 
 
 
 
-        </div> <!-- end side-content -->
+          </div> <!-- end side-content -->
 
-      </div> <!-- end full-width -->
+        </div> <!-- end full-width -->
 
-    </div> <!-- end content -->
+      </div> <!-- end content -->
 
-    <%= javascript_include_tag("bootstrap") %>
-    <%= javascript_include_tag("zebra_datepicker") %>
-    <script>
-      $('.date-picker').Zebra_DatePicker({
-        view : 'years',
-        direction: ['<%=  Date.today.strftime("%Y-%m-%d") %>', '<%=  (Date.today + 1.year).strftime("%Y-%m-%d") %>']
-      });
-    </script>
-  </body>
-</html>
+      <%= javascript_include_tag("bootstrap") %>
+      <%= javascript_include_tag("zebra_datepicker") %>
+      <script>
+        $('.date-picker').Zebra_DatePicker({
+          view : 'years',
+          direction: ['<%=  Date.today.strftime("%Y-%m-%d") %>', '<%=  (Date.today + 1.year).strftime("%Y-%m-%d") %>']
+        });
+      </script>
+    </body>
+  </html>
