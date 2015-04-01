@@ -80,6 +80,6 @@ class GlobalPropertiesController < ApplicationController
     global_property.value = params[:property_value]
     global_property.save
     flash[:notice] = "Operation successful"
-    redirect_to :controller => "admin", :action => "period_settings" and return
+    redirect_to :controller => "admin", :action => params[:source_uri] and return
   end
 end
