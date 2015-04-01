@@ -18,13 +18,46 @@
     <%= stylesheet_link_tag("gvalidator") %>
     <%= stylesheet_link_tag("bootstrap") %>
 
+    <script type="text/javascript">
+      function editPropertyValue(obj){
+        property = obj.getAttribute("property");
+        value = obj.getAttribute("property_value");
+        jQuery.confirm({
+          title:"Edit confirmation",
+          text:"Are you really really sure you want to edit selected item?",
+          confirm: function() {
+            window.location = '/admin/period_settings?mode=edit&property=' + property + '&value=' + value;
+          },
+          cancel: function() {
+
+          },
+          confirmButton: "Yes I am",
+          cancelButton: "No"
+        });
+      }
+
+      function cancel(){
+        jQuery.confirm({
+          title:"Cancel confirmation",
+          text:"Are you really really sure you want to cancel?",
+          confirm: function() {
+            window.location = "/admin/period_settings";
+          },
+          cancel: function() {
+
+          },
+          confirmButton: "Yes I am",
+          cancelButton: "No"
+        });
+      }
+    </script>
     <style>
       .modal-title {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         font-weight: 500;
         line-height: 1.1;
         font-size: 1.2em;
-        color: red;
+        color: #317eac;
       }
 
       form.autoform .msg.icon {
@@ -63,11 +96,22 @@
         transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
       }
 
+      input[type=submit]{
+        margin-left: 5%;
+      }
       .badge{
         min-width: 89%;
         border-radius: 5px;
+        cursor: pointer;
       }
-      
+
+      .badge:hover{
+        background-color: #5081b3;
+      }
+
+      a{
+        cursor: pointer
+      }
     </style>
   </head>
   <body> 
@@ -138,32 +182,66 @@
                       <%= flash[:error] %>
                     </div>
                   <% end %>
+                  <% if params[:mode].blank? %>
+                    <form action="/global_properties/create_period_properties/" method="POST" >
+                      <table>
+                        <tr style="background-color:white;">
+                          <td>Period Starts At?</td>
+                          <td><%= select_tag("period_start_time", options_for_select(@start_time), {:required => 'required'}) %></td>
+                        </tr>
+                        <tr style="background-color:white;">
+                          <td>Period Ends At?</td>
+                          <td><%= select_tag("period_end_time", options_for_select(@end_time), {:required => 'required'}) %></td>
+                        </tr>
+                        <tr style="background-color:white;">
+                          <td>Period Length</td>
+                          <td><%= select_tag("period_length", options_for_select(@period_length), {:required => 'required'}) %></td>
+                        </tr>
+                        <tr style="background-color:white;">
+                          <td>Lunch Starts At?</td>
+                          <td><%= select_tag("lunch_start_time", options_for_select(@lunch_start_time), {:required => 'required'}) %></td>
+                        </tr>
+                        <tr style="background-color:white;">
+                          <td>Lunch Period Length</td>
+                          <td><%= select_tag("lunch_period_length", options_for_select(@lunch_period_length), {:required => 'required'}) %></td>
+                        </tr>
+                      </table>
+                      <input type="submit" value="Submit" class="round blue ic-right-arrow" />
+                    </form>
+                  <% end %>
+                  <% unless params[:mode].blank? %>
+                    <form action="/global_properties/update_properties/" method="POST">
+                      <% if params[:property] == 'period_start_time'%>
+                        Period Starts At?
+                        <%= select_tag("property_value", options_for_select(@start_time, params[:value]), {:required => 'required'}) %>
+                      <% end %>
 
-                  <form action="/global_properties/create_period_properties/" method="POST" >
-                    <table>
-                      <tr style="background-color:white;">
-                        <td>Period Starts At?</td>
-                        <td><%= select_tag("period_start_time", options_for_select(@start_time), {:required => 'required'}) %></td>
-                      </tr>
-                      <tr style="background-color:white;">
-                        <td>Period Ends At?</td>
-                        <td><%= select_tag("period_end_time", options_for_select(@end_time), {:required => 'required'}) %></td>
-                      </tr>
-                      <tr style="background-color:white;">
-                        <td>Period Length</td>
-                        <td><%= select_tag("period_length", options_for_select(@period_length), {:required => 'required'}) %></td>
-                      </tr>
-                      <tr style="background-color:white;">
-                        <td>Lunch Starts At?</td>
-                        <td><%= select_tag("lunch_start_time", options_for_select(@lunch_start_time), {:required => 'required'}) %></td>
-                      </tr>
-                      <tr style="background-color:white;">
-                        <td>Lunch Period Length</td>
-                        <td><%= select_tag("lunch_period_length", options_for_select(@lunch_period_length), {:required => 'required'}) %></td>
-                      </tr>
-                    </table>
-                    <input type="submit" value="Submit" class="round blue ic-right-arrow" />
-                  </form>
+                      <% if params[:property] == 'period_end_time'%>
+                        Period Ends At?
+                        <%= select_tag("property_value", options_for_select(@end_time, params[:value]), {:required => 'required'}) %>
+                      <% end %>
+
+                      <% if params[:property] == 'period_length'%>
+                        Period Length
+                        <%= select_tag("property_value", options_for_select(@period_length, params[:value]), {:required => 'required'}) %>
+                      <% end %>
+
+                      <% if params[:property] == 'lunch_start_time'%>
+                        Lunch Starts At?
+                        <%= select_tag("property_value", options_for_select(@lunch_start_time, params[:value]), {:required => 'required'}) %>
+                      <% end %>
+
+                      <% if params[:property] == 'lunch_period_length'%>
+                        Lunch Period Length
+                        <%= select_tag("property_value", options_for_select(@lunch_period_length, params[:value]), {:required => 'required'}) %>
+                      <% end %>
+
+                      <div class="stripe-separator"><!--  --></div>
+                      <%= hidden_field_tag("property", params[:property]) %>
+                      <a class="button round blue image-right ic-cancel text-upper" onclick="cancel();">Cancel</a>
+                      <input type="submit" value="Submit" class="round blue ic-right-arrow" />
+                    </form>
+                  <% end %>
                 </div> <!-- end content-module-main -->
 
               </div> <!-- end content-module -->
@@ -191,23 +269,33 @@
                     </thead>
                     <tr style="background-color:white;">
                       <td style="width:50%; font-size: 11pt;">Period Starts At</td>
-                      <td style="text-align:center; padding-bottom: 2px;"><span class="badge badge-info"><%= @current_period_start_time %></span></td>
+                      <td style="text-align:center; padding-bottom: 2px;">
+                        <span property="period_start_time" property_value="<%= @current_period_start_time %>" onmousedown="editPropertyValue(this)" class="badge badge-info"><%= @current_period_start_time %></span>
+                      </td>
                     </tr>
                     <tr style="background-color:white;">
                       <td style="font-size: 11pt;">Period Ends At</td>
-                      <td style="text-align:center; padding-bottom: 2px;"><span class="badge badge-info"><%= @current_period_end_time %></span></td>
+                      <td style="text-align:center; padding-bottom: 2px;">
+                        <span property="period_end_time" property_value="<%= @current_period_end_time %>" onmousedown="editPropertyValue(this)" class="badge badge-info"><%= @current_period_end_time %></span>
+                      </td>
                     </tr>
                     <tr style="background-color:white;">
                       <td style="font-size: 11pt;">Period Length</td>
-                      <td style="text-align:center; padding-bottom: 2px;"><span class="badge badge-info"><%= @current_period_length %> Min</span></td>
+                      <td style="text-align:center; padding-bottom: 2px;">
+                        <span property="period_length" property_value="<%= @current_period_length %>" onmousedown="editPropertyValue(this)" class="badge badge-info"><%= @current_period_length %> Min</span>
+                      </td>
                     </tr>
                     <tr style="background-color:white;">
                       <td style="font-size: 11pt;">Lunch Starts At</td>
-                      <td style="text-align:center; padding-bottom: 2px;"><span class="badge badge-info"><%= @current_lunch_start_time %></span></td>
+                      <td style="text-align:center; padding-bottom: 2px;">
+                        <span property="lunch_start_time" property_value="<%= @current_lunch_start_time %>" onmousedown="editPropertyValue(this)" class="badge badge-info"><%= @current_lunch_start_time %></span>
+                      </td>
                     </tr>
                     <tr style="background-color:white;">
                       <td style="font-size: 11pt;">Lunch Period</td>
-                      <td style="text-align:center;"><span class="badge badge-info"><%= @current_lunch_period_length %> Min</span></td>
+                      <td style="text-align:center;">
+                        <span property="lunch_period_length" property_value="<%= @current_lunch_period_length %>" onmousedown="editPropertyValue(this)" class="badge badge-info"><%= @current_lunch_period_length %> Min</span>
+                      </td>
                     </tr>
                   </table>
                 </div> <!-- end content-module-main -->

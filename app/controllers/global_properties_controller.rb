@@ -74,5 +74,12 @@ class GlobalPropertiesController < ApplicationController
     flash[:notice] = "Operation successful"
     redirect_to :controller => "admin", :action => "teacher_settings" and return
   end
-  
+
+  def update_properties
+    global_property = GlobalProperty.find_by_property("#{params[:property]}")
+    global_property.value = params[:property_value]
+    global_property.save
+    flash[:notice] = "Operation successful"
+    redirect_to :controller => "admin", :action => "period_settings" and return
+  end
 end
