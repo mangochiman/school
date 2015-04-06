@@ -49,4 +49,37 @@ class TimeTable < ActiveRecord::Base
     
     return class_periods
   end
+
+  def self.course_settings
+    course_settings_hash = {}
+    
+    min_periods_per_week = GlobalProperty.find_by_property("min_periods_per_week").value.to_i
+    max_periods_per_week = GlobalProperty.find_by_property("max_periods_per_week").value.to_i
+    recommended_periods_per_week = GlobalProperty.find_by_property("recommended_periods_per_week").value.to_i
+    
+    course_settings_hash["min_periods_per_week"] = min_periods_per_week
+    course_settings_hash["max_periods_per_week"] = max_periods_per_week
+    course_settings_hash["recommended_periods_per_week"] = recommended_periods_per_week
+    return course_settings_hash
+  end
+
+  def self.teacher_settings
+    teacher_settings_hash = {}
+    teacher_min_periods_per_week = GlobalProperty.find_by_property("teacher_min_periods_per_week").value.to_i
+    teacher_max_periods_per_week = GlobalProperty.find_by_property("teacher_max_periods_per_week").value.to_i
+    teacher_recommended_periods_per_week = GlobalProperty.find_by_property("teacher_recommended_periods_per_week").value.to_i
+    teacher_max_courses_per_row = GlobalProperty.find_by_property("teacher_max_courses_per_row").value.to_i
+    teacher_min_courses_per_day = GlobalProperty.find_by_property("teacher_min_courses_per_day").value.to_i
+    teacher_max_courses_per_day = GlobalProperty.find_by_property("teacher_max_courses_per_day").value.to_i
+
+    teacher_settings_hash["teacher_min_periods_per_week"] = teacher_min_periods_per_week
+    teacher_settings_hash["teacher_max_periods_per_week"] = teacher_max_periods_per_week
+    teacher_settings_hash["teacher_recommended_periods_per_week"] = teacher_recommended_periods_per_week
+    teacher_settings_hash["teacher_max_courses_per_row"] = teacher_max_courses_per_row
+    teacher_settings_hash["teacher_min_courses_per_day"] = teacher_min_courses_per_day
+    teacher_settings_hash["teacher_max_courses_per_day"] = teacher_max_courses_per_day
+    
+    return teacher_settings_hash
+  end
+  
 end
