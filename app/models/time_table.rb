@@ -33,6 +33,19 @@ class TimeTable < ActiveRecord::Base
       class_periods << formatted_time
       lunch_end_time_parsed += period_length.minutes
     end
+
+    last_period = class_periods.last
+    last_period_parsed = Time.parse(last_period)
+
+    if ((last_period_parsed + period_length.minutes) > period_end_time_parsed) #last period is exceeding last period time set
+      i = 0
+      class_periods_modified = []
+      while (i <= class_periods.length - 2)
+        class_periods_modified << class_periods[i]
+        i = i + 1
+      end
+      return class_periods_modified
+    end
     
     return class_periods
   end
