@@ -194,8 +194,10 @@
                 <thead>
                   <tr>
                     <th><input type="checkbox" id="table-select-all" onclick="selectAll();"/></th>
-                    <th style="min-width:35%;">Username</th>
-                    <th style="min-width:35%;"><center>Date created</center></th>
+                    <th style="text-align:center;">Username</th>
+                    <th style="text-align:center;">First Name</th>
+                    <th style="text-align:center;">Last Name</th>
+                    <th style="text-align:center;">Date created</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -210,7 +212,9 @@
                   <% @users.each do |user| %>
                     <tr id="<%= user.id %>">
                       <td><input type="checkbox" user_id="<%= user.id %>"/></td>
-                      <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= user.username %></td>
+                      <td style="text-align:center; padding: 0.833em 0 0.833em 1.25em;"><%= user.username %></td>
+                      <td style="text-align:center;"><%= user.first_name %></td>
+                      <td style="text-align:center;"><%= user.last_name %></td>
                       <td><center><%= user.created_at.to_date.strftime("%d-%b-%Y") %></center></td>
                       <td>
                         <a user_id="<%= user.id %>" href="#" onmousedown="setCurrentUserId(this)" class="table-actions-button ic-table-delete confirm"></a>

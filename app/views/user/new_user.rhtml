@@ -135,7 +135,7 @@
         font-size: 10pt;
         margin: 0 10px;
         padding: 5px 5px 5px 30px;
-        position: unset;
+        max-width: 19.4%;
       }
 
       form label {
@@ -247,6 +247,8 @@
                   <% end %>
 
                   <form id="registration" class="autoform" action="/user/create" method="POST">
+                    <div><label for="first_name">First Name</label><input type="text" name="first_name" class="text required" id="first_name" maxlength="30"/></div>
+                    <div><label for="last_name">Last Name</label><input type="text" name="last_name" class="text required" id="last_name" maxlength="30"/></div>
                     <div><label for="username">username</label><input type="text" name="username" class="text required" id="username" maxlength="30"/></div>
                     <div><label for="password">Password</label><input type="password" name="password" id="password" class="text required" maxlength="30"/></div>
                     <div><label for="password_confirm">Confirm Password</label>

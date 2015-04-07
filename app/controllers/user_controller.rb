@@ -63,6 +63,8 @@ class UserController < ApplicationController
   end
   
   def create
+    first_name = params[:first_name]
+    last_name = params[:last_name]
     password = params[:password]
     password_confirm = params[:password_confirm]
     errors = ""
@@ -76,6 +78,8 @@ class UserController < ApplicationController
     end
     
     user = User.create({
+        :first_name => first_name,
+        :last_name => last_name,
         :password => password,
         :username => params[:username]
       })
@@ -91,6 +95,8 @@ class UserController < ApplicationController
       redirect_to :controller => "user", :action => "edit_user" and return
     end
     user = User.find(params[:user_id])
+    first_name = params[:first_name]
+    last_name = params[:last_name]
     password = params[:password]
     password_confirm = params[:password_confirm]
     if (password != password_confirm)
@@ -98,6 +104,8 @@ class UserController < ApplicationController
       redirect_to :controller => "user", :action => "edit_user", :user_id => params[:user_id] and return
     end
     if (user.update_attributes({
+            :first_name => first_name,
+            :last_name => last_name,
             :username => params[:username],
             :password => params[:password]
           }))

@@ -127,8 +127,10 @@
                 <thead>
                   <tr>
                     <th>#</th>
-                    <th style="min-width:35%; text-align: center;">Username</th>
-                    <th style="min-width:35%;"><center>Date created</center></th>
+                    <th style="text-align:center;">Username</th>
+                    <th style="text-align:center;">First Name</th>
+                    <th style="text-align:center;">Last Name</th>
+                    <th style="text-align:center; width:15%;">Date created</th>
                   </tr>
                 </thead>
  
@@ -138,6 +140,8 @@
                     <tr>
                       <td><%= count = count + 1 %></td>
                       <td style="text-align:left; padding:4px; text-align: center;"><%= user.username %></td>
+                      <td style="text-align:center;"><%= user.first_name %></td>
+                      <td style="text-align:center;"><%= user.last_name %></td>
                       <td><center><%= user.created_at.to_date.strftime("%d-%b-%Y") %></center></td>
                     </tr>
                   <% end %>
