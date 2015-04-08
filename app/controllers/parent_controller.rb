@@ -60,6 +60,24 @@ class ParentController < ApplicationController
     parent_id = params[:parent_id]
     @parent = Parent.find(parent_id)
     if request.method == :post
+      password = params[:password]
+      password_confirm = params[:password_confirm]
+      parent_account = Parent.find_by_username(params[:username])
+
+      errors = ""
+      errors += ' Password mismatch.' if (password != password_confirm)
+
+      unless parent_account.blank?
+        unless (parent_account.id == @parent.id)
+          errors += 'Username already exists.'
+        end
+      end
+
+      unless (errors.blank?)
+        flash[:error] = "#{errors}"
+        redirect_to :controller => "parent", :action => "edit_me", :parent_id => params[:parent_id] and return
+      end
+      
       if (@parent.update_attributes({
               :fname => params[:firstname],
               :lname => params[:lastname],
