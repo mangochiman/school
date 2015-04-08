@@ -146,7 +146,7 @@
 
             <div class="content-module-heading cf">
 
-              <h3 class="fl">Table design</h3>
+              <h3 class="fl">Filter Guardians</h3>
               <span class="fr expand-collapse-text">Click to collapse</span>
               <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -161,7 +161,7 @@
                     <table>
                       <tr>
                         <td style="width:5.5em; text-align: left;"><span>Select Class</span></td>
-                        <td><%= select_tag("class_room", options_for_select(@class_rooms), {:onchange=>"loadClassCourses(this);"})%></td>
+                        <td><%= select_tag("class_room", options_for_select(@class_rooms))%></td>
 
                         <td style="text-align: left;"><span>Select Gender</span></td>
                         <td><%= select_tag("gender", options_for_select(['All', 'Male', 'Female']))%></td>

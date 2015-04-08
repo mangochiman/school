@@ -12,7 +12,7 @@ class ParentController < ApplicationController
       hash[class_room_id] = {}
       total_guardians = 0
       
-      class_room.class_room_students.each do |crs|
+      class_room.active_student_class_room_adjustments.each do |crs|
         next if crs.student.blank?
         next if crs.student.student_parent.blank?
         total_guardians += 1 #Counting available guardians per class
@@ -22,7 +22,7 @@ class ParentController < ApplicationController
       with_guardians = 0
       without_guardians = 0
 
-      class_room.class_room_students.each do |crs|
+      class_room.active_student_class_room_adjustments.each do |crs|
         next if crs.student.blank?
         if crs.student.student_parent.blank?
           without_guardians += 1
@@ -117,9 +117,9 @@ class ParentController < ApplicationController
       
       if (params[:class_room].to_s.upcase == 'ALL')
         class_room_ids = ClassRoom.all.collect{|c| c.id}.join(', ')
-        class_room_conditions = "crs.class_room_id IN (#{class_room_ids})"
+        class_room_conditions = "scra.new_class_room_id IN (#{class_room_ids})"
       else
-        class_room_conditions = "crs.class_room_id = #{class_room_id}"
+        class_room_conditions = "scra.new_class_room_id = #{class_room_id}"
       end
 
       if (params[:gender].to_s.upcase == 'ALL')
@@ -127,15 +127,14 @@ class ParentController < ApplicationController
       else
         gender_conditions = "p.gender = '#{gender}'"
       end
-      
+
       parents = StudentParent.find_by_sql("SELECT * FROM student_parent sp INNER JOIN parent p
-          ON sp.parent_id=p.parent_id INNER JOIN class_room_student crs
-          ON sp.student_id=crs.student_id WHERE #{class_room_conditions}
-          AND #{gender_conditions}"
+          ON sp.parent_id=p.parent_id INNER JOIN student_class_room_adjustment scra
+          ON sp.student_id=scra.student_id WHERE #{class_room_conditions}
+          AND #{gender_conditions} AND scra.status = 'Active'"
       ).collect{|sp|sp.parent}
 
       hash = {}
-      
       (parents || []).each do |parent|
         parent_id = parent.id.to_s
         hash[parent_id] = {}
@@ -287,7 +286,7 @@ class ParentController < ApplicationController
       hash[class_room_id] = {}
       total_guardians = 0
 
-      class_room.class_room_students.each do |crs|
+      class_room.active_student_class_room_adjustments.each do |crs|
         next if crs.student.blank?
         next if crs.student.student_parent.blank?
         total_guardians += 1 #Counting available guardians per class
@@ -297,7 +296,7 @@ class ParentController < ApplicationController
       with_guardians = 0
       without_guardians = 0
 
-      class_room.class_room_students.each do |crs|
+      class_room.active_student_class_room_adjustments.each do |crs|
         next if crs.student.blank?
         if crs.student.student_parent.blank?
           without_guardians += 1
