@@ -161,9 +161,23 @@ class ParentController < ApplicationController
     phone = params[:phone]
     date_of_birth = params[:dob].to_date
 
+    password = params[:password]
+    password_confirm = params[:password_confirm]
+    errors = ""
+    user_exists = Parent.find_by_username(params[:username])
+    errors += 'Username already exists.' if user_exists
+    errors += ' Password mismatch.' if (password != password_confirm)
+
+    unless (errors.blank?)
+      flash[:error] = "#{errors}"
+      redirect_to :controller => "parent", :action => "new_parent_guardian" and return
+    end
+    
     if (Parent.create({
             :fname => first_name,
             :lname => last_name,
+            :password => password,
+            :username => params[:username],
             :gender => gender,
             :email => email,
             :phone => phone,

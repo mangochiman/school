@@ -21,18 +21,18 @@
 
     <script>
       function selectGender(){
-        <% unless params[:gender].blank?%>
-          <% if (params[:gender].upcase == "MALE") %>
-                document.getElementById('male').setAttribute("selected", 'true');
-          <%  end %>
+<% unless params[:gender].blank?%>
+  <% if (params[:gender].upcase == "MALE") %>
+        document.getElementById('male').setAttribute("selected", 'true');
+  <%  end %>
 
-          <% if (params[:gender].upcase == "FEMALE") %>
-                document.getElementById('female').setAttribute("selected", 'true');
-          <%  end %>
-        <% end %>
-      }
+  <% if (params[:gender].upcase == "FEMALE") %>
+        document.getElementById('female').setAttribute("selected", 'true');
+  <%  end %>
+<% end %>
+  }
 
-      window.setTimeout("selectGender();", 100);
+  window.setTimeout("selectGender();", 100);
     </script>
     <style>
       .modal-title {
@@ -44,15 +44,26 @@
       }
 
       form.autoform .msg.icon {
+        font-size: 10pt;
         margin: 0 10px;
         padding: 5px 5px 5px 30px;
-        position: unset;
       }
 
       form label {
         font-size: 0.9em;
         font-weight: bold;
       }
+      
+      .Zebra_DatePicker_Icon_Wrapper .info{
+        min-width: 43%;
+        position: absolute !important;
+      }
+
+      .Zebra_DatePicker_Icon_Wrapper .error{
+        min-width: 111%;
+        position: absolute !important;
+      }
+
       form.autoform input, select{
         font-size: 0.8em !important;
         font-weight: bold;
@@ -62,19 +73,14 @@
         margin-left:15%;
         width: 60%;
       }
-      table td #simple-input{
-        float: right;
-      }
+
 
       table label{
         text-align: left;
       }
-      #simple-input{
-        font-size: 10pt !important;
-      }
 
-      #registration input[type="text"], input[type="password"], textarea {
-        border: 1px solid #d9dbdd;
+      #registration input[type="text"], input[type="password"]{
+        border: 0px !important;
         outline: medium none;
         padding: 0.5em 0.225em;
       }
@@ -164,8 +170,13 @@
 
                 <div><label for="firstname">First Name</label><input type="text" name="firstname" class="firstname required" id="firstname" maxlength="30" value="<%= params[:first_name] %>"/></div>
                 <div><label for="lastname">Last Name</label><input type="text" name="lastname" class="lastname required" id="lastname" maxlength="30" value="<%= params[:last_name] %>"/></div>
-                <div><label for="phone">Phone</label><input type="text" name="phone" class="phone required" id="phone" maxlength="12"/></div>
-                <div><label for="email">Email</label><input type="text" name="email" class="email required" id="email" maxlength="60"/></div>
+                <div><label for="username">username</label><input type="text" name="username" class="text required" id="username" maxlength="30"/></div>
+                <div><label for="password">Password</label><input type="password" name="password" id="password" class="text required" maxlength="30"/></div>
+                <div><label for="password_confirm">Confirm Password</label>
+                  <input type="password" maxlength="32" id="password_confirm" class="text required" name="password_confirm"></input>
+                </div>
+                <div><label for="phone">Phone</label><input type="text" name="phone" class="phone" id="phone" maxlength="12"/></div>
+                <div><label for="email">Email</label><input type="text" name="email" class="email" id="email" maxlength="60"/></div>
 
                 <div>
                   <label for="gender">Gender</label>
@@ -176,7 +187,7 @@
                   </select>
                 </div>
 
-                <div><label for="text">Date of Birth</label><input type="text" name="dob" class="text required date-picker"/></div>
+                <div><label for="dob">Date of Birth</label><input type="text" name="dob" id="dob" class="text required date-picker"/></div>
 
 
                 <div class="stripe-separator"><!--  --></div>
