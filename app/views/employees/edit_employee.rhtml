@@ -40,6 +40,39 @@
         position: unset;
       }
 
+      #search-employee-form fieldset {
+        border: 1px solid gray;
+        float: none;
+        margin-bottom: 15px;
+        padding: 0;
+      }
+
+      #search-employee-form legend {
+        color: #abda0f;
+        font-size: 14px;
+        font-weight: 100;
+        margin-left: 14px;
+        padding: 2px;
+        width: initial;
+        margin-bottom: initial;
+        border-style: none;
+      }
+
+      #search-employee-form fieldset input {
+        color: #505050;
+        float: left;
+        margin-right: 5px;
+        width: 215px;
+        padding: 6px;
+        font-size: 14px;
+        border: 1px solid #d9dbdd;
+        outline: medium none;
+      }
+
+      #search-employee-form table td{
+        border-left: none;
+      }
+
       form label {
         font-size: 0.9em;
         font-weight: bold;
@@ -71,6 +104,20 @@
         width: 205px;
         text-align: center;
         padding: 6px 12px;
+        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+      }
+      #dropdown-actions{
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        color: #555;
+        font-size: 12px !important;
+        height: 34px;
+        line-height: 1.42857;
+        width: 205px;
+        text-align: center;
         transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
       }
       table th:first-child {
@@ -141,6 +188,28 @@
                   <%= flash[:error] %>
                 </div>
               <% end %>
+              <form id="search-employee-form" action="#">
+                <fieldset>
+                  <legend>Search</legend>
+                  <div style="margin-left:2%;">
+                    <table>
+                      <tr>
+                        <td style="width:10%; font-size: 13pt;">Name</td>
+                        <td style="width:20%;"><input type="text" id="name_search"/></td>
+                        <td style="width:10%; text-align: center; font-size: 13pt;"><span>Gender</span></td>
+                        <td style="width:24%">
+                          <select id="dropdown-actions" class="gender_search">
+                            <option value="">[Select Gender]</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                          </select>
+                        </td>
+                        <td><a onclick="loadSearchResults();" class="button round blue image-right ic-search text-upper">Search</a></td>
+                      </tr>
+                    </table>
+                  </div>
+                </fieldset>
+              </form>
               <table>
 
                 <thead>
