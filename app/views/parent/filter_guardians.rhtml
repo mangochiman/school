@@ -14,7 +14,7 @@
 
     <script>
       function editMe(obj){
-        parentId = obj.getAttribute("teacher_id");
+        parentId = obj.getAttribute("parent_id");
         window.location = "/parent/edit_me?parent_id=" + parentId;
       }
       
@@ -45,7 +45,7 @@
               html+="<td>" + dob +  "</td>";
               html+="<td>" + phone +  "</td>";
               html+="<td>" + join_date +  "</td>";
-              html+="<td><a parent_id=" + parentId + " onclick='editMe(this)' href='#' class='table-actions-button ic-table-edit'></a></td>";
+              html+="<td><a parent_id=" + parentId + " onclick='editMe(this)' class='table-actions-button ic-table-edit'></a></td>";
               html+="</tr>";
             }
 
@@ -189,16 +189,16 @@
                 </thead>
 
                 <tbody id="parents">
-                  <% @parents.each do |teacher| %>
+                  <% @parents.each do |parent| %>
                   <tr>
-                    <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= teacher.fname.capitalize.to_s + ' ' + teacher.lname.capitalize.to_s %></td>
-                    <td><a href="#"><%=  teacher.email %></a></td>
-                    <td><%=  teacher.gender %></td>
-                    <td><%=  teacher.dob.to_date.strftime("%d-%b-%Y") %></td>
-                    <td><%=  teacher.phone %></td>
-                    <td><%=  teacher.created_at.strftime("%d-%b-%Y") %></td>
+                    <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= parent.fname.capitalize.to_s + ' ' + parent.lname.capitalize.to_s %></td>
+                    <td><a href="#"><%=  parent.email %></a></td>
+                    <td><%=  parent.gender %></td>
+                    <td><%=  parent.dob.to_date.strftime("%d-%b-%Y") %></td>
+                    <td><%=  parent.phone %></td>
+                    <td><%=  parent.created_at.strftime("%d-%b-%Y") %></td>
                     <td>
-                      <a teacher_id="<%= teacher.id %>" onclick="editMe(this)" class="table-actions-button ic-table-edit"></a>
+                      <a parent_id="<%= parent.id %>" onclick="editMe(this)" class="table-actions-button ic-table-edit"></a>
                     </td>
                   </tr>
                   <% end %>
