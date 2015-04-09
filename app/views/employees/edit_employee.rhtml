@@ -24,6 +24,52 @@
         window.location = "/employees/edit_me_employee?employee_id=" + employeeId;
       }
 
+      function loadSearchResults(){
+        names = document.getElementById('name_search').value.split(/\W+/);
+        console.log(names)
+        firstName = names[0];
+        lastName = names[1];
+        if (typeof lastName == 'undefined'){
+          lastName = '';
+        }
+
+        gender = document.getElementsByClassName('gender_search')[0].value;
+        jQuery.ajax({
+          type: "POST",
+          url: "/employees/render_employees",
+          data: "first_name=" + firstName + "&last_name=" + lastName + "&gender=" + gender,
+          success: function(results){
+            results = eval("(" + results  + ")");
+            html = "";
+            tbody = document.getElementById("employees");
+            count = 0
+            for (var employee_id in results){
+              count = count + 1
+              firstName = results[employee_id]["fname"];
+              lastName = results[employee_id]["lname"];
+              gender = results[employee_id]["gender"];
+              phone = results[employee_id]["phone"];
+              email = results[employee_id]["email"];
+              dob = results[employee_id]["dob"];
+              position = results[employee_id]["position"];
+
+              html+="<tr>";
+              html+="<td style='text-align:left; padding: 0.833em 0 0.833em 1.25em;'>" + firstName + ' ' + lastName +  "</td>";
+              html+="<td><a href='#'>" + email +  "</a></td>";
+              html+="<td style=''>" + gender +  "</td>";
+              html+="<td style=''>" + dob +  "</td>";
+              html+="<td style=''>" + phone +  "</td>";
+              html+="<td style=''>" + position +  "</td>";
+              html+="<td><a employee_id=" + employee_id + " onclick='editMe(this)' class='table-actions-button ic-table-edit'></a></td>"
+              html+="</tr>";
+            }
+            
+            tbody.innerHTML = html
+          }
+
+        });
+
+      }
     </script>
     <style>
       .modal-title {
@@ -122,6 +168,10 @@
       }
       table th:first-child {
         border-style: none none none !important;
+      }
+
+      a{
+        cursor: pointer;
       }
     </style>
   </head>
@@ -236,7 +286,7 @@
                       <td><%=  employee.phone %></td>
                       <td><%=  employee.employee_position.position.name.titleize %></td>
                       <td>
-                        <a employee_id="<%= employee.id %>" onclick="editMe(this)" href="#" class="table-actions-button ic-table-edit"></a>
+                        <a employee_id="<%= employee.id %>" onclick="editMe(this)" class="table-actions-button ic-table-edit"></a>
                       </td>
                     </tr>
                   <% end %>

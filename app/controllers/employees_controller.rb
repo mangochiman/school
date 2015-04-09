@@ -322,8 +322,31 @@ class EmployeesController < ApplicationController
       end
       render :text => "true" and return
     end
-
-    
   end
-  
+
+  def render_employees
+    fname = params[:first_name]
+    lname = params[:last_name]
+    gender = params[:gender]
+    gender = ['Male', 'Female'] if params[:gender].blank?
+    
+    employees = Employee.find(:all, :conditions => ["fname LIKE (?) AND lname LIKE (?) AND
+        gender IN (?)", '%' + fname + '%', '%' + lname + '%', gender])
+    employees_hash = {}
+    
+    employees.each do |employee|
+      employee_id = employee.id
+      employees_hash[employee_id] = {}
+      employees_hash[employee_id]['fname'] = employee.fname
+      employees_hash[employee_id]['lname'] = employee.lname
+      employees_hash[employee_id]['email'] = employee.email
+      employees_hash[employee_id]['gender'] = employee.gender
+      employees_hash[employee_id]['dob'] = employee.dob.to_date.strftime("%d-%b-%Y")
+      employees_hash[employee_id]['phone'] = employee.phone
+      employees_hash[employee_id]['position'] = employee.employee_position.position.name.titleize
+    end
+
+    render :text => employees_hash.to_json and return
+  end
+
 end
