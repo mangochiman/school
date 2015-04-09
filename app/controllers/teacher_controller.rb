@@ -19,10 +19,10 @@ class TeacherController < ApplicationController
 
       (class_room.class_room_teachers || []).each do |crt|
         next if crt.teacher.blank?
-        if (crt.teacher.gender.upcase == 'MALE')
+        if (crt.teacher.gender.to_s.upcase == 'MALE')
           total_males += 1
         end
-        if (crt.teacher.gender.upcase == 'FEMALE')
+        if (crt.teacher.gender.to_s.upcase == 'FEMALE')
           total_females += 1
         end
       end
@@ -405,10 +405,10 @@ class TeacherController < ApplicationController
 
       (class_room.class_room_teachers || []).each do |crt|
         next if crt.teacher.blank?
-        if (crt.teacher.gender.upcase == 'MALE')
+        if (crt.teacher.gender.to_s.upcase == 'MALE')
           total_males += 1
         end
-        if (crt.teacher.gender.upcase == 'FEMALE')
+        if (crt.teacher.gender.to_s.upcase == 'FEMALE')
           total_females += 1
         end
       end

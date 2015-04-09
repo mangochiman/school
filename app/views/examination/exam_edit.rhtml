@@ -342,7 +342,7 @@
     <script>
       $('.date-picker').Zebra_DatePicker({
         view : 'years',
-        direction: ['<%=  Date.today.strftime("%Y-%m-%d") %>', '<%=  (Date.today + 1.year).strftime("%Y-%m-%d") %>']
+        direction: ['<%=  (Date.today - 100.years).strftime("%Y-%m-%d") %>', '<%=  (Date.today + 1.year).strftime("%Y-%m-%d") %>']
       });
     </script>
   </body>
