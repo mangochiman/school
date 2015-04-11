@@ -53,7 +53,7 @@
             tbody.innerHTML = html
           }
 
-      });
+        });
       }
 
     </script>
@@ -82,7 +82,8 @@
       #filter-form table td{
         border-left: none;
       }
-     #class_room, #course, #gender{
+
+      #class_room, #course, #gender{
         background-color: #fff;
         background-image: none;
         border: 1px solid #ccc;
@@ -101,9 +102,9 @@
       a{
         cursor: pointer;
       }
-    table th:first-child {
+      table th:first-child {
         border-style: none none none !important;
-    }
+      }
     </style>
   </head>
   <body>
@@ -201,17 +202,17 @@
 
                 <tbody id="teachers">
                   <% @teachers.each do |teacher| %>
-                  <tr>
-                    <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= teacher.fname.capitalize.to_s + ' ' + teacher.lname.capitalize.to_s %></td>
-                    <td><a href="#"><%=  teacher.email %></a></td>
-                    <td><%=  teacher.gender %></td>
-                    <td><%=  teacher.dob.to_date.strftime("%d-%b-%Y") %></td>
-                    <td><%=  teacher.phone %></td>
-                    <td><%=  teacher.created_at.strftime("%d-%b-%Y") %></td>
-                    <td>
-                      <a teacher_id="<%= teacher.id %>" onclick="editMe(this)" class="table-actions-button ic-table-edit"></a>
-                    </td>
-                  </tr>
+                    <tr>
+                      <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= teacher.fname.capitalize.to_s + ' ' + teacher.lname.capitalize.to_s %></td>
+                      <td><a href="#"><%=  teacher.email %></a></td>
+                      <td><%=  teacher.gender %></td>
+                      <td><%=  teacher.dob.to_date.strftime("%d-%b-%Y") %></td>
+                      <td><%=  teacher.phone %></td>
+                      <td><%=  teacher.created_at.strftime("%d-%b-%Y") %></td>
+                      <td>
+                        <a teacher_id="<%= teacher.id %>" onclick="editMe(this)" class="table-actions-button ic-table-edit"></a>
+                      </td>
+                    </tr>
                   <% end %>
                 </tbody>
 
