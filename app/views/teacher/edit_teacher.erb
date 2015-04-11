@@ -8,11 +8,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <!-- jQuery & JS files -->
-
     <%= javascript_include_tag("jquery") %>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("jquery.confirm") %>
     <%= javascript_include_tag("script") %>
+    <%= javascript_include_tag("gvalidator") %>
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("metallic") %>
+    <%= stylesheet_link_tag("gvalidator") %>
+    <%= stylesheet_link_tag("bootstrap") %>
 
     <script type="text/javascript">
 
@@ -22,8 +26,12 @@
       }
 
       function loadSearchResults(){
-        firstName = document.getElementById('fname_search').value;
-        lastName = document.getElementById('lname_search').value;
+        names = document.getElementById('name_search').value.split(/\W+/);
+        firstName = names[0];
+        lastName = names[1];
+        if (typeof lastName == 'undefined'){
+          lastName = '';
+        }
         gender = document.getElementsByClassName('gender_search')[0].value;
         jQuery.ajax({
           type: "POST",
@@ -38,8 +46,11 @@
               firstName = results[teacher_id]["fname"];
               lastName = results[teacher_id]["lname"];
               gender = results[teacher_id]["gender"];
+              if (gender == null) gender = '';
               phone = results[teacher_id]["phone"];
+              if (phone == null) phone = '';
               email = results[teacher_id]["email"];
+              if (email == null) email = '';
               dob = results[teacher_id]["dob"];
               join_date = results[teacher_id]["join_date"];
               html+="<tr>";
@@ -49,25 +60,25 @@
               html+="<td>" + dob +  "</td>";
               html+="<td>" + phone +  "</td>";
               html+="<td>" + join_date +  "</td>";
-              html+="<td><a teacher_id=" + teacher_id + " onclick='editMe(this)' href='#' class='table-actions-button ic-table-edit'></a></td>";
+              html+="<td><a teacher_id=" + teacher_id + " onclick='editMe(this)' class='table-actions-button ic-table-edit'></a></td>";
               html+="</tr>";
             }
 
             tbody.innerHTML = html
           }
 
-      });
+        });
 
-  }
+      }
     </script>
-    
+
     <style>
       #search-teacher-form fieldset {
         border: 1px solid gray;
         float: left;
         margin-bottom: 15px;
-        padding: 5px;
-        width: 98.7%;
+        padding: 0px;
+        float: none;
       }
       #search-teacher-form legend {
         color: #abda0f;
@@ -75,41 +86,39 @@
         font-weight: 100;
         margin-left: 14px;
         padding: 2px;
+        width: initial;
+        margin-bottom: initial;
+        border-style: none;
       }
+
       #search-teacher-form fieldset input {
         color: #505050;
         float: left;
         margin-right: 5px;
-        width: 140px;
-        padding: 3px;
+        width: 215px;
+        padding: 6px;
         font-size: 14px;
-      }
-      
-   
-      table td #simple-input, #password, #confirm{
-        float: right;
+        border: 1px solid #d9dbdd;
+        outline: medium none;
       }
 
-      table label{
-       text-align: left;
-      }
-      #simple-input, #password, #confirm {
-        font-size: 10pt !important;
+      #search-teacher-form table td{
+        border-left: none;
       }
 
-    #registration input[type="text"], input[type="password"], textarea {
+      #registration input[type="text"], input[type="password"], textarea {
         border: 1px solid #d9dbdd;
         outline: medium none;
         padding: 0.5em 0.225em;
-    }
-    input[type="submit"] {
-      margin-left: 37%;
-    }
-    table th:first-child {
+      }
+      input[type="submit"] {
+        margin-left: 37%;
+      }
+      table th:first-child {
         border-style: none none none !important;
-    }
+      }
 
-    #dropdown-actions{
+      #dropdown-actions{
         background-color: #fff;
         background-image: none;
         border: 1px solid #ccc;
@@ -123,6 +132,10 @@
         text-align: center;
         padding: 6px 12px;
         transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+      }
+
+      a{
+        cursor: pointer;
       }
     </style>
   </head>
@@ -183,37 +196,33 @@
 
             <div class="content-module-main">
               <% if flash[:notice] %>
-                  <div class="confirmation-box round">
-                    <%= flash[:notice] %>
-                  </div>
-                <% end %>
-                <% if flash[:error] %>
-                  <div class="error-box round">
-                      <%= flash[:error] %>
-                  </div>
-                <% end %>
+                <div class="confirmation-box round">
+                  <%= flash[:notice] %>
+                </div>
+              <% end %>
+              <% if flash[:error] %>
+                <div class="error-box round">
+                  <%= flash[:error] %>
+                </div>
+              <% end %>
 
               <form id="search-teacher-form" action="#">
                 <fieldset>
                   <legend>Search</legend>
-                  <div style="width:81%; margin-left:10%;">
+                  <div style="margin-left:2%;">
                     <table>
                       <tr>
-                        <td style="width:10%;">First Name</td>
-                        <td style="width:10%;"><input type="text" id="fname_search"/></td>
-                        <td style="width:10%;">Last Name</td>
-                        <td style="width:10%;"><input type="text" id="lname_search"/></td>
-                        <td style="width:10%;">Gender</td>
-                        <td style="width:5%">
+                        <td style="width:10%; font-size: 13pt;">Name</td>
+                        <td style="width:20%;"><input type="text" id="name_search"/></td>
+                        <td style="width:10%; text-align: center; font-size: 13pt;"><span>Gender</span></td>
+                        <td style="width:24%">
                           <select id="dropdown-actions" class="gender_search">
-                            <option value="">Select Gender</option>
+                            <option value="">[Select Gender]</option>
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>
                           </select>
                         </td>
-                      </tr>
-                      <tr>
-                        <td colspan="6"><a onclick="loadSearchResults();" href="#" class="button round blue image-right ic-search text-upper">Search</a></td>
+                        <td><a onclick="loadSearchResults();" class="button round blue image-right ic-search text-upper">Search</a></td>
                       </tr>
                     </table>
                   </div>
@@ -237,17 +246,17 @@
 
                 <tbody id="teachers">
                   <% @teachers.each do |teacher| %>
-                  <tr>
-                    <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= teacher.fname.capitalize.to_s + ' ' + teacher.lname.capitalize.to_s %></td>
-                    <td><a href="#"><%=  teacher.email %></a></td>
-                    <td><%=  teacher.gender %></td>
-                    <td><%=  teacher.dob.to_date.strftime("%d-%b-%Y") %></td>
-                    <td><%=  teacher.phone %></td>
-                    <td><%=  teacher.created_at.strftime("%d-%b-%Y") %></td>
-                    <td>
-                      <a teacher_id="<%= teacher.id %>" onclick="editMe(this)" href="#" class="table-actions-button ic-table-edit"></a>
-                    </td>
-                  </tr>
+                    <tr>
+                      <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= teacher.fname.capitalize.to_s + ' ' + teacher.lname.capitalize.to_s %></td>
+                      <td><a href="#"><%=  teacher.email %></a></td>
+                      <td><%=  teacher.gender %></td>
+                      <td><%=  teacher.dob.to_date.strftime("%d-%b-%Y") %></td>
+                      <td><%=  teacher.phone %></td>
+                      <td><%=  teacher.created_at.strftime("%d-%b-%Y") %></td>
+                      <td>
+                        <a teacher_id="<%= teacher.id %>" onclick="editMe(this)" class="table-actions-button ic-table-edit"></a>
+                      </td>
+                    </tr>
                   <% end %>
                 </tbody>
 
@@ -267,8 +276,8 @@
     <%= javascript_include_tag("zebra_datepicker") %>
     <script>
       $('.date-picker').Zebra_DatePicker({
-            view : 'years',
-            direction: ['<%=  (Date.today - 70.years).strftime("%Y-%m-%d") %>', '<%=  (Date.today - 12.years).strftime("%Y-%m-%d") %>']
+        view : 'years',
+        direction: ['<%=  (Date.today - 70.years).strftime("%Y-%m-%d") %>', '<%=  (Date.today - 12.years).strftime("%Y-%m-%d") %>']
       });
 
       function __$(id){
