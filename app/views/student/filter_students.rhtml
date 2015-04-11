@@ -75,30 +75,6 @@
       }
     </script>
     <style>
-      /*table{
-        margin-left:15%;
-        width: 60%;
-      }
-      table td #simple-input{
-        float: right;
-      }
-
-      table label{
-       text-align: left;
-      }
-      #simple-input{
-        font-size: 10pt !important;
-      }
-
-    form input[type="text"], input[type="password"], textarea {
-        border: 1px solid #d9dbdd;
-        outline: medium none;
-        padding: 0.5em 0.225em;
-    }
-
-    input[type="submit"] {
-      margin-left: 37%;
-    }*/
       .start-date, .end-date{
         background-color: #fff;
 
@@ -124,8 +100,8 @@
         height: 34px;
         line-height: 1.42857;
         margin-left: 30%;
-        min-width: 108px;
-        padding: 6px 12px;
+        text-align: center;
+        min-width: 180px;
         transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
         margin-left: 0%;
       }
@@ -147,22 +123,15 @@
       #search-student-form fieldset input {
         color: #505050;
         float: left;
+        text-align: center;
         margin-right: 5px;
-        width: 140px;
+        width: 172px;
         padding: 3px;
         font-size: 14px;
       }
 
-      .search_table{
-        display: table;
-      }
-
-      .search_row{
-        display: table-row;
-      }
-
-      .search_td{
-        display: table-cell;
+      #search-student-form table td{
+        border-left: none;
       }
 
       table th:first-child {
@@ -243,15 +212,15 @@
               <form id="search-student-form" action="#">
                 <fieldset>
                   <legend>Filter</legend>
-                  <div style="width:78%; margin-left:10%;">
+                  <div style="width:100%; ">
                     <table>
                       <tr>
-                        <td style="width:10%;">Class</td>
+                        <td style="width:10%; text-align: right; font-size: 12pt;">Class</td>
                         <td style="width:5%">
                           <%= select_tag:class_name, options_for_select(@class_rooms), {
                             :id => "dropdown-actions", :class => "class_room_search"} %>
                         </td>
-                        <td style="width:10%;">Gender</td>
+                        <td style="width:10%; text-align: right; font-size: 12pt;">Gender</td>
                         <td style="width:5%">
                           <select id="dropdown-actions" class="gender_search">
                             <option value="">Select Gender</option>
@@ -259,7 +228,7 @@
                             <option value="Female">Female</option>
                           </select>
                         </td>
-                        <td style="">Date Enrolled</td>
+                        <td style="text-align: right; font-size: 12pt; padding-right: 10px;">Date Enrolled</td>
                         <td>
                           <select id="dropdown-actions" class="date_enrolled_search" onchange="showHideCustomDateInputs(this.value)">
                             <option value="">Select Date Enrolled</option>
@@ -274,12 +243,14 @@
                         </td>
                       </tr>
                       <tr class="custom-date-inputs" style="display:none;">
-                        <td>Start Date</td>
+                        <td style="text-align: right; font-size: 12pt;">Start Date</td>
                         <td><input type="text"  id="simple-input" class="round default-width-input start-date date-picker" /></td>
-                        <td>End Date</td>
-                        <td><input type="text"  id="simple-input" class="round default-width-input end-date date-picker" /></td>
+                        <td style="text-align: right; font-size: 12pt;">End Date</td>
+                        <td style="text-align:center;"><input type="text"  id="simple-input" class="round default-width-input end-date date-picker" /></td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
                       </tr>
-                      <tr>
+                      <tr style="background-color:white;">
                         <td colspan="6"><a onclick="loadSearchResults();" class="button round blue image-right ic-search text-upper">Filter</a></td>
                       </tr>
                     </table>
