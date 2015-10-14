@@ -14,9 +14,9 @@ class ReportController < ApplicationController
       end
       hash = {}
       unless (params[:year].match(/ALL/i))
-        students = Student.find_by_sql("SELECT * FROM student s INNER JOIN class_room_student crs ON
-          s.student_id = crs.student_id INNER JOIN class_room cr ON crs.class_room_id = cr.class_room_id
-          WHERE cr.year = #{params[:year]} AND crs.semester_id IN (#{semester_id})")
+        students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id
+          WHERE DATE_FORMAT(scra.start_date, '%Y') = #{params[:year]} AND scra.semester_id IN (#{semester_id})")
 
         hash[params[:year]] = {}
         students.each do |student|
@@ -35,9 +35,8 @@ class ReportController < ApplicationController
         hash = {}
         (start_year..end_year).to_a.each do |year|
           hash[year] = {}
-          students = Student.find_by_sql("SELECT * FROM student s INNER JOIN class_room_student crs ON
-          s.student_id = crs.student_id INNER JOIN class_room cr ON crs.class_room_id = cr.class_room_id
-          WHERE cr.year = #{year} AND crs.semester_id IN (#{semester_id})")
+          students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id WHERE DATE_FORMAT(scra.start_date, '%Y') = #{year} AND scra.semester_id IN (#{semester_id})")
           
           students.each do |student|
             student_id  = student.id
@@ -69,9 +68,9 @@ class ReportController < ApplicationController
     if (request.method == :post)
       hash = {}
       unless (params[:year].match(/ALL/i))
-        students = Student.find_by_sql("SELECT * FROM student s INNER JOIN class_room_student crs ON
-          s.student_id = crs.student_id INNER JOIN class_room cr ON crs.class_room_id = cr.class_room_id
-          WHERE cr.year = #{params[:year]}")
+        students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id WHERE DATE_FORMAT(scra.start_date, '%Y') = #{params[:year]}
+          GROUP BY s.student_id, DATE_FORMAT(scra.start_date, '%Y')")
 
         hash[params[:year]] = {}
         students.each do |student|
@@ -90,9 +89,9 @@ class ReportController < ApplicationController
         hash = {}
         (start_year..end_year).to_a.each do |year|
           hash[year] = {}
-          students = Student.find_by_sql("SELECT * FROM student s INNER JOIN class_room_student crs ON
-          s.student_id = crs.student_id INNER JOIN class_room cr ON crs.class_room_id = cr.class_room_id
-          WHERE cr.year = #{year}")
+          students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id WHERE DATE_FORMAT(scra.start_date, '%Y') = #{year}
+          GROUP BY s.student_id, DATE_FORMAT(scra.start_date, '%Y')")
 
           students.each do |student|
             student_id  = student.id
@@ -132,10 +131,9 @@ class ReportController < ApplicationController
       hash = {}
       unless (params[:year].match(/ALL/i))
         unless (params[:class_room].match(/ALL/i))
-          students = Student.find_by_sql("SELECT * FROM student s INNER JOIN class_room_student crs ON
-            s.student_id = crs.student_id INNER JOIN class_room cr ON crs.class_room_id = cr.class_room_id
-            WHERE cr.year = #{params[:year]} AND crs.class_room_id=#{class_room_id} AND
-            crs.semester_id IN (#{semester_id})")
+          students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
+            s.student_id = scra.student_id WHERE DATE_FORMAT(scra.start_date, '%Y') = #{params[:year]} AND
+            scra.new_class_room_id=#{class_room_id} AND scra.semester_id IN (#{semester_id})")
 
           hash[params[:year]] = {}
           hash[params[:year]][params[:class_room]] = {}
@@ -156,10 +154,9 @@ class ReportController < ApplicationController
           class_room_ids = ClassRoom.all.map(&:id)
           class_room_ids.each do |class_id|
             hash[params[:year]][class_id] = {}
-            students = Student.find_by_sql("SELECT * FROM student s INNER JOIN class_room_student crs ON
-            s.student_id = crs.student_id INNER JOIN class_room cr ON crs.class_room_id = cr.class_room_id
-            WHERE cr.year = #{params[:year]} AND crs.class_room_id=#{class_id} AND
-            crs.semester_id IN (#{semester_id})")
+            students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
+            s.student_id = scra.student_id WHERE DATE_FORMAT(scra.start_date, '%Y') = #{params[:year]} AND
+            scra.new_class_room_id=#{class_id} AND scra.semester_id IN (#{semester_id})")
 
             students.each do |student|
               student_id  = student.id
@@ -179,10 +176,9 @@ class ReportController < ApplicationController
         hash = {}
         (start_year..end_year).to_a.each do |year|
           unless (params[:class_room].match(/ALL/i))
-            students = Student.find_by_sql("SELECT * FROM student s INNER JOIN class_room_student crs ON
-            s.student_id = crs.student_id INNER JOIN class_room cr ON crs.class_room_id = cr.class_room_id
-            WHERE cr.year = #{year} AND crs.class_room_id=#{class_room_id} AND
-            crs.semester_id IN (#{semester_id})")
+            students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
+            s.student_id = scra.student_id WHERE DATE_FORMAT(scra.start_date, '%Y') = #{year} AND
+            scra.new_class_room_id=#{class_room_id} AND scra.semester_id IN (#{semester_id})")
 
             hash[year] = {}
             hash[year][params[:class_room]] = {}
@@ -202,10 +198,9 @@ class ReportController < ApplicationController
             class_room_ids = ClassRoom.all.map(&:id)
             class_room_ids.each do |class_id|
               hash[year][class_id] = {}
-              students = Student.find_by_sql("SELECT * FROM student s INNER JOIN class_room_student crs ON
-              s.student_id = crs.student_id INNER JOIN class_room cr ON crs.class_room_id = cr.class_room_id
-              WHERE cr.year = #{year} AND crs.class_room_id=#{class_id} AND
-              crs.semester_id IN (#{semester_id})")
+              students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
+              s.student_id = scra.student_id WHERE DATE_FORMAT(scra.start_date, '%Y') = #{year} AND scra.new_class_room_id=#{class_id} AND
+              scra.semester_id IN (#{semester_id})")
 
               students.each do |student|
                 student_id  = student.id
@@ -269,7 +264,11 @@ class ReportController < ApplicationController
   def courses_per_class_report
     start_year = Date.today.year - 5
     end_year = Date.today.year
-    
+=begin
+students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id WHERE DATE_FORMAT(scra.start_date, '%Y') = #{params[:year]}
+          GROUP BY s.student_id, DATE_FORMAT(scra.start_date, '%Y')")
+=end
     if (request.method == :post)
       class_room_id = params[:class_room]
       semester_id = params[:semester]
@@ -283,9 +282,9 @@ class ReportController < ApplicationController
         unless (params[:class_room].match(/ALL/i))
           courses = Course.find_by_sql("SELECT c.course_id, c.name, c.created_at FROM course c INNER JOIN class_room_course crc ON
             c.course_id = crc.course_id INNER JOIN class_room cr ON crc.class_room_id = cr.class_room_id
-            INNER JOIN class_room_student crs ON crs.class_room_id=cr.class_room_id
-            WHERE cr.year = #{params[:year]} AND crc.class_room_id=#{class_room_id} AND
-            crs.semester_id IN (#{semester_id})")
+            INNER JOIN student_class_room_adjustment scra ON scra.new_class_room_id = cr.class_room_id
+            WHERE DATE_FORMAT(scra.start_date, '%Y') = #{params[:year]} AND scra.new_class_room_id = #{class_room_id} AND
+            scra.semester_id IN (#{semester_id})")
 
           hash[params[:year]] = {}
           hash[params[:year]][params[:class_room]] = {}
@@ -306,10 +305,10 @@ class ReportController < ApplicationController
             hash[params[:year]][class_id] = {}
             
             courses = Course.find_by_sql("SELECT c.course_id, c.name, c.created_at FROM course c INNER JOIN class_room_course crc ON
-            c.course_id = crc.course_id INNER JOIN class_room cr ON crc.class_room_id = cr.
-            INNER JOIN class_room_student crs ON crs.class_room_id=cr.class_room_id
-            WHERE cr.year = #{params[:year]} AND crc.class_room_id=#{class_id} AND
-            crs.semester_id IN (#{semester_id})")
+            c.course_id = crc.course_id INNER JOIN class_room cr ON crc.class_room_id = cr.class_room_id
+            INNER JOIN student_class_room_adjustment scra ON scra.new_class_room_id = cr.class_room_id
+            WHERE DATE_FORMAT(scra.start_date, '%Y') = #{params[:year]} AND scra.new_class_room_id = #{class_id} AND
+            scra.semester_id IN (#{semester_id})")
 
             courses.each do |course|
               course_id  = course.course_id
@@ -331,9 +330,9 @@ class ReportController < ApplicationController
 
             courses = Course.find_by_sql("SELECT c.course_id, c.name, c.created_at FROM course c INNER JOIN class_room_course crc ON
             c.course_id = crc.course_id INNER JOIN class_room cr ON crc.class_room_id = cr.class_room_id
-            INNER JOIN class_room_student crs ON crs.class_room_id=cr.class_room_id
-            WHERE cr.year = #{year} AND crc.class_room_id=#{class_room_id} AND
-            crs.semester_id IN (#{semester_id})")
+            INNER JOIN student_class_room_adjustment scra ON scra.new_class_room_id = cr.class_room_id
+            WHERE DATE_FORMAT(scra.start_date, '%Y') = #{year} AND scra.new_class_room_id = #{class_room_id} AND
+            scra.semester_id IN (#{semester_id})")
             
             hash[year] = {}
             hash[year][params[:class_room]] = {}
@@ -355,9 +354,9 @@ class ReportController < ApplicationController
               hash[year][class_id] = {}
               courses = Course.find_by_sql("SELECT c.course_id, c.name, c.created_at FROM course c INNER JOIN class_room_course crc ON
               c.course_id = crc.course_id INNER JOIN class_room cr ON crc.class_room_id = cr.class_room_id
-              INNER JOIN class_room_student crs ON crs.class_room_id=cr.class_room_id
-              WHERE cr.year = #{year} AND crc.class_room_id=#{class_id} AND
-              crs.semester_id IN (#{semester_id})")
+              INNER JOIN student_class_room_adjustment scra ON scra.new_class_room_id = cr.class_room_id
+              WHERE DATE_FORMAT(scra.start_date, '%Y') = #{year} AND scra.new_class_room_id = #{class_id} AND
+              scra.semester_id IN (#{semester_id})")
 
               courses.each do |course|
 
