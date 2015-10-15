@@ -473,7 +473,7 @@ students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class
     end
     @teachers = ["All"]
     @teachers += Teacher.all.collect{|t|
-      name = t.fname.to_s.capitalize + ' ' + t.lname.to_s.capitalize + ' (' + t.gender.first.capitalize + ')'
+      name = t.fname.to_s.capitalize + ' ' + t.lname.to_s.capitalize + ' (' + (t.gender.first.capitalize rescue '?') + ')'
       [name, t.teacher_id]
     }
 
@@ -487,7 +487,7 @@ students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class
     
     @teachers_hash = {}
     Teacher.all.each do |t|
-      name = t.fname.to_s.capitalize + ' ' + t.lname.to_s.capitalize + ' (' + t.gender.first.capitalize + ')'
+      name = t.fname.to_s.capitalize + ' ' + t.lname.to_s.capitalize + ' (' + (t.gender.first.capitalize rescue '?') + ')'
       teacher_id = t.teacher_id
       @teachers_hash[teacher_id] = name
     end

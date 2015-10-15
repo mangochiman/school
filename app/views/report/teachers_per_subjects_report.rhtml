@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <!-- jQuery & JS files -->
-    <%= javascript_include_tag("jquery") %>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
     <%= javascript_include_tag("script") %>
     <%= stylesheet_link_tag("style") %>
 
@@ -35,6 +35,13 @@
               html += "<tr style='background-color:#2069b4; color:white; font-weight:bold;'>";
               html += "<td colspan='5' style='text-align:left; padding-left:30px;'>" + teachersHash[teacherId] + "</td>";
               html += "</tr>";
+ 
+              if (jQuery.isEmptyObject(results[teacherId])){
+                console.log("Empty Object")
+                html += "<tr style='background-color:gray; line-height:14px;'>";
+                html += "<td colspan='5' style='color:white; font-weight:bold;'>NO DATA</td>";
+                html += "</tr>";
+              }
               for (var classRoom in results[teacherId]){
                 html += "<tr style='background-color:gray;'>";
                 html += "<td colspan='5' style='color:white; font-weight:bold;'>" + classRoomHash[classRoom]+ "</td>";
@@ -49,6 +56,7 @@
                   html += "</tr>";
                 }
               }
+
             }
             html += "</tbody>";
             html += "</table>";
