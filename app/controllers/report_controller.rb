@@ -81,7 +81,7 @@ class ReportController < ApplicationController
           hash[params[:year]][student_id]["dob"] = student.dob
           hash[params[:year]][student_id]["email"] = student.email
           hash[params[:year]][student_id]["gender"] = student.gender
-          hash[params[:year]][student_id]["class_room"] = student.name #class room name
+          hash[params[:year]][student_id]["class_room"] = student.current_class #class room name
         end
 
         render :text => hash.to_json and return
@@ -101,7 +101,7 @@ class ReportController < ApplicationController
             hash[year][student_id]["dob"] = student.dob
             hash[year][student_id]["email"] = student.email
             hash[year][student_id]["gender"] = student.gender
-            hash[year][student_id]["class_room"] = student.name #class room name
+            hash[year][student_id]["class_room"] = student.current_class #class room name
           end
         end
 
