@@ -536,4 +536,99 @@ students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
     
   end
+
+  def student_payments_report_menu
+
+  end
+
+  def student_performance_report_menu
+    
+  end
+
+  def students_with_balances
+    start_year = Date.today.year - 5
+    end_year = Date.today.year
+
+    @payment_types = [["Select Payment Type", ""]]
+    @payment_types += PaymentType.all.collect{|p|[p.name, p.payment_type_id]}
+    
+    @years = [["Select Year", ""]]
+    @years += (start_year..end_year).to_a.reverse
+
+    @semesters = [["Select Semester", ""]]
+    @semesters += Semester.find(:all).collect{|s|[s.semester_number, s.semester_id]}
+
+    @class_rooms = ["All"]
+    @class_rooms += ClassRoom.all.collect{|cr|[cr.name, cr.class_room_id]}
+
+    @class_room_hash = {}
+    (ClassRoom.all || []).each do |class_room|
+      @class_room_hash[class_room.id] = class_room.name
+    end
+
+    if (request.method == :post)
+      class_room_id = params[:class_room]
+      semester_id = params[:semester]
+      year = params[:year]
+
+    end
+  end
+
+  def students_without_balances
+    start_year = Date.today.year - 5
+    end_year = Date.today.year
+
+    @payment_types = [["Select Payment Type", ""]]
+    @payment_types += PaymentType.all.collect{|p|[p.name, p.payment_type_id]}
+
+    @years = [["Select Year", ""]]
+    @years += (start_year..end_year).to_a.reverse
+
+    @semesters = [["Select Semester", ""]]
+    @semesters += Semester.find(:all).collect{|s|[s.semester_number, s.semester_id]}
+
+    @class_rooms = ["All"]
+    @class_rooms += ClassRoom.all.collect{|cr|[cr.name, cr.class_room_id]}
+
+    @class_room_hash = {}
+    (ClassRoom.all || []).each do |class_room|
+      @class_room_hash[class_room.id] = class_room.name
+    end
+
+    if (request.method == :post)
+      class_room_id = params[:class_room]
+      semester_id = params[:semester]
+      year = params[:year]
+    end
+    
+  end
+
+  def students_without_payments
+    start_year = Date.today.year - 5
+    end_year = Date.today.year
+
+    @payment_types = [["Select Payment Type", ""]]
+    @payment_types += PaymentType.all.collect{|p|[p.name, p.payment_type_id]}
+
+    @years = [["Select Year", ""]]
+    @years += (start_year..end_year).to_a.reverse
+
+    @semesters = [["Select Semester", ""]]
+    @semesters += Semester.find(:all).collect{|s|[s.semester_number, s.semester_id]}
+
+    @class_rooms = ["All"]
+    @class_rooms += ClassRoom.all.collect{|cr|[cr.name, cr.class_room_id]}
+
+    @class_room_hash = {}
+    (ClassRoom.all || []).each do |class_room|
+      @class_room_hash[class_room.id] = class_room.name
+    end
+
+    if (request.method == :post)
+      class_room_id = params[:class_room]
+      semester_id = params[:semester]
+      year = params[:year]
+    end
+  end
+  
 end

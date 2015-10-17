@@ -13,42 +13,7 @@
     <%= stylesheet_link_tag("style") %>
 
     <script>
-
-      function queryReportData(){
-        year = document.getElementById('year').value;
-        jQuery.ajax({
-          type: "POST",
-          url: "/report/courses_report",
-          data: "year=" + year,
-          success: function(results){
-            html = "<table>";
-            html += "<thead>";
-            html += "<tr>";
-            html += "<th style='font-weight:bold;'>#</th><th style='text-align:center;'>Course Name</th><th style='min-width:30%;'>Date Created</th>";
-            html += "</tr>";
-            html += "</thead>";
-            results = eval('(' + results + ')');
-            html += "<tbody>";
-            count = 0
-            for (var courseId in results){
-              count = count + 1
-              courseName = results[courseId]["course_name"];
-              dateCreated = results[courseId]["date_created"];
-              html += "<tr>";
-              html += "<td style='font-weight:bold;'>" + count + "</td>";
-              html += "<td style='padding-left:25%;'>" + courseName + "</td>";
-              html += "<td>" + dateCreated + "</td>";
-              html += "</tr>";
-            }
-            html += "</tbody>";
-            html += "</table>";
-            reportData = document.getElementById('report_data');
-            reportData.innerHTML = html;
-          }
-
-        });
-      }
-
+      
     </script>
 
     <style>
@@ -76,6 +41,7 @@
         border-style: none none none !important;
       }
     </style>
+
   </head>
   <body>
     <!-- HEADER -->
@@ -107,17 +73,10 @@
 
           <h3>Select Report</h3>
           <ul>
-            <li><a href="/report/students_per_semester_report">Students per semester</a></li>
-            <li><a href="/report/students_per_year_report">Students per year Report</a></li>
-            <li><a href="/report/students_per_class_report">Students per class Report </a></li>
-            <li><a href="/report/courses_report">Courses Report</a></li>
-            <li><a href="/report/courses_per_class_report">Courses per class Report</a></li>
-            <li><a href="/report/teachers_report">Teachers Report</a></li>
-            <li><a href="/report/teachers_per_subjects_report">Teacher vs subjects Report</a></li>
-            <li><a href="/report/results_per_class_report">Results per class Report</a></li>
-            <li><a href="/report/subject_pass_rate_report">Subject pass rate report</a></li>
-            <li><a href="/report/student_performance_report_menu">Student Performance report</a></li>
-            <li><a href="/report/student_payments_report_menu">Student Payments Report</a></li>
+            <li><a href="/report/students_with_balances">Students With Balances</a></li>
+            <li><a href="/report/students_without_balances">Students Without Balances</a></li>
+            <li><a href="/report/students_without_payments">Students Who Haven't Paid</a></li>
+
             <!-- <li><a href="/report/employees_report">Employees Report</a></li> -->
           </ul>
 
@@ -131,7 +90,7 @@
 
               <div class="content-module-heading cf">
 
-                <h3 class="fl">Courses Report</h3>
+                <h3 class="fl">Students Payments Report Menu</h3>
                 <span class="fr expand-collapse-text">Click to collapse</span>
                 <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -139,18 +98,6 @@
 
 
               <div class="content-module-main">
-
-                <table>
-                  <tr>
-                    <td style="min-width:30%; text-align: left;"><span style="font-size:1.4em;">Year</span></td>
-                    <td><%= select_tag("year", options_for_select(@years), {:style => 'text-align:center'})%></td>
-                  </tr>
-                </table>
-                <div class="stripe-separator"><!-- --></div>
-                <span style="margin-left:41%; position: relative;">
-                  <a onclick="queryReportData();" class="button round blue image-right ic-right-arrow text-upper">Apply</a>
-                </span>
-
 
               </div> <!-- end content-module-main -->
 
@@ -169,7 +116,6 @@
                 <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
               </div> <!-- end content-module-heading -->
-
 
               <div class="content-module-main cf">
                 <div id="report_data">
