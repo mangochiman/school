@@ -14,14 +14,15 @@
 
     <script>
       function queryReportData(){
+        paymentType = document.getElementById('payment_type').value;
         classRoomID = document.getElementById('class_room').value;
         semesterID = document.getElementById('semester').value;
         year = document.getElementById('year').value;
         
         jQuery.ajax({
           type: "POST",
-          url: "/report/student_payments_report_menu",
-          data: "class_room=" + classRoomID + "&semester=" + semesterID + "&year=" + year,
+          url: "/report/students_with_balances",
+          data: "class_room=" + classRoomID + "&semester=" + semesterID + "&year=" + year + '&payment_type=' + paymentType,
           success: function(results){
             html = "<table>";
             html += "<thead>";

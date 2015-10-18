@@ -567,10 +567,42 @@ students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class
     end
 
     if (request.method == :post)
-      class_room_id = params[:class_room]
+      payment_type = params[:payment_type]
       semester_id = params[:semester]
       year = params[:year]
 
+      class_rooms = ClassRoom.all if params[:class_room].match(/ALL/i)
+      class_rooms = [ClassRoom.find(params[:class_room])] unless params[:class_room].match(/ALL/i)
+
+      hash = {}
+      
+      class_rooms.each do |class_room|
+        class_room_id = class_room.class_room_id
+        hash[class_room_id] = {}
+        students = Student.find_by_sql("SELECT s.*, SUM(p.amount_paid) as total_amount_paid,
+              pt.amount_required as amount_required FROM student s
+              INNER JOIN payment p ON s.student_id = p.student_id
+              INNER JOIN student_class_room_adjustment scra ON s.student_id = scra.student_id
+              INNER JOIN payment_type pt ON p.payment_type_id = pt.payment_type_id
+              WHERE DATE_FORMAT(p.date, '%Y') = #{year} AND scra.new_class_room_id = #{class_room.class_room_id} AND
+              p.semester_id = #{semester_id} AND pt.payment_type_id = #{payment_type}
+              GROUP BY student_id HAVING total_amount_paid < amount_required")
+
+        students.each do |student|
+          student_id = student.student_id
+          total_amount_paid = student.total_amount_paid
+          hash[class_room_id][student_id] = {}
+          student_name = student.fname.capitalize.to_s + ' ' + student.lname.capitalize.to_s
+          hash[class_room_id][student_id]["name"] = student_name
+          hash[class_room_id][student_id]["dob"] = student.dob
+          hash[class_room_id][student_id]["email"] = student.email
+          hash[class_room_id][student_id]["gender"] = student.gender
+          hash[class_room_id][student_id]["total_amount_paid"] = total_amount_paid
+        end
+
+      end
+
+      render :text => hash.to_json and return
     end
   end
 
