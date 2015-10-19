@@ -724,8 +724,6 @@ students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class
               ON s.student_id = scra.student_id WHERE scra.new_class_room_id = #{class_room_id} AND
               scra.semester_id = #{semester_id} AND s.student_id NOT IN (#{students_who_paid_ids})")
 
-        raise students.inspect
-        
         students.each do |student|
           student_id = student.student_id
           total_amount_paid = student.total_amount_paid
