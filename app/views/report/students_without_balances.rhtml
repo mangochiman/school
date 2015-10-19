@@ -22,7 +22,7 @@
         jQuery.ajax({
           type: "POST",
           url: "/report/students_without_balances",
-          data: "class_room=" + classRoomID + "&semester=" + semesterID + "&year=" + year,
+          data: "class_room=" + classRoomID + "&semester=" + semesterID + "&year=" + year + '&payment_type=' + paymentType,
           success: function(results){
             html = "<table>";
             html += "<thead>";
