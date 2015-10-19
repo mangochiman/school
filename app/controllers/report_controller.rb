@@ -668,6 +668,20 @@ students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class
     
   end
 
+  def students_who_paid(semester_id, class_room_id, payment_type, year_paid)
+    students = Student.find_by_sql("SELECT s.*, SUM(p.amount_paid) as total_amount_paid,
+              pt.amount_required as amount_required FROM student s
+              INNER JOIN payment p ON s.student_id = p.student_id
+              INNER JOIN student_class_room_adjustment scra ON s.student_id = scra.student_id
+              INNER JOIN payment_type pt ON p.payment_type_id = pt.payment_type_id
+              WHERE DATE_FORMAT(p.date, '%Y') = #{year_paid} AND scra.new_class_room_id = #{class_room_id} AND
+              p.semester_id = #{semester_id} AND pt.payment_type_id = #{payment_type}
+              GROUP BY student_id HAVING total_amount_paid > 0")
+
+    return students.map(&:student_id)
+    
+  end
+
   def students_without_payments
     start_year = Date.today.year - 5
     end_year = Date.today.year
@@ -702,7 +716,13 @@ students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class
       class_rooms.each do |class_room|
         class_room_id = class_room.class_room_id
         hash[class_room_id] = {}
-        students = Student.find_by_sql("")
+
+        students_who_paid_ids = students_who_paid(semester_id, class_room_id, payment_type, year).join(', ')
+        students_who_paid_ids = '0' if students_who_paid_ids.blank?
+        
+        students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra
+              ON s.student_id = scra.student_id WHERE scra.new_class_room_id = #{class_room_id} AND
+              scra.semester_id = #{semester_id} AND s.student_id NOT IN (#{students_who_paid_ids})")
 
         raise students.inspect
         
