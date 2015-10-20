@@ -35,7 +35,15 @@
             results = eval('(' + results + ')');
             console.log(results)
             html += "<tbody>";
+
+            if (jQuery.isEmptyObject(results)){
+              html += "<tr style='font-size:1.2em; '>";
+              html += "<td colspan='5'>No data in this report</td>";
+              html += "</tr>";
+            }
+              
             for (var classRoom in results){
+              
               if (!jQuery.isEmptyObject(results[classRoom])){
                 html += "<tr style='font-size:1.4em; background-color:#2069b4; color:white;'>";
                 html += "<td colspan='5'>" + classRoomHash[classRoom] + "</td>";
