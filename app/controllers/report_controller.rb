@@ -597,7 +597,7 @@ students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class
           hash[class_room_id][student_id]["dob"] = student.dob
           hash[class_room_id][student_id]["email"] = student.email
           hash[class_room_id][student_id]["gender"] = student.gender
-          hash[class_room_id][student_id]["total_amount_paid"] = total_amount_paid#number_to_currency(total_amount_paid, :unit => 'MK')
+          hash[class_room_id][student_id]["total_amount_paid"] = ActionController::Base.helpers.number_to_currency(total_amount_paid, :unit => 'MK')
         end
 
         hash.delete(class_room_id) if hash[class_room_id].blank?
@@ -659,7 +659,7 @@ students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class
           hash[class_room_id][student_id]["dob"] = student.dob
           hash[class_room_id][student_id]["email"] = student.email
           hash[class_room_id][student_id]["gender"] = student.gender
-          hash[class_room_id][student_id]["total_amount_paid"] = total_amount_paid
+          hash[class_room_id][student_id]["total_amount_paid"] = ActionController::Base.helpers.number_to_currency(total_amount_paid, :unit => 'MK')
         end
 
         hash.delete(class_room_id) if hash[class_room_id].blank?
