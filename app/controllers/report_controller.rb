@@ -662,6 +662,7 @@ students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class
           hash[class_room_id][student_id]["total_amount_paid"] = total_amount_paid
         end
 
+        hash.delete(class_room_id) if hash[class_room_id].blank?
       end
 
       render :text => hash.to_json and return
@@ -737,6 +738,7 @@ students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class
           hash[class_room_id][student_id]["total_amount_paid"] = total_amount_paid
         end
 
+        hash.delete(class_room_id) if hash[class_room_id].blank?
       end
 
       render :text => hash.to_json and return
