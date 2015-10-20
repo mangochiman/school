@@ -13,6 +13,8 @@
     <%= stylesheet_link_tag("style") %>
 
     <script>
+      var classRoomHash = eval('(' + '<%= @class_room_hash.to_json %>' + ')');
+      
       function queryReportData(){
         paymentType = document.getElementById('payment_type').value;
         classRoomID = document.getElementById('class_room').value;
@@ -27,36 +29,36 @@
             html = "<table>";
             html += "<thead>";
             html += "<tr>";
-            html += "<th style='min-width:30%;'>Name</th><th>Email</th><th>Gender</th><th>Date of Birth</th><th>Class Room</th>";
+            html += "<th style='min-width:30%;'>Name</th><th>Email</th><th>Gender</th><th>Date of Birth</th><th>Amount Paid</th>";
             html += "</tr>";
             html += "</thead>";
             results = eval('(' + results + ')');
             console.log(results)
             html += "<tbody>";
-            for (var year in results){
-              if (!jQuery.isEmptyObject(results[year])){
+            for (var classRoom in results){
+              if (!jQuery.isEmptyObject(results[classRoom])){
                 html += "<tr style='font-size:1.4em; background-color:#2069b4; color:white;'>";
-                html += "<td colspan='5'>" + year + "</td>";
+                html += "<td colspan='5'>" + classRoomHash[classRoom] + "</td>";
                 html += "</tr>";
               }
 
-              for (var classRoom in results[year]){
-                for (var studentID in results[year][classRoom]){
-                  html += "<tr>";
-                  studentName = results[year][classRoom][studentID]["name"];
-                  studentGender = results[year][classRoom][studentID]["gender"];
-                  studentEmail = results[year][classRoom][studentID]["email"];
-                  studentDOB = results[year][classRoom][studentID]["dob"];
-                  studentClassRoom = results[year][classRoom][studentID]["class_room"];
-                  html += "<td>" + studentName + "</td>";
-                  html += "<td><a href='#'>" + studentEmail + "</a></td>";
-                  html += "<td>" + studentGender + "</td>";
-                  html += "<td>" + studentDOB + "</td>";
-                  html += "<td>" + studentClassRoom + "</td>";
-                  html += "</tr>";
-                }
+              for (var studentID in results[classRoom]){
+                html += "<tr>";
+                console.log(results[classRoom][studentID])
+                studentName = results[classRoom][studentID]["name"];
+                studentGender = results[classRoom][studentID]["gender"];
+                studentEmail = results[classRoom][studentID]["email"];
+                studentDOB = results[classRoom][studentID]["dob"];
+                totalAmountPaid = results[classRoom][studentID]["total_amount_paid"];
+                html += "<td>" + studentName + "</td>";
+                html += "<td><a href='#'>" + studentEmail + "</a></td>";
+                html += "<td>" + studentGender + "</td>";
+                html += "<td>" + studentDOB + "</td>";
+                html += "<td>" + totalAmountPaid + "</td>";
+                html += "</tr>";
               }
             }
+            
             html += "</tbody>";
             html += "</table>";
             reportData = document.getElementById('report_data');
