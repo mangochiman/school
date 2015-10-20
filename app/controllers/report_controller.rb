@@ -728,14 +728,12 @@ students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class
 
         students.each do |student|
           student_id = student.student_id
-          total_amount_paid = student.total_amount_paid
           hash[class_room_id][student_id] = {}
           student_name = student.fname.capitalize.to_s + ' ' + student.lname.capitalize.to_s
           hash[class_room_id][student_id]["name"] = student_name
           hash[class_room_id][student_id]["dob"] = student.dob
           hash[class_room_id][student_id]["email"] = student.email
           hash[class_room_id][student_id]["gender"] = student.gender
-          hash[class_room_id][student_id]["total_amount_paid"] = total_amount_paid
         end
 
         hash.delete(class_room_id) if hash[class_room_id].blank?

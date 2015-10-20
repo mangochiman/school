@@ -13,6 +13,8 @@
     <%= stylesheet_link_tag("style") %>
 
     <script>
+      var classRoomHash = eval('(' + '<%= @class_room_hash.to_json %>' + ')');
+      
       function queryReportData(){
         paymentType = document.getElementById('payment_type').value;
         classRoomID = document.getElementById('class_room').value;
