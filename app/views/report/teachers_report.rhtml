@@ -9,57 +9,91 @@
 
     <!-- jQuery & JS files -->
     <%= javascript_include_tag("jquery-1.9.1.min") %>
-    <%= javascript_include_tag("highcharts") %>
+    <%= javascript_include_tag("jquery.confirm") %>
     <%= javascript_include_tag("script") %>
-
-    <%= javascript_include_tag("exporting") %>
+    <%= javascript_include_tag("gvalidator") %>
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("metallic") %>
+    <%= stylesheet_link_tag("gvalidator") %>
+    <%= stylesheet_link_tag("bootstrap") %>
 
     <script>
+      var requiredData = {'start-date':'Start Date', 'end-date':'End Date'}
+
       function queryReportData(){
-        startDate = $('.start-date')[0].value;
-        endDate = $('.end-date')[0].value;
-
-        jQuery.ajax({
-          type: "POST",
-          url: "/report/teachers_report",
-          data: "start_date=" + startDate + "&end_date=" + endDate,
-          success: function(results){
-            html = "<table>";
-            html += "<thead>";
-            html += "<tr>";
-            html += "<th style='min-width:30%;'>Name</th><th>Email</th><th>Gender</th><th>Date of Birth</th>";
-            html += "</tr>";
-            html += "</thead>";
-            results = eval('(' + results + ')');
-            console.log(results)
-            html += "<tbody>";
-            for (var teacherID in results){
-              teacherName = results[teacherID]["name"];
-              teacherGender = results[teacherID]["gender"];
-              teacherEmail = results[teacherID]["email"];
-              teacherDOB = results[teacherID]["dob"];
-              html += "<tr>";
-              html += "<td style='text-align:left; padding-left:40px;'>" + teacherName + "</td>";
-              html += "<td><a href='#'>" + teacherEmail + "</a></td>";
-              html += "<td>" + teacherGender + "</td>";
-              html += "<td>" + teacherDOB + "</td>";
-              html += "</tr>";
-
-            }
-            html += "</tbody>";
-            html += "</table>";
-            reportData = document.getElementById('report_data');
-            reportData.innerHTML = html;
+        missingFields = []
+        for (var field in requiredData){
+          value = document.getElementsByClassName(field)[0].value;
+          if (value == ''){
+            missingFields.push('<b><i>' + requiredData[field] + '</i></b>');
           }
+        }
 
-        });
+        if (missingFields.length > 0){
+          jQuery.confirm({
+            title:"MISSING FIELDS",
+            text:"Fill the following fields " + missingFields.join(", "),
+            confirm: function(button) {
+
+            },
+            cancel: function(button) {
+
+            },
+            confirmButton: "Done"
+          });
+        }
+        else{
+          startDate = $('.start-date')[0].value;
+          endDate = $('.end-date')[0].value;
+
+          jQuery.ajax({
+            type: "POST",
+            url: "/report/teachers_report",
+            data: "start_date=" + startDate + "&end_date=" + endDate,
+            success: function(results){
+              html = "<table>";
+              html += "<thead>";
+              html += "<tr>";
+              html += "<th style='min-width:30%;'>Name</th><th>Email</th><th>Gender</th><th>Date of Birth</th>";
+              html += "</tr>";
+              html += "</thead>";
+              results = eval('(' + results + ')');
+              console.log(results)
+              html += "<tbody>";
+              for (var teacherID in results){
+                teacherName = results[teacherID]["name"];
+                teacherGender = results[teacherID]["gender"];
+                teacherEmail = results[teacherID]["email"];
+                teacherDOB = results[teacherID]["dob"];
+                html += "<tr>";
+                html += "<td style='text-align:left; padding-left:40px;'>" + teacherName + "</td>";
+                html += "<td><a href='#'>" + teacherEmail + "</a></td>";
+                html += "<td>" + teacherGender + "</td>";
+                html += "<td>" + teacherDOB + "</td>";
+                html += "</tr>";
+
+              }
+              html += "</tbody>";
+              html += "</table>";
+              reportData = document.getElementById('report_data');
+              reportData.innerHTML = html;
+            }
+
+          })
+        };
       }
 
     </script>
 
     <style>
+      .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: #317eac;
+      }
+
       .start-date, .end-date{
         background-color: #fff;
         background-image: none;
@@ -201,6 +235,7 @@
     </div>
 
     <%= javascript_include_tag("zebra_datepicker") %>
+    <%= javascript_include_tag("bootstrap") %>
     <script>
       $('.start-date').Zebra_DatePicker({
         view : 'years',
