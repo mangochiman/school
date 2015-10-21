@@ -8,9 +8,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <!-- jQuery & JS files -->
-    <%= javascript_include_tag("jquery") %>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("jquery.confirm") %>
     <%= javascript_include_tag("script") %>
+    <%= javascript_include_tag("gvalidator") %>
     <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("metallic") %>
+    <%= stylesheet_link_tag("gvalidator") %>
+    <%= stylesheet_link_tag("bootstrap") %>
 
     <style>
       #class_room, #course{
@@ -33,7 +38,7 @@
         cursor: pointer;
       }
     </style>
-    
+
   </head>
   <body>
     <!-- HEADER -->
@@ -108,7 +113,7 @@
                     <td><%= select_tag("course", options_for_select(@courses), {:style => 'text-align:center'})%></td>
                   </tr>
                 </table>
-                
+
                 <div class="stripe-separator"><!-- --></div>
                 <span style="margin-left:41%; position: relative;">
                   <a class="button round blue image-right ic-right-arrow text-upper">Apply</a>
@@ -146,5 +151,6 @@
 
     </div>
 
+    <%= javascript_include_tag("bootstrap") %>
   </body>
 </html>
