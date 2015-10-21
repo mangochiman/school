@@ -723,7 +723,10 @@ students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class
         students_who_paid_ids = '0' if students_who_paid_ids.blank?
         
         students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra
-              ON s.student_id = scra.student_id WHERE scra.new_class_room_id = #{class_room_id} AND
+              ON s.student_id = scra.student_id 
+              INNER JOIN semesters ss ON scra.semester_id = ss.semester_id
+              WHERE scra.new_class_room_id = #{class_room_id} AND
+              (DATE_FORMAT(ss.start_date, '%Y') = #{year} OR DATE_FORMAT(ss.end_date, '%Y') = #{year}) AND
               scra.semester_id = #{semester_id} AND s.student_id NOT IN (#{students_who_paid_ids})")
 
         students.each do |student|
