@@ -9,76 +9,113 @@
 
     <!-- jQuery & JS files -->
     <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("jquery.confirm") %>
     <%= javascript_include_tag("script") %>
+    <%= javascript_include_tag("gvalidator") %>
     <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("metallic") %>
+    <%= stylesheet_link_tag("gvalidator") %>
+    <%= stylesheet_link_tag("bootstrap") %>
 
     <script>
       var classRoomHash = eval('(' + '<%= @class_room_hash.to_json %>' + ')');
-      
+      requiredData = {'payment_type':' Payment Type', 'class_room':'Class Room', 'semester':'Semester', 'year':'Year'}
+
       function queryReportData(){
-        paymentType = document.getElementById('payment_type').value;
-        classRoomID = document.getElementById('class_room').value;
-        semesterID = document.getElementById('semester').value;
-        year = document.getElementById('year').value;
-        
-        jQuery.ajax({
-          type: "POST",
-          url: "/report/students_without_balances",
-          data: "class_room=" + classRoomID + "&semester=" + semesterID + "&year=" + year + '&payment_type=' + paymentType,
-          success: function(results){
-            html = "<table>";
-            html += "<thead>";
-            html += "<tr>";
-            html += "<th style='min-width:30%;'>Name</th><th>Email</th><th>Gender</th><th>Date of Birth</th><th>Amount Paid</th>";
-            html += "</tr>";
-            html += "</thead>";
-            results = eval('(' + results + ')');
-            console.log(results)
-            html += "<tbody>";
-
-            if (jQuery.isEmptyObject(results)){
-              html += "<tr style='font-size:1.2em; '>";
-              html += "<td colspan='5'>No data in this report</td>";
-              html += "</tr>";
-            }
-
-            for (var classRoom in results){
-
-              if (!jQuery.isEmptyObject(results[classRoom])){
-                html += "<tr style='font-size:1.4em; background-color:#2069b4; color:white;'>";
-                html += "<td colspan='5'>" + classRoomHash[classRoom] + "</td>";
-                html += "</tr>";
-              }
-
-              for (var studentID in results[classRoom]){
-                html += "<tr>";
-                console.log(results[classRoom][studentID])
-                studentName = results[classRoom][studentID]["name"];
-                studentGender = results[classRoom][studentID]["gender"];
-                studentEmail = results[classRoom][studentID]["email"];
-                studentDOB = results[classRoom][studentID]["dob"];
-                totalAmountPaid = results[classRoom][studentID]["total_amount_paid"];
-                html += "<td>" + studentName + "</td>";
-                html += "<td><a href='#'>" + studentEmail + "</a></td>";
-                html += "<td>" + studentGender + "</td>";
-                html += "<td>" + studentDOB + "</td>";
-                html += "<td>" + totalAmountPaid + "</td>";
-                html += "</tr>";
-              }
-            }
-
-            html += "</tbody>";
-            html += "</table>";
-            reportData = document.getElementById('report_data');
-            reportData.innerHTML = html;
+        missingFields = []
+        for (var field in requiredData){
+          value = document.getElementById(field).value;
+          if (value == ''){
+            missingFields.push('<b><i>' + requiredData[field] + '</i></b>');
           }
+        }
 
-        });
+        if (missingFields.length > 0){
+          jQuery.confirm({
+            title:"MISSING FIELDS",
+            text:"Fill the following fields " + missingFields.join(", "),
+            confirm: function(button) {
+
+            },
+            cancel: function(button) {
+
+            },
+            confirmButton: "Done"
+          });
+        }
+        else{
+          paymentType = document.getElementById('payment_type').value;
+          classRoomID = document.getElementById('class_room').value;
+          semesterID = document.getElementById('semester').value;
+          year = document.getElementById('year').value;
+        
+          jQuery.ajax({
+            type: "POST",
+            url: "/report/students_without_balances",
+            data: "class_room=" + classRoomID + "&semester=" + semesterID + "&year=" + year + '&payment_type=' + paymentType,
+            success: function(results){
+              html = "<table>";
+              html += "<thead>";
+              html += "<tr>";
+              html += "<th style='min-width:30%;'>Name</th><th>Email</th><th>Gender</th><th>Date of Birth</th><th>Amount Paid</th>";
+              html += "</tr>";
+              html += "</thead>";
+              results = eval('(' + results + ')');
+              console.log(results)
+              html += "<tbody>";
+
+              if (jQuery.isEmptyObject(results)){
+                html += "<tr style='font-size:1.2em; '>";
+                html += "<td colspan='5'>No data in this report</td>";
+                html += "</tr>";
+              }
+
+              for (var classRoom in results){
+
+                if (!jQuery.isEmptyObject(results[classRoom])){
+                  html += "<tr style='font-size:1.4em; background-color:#2069b4; color:white;'>";
+                  html += "<td colspan='5'>" + classRoomHash[classRoom] + "</td>";
+                  html += "</tr>";
+                }
+
+                for (var studentID in results[classRoom]){
+                  html += "<tr>";
+                  console.log(results[classRoom][studentID])
+                  studentName = results[classRoom][studentID]["name"];
+                  studentGender = results[classRoom][studentID]["gender"];
+                  studentEmail = results[classRoom][studentID]["email"];
+                  studentDOB = results[classRoom][studentID]["dob"];
+                  totalAmountPaid = results[classRoom][studentID]["total_amount_paid"];
+                  html += "<td>" + studentName + "</td>";
+                  html += "<td><a href='#'>" + studentEmail + "</a></td>";
+                  html += "<td>" + studentGender + "</td>";
+                  html += "<td>" + studentDOB + "</td>";
+                  html += "<td>" + totalAmountPaid + "</td>";
+                  html += "</tr>";
+                }
+              }
+
+              html += "</tbody>";
+              html += "</table>";
+              reportData = document.getElementById('report_data');
+              reportData.innerHTML = html;
+            }
+
+          })
+        };
       }
 
     </script>
 
     <style>
+      .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: #317eac;
+      }
+
       #year, #semester, #class_room, #payment_type{
         background-color: #fff;
         background-image: none;
@@ -219,5 +256,6 @@
 
     </div>
 
+    <%= javascript_include_tag("bootstrap") %>
   </body>
 </html>
