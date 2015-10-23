@@ -58,7 +58,7 @@
               html = "<table>";
               html += "<thead>";
               html += "<tr>";
-              html += "<th style='min-width:30%;'>Name</th><th>Email</th><th>Gender</th><th>Date of Birth</th><th>Amount Paid</th>";
+              html += "<th style='min-width:30%;'>Name</th><th>Email</th><th>Gender</th><th>Exam Date</th><th>Grade</th>";
               html += "</tr>";
               html += "</thead>";
               results = eval('(' + results + ')');
@@ -86,12 +86,14 @@
                   studentGender = results[classRoom][studentID]["gender"];
                   studentEmail = results[classRoom][studentID]["email"];
                   studentDOB = results[classRoom][studentID]["dob"];
-                  totalAmountPaid = results[classRoom][studentID]["total_amount_paid"];
+                  exam_date = results[classRoom][studentID]["exam_date"];
+                  grade = results[classRoom][studentID]["grade"];
+
                   html += "<td>" + studentName + "</td>";
                   html += "<td><a href='#'>" + studentEmail + "</a></td>";
                   html += "<td>" + studentGender + "</td>";
-                  html += "<td>" + studentDOB + "</td>";
-                  html += "<td>" + totalAmountPaid + "</td>";
+                  html += "<td>" + exam_date + "</td>";
+                  html += "<td style='color: green; font-weight: bold;'>" + grade + "</td>";
                   html += "</tr>";
                 }
               }
