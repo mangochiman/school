@@ -565,6 +565,8 @@ students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class
     end
 
     if (request.method == :post)
+      raise params.inspect
+      exam_type = params[:exam_type]
       course = params[:course]
       semester_id = params[:semester]
       year = params[:year]
@@ -577,7 +579,12 @@ students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class
       class_rooms.each do |class_room|
         class_room_id = class_room.class_room_id
         hash[class_room_id] = {}
-        students = Student.find_by_sql("")
+        students = Student.find_by_sql("SELECT * FROM exam e LEFT JOIN exam_result er ON e.exam_id = er.exam_id
+          INNER JOIN student_class_room_adjustment scra ON e.class_room_id = scra.new_class_room_id
+          INNER JOIN semesters ss ON scra.semester_id = ss.semester_id
+          WHERE e.class_room_id = #{class_room_id} AND e.exam_type_id = #{exam_type} AND e.course_id = #{course}
+          AND scra.semester_id = #{semester_id} AND 
+          (DATE_FORMAT(ss.start_date, '%Y') = #{year} OR DATE_FORMAT(ss.end_date, '%Y') = #{year})" )
 
         students.each do |student|
           student_id = student.student_id
