@@ -181,10 +181,60 @@ class StudentController < ApplicationController
   end
 
   def edit_subjects
-    @students = Student.find(:all, :joins => [:student_courses]).uniq
-    
+    @students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_course scrc
+      ON s.student_id = scrc.student_id GROUP BY s.student_id")
+
   end
 
+  def edit_subjects_search
+    first_name = params[:first_name]
+    last_name = params[:last_name]
+    gender = params[:gender]
+    conditions = ""
+    multiple = false
+    unless first_name.blank?
+      multiple = true
+      conditions += "s.fname LIKE '%#{first_name}%'"
+    end
+
+    unless last_name.blank?
+      multiple = true
+      conditions += ' AND ' unless conditions.blank?
+      conditions += "s.lname LIKE '%#{last_name}%' "
+    end
+
+    unless gender.blank?
+      conditions += ' AND ' if multiple
+      conditions += "s.gender = '#{gender}' "
+    end
+
+    unless conditions.blank?
+      students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_course scrc
+      ON s.student_id = scrc.student_id AND #{conditions} GROUP BY s.student_id")
+    else
+      students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_course scrc
+      ON s.student_id = scrc.student_id GROUP BY s.student_id")
+    end
+
+    hash = {}
+    students.each do |student|
+      student_id = student.id.to_s
+      hash[student_id] = {}
+      hash[student_id]["fname"] = student.fname.to_s
+      hash[student_id]["lname"] = student.lname.to_s
+      hash[student_id]["phone"] = student.phone
+      hash[student_id]["email"] = student.email
+      hash[student_id]["gender"] = student.gender
+      hash[student_id]["dob"] = student.dob.to_date.strftime("%d-%b-%Y")
+      hash[student_id]["current_class"] = student.current_class
+      hash[student_id]["current_active_class"] = student.current_active_class
+      hash[student_id]["total_photos"] = student.student_photos.count
+    end
+
+    render :json => hash
+  end
+
+  
   def edit_my_subjects
     student = Student.find(params[:student_id])
     @current_student_courses = student.student_courses.collect{|sc|sc.course}
