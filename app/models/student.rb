@@ -21,6 +21,18 @@ class Student < ActiveRecord::Base
     return current_class_room
   end
 
+  def current_active_class
+    scra = self.student_class_room_adjustments.last
+    return "Not Assigned" if scra.blank?
+    unless scra.blank?
+      if (scra.status.match(/ACTIVE/i))
+        return scra.class_room.name
+      else
+        return scra.class_room.name.to_s + ' (Not Active)'
+      end
+    end
+  end
+  
   def age
     ((Date.today - (self.dob.to_date rescue nil)).to_i/365) rescue 'Error'
   end

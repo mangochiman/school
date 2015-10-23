@@ -34,7 +34,7 @@
         gender = document.getElementsByClassName('gender_search')[0].value;
         jQuery.ajax({
           type: "POST",
-          url: "/student/search_students",
+          url: "/student/assign_subjects_search",
           data: "first_name=" + firstName + "&last_name=" + lastName + "&gender=" + gender,
           success: function(results){
             //results = eval("(" + results  + ")");
