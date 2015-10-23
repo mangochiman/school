@@ -542,7 +542,56 @@ students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class
   end
 
   def student_performance_report_menu
-    
+    start_year = Date.today.year - 5
+    end_year = Date.today.year
+
+    @courses = [["Select Course", ""]]
+    @courses += Course.all.collect{|c|[c.name, c.course_id]}
+
+    @years = [["Select Year", ""]]
+    @years += (start_year..end_year).to_a.reverse
+
+    @semesters = [["Select Semester", ""]]
+    @semesters += Semester.find(:all).collect{|s|[s.semester_number, s.semester_id]}
+
+    @class_rooms = ["All"]
+    @class_rooms += ClassRoom.all.collect{|cr|[cr.name, cr.class_room_id]}
+
+    @class_room_hash = {}
+    (ClassRoom.all || []).each do |class_room|
+      @class_room_hash[class_room.id] = class_room.name
+    end
+
+    if (request.method == :post)
+      course = params[:course]
+      semester_id = params[:semester]
+      year = params[:year]
+
+      class_rooms = ClassRoom.all if params[:class_room].match(/ALL/i)
+      class_rooms = [ClassRoom.find(params[:class_room])] unless params[:class_room].match(/ALL/i)
+
+      hash = {}
+      
+      class_rooms.each do |class_room|
+        class_room_id = class_room.class_room_id
+        hash[class_room_id] = {}
+        students = Student.find_by_sql("")
+
+        students.each do |student|
+          student_id = student.student_id
+          hash[class_room_id][student_id] = {}
+          student_name = student.fname.capitalize.to_s + ' ' + student.lname.capitalize.to_s
+          hash[class_room_id][student_id]["name"] = student_name
+          hash[class_room_id][student_id]["dob"] = student.dob
+          hash[class_room_id][student_id]["email"] = student.email
+          hash[class_room_id][student_id]["gender"] = student.gender
+        end
+
+        hash.delete(class_room_id) if hash[class_room_id].blank?
+      end
+
+      render :text => hash.to_json and return
+    end
   end
 
   def students_with_balances
