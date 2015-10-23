@@ -44,6 +44,7 @@
           });
         }
         else{
+          examType = document.getElementById('exam_type').value;
           course = document.getElementById('course').value;
           classRoomID = document.getElementById('class_room').value;
           semesterID = document.getElementById('semester').value;
@@ -52,7 +53,7 @@
           jQuery.ajax({
             type: "POST",
             url: "/report/student_performance_report_menu",
-            data: "class_room=" + classRoomID + "&semester=" + semesterID + "&year=" + year + '&course=' + course,
+            data: "class_room=" + classRoomID + "&semester=" + semesterID + "&year=" + year + '&course=' + course + '&exam_type=' + examType,
             success: function(results){
               html = "<table>";
               html += "<thead>";
@@ -207,7 +208,7 @@
 
                 <table>
                   <tr>
-                    <td style="min-width:30%; text-align: left;"><span style="font-size:1.4em;">Course</span></td>
+                    <td style="min-width:30%; text-align: left;"><span style="font-size:1.4em;">Exam Type</span></td>
                     <td><%= select_tag("exam_type", options_for_select(@exam_types), {:style => 'text-align:center'})%></td>
                   </tr>
 
