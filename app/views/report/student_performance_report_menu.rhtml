@@ -19,7 +19,7 @@
 
     <script>
       var classRoomHash = eval('(' + '<%= @class_room_hash.to_json %>' + ')');
-      requiredData = {'course':' Course', 'class_room':'Class Room', 'semester':'Semester', 'year':'Year'}
+      requiredData = {'exam_type':'Exam Type', 'course':' Course', 'class_room':'Class Room', 'semester':'Semester', 'year':'Year'}
 
       function queryReportData(){
         missingFields = []
@@ -116,7 +116,7 @@
         color: #317eac;
       }
 
-      #year, #semester, #class_room, #course{
+      #year, #semester, #class_room, #course, #exam_type{
         background-color: #fff;
         background-image: none;
         border: 1px solid #ccc;
@@ -206,6 +206,11 @@
               <div class="content-module-main">
 
                 <table>
+                  <tr>
+                    <td style="min-width:30%; text-align: left;"><span style="font-size:1.4em;">Course</span></td>
+                    <td><%= select_tag("exam_type", options_for_select(@exam_types), {:style => 'text-align:center'})%></td>
+                  </tr>
+
                   <tr>
                     <td style="min-width:30%; text-align: left;"><span style="font-size:1.4em;">Course</span></td>
                     <td><%= select_tag("course", options_for_select(@courses), {:style => 'text-align:center'})%></td>

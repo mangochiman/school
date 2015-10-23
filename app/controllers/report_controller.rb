@@ -544,6 +544,8 @@ students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class
   def student_performance_report_menu
     start_year = Date.today.year - 5
     end_year = Date.today.year
+    @exam_types = [["Select Exam Type", ""]]
+    @exam_types += ExaminationType.all.collect{|e|[e.name, e.exam_type_id]}
 
     @courses = [["Select Course", ""]]
     @courses += Course.all.collect{|c|[c.name, c.course_id]}
