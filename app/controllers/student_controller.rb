@@ -241,7 +241,7 @@ class StudentController < ApplicationController
   def edit_my_subjects
     student = Student.find(params[:student_id])
     new_class_room_id = student.student_class_room_adjustments.find(:last,
-            :conditions => ["status = 'ACTIVE'"]).new_class_room_id
+      :conditions => ["status = 'ACTIVE'"]).new_class_room_id
 
     student_class_room_courses = student.student_class_room_courses.find(:all,
       :conditions => ["class_room_id =?", new_class_room_id]
@@ -251,35 +251,40 @@ class StudentController < ApplicationController
     @courses = ClassRoomCourse.find_all_by_class_room_id(new_class_room_id).collect{|crc|
       crc.course
     }
-
+  
     if (request.method == :post)
+
+      if (params[:subjects].blank?)
+        flash[:error] = "Select atleast one course"
+        redirect_to("/student/edit_my_subjects?student_id=#{params[:student_id]}") and return
+      end
+      
+      assigned_course_ids = @current_student_courses.map(&:course_id)
+      already_signed_course_ids = []
       ActiveRecord::Base.transaction do
-        #@class_room.class_room_courses.delete_all
-        assigned_course_ids = @current_student_courses.map(&:course_id)
-        already_signed_course_ids = []
 
         (params[:subjects] || []).each do |subject_id, details|
           if (assigned_course_ids.include?(subject_id.to_i))
             already_signed_course_ids << subject_id.to_i
             next
           end
-          StudentCourse.create({
-              :student_id => params[:student_id],
-              :course_id => subject_id
+          student.student_class_room_courses.create({
+              :course_id => subject_id,
+              :class_room_id => new_class_room_id
             })
         end
 
         ((assigned_course_ids - already_signed_course_ids) || []).each do |course_id|
-          student_course = StudentCourse.find(:last, :conditions => ["student_id =? AND course_id =?",
-              params[:student_id], course_id])
-          student_course.delete
+          scrc = student.student_class_room_courses.find(:last, :conditions => ["class_room_id =? AND
+              course_id =?", new_class_room_id, course_id])
+          scrc.delete
         end
-
-        flash[:notice] = "You have successfuly edited subjects"
-        redirect_to :action => "edit_subjects" and return
+        
       end
+      
+      flash[:notice] = "You have successfuly edited subjects"
+      redirect_to :action => "edit_subjects" and return
     end
-    
     
   end
   
