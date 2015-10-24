@@ -182,7 +182,8 @@ class StudentController < ApplicationController
 
   def edit_subjects
     @students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_course scrc
-      ON s.student_id = scrc.student_id GROUP BY s.student_id")
+      ON s.student_id = scrc.student_id  INNER JOIN student_class_room_adjustment scra ON
+      s.student_id = scra.student_id WHERE scra.status = 'active' GROUP BY s.student_id")
 
   end
 
@@ -210,10 +211,12 @@ class StudentController < ApplicationController
 
     unless conditions.blank?
       students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_course scrc
-      ON s.student_id = scrc.student_id AND #{conditions} GROUP BY s.student_id")
+      ON s.student_id = scrc.student_id INNER JOIN student_class_room_adjustment scra ON
+      s.student_id = scra.student_id WHERE scra.status = 'active' AND #{conditions} GROUP BY s.student_id")
     else
       students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_course scrc
-      ON s.student_id = scrc.student_id GROUP BY s.student_id")
+      ON s.student_id = scrc.student_id INNER JOIN student_class_room_adjustment scra ON
+      s.student_id = scra.student_id WHERE scra.status = 'active' GROUP BY s.student_id")
     end
 
     hash = {}
@@ -237,8 +240,15 @@ class StudentController < ApplicationController
   
   def edit_my_subjects
     student = Student.find(params[:student_id])
-    @current_student_courses = student.student_courses.collect{|sc|sc.course}
-    @courses = student.class_room_student.class_room.class_room_courses.collect{|crc|
+    new_class_room_id = student.student_class_room_adjustments.find(:last,
+            :conditions => ["status = 'ACTIVE'"]).new_class_room_id
+
+    student_class_room_courses = student.student_class_room_courses.find(:all,
+      :conditions => ["class_room_id =?", new_class_room_id]
+    )
+    @current_student_courses = student_class_room_courses.collect{|sc|sc.course}
+    
+    @courses = ClassRoomCourse.find_all_by_class_room_id(new_class_room_id).collect{|crc|
       crc.course
     }
 
