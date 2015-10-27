@@ -70,13 +70,15 @@
               if (email == null) email = '';
               dob = results[student_id]["dob"];
               join_date = results[student_id]["join_date"];
+              guardian_details = results[student_id]["guardian_details"];
+              
               html+="<tr id=" + student_id+ ">";
               html+="<td style='text-align:left; padding: 0.833em 0 0.833em 1.25em;'>" + firstName + ' ' + lastName +  "</td>";
               html+="<td><a href='#'>" + email +  "</a></td>";
               html+="<td>" + gender +  "</td>";
               html+="<td>" + dob +  "</td>";
               html+="<td>" + phone +  "</td>";
-              html+="<td>" + join_date +  "</td>";
+              html+="<td>" + guardian_details +  "</td>";
               html+="<td>"
               html+= "<a student_id=" + student_id + " onclick='editGuardian(this)' class='table-actions-button ic-table-edit'></a>"
               html+="</td>";
@@ -263,7 +265,7 @@
                     <th>Gender</th>
                     <th>Date Of Birth</th>
                     <th>Phone #</th>
-                    <th>Date of Join</th>
+                    <th>Guardian Details</th>
                     <th>Action</th>
                   </tr>
 
@@ -277,7 +279,7 @@
                       <td><%=  student.gender %></td>
                       <td><%=  student.dob.to_date.strftime("%d-%b-%Y") %></td>
                       <td><%=  student.phone %></td>
-                      <td><%=  student.created_at.strftime("%d-%b-%Y") %></td>
+                      <td><%=  student.guardian_details %></td>
                       <td>
                         <a student_id="<%= student.id %>" onclick="editGuardian(this)" class="table-actions-button ic-table-edit"></a>
                       </td>

@@ -472,6 +472,7 @@ class StudentController < ApplicationController
       hash[student_id]["current_class"] = student.current_class
       hash[student_id]["current_active_class"] = student.current_active_class
       hash[student_id]["total_photos"] = student.student_photos.count
+      hash[student_id]["guardian_details"] = student.guardian_details
     end
     render :json => hash
   end
