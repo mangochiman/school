@@ -1191,6 +1191,54 @@ class StudentController < ApplicationController
     @students = Student.find(:all)
   end
 
+  def archive_students_seach
+    first_name = params[:first_name]
+    last_name = params[:last_name]
+    gender = params[:gender]
+    conditions = ""
+    multiple = false
+    unless first_name.blank?
+      multiple = true
+      conditions += "fname LIKE '%#{first_name}%'"
+    end
+
+    unless last_name.blank?
+      multiple = true
+      conditions += ' AND ' unless conditions.blank?
+      conditions += "lname LIKE '%#{last_name}%' "
+    end
+
+    unless gender.blank?
+      conditions += ' AND ' if multiple
+      conditions += "gender = '#{gender}' "
+    end
+
+    unless conditions.blank?
+      students = Student.find_by_sql("SELECT * FROM student WHERE #{conditions}")
+    else
+      students = Student.all
+    end
+
+    hash = {}
+    students.each do |student|
+      student_id = student.id.to_s
+      hash[student_id] = {}
+      hash[student_id]["fname"] = student.fname.to_s
+      hash[student_id]["lname"] = student.lname.to_s
+      hash[student_id]["phone"] = student.phone
+      hash[student_id]["email"] = student.email
+      hash[student_id]["gender"] = student.gender
+      hash[student_id]["dob"] = student.dob.to_date.strftime("%d-%b-%Y")
+      hash[student_id]["join_date"] = student.created_at.to_date.strftime("%d-%b-%Y")
+      hash[student_id]["current_class"] = student.current_class
+      hash[student_id]["current_active_class"] = student.current_active_class
+      hash[student_id]["total_photos"] = student.student_photos.count
+      hash[student_id]["guardian_details"] = student.guardian_details
+    end
+    
+    render :json => hash
+  end
+
   def archive_students
     
   end
