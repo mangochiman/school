@@ -1186,4 +1186,13 @@ class StudentController < ApplicationController
   def my_photos
     @student = Student.find(params[:student_id])
   end
+
+  def archive_students_menu
+    @students = Student.find(:all)
+  end
+
+  def archive_students
+    
+  end
+  
 end
