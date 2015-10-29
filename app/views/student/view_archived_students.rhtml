@@ -27,7 +27,7 @@
         gender = document.getElementsByClassName('gender_search')[0].value;
         jQuery.ajax({
           type: "POST",
-          url: "/student/archive_students_seach",
+          url: "/student/view_archived_students_seach",
           data: "first_name=" + firstName + "&last_name=" + lastName + "&gender=" + gender,
           success: function(results){
             //results = eval("(" + results  + ")");
@@ -273,7 +273,7 @@
 
             <div class="content-module-heading cf">
 
-              <h3 class="fl">Archive Students</h3>
+              <h3 class="fl">UN-Archive Students</h3>
               <span class="fr expand-collapse-text">Click to collapse</span>
               <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -292,7 +292,7 @@
                   <%= flash[:error] %>
                 </div>
               <% end %>
-              <a href="/student/view_archived_students" class="button round blue image-right ic-right-arrow text-upper">View Archived Students</a>
+
               <form id="search-student-form" action="#">
                 <fieldset>
                   <legend>Search</legend>
@@ -329,6 +329,8 @@
                     <th>Phone #</th>
                     <th>Latest Class</th>
                     <th>Guardian Details</th>
+                    <th>Date Archived</th>
+                    <th>Test Reason</th>
                     <th>Action</th>
                   </tr>
 
@@ -337,7 +339,7 @@
                 <tfoot>
                   <tr>
                     <td colspan="8" class="table-footer">
-                      <a href="#" class="button round blue image-right ic-right-arrow text-upper archive-multiple">Archive Selected</a>
+                      <a href="#" class="button round blue image-right ic-right-arrow text-upper archive-multiple">Activated Selected</a>
                     </td>
                   </tr>
                 </tfoot>
@@ -353,8 +355,10 @@
                       <td><%=  student.phone %></td>
                       <td><%=  student.current_active_class %></td>
                       <td><%=  student.guardian_details %></td>
+                      <td>01-Jan-2000</td>
+                      <td>Test Reason</td>
                       <td>
-                        <a student_id="<%= student.id %>" href="#" onmousedown="setcurrentStudentID(this)" class="table-actions-button ic-table-retire confirm"></a>
+                        <a student_id="<%= student.id %>" href="#" onmousedown="setcurrentStudentID(this)" class="button round blue image-right ic-right-arrow text-upper confirm">Activate</a>
                       </td>
                     </tr>
                   <% end %>

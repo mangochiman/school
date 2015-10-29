@@ -1242,5 +1242,12 @@ class StudentController < ApplicationController
   def archive_students
     
   end
-  
+
+  def view_archived_students
+      @students = Student.all
+  end
+
+  def view_archived_students_seach
+    
+  end
 end
