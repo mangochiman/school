@@ -100,7 +100,7 @@
         }
       }
 
-      function archiveStudents(){
+      function unarchiveStudents(){
         inputs = document.getElementsByTagName("input");
         studentIDs = []
         for (var i=0; i<=inputs.length - 1; i++){
@@ -116,7 +116,7 @@
 
         jQuery.ajax({
           type: "POST",
-          url: "/student/archive_students",
+          url: "/student/activate_archived_students",
           data: "student_ids=" + studentIDs,
           success: function(){
             for (var x=0; x<= studentIDs.length - 1; x++){
@@ -133,10 +133,10 @@
         currentStudentID = obj.getAttribute("student_id");
       }
 
-      function archiveSingleEntry(){
+      function unarchiveSingleEntry(){
         jQuery.ajax({
           type: "POST",
-          url: "/student/archive_students",
+          url: "/student/activate_archived_students",
           data: "student_id=" + currentStudentID + "&mode=single_entry",
           success: function(){
             element = document.getElementById(currentStudentID);
@@ -385,10 +385,10 @@
     <script>
 
       $(".archive-multiple").confirm({
-        title:"Archive confirmation",
+        title:"Un-archive confirmation",
         text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
         confirm: function(button) {
-          archiveStudents();
+          unarchiveStudents();
         },
         cancel: function(button) {
           alert("You aborted the operation.");
@@ -398,10 +398,10 @@
       });
 
       $(".confirm").confirm({
-        title:"Archive confirmation",
+        title:"Un-archive confirmation",
         text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
         confirm: function(button) {
-          archiveSingleEntry();
+          unarchiveSingleEntry();
         },
         cancel: function(button) {
 
