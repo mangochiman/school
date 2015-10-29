@@ -46,7 +46,9 @@
               join_date = results[student_id]["join_date"];
               current_active_class = results[student_id]["current_active_class"];
               guardian_details = results[student_id]["guardian_details"];
-    
+              date_archived = results[student_id]["date_archived"];
+              archive_reason = results[student_id]["archive_reason"];
+
               html+="<tr><td><input type='checkbox' student_id='" + student_id + "'/></td>";
               html+="<td style='text-align:left; padding: 0.833em 0 0.833em 1.25em;'>" + firstName + ' ' + lastName +  "</td>";
               html+="<td><a href='#'>" + email +  "</a></td>";
@@ -55,16 +57,18 @@
               html+="<td>" + phone +  "</td>";
               html+="<td>" + current_active_class +  "</td>";
               html+="<td>" + guardian_details +  "</td>";
-              html+="<td><a student_id=" + student_id + " href='#' onmousedown='setcurrentStudentID(this)' class='table-actions-button ic-table-retire confirm'></a></td>";
+              html+="<td>" + date_archived +  "</td>";
+              html+="<td>" + archive_reason +  "</td>";
+              html+="<td><a student_id=" + student_id + " href='#' onmousedown='setcurrentStudentID(this)' class='button round blue image-right ic-right-arrow text-upper confirm'>Activate</a></td>";
               html+="</tr>";
             }
 
             tbody.innerHTML = html;
             $(".confirm").confirm({
-              title:"Archive confirmation",
+              title:"Un-archive confirmation",
               text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
               confirm: function(button) {
-                archiveSingleEntry();
+                unarchiveSingleEntry();
               },
               cancel: function(button) {
 
@@ -330,7 +334,7 @@
                     <th>Latest Class</th>
                     <th>Guardian Details</th>
                     <th>Date Archived</th>
-                    <th>Test Reason</th>
+                    <th>Archive Reason</th>
                     <th>Action</th>
                   </tr>
 
