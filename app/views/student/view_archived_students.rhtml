@@ -359,8 +359,8 @@
                       <td><%=  student.phone %></td>
                       <td><%=  student.current_active_class %></td>
                       <td><%=  student.guardian_details %></td>
-                      <td>01-Jan-2000</td>
-                      <td>Test Reason</td>
+                      <td><%=  student.student_archive.date_archived.to_date.strftime("%d-%b-%Y") rescue '' %></td>
+                      <td><%=  student.student_archive.reason %></td>
                       <td>
                         <a student_id="<%= student.id %>" href="#" onmousedown="setcurrentStudentID(this)" class="button round blue image-right ic-right-arrow text-upper confirm">Activate</a>
                       </td>

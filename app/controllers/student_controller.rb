@@ -1246,7 +1246,8 @@ class StudentController < ApplicationController
   end
 
   def view_archived_students
-    @students = Student.all
+    @students = Student.find_by_sql("SELECT s.* FROM student s LEFT JOIN student_archive sa
+      ON s.student_id = sa.student_id WHERE sa.student_id IS NOT NULL")
   end
 
   def view_archived_students_seach
@@ -1257,24 +1258,26 @@ class StudentController < ApplicationController
     multiple = false
     unless first_name.blank?
       multiple = true
-      conditions += "fname LIKE '%#{first_name}%'"
+      conditions += "s.fname LIKE '%#{first_name}%'"
     end
 
     unless last_name.blank?
       multiple = true
       conditions += ' AND ' unless conditions.blank?
-      conditions += "lname LIKE '%#{last_name}%' "
+      conditions += "s.lname LIKE '%#{last_name}%' "
     end
 
     unless gender.blank?
       conditions += ' AND ' if multiple
-      conditions += "gender = '#{gender}' "
+      conditions += "s.gender = '#{gender}' "
     end
 
     unless conditions.blank?
-      students = Student.find_by_sql("SELECT * FROM student WHERE #{conditions}")
+      students = Student.find_by_sql("SELECT s.* FROM student s LEFT JOIN student_archive sa
+      ON s.student_id = sa.student_id WHERE #{conditions} AND sa.student_id IS NOT NULL")
     else
-      students = Student.all
+      students = Student.find_by_sql("SELECT s.* FROM student s LEFT JOIN student_archive sa
+      ON s.student_id = sa.student_id WHERE sa.student_id IS NOT NULL")
     end
 
     hash = {}
@@ -1286,16 +1289,16 @@ class StudentController < ApplicationController
       hash[student_id]["phone"] = student.phone
       hash[student_id]["email"] = student.email
       hash[student_id]["gender"] = student.gender
-      hash[student_id]["dob"] = student.dob.to_date.strftime("%d-%b-%Y")
-      hash[student_id]["join_date"] = student.created_at.to_date.strftime("%d-%b-%Y")
+      hash[student_id]["dob"] = student.dob.to_date.strftime("%d-%b-%Y") rescue ''
+      hash[student_id]["join_date"] = student.created_at.to_date.strftime("%d-%b-%Y") rescue ''
       hash[student_id]["current_class"] = student.current_class
       hash[student_id]["current_active_class"] = student.current_active_class
       hash[student_id]["total_photos"] = student.student_photos.count
       hash[student_id]["guardian_details"] = student.guardian_details
-      hash[student_id]["date_archived"] = "01-Jan-2000"
-      hash[student_id]["archive_reason"] = "Test Reason"
+      hash[student_id]["date_archived"] = student.student_archive.date_archived.to_date.strftime("%d-%b-%Y") rescue ''
+      hash[student_id]["archive_reason"] = student.student_archive.reason
     end
-
+    
     render :json => hash
   end
 end
