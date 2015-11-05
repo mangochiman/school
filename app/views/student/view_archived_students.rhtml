@@ -49,7 +49,7 @@
               date_archived = results[student_id]["date_archived"];
               archive_reason = results[student_id]["archive_reason"];
 
-              html+="<tr><td><input type='checkbox' student_id='" + student_id + "'/></td>";
+              html+="<tr><td><input id='" + student_id + "' type='checkbox' student_id='" + student_id + "'/></td>";
               html+="<td style='text-align:left; padding: 0.833em 0 0.833em 1.25em;'>" + firstName + ' ' + lastName +  "</td>";
               html+="<td><a href='#'>" + email +  "</a></td>";
               html+="<td>" + gender +  "</td>";
@@ -120,7 +120,7 @@
 
         jQuery.ajax({
           type: "POST",
-          url: "/student/activate_archived_students",
+          url: "/student_archives/activate_archived_students",
           data: "student_ids=" + studentIDs,
           success: function(){
             for (var x=0; x<= studentIDs.length - 1; x++){
@@ -140,7 +140,7 @@
       function unarchiveSingleEntry(){
         jQuery.ajax({
           type: "POST",
-          url: "/student/activate_archived_students",
+          url: "/student_archives/activate_archived_students",
           data: "student_id=" + currentStudentID + "&mode=single_entry",
           success: function(){
             element = document.getElementById(currentStudentID);
