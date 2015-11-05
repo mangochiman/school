@@ -33,7 +33,6 @@
             //results = eval("(" + results  + ")");
             html = "";
             tbody = document.getElementById("students");
-
             for (var student_id in results){
               firstName = results[student_id]["fname"];
               lastName = results[student_id]["lname"];
@@ -47,7 +46,7 @@
               current_active_class = results[student_id]["current_active_class"];
               guardian_details = results[student_id]["guardian_details"];
     
-              html+="<tr><td><input type='checkbox' student_id='" + student_id + "'/></td>";
+              html+="<tr id='" + student_id + "'><td><input type='checkbox' student_id='" + student_id + "'/></td>";
               html+="<td style='text-align:left; padding: 0.833em 0 0.833em 1.25em;'>" + firstName + ' ' + lastName +  "</td>";
               html+="<td><a href='#'>" + email +  "</a></td>";
               html+="<td>" + gender +  "</td>";
@@ -64,7 +63,10 @@
               title:"Archive confirmation",
               text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
               confirm: function(button) {
-                archiveSingleEntry();
+                //archiveSingleEntry();
+                currentMode = 'single';
+                captureArchiveReason();
+
               },
               cancel: function(button) {
 
@@ -102,6 +104,7 @@
 
       function archiveStudents(){
         inputs = document.getElementsByTagName("input");
+        archiveReason = $('#archive-reason').val();
         studentIDs = []
         for (var i=0; i<=inputs.length - 1; i++){
           if (inputs[i].type == 'checkbox'){
@@ -116,8 +119,8 @@
 
         jQuery.ajax({
           type: "POST",
-          url: "/student/archive_students",
-          data: "student_ids=" + studentIDs,
+          url: "/student_archives/archive_students",
+          data: "student_ids=" + studentIDs + '&archive_reason=' + archiveReason,
           success: function(){
             for (var x=0; x<= studentIDs.length - 1; x++){
               id = studentIDs[x];
@@ -134,10 +137,11 @@
       }
 
       function archiveSingleEntry(){
+        archiveReason = $('#archive-reason').val();
         jQuery.ajax({
           type: "POST",
-          url: "/student/archive_students",
-          data: "student_id=" + currentStudentID + "&mode=single_entry",
+          url: "/student_archives/archive_students",
+          data: "student_id=" + currentStudentID + "&mode=single_entry&archive_reason=" + archiveReason,
           success: function(){
             element = document.getElementById(currentStudentID);
             element.parentNode.removeChild(element);
@@ -221,6 +225,13 @@
         width: 2.25em !important;
       }
 
+      #archive-reason{
+        border: 0.5px solid;
+      }
+
+      #myModal{
+        z-index: 5000;
+      }
     </style>
   </head>
   <body>
@@ -379,12 +390,14 @@
 
     <%= javascript_include_tag("bootstrap") %>
     <script>
-
+      var currentMode = ''
       $(".archive-multiple").confirm({
         title:"Archive confirmation",
         text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
         confirm: function(button) {
-          archiveStudents();
+          //archiveStudents();
+          currentMode = 'multiple';
+          captureArchiveReason();
         },
         cancel: function(button) {
           alert("You aborted the operation.");
@@ -397,7 +410,10 @@
         title:"Archive confirmation",
         text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
         confirm: function(button) {
-          archiveSingleEntry();
+          //archiveSingleEntry();
+          currentMode = 'single';
+          captureArchiveReason();
+
         },
         cancel: function(button) {
 
@@ -405,6 +421,45 @@
         confirmButton: "Yes I am",
         cancelButton: "No"
       });
+
+      function captureArchiveReason(){
+        $('#myModal').modal('show');
+      }
+
+      function processData(){
+        console.log("Current Mode = " + currentMode);
+        if (currentMode == 'multiple'){
+          archiveStudents();
+        }
+        
+        if (currentMode == 'single'){
+          archiveSingleEntry();
+        }
+      }
     </script>
+
+    <!--CONFIRMATION POPUP BEGIN -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">
+              Archive Reason
+            </h4>
+          </div>
+          <div class="modal-body">
+            <span style="text-align:center;">
+              <textarea rows='3' cols='76' id='archive-reason' placeholder='Archive reason goes here'></textarea>
+            </span>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" onclick="processData();" data-dismiss="modal">Okay</button>
+              <button type="button" class="btn" data-dismiss="modal">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--CONFIRMATION POPUP END -->
   </body>
 </html>
