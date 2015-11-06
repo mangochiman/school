@@ -14,7 +14,7 @@ module ApplicationHelper
     if (semesters.blank?)
       notifications["semesters"] = {} if notifications["semesters"].blank?
       notifications["semesters"]["link"] = "/semesters/semester_settings"
-      notifications["semesters"]["caption"] = "Add Semester"
+      notifications["semesters"]["caption"] = "Add Semesters"
     end
 
     current_semester = GlobalProperty.find_by_property("current_semester").value rescue nil
@@ -39,6 +39,13 @@ module ApplicationHelper
       notifications["payment_types"]["caption"] = "Add Payment Type"
     end
 
+    examination_types = ExaminationType.all
+    if (examination_types.blank?)
+      notifications["examination_types"] = {} if notifications["examination_types"].blank?
+      notifications["examination_types"]["link"] = "/examination_type/new_exam_type"
+      notifications["examination_types"]["caption"] = "Add Exam Types"
+    end
+    
     class_rooms = ClassRoom.all
     if (class_rooms.blank?)
       notifications["class_rooms"] = {} if notifications["class_rooms"].blank?
@@ -67,6 +74,13 @@ module ApplicationHelper
       notifications["school_name"]["caption"] = "Add School Name"
     end
 
+    school_logo = GlobalProperty.find_by_property('school_logo')
+    if (school_logo.blank?)
+      notifications["school_logo"] = {} if notifications["school_logo"].blank?
+      notifications["school_logo"]["link"] = "/admin/add_logo"
+      notifications["school_logo"]["caption"] = "Upload School Logo"
+    end
+    
     return notifications
   end
 end
