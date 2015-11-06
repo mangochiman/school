@@ -28,14 +28,14 @@ class ApplicationController < ActionController::Base
     semesters = Semester.all
     if (semesters.blank?)
       notifications["semesters"] = {} if notifications["semesters"].blank?
-      notifications["semesters"]["view"] = "/semesters/index"
+      notifications["semesters"]["view"] = "/semesters/semester_settings"
       notifications["semesters"]["caption"] = "Add Semester"
     end
     
     current_semester = GlobalProperty.find_by_property("current_semester").value rescue nil
     if (current_semester.blank?)
       notifications["current_semester"] = {} if notifications["current_semester"].blank?
-      notifications["current_semester"]["view"] = "/semesters/index"
+      notifications["current_semester"]["view"] = "/semesters/set_current_semester"
       notifications["current_semester"]["caption"] = "Set Current Semester"
     end
 
@@ -43,7 +43,7 @@ class ApplicationController < ActionController::Base
       ON s.student_id = sa.student_id WHERE sa.student_id IS NULL")
     if (students.blank)
       notifications["students"] = {} if notifications["students"].blank?
-      notifications["students"]["view"] = "/students/add_student"
+      notifications["students"]["view"] = "/student/add_student/"
       notifications["students"]["caption"] = "Add Students"
     end
     
@@ -57,28 +57,28 @@ class ApplicationController < ActionController::Base
     class_rooms = ClassRoom.all
     if (class_rooms.blank?)
       notifications["class_rooms"] = {} if notifications["class_rooms"].blank?
-      notifications["class_rooms"]["view"] = "/class_room/add_class_room"
+      notifications["class_rooms"]["view"] = "/class_room/add_class"
       notifications["class_rooms"]["caption"] = "Add Class Rooms"
     end
 
     courses = Course.all
     if (courses.blank?)
       notifications["courses"] = {} if notifications["courses"].blank?
-      notifications["courses"]["view"] = "/class_room/add_class_room"
+      notifications["courses"]["view"] = "/course/add_course"
       notifications["courses"]["caption"] = "Add Courses"
     end
 
     teachers = Teacher.all
     if (teachers.blank?)
       notifications["teachers"] = {} if notifications["teachers"].blank?
-      notifications["teachers"]["view"] = "/teachers/add_teacher"
+      notifications["teachers"]["view"] = "/employees/add_employee/"
       notifications["teachers"]["caption"] = "Add Teachers"
     end
 
     school_name = GlobalProperty.find_by_property("school_name") rescue nil
     if (school_name).blank?
       notifications["school_name"] = {} if notifications["school_name"].blank?
-      notifications["school_name"]["view"] = "#"
+      notifications["school_name"]["view"] = "/admin/settings"
       notifications["teachers"]["caption"] = "Add School Name"
     end
     
