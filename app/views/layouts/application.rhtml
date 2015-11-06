@@ -148,6 +148,7 @@
       .match{
         font-weight: bold !important;
       }
+
     </style>
   </head>
   <body>
@@ -212,7 +213,15 @@
               <li><a href="/admin/backup_data_menu">Backup Settings</a></li>
             </ul>
           </li>
-
+          <% if notices.keys.count > 0 %>
+            <li class="v-sep"><a href="#" class="round button dark menu-email image-left">To Do&nbsp;<sup class="notice badge badge-info"><%= notices.keys.count%></sup></a>
+              <ul>
+                <% notices.each do |key, values| %>
+                  <li><a href="<%=  values["link"]%>"><%= values["caption"] %></a></li>
+                <% end %>
+              </ul>
+            </li>
+          <% end %>
         </ul> <!-- end nav -->
 
 
