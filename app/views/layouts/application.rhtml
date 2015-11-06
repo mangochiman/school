@@ -217,8 +217,8 @@
             <li class="v-sep"><a href="#" class="round button dark menu-email image-left">To Do&nbsp;<sup class="notice badge badge-info"><%= notices.keys.count%></sup></a>
               <ul>
                 <% count = 1 %>
-                <% notices.each do |key, values| %>
-                <li><a href="<%=  values["link"]%>"><span style="font-weight: bold;"><%= count %>.</span>&nbsp;<%= values["caption"] %></a></li>
+                <% notices.sort_by{|x, y| y["sort_weight"].to_i}.each do |key, values| %>
+                  <li><a href="<%=  values["link"]%>"><span style="font-weight: bold;"><%= count %>.</span>&nbsp;<%= values["caption"] %></a></li>
                   <% count = count + 1  %>
                 <% end %>
               </ul>
