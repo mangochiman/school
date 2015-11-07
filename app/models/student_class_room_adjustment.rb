@@ -10,9 +10,9 @@ class StudentClassRoomAdjustment < ActiveRecord::Base
   before_save :add_dates
 
   def add_dates
-    start_date = GlobalProperty.find_by_property("current_semester_start_date").value
-    end_date = GlobalProperty.find_by_property("current_semester_end_date").value
-    semester = GlobalProperty.find_by_property("current_semester").value
+    start_date = GlobalProperty.find_by_property("current_semester_start_date").value rescue ''
+    end_date = GlobalProperty.find_by_property("current_semester_end_date").value rescue ''
+    semester = GlobalProperty.find_by_property("current_semester").value rescue ''
     
     self.semester_id = semester
     self.start_date = start_date

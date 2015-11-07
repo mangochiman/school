@@ -102,6 +102,68 @@ module ApplicationHelper
       notifications["school_logo"]["caption"] = "Upload School Logo"
     end
 
+    class_rooms = ClassRoom.all
+    unless class_rooms.blank?
+      class_without_courses = false
+      class_rooms.each do |class_room|
+        class_room_courses = class_room.class_room_courses
+        if (class_room_courses.blank?)
+          class_without_courses = true
+          break
+        end
+      end
+
+      if (class_without_courses == true)
+        sort_weight = sort_weight + 1
+        notifications["class_courses"] = {} if notifications["class_courses"].blank?
+        notifications["class_courses"]["sort_weight"] = sort_weight
+        notifications["class_courses"]["link"] = "/class_room/assign_subjects"
+        notifications["class_courses"]["caption"] = "Assign Courses to Class Rooms"
+      end
+    end
+    
+    unless (students.blank?)
+      students_without_classes = false
+      students.each do |student|
+        student_class_room_adjustments = student.student_class_room_adjustments
+        if (student_class_room_adjustments.blank?)
+          students_without_classes = true
+          break
+        end
+      end
+
+      if (students_without_classes == true)
+        sort_weight = sort_weight + 1
+        notifications["students_without_classes"] = {} if notifications["students_without_classes"].blank?
+        notifications["students_without_classes"]["sort_weight"] = sort_weight
+        notifications["students_without_classes"]["link"] = "/student/assign_class/"
+        notifications["students_without_classes"]["caption"] = "Assign Classes to Students"
+      end
+    end
+
+    unless (students.blank?)
+      students_without_courses = false
+      students.each do |student|
+        next if student.current_class.blank? #Not Interested in students without classes
+        latest_class_name = student.current_class #Returns Class Name
+        class_room_id = ClassRoom.find_all_by_name(latest_class_name).id
+        latest_student_courses = student.student_class_room_courses.find(:all,
+          :conditions => ["class_room_id =?", class_room_id])
+        if (latest_student_courses.blank?)
+          students_without_courses = true
+          break
+        end
+      end
+
+      if (students_without_courses == true)
+        sort_weight = sort_weight + 1
+        notifications["students_without_courses"] = {} if notifications["students_without_courses"].blank?
+        notifications["students_without_courses"]["sort_weight"] = sort_weight
+        notifications["students_without_courses"]["link"] = "/student/assign_subjects"
+        notifications["students_without_courses"]["caption"] = "Assign Courses to Students"
+      end
+    end
+
     return notifications
   end
 end

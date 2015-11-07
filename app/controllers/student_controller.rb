@@ -119,15 +119,13 @@ class StudentController < ApplicationController
         student.student_class_room_adjustments.create({
             :old_class_room_id => student_class_adjustment.new_class_room_id,
             :new_class_room_id => class_room_id,
-            :status => 'active',
-            :semester_id => (GlobalProperty.find_by_property("current_semester").value rescue nil)
+            :status => 'active'
           })
       else
         student.student_class_room_adjustments.create({
             :old_class_room_id => 0,
             :new_class_room_id => class_room_id,
-            :status => 'active',
-            :semester_id => (GlobalProperty.find_by_property("current_semester").value rescue nil)
+            :status => 'active'
           })
       end
       flash[:notice] = "You have successfully assigned a class"

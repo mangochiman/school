@@ -203,7 +203,7 @@
                   </span><br />
                   <span style="font-size: 0.9em; font-weight: bold;">Class:</span>
                   <span style="font-size:0.9em;">
-                    <a href="#"><%= @student.class_room_student.class_room.name rescue 'Unknown Class'%></a>
+                    <a href="#"><%= @student.current_class %></a>
                   </span><br />
 
                   <% if @payments_hash.blank? %>
