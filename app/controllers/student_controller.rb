@@ -49,12 +49,14 @@ class StudentController < ApplicationController
   end
 
   def edit_student
-    @students = Student.all
+    @students = Student.find_by_sql("SELECT s.* FROM student s LEFT JOIN student_archive sa
+      ON s.student_id = sa.student_id WHERE sa.student_id IS NULL")
     
   end
 
   def remove_students
-    @students = Student.all
+    @students = Student.find_by_sql("SELECT s.* FROM student s LEFT JOIN student_archive sa
+      ON s.student_id = sa.student_id WHERE sa.student_id IS NULL")
     
   end
 
@@ -75,14 +77,10 @@ class StudentController < ApplicationController
   end
   
   def assign_class
-    student_ids_with_class_rooms = Student.find(:all,
-      :joins => [:class_room_student]).map(&:student_id)
-
-    student_ids_with_class_rooms = '' if student_ids_with_class_rooms.blank? #To handle mysql NOT IN when the data is array is blank
-    @students = Student.find(:all, :conditions => ["student_id NOT IN (?)",
-        student_ids_with_class_rooms]
-    )
-    
+    @students = Student.find_by_sql("SELECT s.* FROM student s LEFT JOIN student_archive sa
+      ON s.student_id = sa.student_id LEFT JOIN student_class_room_adjustment scra
+      ON s.student_id = scra.student_id WHERE sa.student_id IS NULL AND scra.student_id IS NULL
+      GROUP BY s.student_id")
   end
   
   def assign_me_class
@@ -436,24 +434,26 @@ class StudentController < ApplicationController
     multiple = false
     unless first_name.blank?
       multiple = true
-      conditions += "fname LIKE '%#{first_name}%'"
+      conditions += "s.fname LIKE '%#{first_name}%'"
     end
     
     unless last_name.blank?
       multiple = true
       conditions += ' AND ' unless conditions.blank?
-      conditions += "lname LIKE '%#{last_name}%' "
+      conditions += "s.lname LIKE '%#{last_name}%' "
     end
 
     unless gender.blank?
       conditions += ' AND ' if multiple
-      conditions += "gender = '#{gender}' "
+      conditions += "s.gender = '#{gender}' "
     end
 
     unless conditions.blank?
-      students = Student.find_by_sql("SELECT * FROM student WHERE #{conditions}")
+      students = Student.find_by_sql("SELECT s.* FROM student s LEFT JOIN student_archive sa
+      ON s.student_id = sa.student_id WHERE #{conditions} AND sa.student_id IS NULL")
     else
-      students = Student.all
+      students = Student.find_by_sql("SELECT s.* FROM student s LEFT JOIN student_archive sa
+      ON s.student_id = sa.student_id WHERE sa.student_id IS NULL")
     end
     
     hash = {}
