@@ -15,8 +15,11 @@ class PunishmentsController < ApplicationController
   end
 
   def add_punishment
-    @students = Student.all
-    
+
+    @students = Student.find_by_sql("SELECT s.* FROM student s LEFT JOIN student_archive sa
+      ON s.student_id = sa.student_id WHERE sa.student_id IS NULL
+      GROUP BY s.student_id")
+
     @teachers_select_tag = "<select id='teacher'><option value=''></option>"
     (Teacher.all || []).each{|t|
       name = t.fname.to_s + ' ' + t.lname.to_s + '(' + (t.gender.first.upcase.to_s rescue 'Unknown') + ')'

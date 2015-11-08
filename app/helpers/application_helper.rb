@@ -9,6 +9,7 @@ module ApplicationHelper
     #Courses
     #Teachers
     #School Name
+    #Punishment Type
     notifications = {}
     sort_weight = 0
     semesters = Semester.all
@@ -162,6 +163,15 @@ module ApplicationHelper
         notifications["students_without_courses"]["link"] = "/student/assign_subjects"
         notifications["students_without_courses"]["caption"] = "Assign Courses to Students"
       end
+    end
+
+    punishment_types = PunishmentType.all
+    if (punishment_types.blank?)
+      sort_weight = sort_weight + 1
+      notifications["punishment_types"] = {} if notifications["punishment_types"].blank?
+      notifications["punishment_types"]["sort_weight"] = sort_weight
+      notifications["punishment_types"]["link"] = "/punishments/add_punishment_type/"
+      notifications["punishment_types"]["caption"] = "Add Punishment Types"
     end
 
     return notifications
