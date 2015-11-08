@@ -136,8 +136,10 @@ class StudentController < ApplicationController
   
   def assign_subjects
     #@students = Student.find(:all, :joins => [:class_room_student])
-    @students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
-          s.student_id = scra.student_id WHERE scra.status = 'active' ")
+    @students = Student.find_by_sql("SELECT s.* FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id LEFT JOIN student_archive sa
+          ON s.student_id = sa.student_id WHERE scra.status = 'active' AND sa.student_id IS NULL")
+
   end
 
   def assign_optional_courses
@@ -177,10 +179,11 @@ class StudentController < ApplicationController
   end
 
   def edit_subjects
-    @students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_course scrc
+    @students = Student.find_by_sql("SELECT s.* FROM student s INNER JOIN student_class_room_course scrc
       ON s.student_id = scrc.student_id  INNER JOIN student_class_room_adjustment scra ON
-      s.student_id = scra.student_id WHERE scra.status = 'active' GROUP BY s.student_id")
-
+      s.student_id = scra.student_id LEFT JOIN student_archive sa
+      ON s.student_id = sa.student_id WHERE scra.status = 'active' AND scra.student_id IS NULL
+      GROUP BY s.student_id")
   end
 
   def edit_subjects_search
@@ -285,9 +288,11 @@ class StudentController < ApplicationController
   end
   
   def assign_parent_guardian
-    students_with_guardians_ids = StudentParent.find(:all).map(&:student_id).join(', ')
-    @students = Student.find(:all, :conditions => ["student_id NOT IN (?)", students_with_guardians_ids])
-    
+    @students = Student.find_by_sql("SELECT s.* FROM student s LEFT JOIN student_archive sa
+      ON s.student_id = sa.student_id LEFT JOIN student_parent sp
+      ON s.student_id = sp.student_id WHERE sa.student_id IS NULL AND sp.student_id IS NULL
+      GROUP BY s.student_id")
+
   end
 
   def delete_student_guardian
@@ -297,9 +302,9 @@ class StudentController < ApplicationController
   end
   
   def edit_parent_guardian
-    @students = StudentParent.find(:all).collect{|sp|
-      next if sp.student.blank?
-      sp.student}
+    @students = Student.find_by_sql("SELECT s.* FROM student s LEFT JOIN student_archive sa
+      ON s.student_id = sa.student_id INNER JOIN student_parent sp
+      ON s.student_id = sp.student_id WHERE sa.student_id IS NULL GROUP BY s.student_id")
   end
   
   def select_guardian
@@ -351,7 +356,10 @@ class StudentController < ApplicationController
   def filter_students
     @class_rooms = [["---Select Class---", ""]]
     @class_rooms += ClassRoom.find(:all).collect{|c|[c.name, c.id]}
-    
+
+    @students = Student.find_by_sql("SELECT s.* FROM student s LEFT JOIN student_archive sa
+      ON s.student_id = sa.student_id WHERE sa.student_id IS NULL
+      GROUP BY (s.student_id) ORDER BY DATE(s.created_at) DESC")
   end
 
   def filter_students_by_params
