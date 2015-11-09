@@ -40,7 +40,7 @@
             for (var punishment_id in results){
               punishmentType = results[punishment_id]["punishment_type"];
               punishmentDetails = results[punishment_id]["punishment_details"];
-              responsibleTeacher = results[punishment_id]["gender"];
+              responsibleTeacher = results[punishment_id]["responsible_teacher"];
               totalStudents = results[punishment_id]["total_students"];
               startDate = results[punishment_id]["start_date"];
               endDate = results[punishment_id]["end_date"];
@@ -48,9 +48,9 @@
 
               html+="<tr>";
               html+="<td style='text-align:left; padding: 0.833em 0 0.833em 1.25em;'>" + punishmentType +  "</td>";
-              html+="<td><a href='#'>" + punishmentDetails +  "</a></td>";
+              html+="<td>" + punishmentDetails +  "</td>";
               html+="<td>" + responsibleTeacher +  "</td>";
-              html+="<td>" + totalStudents +  "</td>";
+              html+="<td><center> <span class='label' onmousedown='showStudents('" + punishment_id + "')'>" + totalStudents +  "</span></center></td>";
               html+="<td>" + startDate +  "</td>";
               html+="<td>" + endDate +  "</td>";
               html+="<td><a onclick='editMe(this)' class='table-actions-button ic-table-edit' href='#' punishment_id='" + punishment_id + "'></a></td>";
@@ -59,8 +59,6 @@
             }
 
             tbody.innerHTML = html;
-            activateConfirmPopup();
-            activatePopupForMultiple();
           }
 
         });

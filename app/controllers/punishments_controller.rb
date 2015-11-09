@@ -47,7 +47,7 @@ class PunishmentsController < ApplicationController
     @punishment = Punishment.find(params[:punishment_id])
     @teachers_select_tag = "<select id='teacher' name='teacher' class='select required'><option value=''></option>"
     Teacher.all.each{|t|
-      name = t.fname.to_s + ' ' + t.lname.to_s + '(' + t.gender.first.upcase.to_s + ')'
+      name = t.fname.to_s + ' ' + t.lname.to_s + '(' + (t.gender.first.upcase.to_s rescue '?') + ')'
       option="<option value=#{t.teacher_id}>#{name}</option>"
       @teachers_select_tag += option
     }
@@ -86,8 +86,13 @@ class PunishmentsController < ApplicationController
   end
   
   def remove_punishments
-    @punishments = Punishment.find(:all)
-    
+    @punishments = Punishment.find_by_sql("SELECT p.* FROM punishment p
+      INNER JOIN punishment_type pt ON p.punishment_id = pt.punishment_type_id
+      INNER JOIN student_punishment sp ON p.punishment_id = sp.punishment_id
+      INNER JOIN student s ON sp.student_id = s.student_id
+      LEFT JOIN student_archive sa ON s.student_id = sa.student_id WHERE sa.student_id IS NULL
+      GROUP BY p.punishment_id")
+    @punishment_types = PunishmentType.all
   end
 
   def view_punishments
