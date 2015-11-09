@@ -40,7 +40,7 @@ class PunishmentsController < ApplicationController
 
   def edit_punishment
     @punishments = Punishment.find(:all)
-    
+    @punishment_types = PunishmentType.all
   end
 
   def edit_me_punishment
@@ -241,4 +241,26 @@ class PunishmentsController < ApplicationController
     @student_punishments = StudentPunishment.find(:all, :conditions => ["student_id =?", student_id])
     
   end
+
+  def search_punishments
+    hash = {}
+    punishments = Punishment.find_by_sql("SELECT p.* FROM punishment p INNER JOIN student_punishment sp ON
+      p.punishment_id = sp.punishment_id INNER JOIN student s ON sp.student_id = s.student_id
+      LEFT JOIN student_archive sa ON s.student_id = sa.student_id WHERE sa.student_id IS NULL
+      GROUP BY p.punishment_id")
+    
+    punishments.each do |punishment|
+      punishment_id = punishment.id.to_s
+      hash[punishment_id] = {}
+      hash[punishment_id]["punishment_type"] = punishment.punishment_type.name
+      hash[punishment_id]["punishment_details"] = punishment.details
+      hash[punishment_id]["responsible_teacher"] = punishment.teacher.fname + ' ' + punishment.teacher.lname
+      hash[punishment_id]["total_students"] = punishment.students.count
+      hash[punishment_id]["start_date"] = punishment.start_date.to_date.strftime("%d-%b-%Y")
+      hash[punishment_id]["end_date"] = punishment.end_date.to_date.strftime("%d-%b-%Y")
+    end
+
+    render :json => hash
+  end
+  
 end
