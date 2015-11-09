@@ -221,7 +221,7 @@
                         <td style="width:15%; text-align: center; font-size: 13pt;"><span>Punishment Type</span></td>
                         <td style="width:26%">
                           <select id="dropdown-actions" class="punishment_type_search">
-                            <option value="">[Punishment Type]</option>
+                            <option value="All">[Punishment Type]</option>
                             <% @punishment_types.each do |punishment_type| %>
                                 <option value="<%= punishment_type.punishment_type_id %>"><%=  punishment_type.name %></option>
                             <% end %>

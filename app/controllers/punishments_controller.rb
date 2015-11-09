@@ -243,9 +243,19 @@ class PunishmentsController < ApplicationController
   end
 
   def search_punishments
+    punishment_type_id = params[:punishment_type_id]
+    
+    if (params[:punishment_type_id].match(/ALL/i))
+      punishment_type_id = PunishmentType.all.map(&:id).join(', ')
+      punishment_type_id = 0 if punishment_type_id.blank?
+    end
+
     hash = {}
-    punishments = Punishment.find_by_sql("SELECT p.* FROM punishment p INNER JOIN student_punishment sp ON
-      p.punishment_id = sp.punishment_id INNER JOIN student s ON sp.student_id = s.student_id
+    punishments = Punishment.find_by_sql("SELECT p.* FROM punishment p
+      INNER JOIN punishment_type pt ON p.punishment_id = pt.punishment_type_id AND
+      pt.punishment_type_id IN (#{punishment_type_id})
+      INNER JOIN student_punishment sp ON p.punishment_id = sp.punishment_id
+      INNER JOIN student s ON sp.student_id = s.student_id
       LEFT JOIN student_archive sa ON s.student_id = sa.student_id WHERE sa.student_id IS NULL
       GROUP BY p.punishment_id")
     
