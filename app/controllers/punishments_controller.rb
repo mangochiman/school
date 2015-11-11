@@ -41,6 +41,9 @@ class PunishmentsController < ApplicationController
   def edit_punishment
     @punishments = Punishment.find(:all)
     @punishment_types = PunishmentType.all
+
+    @class_rooms = ["All"]
+    @class_rooms += ClassRoom.all.collect{|cr|[cr.name, cr.class_room_id]}
   end
 
   def edit_me_punishment
@@ -93,6 +96,9 @@ class PunishmentsController < ApplicationController
       LEFT JOIN student_archive sa ON s.student_id = sa.student_id WHERE sa.student_id IS NULL
       GROUP BY p.punishment_id")
     @punishment_types = PunishmentType.all
+
+    @class_rooms = ["All"]
+    @class_rooms += ClassRoom.all.collect{|cr|[cr.name, cr.class_room_id]}
   end
 
   def view_punishments

@@ -302,13 +302,40 @@
                   <div style="margin-left:2%;">
                     <table>
                       <tr>
-                        <td style="width:15%; text-align: center; font-size: 13pt;"><span>Punishment Type</span></td>
-                        <td style="width:26%">
+                        <td style="width:12%; text-align: center; font-size: 13pt;"><span>Punishment Type</span></td>
+                        <td style="">
                           <select id="dropdown-actions" class="punishment_type_search">
                             <option value="All">[Punishment Type]</option>
                             <% @punishment_types.each do |punishment_type| %>
                               <option value="<%= punishment_type.punishment_type_id %>"><%=  punishment_type.name %></option>
                             <% end %>
+                          </select>
+                        </td>
+                        <td style="text-align: center; font-size: 13pt;"><span>Limit</span></td>
+                        <td style="">
+                          <select id="dropdown-actions" class="limit" style="width: 130px;">
+                            <option value="All">DON'T</option>
+                            <% @punishments.count.downto(1) do |i| %>
+                              <option value="<%= i %>"><%=  i %></option>
+                            <% end %>
+                          </select>
+                        </td>
+
+                        <td style="text-align: left;"><span style="font-size:1.4em;">Class</span></td>
+                        <td>
+                          <select id="dropdown-actions" class="class_room" style="width: 130px;">
+                            <% @class_rooms.each do |key, value| %>
+                              <option value="<%= value %>"><%=  key %></option>
+                            <% end %>
+                          </select>
+                        </td>
+                        <td style="text-align: left;"><span style="font-size:1.4em;">Order By</span></td>
+                        <td>
+                          <select id="dropdown-actions" class="oder_by">
+                            <option value="start_date ASC" style="text-align: left; padding-left: 30px;">Start Date (ASC)</option>
+                            <option value="start_date DESC" style="text-align: left; padding-left: 30px;">Start Date (DESC)</option>
+                            <option value="end_date ASC" style="text-align: left; padding-left: 30px;">End Date (ASC)</option>
+                            <option value="end_date DESC" style="text-align: left; padding-left: 30px;">End Date (DESC)</option>
                           </select>
                         </td>
                         <td><a onclick="loadSearchResults();" class="button round blue image-right ic-search text-upper">Search</a></td>
