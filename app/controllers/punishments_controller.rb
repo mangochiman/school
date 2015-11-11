@@ -263,7 +263,15 @@ class PunishmentsController < ApplicationController
 
   def search_punishments
     punishment_type_id = params[:punishment_type_id]
+    class_room_id = params[:class_room_id]
     
+    (class_room_id = ClassRoom.all.map(&:id).join(', ')) if (class_room_id.blank?)
+
+    oder_by = params[:oder_by]
+    field = oder_by.split(/\W+/)[0]
+    asc_or_desc = oder_by.split(/\W+/)[1]
+    limit = params[:limit]
+
     if (params[:punishment_type_id].match(/ALL/i))
       punishment_type_id = PunishmentType.all.map(&:id).join(', ')
       punishment_type_id = 0 if punishment_type_id.blank?
@@ -275,8 +283,10 @@ class PunishmentsController < ApplicationController
       pt.punishment_type_id IN (#{punishment_type_id})
       INNER JOIN student_punishment sp ON p.punishment_id = sp.punishment_id
       INNER JOIN student s ON sp.student_id = s.student_id
+      INNER JOIN student_class_room_adjustment scra ON s.student_id = scra.student_id
       LEFT JOIN student_archive sa ON s.student_id = sa.student_id WHERE sa.student_id IS NULL
-      GROUP BY p.punishment_id")
+      AND scra.new_class_room_id IN (#{class_room_id})
+      GROUP BY p.punishment_id ORDER BY DATE(p.#{field}) #{asc_or_desc} LIMIT #{limit}")
     
     punishments.each do |punishment|
       punishment_id = punishment.id.to_s
