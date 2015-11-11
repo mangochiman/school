@@ -24,6 +24,44 @@
       function showStudents(punishmentID){
         window.location = "/punishments/punishment_students_edit?punishment_id=" + punishmentID;
       }
+
+      function loadSearchResults(){
+        punishmentTypeId = document.getElementsByClassName('punishment_type_search')[0].value;
+        jQuery.ajax({
+          type: "POST",
+          url: "/punishments/search_punishments",
+          data: "punishment_type_id=" + punishmentTypeId,
+          success: function(results){
+            //results = eval("(" + results  + ")");
+            html = "";
+            tbody = document.getElementById("punishments");
+
+            for (var punishment_id in results){
+              punishmentType = results[punishment_id]["punishment_type"];
+              punishmentDetails = results[punishment_id]["punishment_details"];
+              responsibleTeacher = results[punishment_id]["responsible_teacher"];
+              totalStudents = results[punishment_id]["total_students"];
+              startDate = results[punishment_id]["start_date"];
+              endDate = results[punishment_id]["end_date"];
+
+
+              html+="<tr id='" + punishment_id + "'>";
+              html+="<td style='text-align:left; padding: 0.833em 0 0.833em 1.25em;'>" + punishmentType +  "</td>";
+              html+="<td>" + punishmentDetails +  "</td>";
+              html+="<td>" + responsibleTeacher +  "</td>";
+              html+="<td><center> <span class='label' onmousedown='showStudents('" + punishment_id + "')'>" + totalStudents +  "</span></center></td>";
+              html+="<td>" + startDate +  "</td>";
+              html+="<td>" + endDate +  "</td>";
+              html+="</tr>";
+
+            }
+
+            tbody.innerHTML = html;
+          }
+
+        });
+
+      }
     </script>
     <style>
       .label {
@@ -48,6 +86,61 @@
       }
       a{
         cursor: pointer;
+      }
+
+      #search-student-form fieldset {
+        border: 1px solid gray;
+        float: left;
+        margin-bottom: 15px;
+        padding: 0px;
+        float: none;
+      }
+      #search-student-form legend {
+        color: #abda0f;
+        font-size: 14px;
+        font-weight: 100;
+        margin-left: 14px;
+        padding: 2px;
+        width: initial;
+        margin-bottom: initial;
+        border-style: none;
+      }
+
+      #search-student-form fieldset input {
+        color: #505050;
+        float: left;
+        margin-right: 5px;
+        width: 215px;
+        padding: 6px;
+        font-size: 14px;
+        border: 1px solid #d9dbdd;
+        outline: medium none;
+      }
+
+      #search-student-form table td{
+        border-left: none;
+      }
+
+      form.autoform input, select {
+        font-size: 0.8em !important;
+        font-weight: bold;
+      }
+
+      #dropdown-actions {
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        color: #555;
+        font-size: 12px !important;
+        height: 34px;
+        line-height: 1.42857;
+        margin-left: 0;
+        text-align: center;
+        width: 186px;
+        padding: 6px 12px;
+        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
       }
     </style>
   </head>
@@ -114,6 +207,29 @@
                   <%= flash[:error] %>
                 </div>
               <% end %>
+
+              <form id="search-student-form" action="#">
+                <fieldset>
+                  <legend>Search</legend>
+                  <div style="margin-left:2%;">
+                    <table>
+                      <tr>
+                        <td style="width:15%; text-align: center; font-size: 13pt;"><span>Punishment Type</span></td>
+                        <td style="width:26%">
+                          <select id="dropdown-actions" class="punishment_type_search">
+                            <option value="All">[Punishment Type]</option>
+                            <% @punishment_types.each do |punishment_type| %>
+                                <option value="<%= punishment_type.punishment_type_id %>"><%=  punishment_type.name %></option>
+                            <% end %>
+                          </select>
+                        </td>
+                        <td><a onclick="loadSearchResults();" class="button round blue image-right ic-search text-upper">Search</a></td>
+                      </tr>
+                    </table>
+                  </div>
+                </fieldset>
+              </form>
+              
               <table>
 
                 <thead>

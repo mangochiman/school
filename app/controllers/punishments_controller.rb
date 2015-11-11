@@ -96,8 +96,13 @@ class PunishmentsController < ApplicationController
   end
 
   def view_punishments
-    @punishments = Punishment.find(:all)
-    
+    @punishments = Punishment.find_by_sql("SELECT p.* FROM punishment p
+      INNER JOIN punishment_type pt ON p.punishment_id = pt.punishment_type_id
+      INNER JOIN student_punishment sp ON p.punishment_id = sp.punishment_id
+      INNER JOIN student s ON sp.student_id = s.student_id
+      LEFT JOIN student_archive sa ON s.student_id = sa.student_id WHERE sa.student_id IS NULL
+      GROUP BY p.punishment_id")
+    @punishment_types = PunishmentType.all
   end
 
   def punishment_types_menu
