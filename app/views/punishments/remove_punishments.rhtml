@@ -319,7 +319,7 @@
                         <td style="text-align: center; font-size: 13pt;"><span>Limit</span></td>
                         <td style="">
                           <select id="dropdown-actions" class="limit" style="width: 130px;">
-                            <option value="All">DON'T</option>
+                            <option value="<%= @punishments.count %>">DON'T</option>
                             <% @punishments.count.downto(1) do |i| %>
                               <option value="<%= i %>"><%=  i %></option>
                             <% end %>
