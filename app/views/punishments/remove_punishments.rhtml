@@ -93,10 +93,15 @@
 
       function loadSearchResults(){
         punishmentTypeId = document.getElementsByClassName('punishment_type_search')[0].value;
+        class_room_id = document.getElementsByClassName('class_room')[0].value;
+        oder_by = document.getElementsByClassName('oder_by')[0].value;
+        limit = document.getElementsByClassName('limit')[0].value;
+        
         jQuery.ajax({
           type: "POST",
           url: "/punishments/search_punishments",
-          data: "punishment_type_id=" + punishmentTypeId,
+          data: "punishment_type_id=" + punishmentTypeId + "&class_room_id=" + class_room_id +
+            "&oder_by=" + oder_by + "&limit=" + limit,
           success: function(results){
             //results = eval("(" + results  + ")");
             html = "";
