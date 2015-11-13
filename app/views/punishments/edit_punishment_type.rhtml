@@ -24,7 +24,42 @@
         punishmentTypeId = obj.getAttribute("punishment_type_id");
         window.location = "/punishments/edit_me_punishment_type?punishment_type_id=" + punishmentTypeId;
       }
+
+      function loadSearchResults(){
+        punishmentTypeName = document.getElementsByClassName('punishment_type_search')[0].value;
+
+        jQuery.ajax({
+          type: "POST",
+          url: "/punishments/search_punishment_types",
+          data: "punishment_type_name=" + punishmentTypeName,
+          success: function(results){
+            //results = eval("(" + results  + ")");
+            html = "";
+            tbody = document.getElementById("punishment_types");
+
+            for (var punishment_type_id in results){
+              punishmentTypeName = results[punishment_type_id]["punishment_name"];
+              dateCreated = results[punishment_type_id]["date_created"];
+
+
+
+              html+="<tr>";
+              html+="<td style='text-align:left; padding: 0.833em 0 0.833em 1.25em;'>" + punishmentTypeName +  "</td>";
+              html+="<td><center>" + dateCreated +  "</center></td>";
+              html+="<td><a onclick='editMe(this)' class='table-actions-button ic-table-edit' punishment_type_id='" + punishment_type_id + "'></a></td>";
+              html+="</tr>";
+
+            }
+
+            tbody.innerHTML = html;
+
+          }
+
+        });
+
+      }
     </script>
+
 
     <style>
       .modal-title {
@@ -38,10 +73,49 @@
       table th:first-child {
         border-style: none none none !important;
       }
-      
+
       a{
         cursor: pointer;
       }
+
+      #search-student-form fieldset {
+        border: 1px solid gray;
+        float: left;
+        margin-bottom: 15px;
+        padding: 0px;
+        float: none;
+      }
+      #search-student-form legend {
+        color: #abda0f;
+        font-size: 14px;
+        font-weight: 100;
+        margin-left: 14px;
+        padding: 2px;
+        width: initial;
+        margin-bottom: initial;
+        border-style: none;
+      }
+
+      #search-student-form fieldset input {
+        color: #505050;
+        float: left;
+        margin-right: 5px;
+        width: 250px;
+        padding: 6px;
+        font-size: 14px;
+        border: 1px solid #d9dbdd;
+        outline: medium none;
+      }
+
+      #search-student-form table td{
+        border-left: none;
+      }
+
+      form.autoform input, select {
+        font-size: 0.8em !important;
+        font-weight: bold;
+      }
+
     </style>
   </head>
 
@@ -107,6 +181,22 @@
                   <%= flash[:error] %>
                 </div>
               <% end %>
+
+              <form id="search-student-form" action="#">
+                <fieldset>
+                  <legend>Search</legend>
+                  <div style="margin-left:2%;">
+                    <table style="width: 45%; float: right;">
+                      <tr>
+                        <td style="font-size: 13pt;">Name</td>
+                        <td style="width: 50px !important;"><input type="text" class="punishment_type_search"/></td>
+                        <td style="width: 20px"><a onclick="loadSearchResults();" class="button round blue image-right ic-search text-upper">Search</a></td>
+                      </tr>
+                    </table>
+                  </div>
+                </fieldset>
+              </form>
+
               <table>
 
                 <thead>

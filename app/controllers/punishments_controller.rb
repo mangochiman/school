@@ -301,5 +301,20 @@ class PunishmentsController < ApplicationController
 
     render :json => hash
   end
+
+  def search_punishment_types
+    punishment_type_name = params[:punishment_type_name]
+    hash = {}
+    punishment_types = PunishmentType.find_by_sql("SELECT * FROM punishment_type WHERE name LIKE '%#{punishment_type_name}%'")
+
+    punishment_types.each do |punishment_type|
+      punishment_type_id = punishment_type.punishment_type_id
+      hash[punishment_type_id] = {}
+      hash[punishment_type_id]["punishment_name"] = punishment_type.name
+      hash[punishment_type_id]["date_created"] = punishment_type.created_at.to_date.strftime("%d-%b-%Y")
+    end
+
+    render :json => hash
+  end
   
 end
