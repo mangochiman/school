@@ -19,6 +19,42 @@
     <%= stylesheet_link_tag("gvalidator") %>
     <%= stylesheet_link_tag("bootstrap") %>
 
+    <script type="text/javascript">
+      function loadSearchResults(){
+        punishmentTypeName = document.getElementsByClassName('punishment_type_search')[0].value;
+
+        jQuery.ajax({
+          type: "POST",
+          url: "/punishments/search_punishment_types",
+          data: "punishment_type_name=" + punishmentTypeName,
+          success: function(results){
+            //results = eval("(" + results  + ")");
+            html = "";
+            tbody = document.getElementById("punishment_types");
+            var count = 1;
+            for (var punishment_type_id in results){
+              punishmentTypeName = results[punishment_type_id]["punishment_name"];
+              dateCreated = results[punishment_type_id]["date_created"];
+
+
+
+              html+="<tr>";
+              html+="<td>" + count + "</td>"
+              html+="<td style='text-align:left; padding: 0.833em 0 0.833em 1.25em;'>" + punishmentTypeName +  "</td>";
+              html+="<td><center>" + dateCreated +  "</center></td>";
+              html+="</tr>";
+              count = count + 1;
+            }
+
+            tbody.innerHTML = html;
+
+          }
+
+        });
+
+      }
+    </script>
+
     <style>
       .modal-title {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -146,7 +182,7 @@
                     <table style="width: 45%; float: right;">
                       <tr>
                         <td style="font-size: 13pt;">Name</td>
-                        <td style="width: 50px !important;"><input type="text" id="punishment_search"/></td>
+                        <td style="width: 50px !important;"><input type="text" class="punishment_type_search"/></td>
                         <td style="width: 20px"><a onclick="loadSearchResults();" class="button round blue image-right ic-search text-upper">Search</a></td>
                       </tr>
                     </table>
