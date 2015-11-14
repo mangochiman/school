@@ -77,4 +77,20 @@ class ExaminationTypeController < ApplicationController
           DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
     
   end
+
+  def search_examination_types
+    exam_type_name = params[:exam_type_name]
+    hash = {}
+    exam_types = ExaminationType.find_by_sql("SELECT * FROM exam_type WHERE name LIKE '%#{exam_type_name}%'")
+
+    exam_types.each do |exam_type|
+      exam_type_id = exam_type.exam_type_id
+      hash[exam_type_id] = {}
+      hash[exam_type_id]["exam_type_name"] = exam_type.name.titleize
+      hash[exam_type_id]["date_created"] = exam_type.created_at.to_date.strftime("%d-%b-%Y")
+    end
+
+    render :json => hash
+  end
+  
 end

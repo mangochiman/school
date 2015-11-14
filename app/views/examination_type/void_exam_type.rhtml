@@ -14,29 +14,28 @@
     <%= javascript_include_tag("jquery.confirm") %>
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("bootstrap") %>
-    
+
     <script>
-        function selectAll(){
-            selectAllInput = document.getElementById('table-select-all');
-            if (selectAllInput.checked){
-              selectAllInput.checked = true;
+      function selectAll(){
+        selectAllInput = document.getElementById('table-select-all');
+        inputs = document.getElementsByTagName("input");
+        if (selectAllInput.checked){
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+              inputs[i].checked = true;
             }
-            else {
-              selectAllInput.checked = false
+          }
+        }
+        else{
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+              inputs[i].checked = false;
             }
-            inputs = document.getElementsByTagName("input");
-            for (var i=0; i<=inputs.length - 1; i++){
-              if (inputs[i] == selectAllInput) continue;
-              if (inputs[i].type == 'checkbox'){
-                if (inputs[i].checked){
-                  inputs[i].checked = false;
-                }
-                else{
-                  inputs[i].checked = true;
-                }
-              }
-            }
-         }
+          }
+        }
+      }
 
       function deleteExamTypes(){
         inputs = document.getElementsByTagName("input");
@@ -64,7 +63,7 @@
             }
           }
 
-      });
+        });
       }
       var currentExamTypeId = "";
       function setCurrentExamTypeId(obj){
@@ -77,11 +76,54 @@
           url: "/examination/delete_exam_types",
           data: "exam_type_id=" + currentExamTypeId + "&mode=single_entry",
           success: function(){
-              element = document.getElementById(currentExamTypeId);
-              element.parentNode.removeChild(element);
+            element = document.getElementById(currentExamTypeId);
+            element.parentNode.removeChild(element);
           }
 
-      });
+        });
+      }
+
+      function loadSearchResults(){
+        examinationTypeName = document.getElementsByClassName('examination_type_search')[0].value;
+
+        jQuery.ajax({
+          type: "POST",
+          url: "/examination_type/search_examination_types",
+          data: "exam_type_name=" + examinationTypeName,
+          success: function(results){
+            //results = eval("(" + results  + ")");
+            html = "";
+            tbody = document.getElementById("exam_types");
+
+            for (var examination_type_id in results){
+              examTypeName = results[examination_type_id]["exam_type_name"];
+              dateCreated = results[examination_type_id]["date_created"];
+              html+="<tr id='" + examination_type_id + "'>";
+              html+="<td><input type='checkbox' exam_type_id='" + examination_type_id + "'></td>"
+              html+="<td style='text-align:left; padding: 0.833em 0 0.833em 1.25em;'>" + examTypeName +  "</td>";
+              html+="<td><center>" + dateCreated +  "</center></td>";
+              html+="<td><a href='#' onmousedown='setCurrentExamTypeId(this)' class='table-actions-button ic-table-delete confirm' exam_type_id='" + examination_type_id + "'></a></td>";
+              html+="</tr>";
+            }
+
+            tbody.innerHTML = html;
+
+            $(".confirm").confirm({
+              title:"Delete confirmation",
+              text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+              confirm: function(button) {
+                deleteSingleEntry();
+              },
+              cancel: function(button) {
+
+              },
+              confirmButton: "Yes I am",
+              cancelButton: "No"
+            });
+          }
+
+        });
+
       }
     </script>
 
@@ -93,9 +135,52 @@
         font-size: 1.2em;
         color: #317eac;
       }
-    
+
       table th:first-child {
         border-style: none none none !important;
+      }
+      
+      #search-student-form fieldset {
+        border: 1px solid gray;
+        float: left;
+        margin-bottom: 15px;
+        padding: 0px;
+        float: none;
+      }
+
+      #search-student-form legend {
+        color: #abda0f;
+        font-size: 14px;
+        font-weight: 100;
+        margin-left: 14px;
+        padding: 2px;
+        width: initial;
+        margin-bottom: initial;
+        border-style: none;
+      }
+
+      #search-student-form fieldset input {
+        color: #505050;
+        float: left;
+        margin-right: 5px;
+        width: 250px;
+        padding: 6px;
+        font-size: 14px;
+        border: 1px solid #d9dbdd;
+        outline: medium none;
+      }
+
+      #search-student-form table td{
+        border-left: none;
+      }
+
+      form.autoform input, select {
+        font-size: 0.8em !important;
+        font-weight: bold;
+      }
+
+      a{
+        cursor: pointer;
       }
     </style>
   </head>
@@ -153,16 +238,32 @@
             <div class="content-module-main">
 
               <% if flash[:notice] %>
-                  <div class="confirmation-box round">
-                    <%= flash[:notice] %>
+                <div class="confirmation-box round">
+                  <%= flash[:notice] %>
+                </div>
+              <% end %>
+              <% if flash[:error] %>
+                <div class="error-box round">
+                  <%= flash[:error] %>
+                </div>
+              <% end %>
+
+              <form id="search-student-form" action="#">
+                <fieldset>
+                  <legend>Search</legend>
+                  <div style="margin-left:2%;">
+                    <table style="width: 45%; float: right;">
+                      <tr>
+                        <td style="font-size: 13pt;">Name</td>
+                        <td style="width: 50px !important;"><input type="text" class="examination_type_search"/></td>
+                        <td style="width: 20px"><a onclick="loadSearchResults();" class="button round blue image-right ic-search text-upper">Search</a></td>
+                      </tr>
+                    </table>
                   </div>
-                <% end %>
-                <% if flash[:error] %>
-                  <div class="error-box round">
-                      <%= flash[:error] %>
-                  </div>
-                <% end %>
-             <table>
+                </fieldset>
+              </form>
+
+              <table>
 
                 <thead>
 
@@ -174,7 +275,7 @@
                   </tr>
 
                 </thead>
-                
+
                 <tfoot>
                   <tr>
                     <td colspan="3" class="table-footer">
@@ -185,14 +286,14 @@
 
                 <tbody id="exam_types">
                   <% @exam_types.each do |exam_type| %>
-                  <tr id="<%= exam_type.id %>">
-                    <td><input type="checkbox" exam_type_id="<%= exam_type.id %>"/></td>
-                    <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%=  exam_type.name.capitalize %></td>
-                    <td><center><%= exam_type.created_at.to_date.strftime("%d-%b-%Y") %></center></td>
-                    <td>
-                      <a exam_type_id="<%= exam_type.id %>" href="#" onmousedown="setCurrentExamTypeId(this)" class="table-actions-button ic-table-delete confirm"></a>
-                    </td>
-                  </tr>
+                    <tr id="<%= exam_type.id %>">
+                      <td><input type="checkbox" exam_type_id="<%= exam_type.id %>"/></td>
+                      <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%=  exam_type.name.titleize %></td>
+                      <td><center><%= exam_type.created_at.to_date.strftime("%d-%b-%Y") %></center></td>
+                      <td>
+                        <a exam_type_id="<%= exam_type.id %>" href="#" onmousedown="setCurrentExamTypeId(this)" class="table-actions-button ic-table-delete confirm"></a>
+                      </td>
+                    </tr>
                   <% end %>
                 </tbody>
 
@@ -201,11 +302,11 @@
 
           </div> <!-- end content-module -->
 
-          
 
-          
 
-          
+
+
+
 
         </div> <!-- end side-content -->
 
@@ -217,30 +318,30 @@
     <script>
 
       $(".delete-multiple").confirm({
-            title:"Delete confirmation",
-            text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
-            confirm: function(button) {
-              deleteExamTypes();
-            },
-            cancel: function(button) {
-              alert("You aborted the operation.");
-            },
-            confirmButton: "Yes I am",
-            cancelButton: "No"
-        });
+        title:"Delete confirmation",
+        text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+        confirm: function(button) {
+          deleteExamTypes();
+        },
+        cancel: function(button) {
+          alert("You aborted the operation.");
+        },
+        confirmButton: "Yes I am",
+        cancelButton: "No"
+      });
 
-        $(".confirm").confirm({
-            title:"Delete confirmation",
-            text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
-            confirm: function(button) {
-              deleteSingleEntry();
-            },
-            cancel: function(button) {
+      $(".confirm").confirm({
+        title:"Delete confirmation",
+        text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+        confirm: function(button) {
+          deleteSingleEntry();
+        },
+        cancel: function(button) {
 
-            },
-            confirmButton: "Yes I am",
-            cancelButton: "No"
-        });
+        },
+        confirmButton: "Yes I am",
+        cancelButton: "No"
+      });
     </script>
   </body>
 </html>

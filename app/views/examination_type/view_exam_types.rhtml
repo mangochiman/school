@@ -10,12 +10,92 @@
     <!-- jQuery & JS files -->
     <%= javascript_include_tag("jquery") %>
     <%= javascript_include_tag("script") %>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("jquery.confirm") %>
     <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("bootstrap") %>
 
-    <style>
+    <script type="text/javascript">
+      function loadSearchResults(){
+        examinationTypeName = document.getElementsByClassName('examination_type_search')[0].value;
+
+        jQuery.ajax({
+          type: "POST",
+          url: "/examination_type/search_examination_types",
+          data: "exam_type_name=" + examinationTypeName,
+          success: function(results){
+            //results = eval("(" + results  + ")");
+            html = "";
+            tbody = document.getElementById("exam_types");
+            var count = 1;
+            for (var examination_type_id in results){
+              examTypeName = results[examination_type_id]["exam_type_name"];
+              dateCreated = results[examination_type_id]["date_created"];
+
+              html+="<tr>";
+              html+="<td><b>" + count + "</b></td>"
+              html+="<td style='text-align:left; padding: 0.833em 0 0.833em 1.25em;'>" + examTypeName +  "</td>";
+              html+="<td><center>" + dateCreated +  "</center></td>";
+              html+="</tr>";
+              count = count + 1;
+            }
+
+            tbody.innerHTML = html;
+
+          }
+
+        });
+
+      }
+    </script>
+
+    <style type="text/css">
       table th:first-child {
         border-style: none none none !important;
-    }
+      }
+
+      #search-student-form fieldset {
+        border: 1px solid gray;
+        float: left;
+        margin-bottom: 15px;
+        padding: 0px;
+        float: none;
+      }
+
+      #search-student-form legend {
+        color: #abda0f;
+        font-size: 14px;
+        font-weight: 100;
+        margin-left: 14px;
+        padding: 2px;
+        width: initial;
+        margin-bottom: initial;
+        border-style: none;
+      }
+
+      #search-student-form fieldset input {
+        color: #505050;
+        float: left;
+        margin-right: 5px;
+        width: 250px;
+        padding: 6px;
+        font-size: 14px;
+        border: 1px solid #d9dbdd;
+        outline: medium none;
+      }
+
+      #search-student-form table td{
+        border-left: none;
+      }
+
+      form.autoform input, select {
+        font-size: 0.8em !important;
+        font-weight: bold;
+      }
+
+      a{
+        cursor: pointer;
+      }
     </style>
   </head>
   <body>   
@@ -72,16 +152,32 @@
             <div class="content-module-main">
 
               <% if flash[:notice] %>
-                  <div class="confirmation-box round">
-                    <%= flash[:notice] %>
+                <div class="confirmation-box round">
+                  <%= flash[:notice] %>
+                </div>
+              <% end %>
+              <% if flash[:error] %>
+                <div class="error-box round">
+                  <%= flash[:error] %>
+                </div>
+              <% end %>
+
+              <form id="search-student-form" action="#">
+                <fieldset>
+                  <legend>Search</legend>
+                  <div style="margin-left:2%;">
+                    <table style="width: 45%; float: right;">
+                      <tr>
+                        <td style="font-size: 13pt;">Name</td>
+                        <td style="width: 50px !important;"><input type="text" class="examination_type_search"/></td>
+                        <td style="width: 20px"><a onclick="loadSearchResults();" class="button round blue image-right ic-search text-upper">Search</a></td>
+                      </tr>
+                    </table>
                   </div>
-                <% end %>
-                <% if flash[:error] %>
-                  <div class="error-box round">
-                      <%= flash[:error] %>
-                  </div>
-                <% end %>
-             <table>
+                </fieldset>
+              </form>
+              
+              <table>
 
                 <thead>
 
@@ -96,11 +192,11 @@
                 <tbody id="exam_types">
                   <% count = 0 %>
                   <% @exam_types.each do |exam_type| %>
-                  <tr>
-                    <td><b><%= count += 1 %></b></td>
-                    <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%=  exam_type.name.capitalize %></td>
-                    <td><center><%= exam_type.created_at.to_date.strftime("%d-%b-%Y") %></center></td>
-                  </tr>
+                    <tr>
+                      <td><b><%= count += 1 %></b></td>
+                      <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%=  exam_type.name.titleize %></td>
+                      <td><center><%= exam_type.created_at.to_date.strftime("%d-%b-%Y") %></center></td>
+                    </tr>
                   <% end %>
                 </tbody>
 
