@@ -8,8 +8,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <!-- jQuery & JS files -->
-
-    <%= javascript_include_tag("jquery") %>
     <%= javascript_include_tag("jquery-1.9.1.min") %>
     <%= javascript_include_tag("jquery.confirm") %>
     <%= javascript_include_tag("script") %>
@@ -88,29 +86,34 @@
 
       function loadSearchResults(){
         paymentTypeSearch = document.getElementsByClassName('payment_type_search')[0].value;
-
+        oderBy = document.getElementsByClassName('oder_by')[0].value;
+        
         jQuery.ajax({
           type: "POST",
           url: "/payment_types/search_payment_types",
-          data: "payment_type_name=" + paymentTypeSearch,
+          data: "payment_type_name=" + paymentTypeSearch + "&order_by=" + oderBy,
           success: function(results){
             //results = eval("(" + results  + ")");
             html = "";
             tbody = document.getElementById("payment_types");
 
-            for (var payment_type_id in results){
-              paymentTypeName = results[payment_type_id]["payment_type_name"];
-              amountSet = results[payment_type_id]["amount_set"];
-              dateCreated = results[payment_type_id]["date_created"];
-              html+="<tr id='" + payment_type_id + "'>";
-              html+="<td><input type='checkbox' payment_type_id='" + payment_type_id + "'/></td>"
-              html+="<td style='text-align:left; padding: 0.833em 0 0.833em 1.25em;'><a href='#'>" + paymentTypeName +  "</a></td>";
-              html+="<td>" + amountSet +  "</td>";
-              html+="<td><center>" + dateCreated +  "</center></td>";
-              html+="<td><a href='#' onmousedown='setCurrentPaymentTypeId(this)' class='table-actions-button ic-table-delete confirm' payment_type_id='" + payment_type_id + "'></a></td>";
-              html+="</tr>";
+            for (var i=0; i<= results.length - 1; i++){
+              for (var payment_type_id in results[i]){
+                paymentTypeName = results[i][payment_type_id]["payment_type_name"];
+                amountSet = results[i][payment_type_id]["amount_set"];
+                dateCreated = results[i][payment_type_id]["date_created"];
+                
+                html+="<tr id='" + payment_type_id + "'>";
+                html+="<td><input type='checkbox' payment_type_id='" + payment_type_id + "'/></td>"
+                html+="<td style='text-align:left; padding: 0.833em 0 0.833em 1.25em;'><a href='#'>" + paymentTypeName +  "</a></td>";
+                html+="<td>" + amountSet +  "</td>";
+                html+="<td><center>" + dateCreated +  "</center></td>";
+                html+="<td><a href='#' onmousedown='setCurrentPaymentTypeId(this)' class='table-actions-button ic-table-delete confirm' payment_type_id='" + payment_type_id + "'></a></td>";
+                html+="</tr>";
 
+              }
             }
+            
             tbody.innerHTML = html;
             $(".confirm").confirm({
               title:"Delete confirmation",
@@ -209,6 +212,23 @@
         font-size: 0.8em !important;
         font-weight: bold;
       }
+
+      #dropdown-actions {
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        color: #555;
+        font-size: 12px !important;
+        height: 34px;
+        line-height: 1.42857;
+        margin-left: 0;
+        text-align: center;
+        width: 186px;
+        padding: 6px 12px;
+        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+      }
     </style>
 
   </head>
@@ -279,10 +299,17 @@
                 <fieldset>
                   <legend>Search</legend>
                   <div style="margin-left:2%;">
-                    <table style="width: 45%; float: right;">
+                    <table style="width: 64%; float: right;">
                       <tr>
                         <td style="font-size: 13pt;">Name</td>
                         <td style="width: 50px !important;"><input type="text" class="payment_type_search"/></td>
+                        <td style="text-align: left;"><span style="font-size:1.4em;">Sort By</span></td>
+                        <td>
+                          <select id="dropdown-actions" class="oder_by">
+                            <option value="amount_required ASC" style="text-align: left; padding-left: 30px;">Amount (ASC)</option>
+                            <option value="amount_required DESC" style="text-align: left; padding-left: 30px;">Amount (DESC)</option>
+                          </select>
+                        </td>
                         <td style="width: 20px"><a onclick="loadSearchResults();" class="button round blue image-right ic-search text-upper">Search</a></td>
                       </tr>
                     </table>
