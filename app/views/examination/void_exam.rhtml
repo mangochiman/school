@@ -129,6 +129,40 @@
             }
           }});
       }
+
+      function loadSearchResults(){
+        classRoomID = $('.class_room')[0].value;
+        courseID = $('.course')[0].value;
+        examTypeID = $('.exam_type')[0].value;
+        jQuery.ajax({
+          type: "POST",
+          url: "/examination/filter_exams",
+          data: "class_room_id=" + classRoomID + '&course_id=' + courseID + '&exam_type_id=' + examTypeID,
+          success: function(results){
+            results = eval("(" + results  + ")");
+            html = "";
+            tbody = document.getElementById("exams");
+            for (var exam_id in results){
+              class_room = results[exam_id]["class_room"];
+              exam_type = results[exam_id]["exam_type"];
+              course = results[exam_id]["course"];
+              exam_date = results[exam_id]["exam_date"];
+              exam_attendees = results[exam_id]["exam_attendees"];
+
+              html+="<tr>";
+              html+="<td><input type='checkbox' exam_id='" + exam_id + "'/></td>";
+              html+="<td style='text-align:left; padding: 0.833em 0 0.833em 1.25em;'>" + class_room +  "</td>";
+              html+="<td>" + exam_type +  "</td>";
+              html+="<td>" + course +  "</td>";
+              html+="<td>" + exam_date +  "</td>";
+              html+="<td><span style='margin-left:20%;' onmousedown='loadExamStudents(this);' class='label' exam_id= " + exam_id + ">" + exam_attendees +  "</span></td>";
+              html+="<td><a href='#' class='table-actions-button ic-table-delete' onmousedown='deleteSingleEntry(this)' exam_id=" + exam_id + "></a></td>";
+              html+="</tr>";
+            }
+            tbody.innerHTML = html
+
+          }});
+      }
     </script>
     <style>
       .modal-title {
@@ -160,6 +194,83 @@
         border-style: none none none !important;
       }
 
+      #filter td{
+        border: none;
+      }
+
+      #dropdown-actions{
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        color: #555;
+        font-size: 14px;
+        height: 34px;
+        line-height: 1.42857;
+        margin-left: 30%;
+        min-width: 108px;
+        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+        margin-left: 0%;
+      }
+
+      #dropdown-actions option{
+        padding-left: 20px;
+      }
+
+      #search-student-form fieldset {
+        border: 1px solid gray;
+        float: left;
+        margin-bottom: 15px;
+        padding: 5px;
+        width: 98.7%;
+      }
+      #search-student-form legend {
+        color: #abda0f;
+        font-size: 14px;
+        font-weight: 100;
+        margin-left: 14px;
+        padding: 2px;
+
+        -moz-border-bottom-colors: none;
+        -moz-border-left-colors: none;
+        -moz-border-right-colors: none;
+        -moz-border-top-colors: none;
+        border-color: none;
+        border-image: none;
+        border-style: none;
+        border-width: 0;
+
+        margin-bottom: 0px;
+        padding: 0;
+        width: auto;
+
+
+      }
+      #search-student-form fieldset input {
+        color: #505050;
+        float: left;
+        margin-right: 5px;
+        width: 140px;
+        padding: 3px;
+        font-size: 14px;
+      }
+
+      table th:first-child {
+        border-style: none none none !important;
+      }
+
+      .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: #317eac;
+      }
+
+      a{
+        cursor: pointer;
+      }
     </style>
   </head>
   <body>  
@@ -216,6 +327,35 @@
 
 
             <div class="content-module-main">
+              <form id="search-student-form" action="#">
+                <fieldset>
+                  <legend>Filter</legend>
+                  <div style="">
+                    <table id="filter">
+                      <tr>
+                        <td style="text-align:right;">Class</td>
+                        <td style="">
+                          <%= select_tag:class_room, options_for_select(@class_rooms), {
+                            :id => "dropdown-actions", :class => "class_room"} %>
+                        </td>
+                        <td style="text-align:right;">Course</td>
+                        <td style="">
+                          <%= select_tag:course, options_for_select(@courses), {
+                            :id => "dropdown-actions", :class => "course"} %>
+                        </td>
+                        <td style="text-align:right;">Exam</td>
+                        <td>
+                          <%= select_tag:exam_type, options_for_select(@exam_types), {
+                            :id => "dropdown-actions" , :class => "exam_type"} %>
+                        </td>
+                        <td>
+                          <a onclick="loadSearchResults();" class="button round blue image-right ic-search text-upper">Filter</a>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                </fieldset>
+              </form>
 
               <table>
 
