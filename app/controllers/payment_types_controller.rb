@@ -59,7 +59,7 @@ class PaymentTypesController < ApplicationController
   end
 
   def view_payment_types
-    @payment_types = PaymentType.find(:all)
+    @payment_types =  PaymentType.find_by_sql("SELECT * FROM payment_type ORDER BY (CAST(amount_required AS UNSIGNED)) ASC")
     
   end
 
@@ -83,15 +83,13 @@ class PaymentTypesController < ApplicationController
     order_by = params[:order_by]
     order_by = 'amount_required ASC' if order_by.blank?
 
-    if (order_by.match(/DESC/i))
-      sort_direction = 'reverse'
-    else
-      sort_direction = 'forward'
-    end
+    field = order_by.split(/\W+/)[0]
+    asc_or_desc = order_by.split(/\W+/)[1]
 
     hash = {}
-    payment_types = PaymentType.find_by_sql("SELECT * FROM payment_type WHERE name LIKE '%#{payment_type_name}%' ORDER BY #{order_by}")
-
+    payment_types = PaymentType.find_by_sql("SELECT * FROM payment_type WHERE name LIKE '%#{payment_type_name}%' 
+        ORDER BY CAST(#{field} AS SIGNED) #{asc_or_desc}")
+    data = []
     payment_types.each do |payment_type|
       payment_type_id = payment_type.payment_type_id.to_s
       hash[payment_type_id] = {}
@@ -99,18 +97,10 @@ class PaymentTypesController < ApplicationController
       hash[payment_type_id]["amount_set"] = ActionController::Base.helpers.number_to_currency(payment_type.amount_required, :unit => 'MK')
       hash[payment_type_id]["amount_not_formatted"] = payment_type.amount_required
       hash[payment_type_id]["date_created"] = payment_type.created_at.to_date.strftime("%d-%b-%Y")
+      ordered = {payment_type_id => hash[payment_type_id]}
+      data.push(ordered)
     end
-    raise Hash[hash.sort_by{|k, v|-v["amount_not_formatted"].to_i}].to_yaml
-    if (sort_direction == 'reverse')
-      #Hash[hash.sort_by{|k, v|v["amount_not_formatted"].to_i}.reverse] #Return back the hash after sorting. Hash sorting returns an array
-      x = Hash[hash.sort_by{|k, v|-v["amount_not_formatted"].to_i}]
-      raise x.to_yaml
-    else
-      hash = Hash[hash.sort_by{|k, v|-v["amount_not_formatted"].to_i}.reverse]
-    end #This is because the hash by default is sorting by key in regardless of the order by query. Just a hack to do the order by manually
-
-    raise hash.inspect
-    render :json => hash and return
+    render :json => data and return
   end
 
 end
