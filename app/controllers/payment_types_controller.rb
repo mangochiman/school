@@ -90,6 +90,7 @@ class PaymentTypesController < ApplicationController
     payment_types = PaymentType.find_by_sql("SELECT * FROM payment_type WHERE name LIKE '%#{payment_type_name}%' 
         ORDER BY CAST(#{field} AS SIGNED) #{asc_or_desc}")
     data = []
+
     payment_types.each do |payment_type|
       payment_type_id = payment_type.payment_type_id.to_s
       hash[payment_type_id] = {}
@@ -100,7 +101,9 @@ class PaymentTypesController < ApplicationController
       ordered = {payment_type_id => hash[payment_type_id]}
       data.push(ordered)
     end
+
     render :json => data and return
+    
   end
 
 end

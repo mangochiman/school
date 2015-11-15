@@ -26,17 +26,14 @@
           url: "/payment_types/search_payment_types",
           data: "payment_type_name=" + paymentTypeSearch + "&order_by=" + oderBy,
           success: function(results){
-            console.log(results[2]["date_created"])
             //results = eval("(" + results  + ")");
             html = "";
             tbody = document.getElementById("payment_types");
             for (var i=0; i<= results.length - 1; i++){
-              //console.log(results[i])
               for (var payment_type_id in results[i]){
-                console.log(results[i][payment_type_id])
-                paymentTypeName = results[payment_type_id]["payment_type_name"];
-                amountSet = results[payment_type_id]["amount_set"];
-                dateCreated = results[payment_type_id]["date_created"];
+                paymentTypeName = results[i][payment_type_id]["payment_type_name"];
+                amountSet = results[i][payment_type_id]["amount_set"];
+                dateCreated = results[i][payment_type_id]["date_created"];
 
                 html+="<tr>";
                 html+="<td style='text-align:left; padding: 0.833em 0 0.833em 1.25em;'><a href='#'>" + paymentTypeName +  "</a></td>";
@@ -46,6 +43,7 @@
 
               }
             }
+
             tbody.innerHTML = html;
 
           }
