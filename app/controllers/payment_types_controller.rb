@@ -77,5 +77,21 @@ class PaymentTypesController < ApplicationController
     end
     render :text => "true" and return
   end
-  
+
+  def search_payment_types
+    payment_type_name = params[:payment_type_name]
+    hash = {}
+    payment_types = PaymentType.find_by_sql("SELECT * FROM payment_type WHERE name LIKE '%#{payment_type_name}%'")
+
+    payment_types.each do |payment_type|
+      payment_type_id = payment_type.payment_type_id
+      hash[payment_type_id] = {}
+      hash[payment_type_id]["payment_type_name"] = payment_type.name
+      hash[payment_type_id]["amount_set"] = ActionController::Base.helpers.number_to_currency(payment_type.amount_required, :unit => 'MK')
+      hash[payment_type_id]["date_created"] = payment_type.created_at.to_date.strftime("%d-%b-%Y")
+    end
+
+    render :json => hash and return
+  end
+
 end
