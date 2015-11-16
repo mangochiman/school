@@ -317,4 +317,20 @@ class ClassRoomController < ApplicationController
     render :json => teacher_data.first and return
   end
 
+  def search_class_rooms
+    class_room_name = params[:class_room_name]
+    hash = {}
+    class_rooms = ClassRoom.find_by_sql("SELECT * FROM class_room WHERE name LIKE '%#{class_room_name}%'")
+
+    class_rooms.each do |class_room|
+      class_room_id = class_room.class_room_id
+      hash[class_room_id] = {}
+      hash[class_room_id]["class_room_name"] = class_room.name.titleize
+      hash[class_room_id]["code"] = class_room.code
+      hash[class_room_id]["date_created"] = class_room.created_at.to_date.strftime("%d-%b-%Y")
+    end
+
+    render :json => hash
+  end
+
 end

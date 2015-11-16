@@ -115,5 +115,20 @@ class CourseController < ApplicationController
       render :controller => "course", :action => "add_course" and return
     end
   end
+
+  def search_courses
+    course_name = params[:course_name]
+    hash = {}
+    courses = Course.find_by_sql("SELECT * FROM course WHERE name LIKE '%#{course_name}%'")
+
+    courses.each do |course|
+      course_id = course.course_id
+      hash[course_id] = {}
+      hash[course_id]["course_name"] = course.name.titleize
+      hash[course_id]["date_created"] = course.created_at.to_date.strftime("%d-%b-%Y")
+    end
+
+    render :json => hash
+  end
   
 end

@@ -10,29 +10,32 @@
     <!-- jQuery & JS files -->
 
     <%= javascript_include_tag("jquery") %>
-    <%= javascript_include_tag("script") %>
     <%= javascript_include_tag("jquery-1.9.1.min") %>
     <%= javascript_include_tag("jquery.confirm") %>
+    <%= javascript_include_tag("script") %>
+    <%= javascript_include_tag("gvalidator") %>
     <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("metallic") %>
+    <%= stylesheet_link_tag("gvalidator") %>
     <%= stylesheet_link_tag("bootstrap") %>
-    <script>
+
+    <script type="text/javascript">
       function selectAll(){
         selectAllInput = document.getElementById('table-select-all');
-        if (selectAllInput.checked){
-          selectAllInput.checked = true;
-        }
-        else {
-          selectAllInput.checked = false
-        }
         inputs = document.getElementsByTagName("input");
-        for (var i=0; i<=inputs.length - 1; i++){
-          if (inputs[i] == selectAllInput) continue;
-          if (inputs[i].type == 'checkbox'){
-            if (inputs[i].checked){
-              inputs[i].checked = false;
-            }
-            else{
+        if (selectAllInput.checked){
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
               inputs[i].checked = true;
+            }
+          }
+        }
+        else{
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+              inputs[i].checked = false;
             }
           }
         }
@@ -64,7 +67,7 @@
             }
           }
 
-      });
+        });
       }
       var currentClassRoomId = "";
       function setCurrentClassRoomId(obj){
@@ -77,11 +80,57 @@
           url: "/class_room/delete_class_rooms",
           data: "class_room_id=" + currentClassRoomId + "&mode=single_entry",
           success: function(){
-              element = document.getElementById(currentClassRoomId);
-              element.parentNode.removeChild(element);
+            element = document.getElementById(currentClassRoomId);
+            element.parentNode.removeChild(element);
           }
 
-      });
+        });
+      }
+
+      function loadSearchResults(){
+        classRoomSearchName = document.getElementsByClassName('class_room_search')[0].value;
+
+        jQuery.ajax({
+          type: "POST",
+          url: "/class_room/search_class_rooms",
+          data: "class_room_name=" + classRoomSearchName,
+          success: function(results){
+            //results = eval("(" + results  + ")");
+            html = "";
+            tbody = document.getElementById("class_rooms");
+
+            for (var class_room_id in results){
+              classRoomName = results[class_room_id]["class_room_name"];
+              classRoomCode = results[class_room_id]["code"];
+              dateCreated = results[class_room_id]["date_created"];
+
+              html+="<tr id='" + class_room_id + "'>";
+              html+= "<td><input type='checkbox' class_room_id='" + class_room_id + "'></td>"
+              html+="<td>" + classRoomName +  "</td>";
+              html+="<td><center>" + classRoomCode +  "</center></td>";
+              html+="<td><a href='#' onmousedown='setCurrentClassRoomId(this)' class='table-actions-button ic-table-delete confirm' class_room_id='" + class_room_id + "'></a></td>";
+              html+="</tr>";
+
+            }
+
+            tbody.innerHTML = html;
+
+            $(".confirm").confirm({
+              title:"Delete confirmation",
+              text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+              confirm: function(button) {
+                deleteSingleEntry();
+              },
+              cancel: function(button) {
+
+              },
+              confirmButton: "Yes I am",
+              cancelButton: "No"
+            });
+          }
+
+        });
+
       }
     </script>
     <style>
@@ -110,26 +159,67 @@
       }
       table th:first-child {
         border-style: none none none !important;
-    }
+      }
 
-    .classes{
+      .classes{
         position: relative;
         margin-left: 0%;
         width: 100%;
-     }
+      }
 
-    .classes th, tbody{
+      .classes th, tbody{
         text-align: center;
-    }
+      }
 
-    .modal-title {
+      .modal-title {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         font-weight: 500;
         line-height: 1.1;
         font-size: 1.2em;
         color: #317eac;
-    }
-    
+      }
+
+      #search-student-form fieldset {
+        border: 1px solid gray;
+        float: left;
+        margin-bottom: 15px;
+        padding: 0px;
+        float: none;
+      }
+      #search-student-form legend {
+        color: #abda0f;
+        font-size: 14px;
+        font-weight: 100;
+        margin-left: 14px;
+        padding: 2px;
+        width: initial;
+        margin-bottom: initial;
+        border-style: none;
+      }
+
+      #search-student-form fieldset input {
+        color: #505050;
+        float: left;
+        margin-right: 5px;
+        width: 250px;
+        padding: 6px;
+        font-size: 14px;
+        border: 1px solid #d9dbdd;
+        outline: medium none;
+      }
+
+      #search-student-form table td{
+        border-left: none;
+      }
+
+      form.autoform input, select {
+        font-size: 0.8em !important;
+        font-weight: bold;
+      }
+
+      a{
+        cursor: pointer;
+      }
     </style>
   </head>
   <body>
@@ -199,6 +289,21 @@
                 </div>
               <% end %>
 
+              <form id="search-student-form" action="#">
+                <fieldset>
+                  <legend>Search</legend>
+                  <div style="margin-left:2%;">
+                    <table style="width: 45%; float: right;">
+                      <tr>
+                        <td style="font-size: 13pt;">Name</td>
+                        <td style="width: 50px !important;"><input type="text" class="class_room_search"/></td>
+                        <td style="width: 20px"><a onclick="loadSearchResults();" class="button round blue image-right ic-search text-upper">Search</a></td>
+                      </tr>
+                    </table>
+                  </div>
+                </fieldset>
+              </form>
+
               <table class="classes">
 
                 <thead>
@@ -218,17 +323,17 @@
                 </tfoot>
                 <tbody id="class_rooms">
                   <% @class_rooms.each do |class_room| %>
-                  <tr id="<%= class_room.id %>">
-                    <td><input type="checkbox" class_room_id="<%= class_room.id %>"/></td>
-                    <td><%= class_room.name%></td>
-                    <td><%=  class_room.code %></td>
-                    <td>
-                      <a href="#" class_room_id="<%= class_room.id %>" onmousedown="setCurrentClassRoomId(this)" class="table-actions-button ic-table-delete confirm"></a>
-                    </td>
-                  </tr>
+                    <tr id="<%= class_room.id %>">
+                      <td><input type="checkbox" class_room_id="<%= class_room.id %>"/></td>
+                      <td><%= class_room.name%></td>
+                      <td><%=  class_room.code %></td>
+                      <td>
+                        <a href="#" class_room_id="<%= class_room.id %>" onmousedown="setCurrentClassRoomId(this)" class="table-actions-button ic-table-delete confirm"></a>
+                      </td>
+                    </tr>
                   <% end %>
                 </tbody>
-                
+
               </table>
 
             </div> <!-- end content-module-main -->
@@ -244,30 +349,30 @@
     <%= javascript_include_tag("bootstrap") %>
     <script>
       $(".delete-multiple").confirm({
-            title:"Delete confirmation",
-            text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
-            confirm: function(button) {
-              deleteClassRooms();
-            },
-            cancel: function(button) {
-              alert("You aborted the operation.");
-            },
-            confirmButton: "Yes I am",
-            cancelButton: "No"
-        });
+        title:"Delete confirmation",
+        text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+        confirm: function(button) {
+          deleteClassRooms();
+        },
+        cancel: function(button) {
+          alert("You aborted the operation.");
+        },
+        confirmButton: "Yes I am",
+        cancelButton: "No"
+      });
 
-        $(".confirm").confirm({
-            title:"Delete confirmation",
-            text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
-            confirm: function(button) {
-              deleteSingleEntry();
-            },
-            cancel: function(button) {
+      $(".confirm").confirm({
+        title:"Delete confirmation",
+        text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+        confirm: function(button) {
+          deleteSingleEntry();
+        },
+        cancel: function(button) {
 
-            },
-            confirmButton: "Yes I am",
-            cancelButton: "No"
-        });
+        },
+        confirmButton: "Yes I am",
+        cancelButton: "No"
+      });
     </script>
   </body>
 </html>
