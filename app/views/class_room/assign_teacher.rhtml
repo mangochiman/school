@@ -58,7 +58,41 @@
             });
           }});
       }
-        
+
+     function loadSearchResults(){
+        classRoomSearchName = document.getElementsByClassName('class_room_search')[0].value;
+
+        jQuery.ajax({
+          type: "POST",
+          url: "/class_room/search_class_rooms",
+          data: "class_room_name=" + classRoomSearchName,
+          success: function(results){
+            //results = eval("(" + results  + ")");
+            html = "";
+            tbody = document.getElementById("class_rooms");
+
+            for (var class_room_id in results){
+              classRoomName = results[class_room_id]["class_room_name"];
+              classRoomCode = results[class_room_id]["code"];
+              totalTeachers = results[class_room_id]["total_teachers"];
+              dateCreated = results[class_room_id]["date_created"];
+
+              html+="<tr>";
+              html+="<td>" + classRoomName +  "</td>";
+              html+="<td><center>" + classRoomCode +  "</center></td>";
+              html+="<td><span style='margin-left:0%;' onmousedown='loadClassRoomTeachers(this);' class='label view-teachers' class_room_id='" + class_room_id + "'>" + totalTeachers + "</td>";
+              html+="<td><a onmousedown='assignTeachers(this)' class='button round blue image-right ic-add text-upper' class_room_id='" + class_room_id + "'>Assign Teachers &nbsp;</a></td>";
+              html+="</tr>";
+
+            }
+
+            tbody.innerHTML = html;
+
+          }
+
+        });
+
+      }
     </script>
     <style>
       .label {
@@ -126,6 +160,44 @@
 
       a{
         cursor: pointer;
+      }
+
+      #search-student-form fieldset {
+        border: 1px solid gray;
+        float: left;
+        margin-bottom: 15px;
+        padding: 0px;
+        float: none;
+      }
+      #search-student-form legend {
+        color: #abda0f;
+        font-size: 14px;
+        font-weight: 100;
+        margin-left: 14px;
+        padding: 2px;
+        width: initial;
+        margin-bottom: initial;
+        border-style: none;
+      }
+
+      #search-student-form fieldset input {
+        color: #505050;
+        float: left;
+        margin-right: 5px;
+        width: 250px;
+        padding: 6px;
+        font-size: 14px;
+        border: 1px solid #d9dbdd;
+        outline: medium none;
+      }
+
+      #search-student-form table td{
+        border-left: none;
+      }
+
+      form.autoform input, select {
+        font-size: 0.8em !important;
+        font-weight: bold;
       }
     </style>
   </head>
@@ -195,6 +267,21 @@
                   <%= flash[:error] %>
                 </div>
               <% end %>
+
+              <form id="search-student-form" action="#">
+                <fieldset>
+                  <legend>Search</legend>
+                  <div style="margin-left:2%;">
+                    <table style="width: 45%; float: right;">
+                      <tr>
+                        <td style="font-size: 13pt;">Name</td>
+                        <td style="width: 50px !important;"><input type="text" class="class_room_search"/></td>
+                        <td style="width: 20px"><a onclick="loadSearchResults();" class="button round blue image-right ic-search text-upper">Search</a></td>
+                      </tr>
+                    </table>
+                  </div>
+                </fieldset>
+              </form>
 
               <table class="classes">
 

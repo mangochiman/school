@@ -54,9 +54,9 @@ class ClassRoomController < ApplicationController
     @class_rooms = ClassRoom.find(:all)
     if request.method == :post
       if (@class_room.update_attributes({
-          :name => params[:class_name],
-          :code => params[:code]
-        }))
+              :name => params[:class_name],
+              :code => params[:code]
+            }))
         flash[:notice] = "You have successfully edited the details"
         redirect_to :action => "edit_class" and return
       else
@@ -81,8 +81,8 @@ class ClassRoomController < ApplicationController
     class_room_ids = params[:class_room_ids].split(",")
     
     (class_room_ids || []).each do |class_room_id|
-       class_room = ClassRoom.find(class_room_id)
-       class_room.delete
+      class_room = ClassRoom.find(class_room_id)
+      class_room.delete
     end
     
     render :text => "true" and return
@@ -107,11 +107,11 @@ class ClassRoomController < ApplicationController
 
     if (request.method == :post)
       (params[:subjects] || []).each do |course, details|
-          course_id = Course.find_by_name(course).id
-          ClassRoomCourse.create({
-              :class_room_id => params[:class_room_id],
-              :course_id => course_id
-            })
+        course_id = Course.find_by_name(course).id
+        ClassRoomCourse.create({
+            :class_room_id => params[:class_room_id],
+            :course_id => course_id
+          })
       end
       flash[:notice] = "You have successfuly assigned courses"
       redirect_to :controller => "class_room", :action => "assign_me_teachers", :class_room_id => params[:class_room_id] and return
@@ -163,7 +163,7 @@ class ClassRoomController < ApplicationController
     
     @class_room_teachers = []
     @class_room.class_room_teachers.each do |crt|
-        @class_room_teachers << crt.teacher
+      @class_room_teachers << crt.teacher
     end
     
     unless (@class_room.class_room_teachers.blank?)
@@ -174,10 +174,10 @@ class ClassRoomController < ApplicationController
     if (request.method == :post)
 
       (params[:teachers] || []).each do |teacher_id, details|
-          ClassRoomTeacher.create({
-              :class_room_id => params[:class_room_id],
-              :teacher_id => teacher_id
-            })
+        ClassRoomTeacher.create({
+            :class_room_id => params[:class_room_id],
+            :teacher_id => teacher_id
+          })
       end
       
       flash[:notice] = "You have successfuly assigned teachers"
@@ -215,13 +215,13 @@ class ClassRoomController < ApplicationController
           ClassRoomTeacher.create({
               :class_room_id => params[:class_room_id],
               :teacher_id => teacher_id
-          })        
+            })
         end
         
         ((assigned_teacher_ids - already_signed_teacher_ids) || []).each do |teacher_id|
-            class_room_teacher = @class_room.class_room_teachers.find(:last,
-                    :conditions => ["teacher_id =?", teacher_id])
-            class_room_teacher.delete
+          class_room_teacher = @class_room.class_room_teachers.find(:last,
+            :conditions => ["teacher_id =?", teacher_id])
+          class_room_teacher.delete
         end
       
         flash[:notice] = "You have successfuly edited teachers"
@@ -244,9 +244,9 @@ class ClassRoomController < ApplicationController
         :name => class_name
       })
     if (class_room)
-        flash[:notice] = "You have successfully created classroom"
-        redirect_to :controller => "class_room", :action => "assign_me_subjects", :class_room_id => class_room.class_room_id and return
-        #redirect_to :action => "add_class" and return
+      flash[:notice] = "You have successfully created classroom"
+      redirect_to :controller => "class_room", :action => "assign_me_subjects", :class_room_id => class_room.class_room_id and return
+      #redirect_to :action => "add_class" and return
     else
       flash[:error] = "Operation not successful. Check for errors and try again"
       render :action => "add_class" and return
@@ -327,6 +327,9 @@ class ClassRoomController < ApplicationController
       hash[class_room_id] = {}
       hash[class_room_id]["class_room_name"] = class_room.name.titleize
       hash[class_room_id]["code"] = class_room.code
+      hash[class_room_id]["total_courses"] = class_room.class_room_courses.count
+      hash[class_room_id]["total_students"] = class_room.class_room_students.count
+      hash[class_room_id]["total_teachers"] = class_room.class_room_teachers.count
       hash[class_room_id]["date_created"] = class_room.created_at.to_date.strftime("%d-%b-%Y")
     end
 
