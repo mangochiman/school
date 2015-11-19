@@ -11,7 +11,7 @@ class SemesterAudit < ActiveRecord::Base
     end_date = selected_semester.end_date
 
     #Close all open semesters if any
-    self.close_open_semesters
+    self.close_open_semesters #Normally one semester will be open
     semester = Semester.find(semester_id)
     semester.semester_audits.create({
         :start_date => start_date,
@@ -28,6 +28,44 @@ class SemesterAudit < ActiveRecord::Base
       semester.state = 'close'
       semester.save
     end
+
+  end
+
+  def self.close_new_semesters
+
+    new_semesters = self.find(:all, :conditions => ["state =? ", 'new'])
+    new_semesters.each do |semester|
+      semester.state = 'close'
+      semester.save
+    end
+
+  end
+
+  def self.new_semester(semester_id, start_date, end_date)
+    semester_audit = self.new
+    semester_audit.semester_id = semester_id
+    semester_audit.start_date = start_date
+    semester_audit.end_date = end_date
+    semester_audit.state = 'new'
+    semester_audit.save
+  end
+
+  def self.new_academic_year
+    old_semesters = self.find(:all, :conditions => ["state IN (?) ", ['new', 'open']])
+    old_semesters.each do |semester|
+      semester.state = 'close'
+      semester.save
+    end #Close old semesters
+
+    Semester.all.each do |s|
+      semester_id = s.semester_id
+      semester_audit = self.new
+      semester_audit.semester_id = semester_id
+      semester_audit.start_date = '' #Start Date not yet added
+      semester_audit.end_date = '' #End Date not yet added
+      semester_audit.state = 'new'
+      semester_audit.save
+    end #Open new semesters
 
   end
   
