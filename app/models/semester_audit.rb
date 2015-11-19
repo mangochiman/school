@@ -41,6 +41,15 @@ class SemesterAudit < ActiveRecord::Base
 
   end
 
+  def self.initial_semester(semester_id, start_date, end_date)
+    semester_audit = self.new
+    semester_audit.semester_id = semester_id
+    semester_audit.start_date = start_date
+    semester_audit.end_date = end_date
+    semester_audit.state = 'initial'
+    semester_audit.save
+  end
+
   def self.new_semester(semester_id, start_date, end_date)
     semester_audit = self.new
     semester_audit.semester_id = semester_id

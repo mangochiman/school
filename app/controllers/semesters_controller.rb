@@ -68,13 +68,10 @@ class SemestersController < ApplicationController
           start_date = dates[:start_date].to_date
           end_date = dates[:end_date].to_date
           
-          #Semester Audit States: Initial, Open, Close
-          SemesterAudit.create({
-              :semester_id => semester_id,
-              :start_date => start_date,
-              :end_date => end_date,
-              :state => "initial"
-            })
+          #Semester Audit States: Initial, New, Open, Close
+         SemesterAudit.initial_semester(semester_id, start_date, end_date)
+         SemesterAudit.new_semester(semester_id, start_date, end_date)
+
         end
         
         flash[:notice] = "Operation successful"
