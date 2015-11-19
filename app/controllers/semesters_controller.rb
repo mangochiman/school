@@ -20,26 +20,7 @@ class SemestersController < ApplicationController
     @current_semester_number = GlobalProperty.find_by_property("current_semester").value rescue 0
     @semesters = Semester.find(:all)
     if (request.method == :post)
-      semester = Semester.find(params[:semester_id])
-      current_semester = semester.semester_number
-      current_semester_start_date = semester.start_date
-      current_semester_end_date = semester.end_date
-
-      ActiveRecord::Base.transaction do
-        cs = GlobalProperty.find_by_property("current_semester")
-        cs.delete unless cs.blank?
-
-        cssd = GlobalProperty.find_by_property("current_semester_start_date")
-        cssd.delete unless cssd.blank?
-
-        csed = GlobalProperty.find_by_property("current_semester_end_date")
-        csed.delete unless csed.blank?
-        
-        GlobalProperty.create({:property => "current_semester", :value => current_semester})
-        GlobalProperty.create({:property => "current_semester_start_date",:value => current_semester_start_date})
-        GlobalProperty.create({:property => "current_semester_end_date",:value => current_semester_end_date})
-      end
-
+      SemesterAudit.set_current_semester(params[:semester_id])
       render :text => "true and return"
     end
     
@@ -84,13 +65,18 @@ class SemestersController < ApplicationController
         redirect_to :controller => "semesters", :action => "set_semester_dates" and return
       else
         params[:semesters].each do |semester_id, dates|
-          semester = Semester.find(semester_id)
           start_date = dates[:start_date].to_date
           end_date = dates[:end_date].to_date
-          semester.start_date = start_date
-          semester.end_date = end_date
-          semester.save
+          
+          #Semester Audit States: Initial, Open, Close
+          SemesterAudit.create({
+              :semester_id => semester_id,
+              :start_date => start_date,
+              :end_date => end_date,
+              :state => "initial"
+            })
         end
+        
         flash[:notice] = "Operation successful"
         redirect_to :controller => "semesters", :action => "set_semester_dates" and return
       end
@@ -149,7 +135,7 @@ class SemestersController < ApplicationController
     (semesters || []).each do |semester|
       semester_id = semester.id
       @hash[semester_id] = {}
-      class_room_students = ClassRoomStudent.find(:all, :joins => [:class_room], 
+      class_room_students = ClassRoomStudent.find(:all, :joins => [:class_room],
         :conditions => ["semester_id =? AND year=?", semester_id, year])
       class_room_students.each do |crs|
         next if crs.class_room.blank?
@@ -185,7 +171,7 @@ class SemestersController < ApplicationController
     ActiveRecord::Base.transaction do
       Semester.delete_all
       (1..total_semesters).each do |semester|
-        Semester.create({
+        semester = Semester.create({
             :semester_number => semester
           })
       end

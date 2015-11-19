@@ -1,6 +1,6 @@
 class CreateSemesterAudits < ActiveRecord::Migration
   def self.up
-    create_table :semester_audit, :id => false do |t|
+    create_table :semester_audit, :primary_key => :semester_audit_id do |t|
       t.integer :semester_id
       t.date :start_date
       t.date :end_date
