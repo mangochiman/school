@@ -166,11 +166,8 @@ class SemestersController < ApplicationController
     total_semesters = params[:total_semesters].to_i
 
     ActiveRecord::Base.transaction do
-      Semester.delete_all
       (1..total_semesters).each do |semester|
-        semester = Semester.create({
-            :semester_number => semester
-          })
+        Semester.create_new_semester(semester)
       end
     end
     
