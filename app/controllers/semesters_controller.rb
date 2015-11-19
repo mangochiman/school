@@ -175,4 +175,28 @@ class SemestersController < ApplicationController
     redirect_to :controller =>"semesters",:action => "set_semester_dates" and return
   end
 
+  def edit_semester_audit
+    semester = Semester.find(params[:semester_id])
+    @start_date = semester.start_date
+    @end_date = semester.end_date
+    @semesters = Semester.all
+    
+    if request.method == :post
+      old_start_date = params[:old_start_date]
+      old_end_date = params[:old_end_date]
+
+      new_start_date = params[:new_start_date]
+      new_end_date = params[:new_end_date]
+
+      semester_audit = SemesterAudit.find(:last, :conditions => ["semester_id =? AND start_date =? AND
+          end_date=?", params[:semester_id], old_start_date, old_end_date]
+      )
+      semester_audit.start_date = new_start_date
+      semester_audit.end_date = new_end_date
+      semester_audit.save
+      redirect_to ("/semesters/set_semester_dates") and return
+    end
+
+  end
+  
 end

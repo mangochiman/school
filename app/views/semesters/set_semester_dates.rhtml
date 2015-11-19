@@ -18,6 +18,13 @@
     <%= stylesheet_link_tag("gvalidator") %>
     <%= stylesheet_link_tag("bootstrap") %>
 
+    <script type="text/javascript">
+      function editMe(obj){
+        semesterId = obj.getAttribute("semester_id");
+        window.location = "/semesters/edit_semester_audit?semester_id=" + semesterId;
+      }
+      
+    </script>
     <style>
       .modal-title {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -40,9 +47,24 @@
       form.semester_dates table td{
         border-bottom: none;
       }
-      
+
       input[type="submit"] {
         margin-left: 31%;
+      }
+
+      table th:first-child {
+        border-style: none none none !important;
+      }
+
+      .green {
+        background-color: green;
+        color: white;
+        font-size: 10pt;
+        font-weight: bold;
+      }
+
+      a{
+        cursor: pointer;
       }
     </style>
   </head>
@@ -108,33 +130,41 @@
                   <%= flash[:error] %>
                 </div>
               <% end %>
-              <form class="semester_dates" action="/semesters/set_semester_dates" method="POST">
 
-                <table style="width:70%; margin-left:7%;" cellspacing='0'>
-                  <thead>
-                    <tr>
-                      <th style="background-color:white; border-style: none; width:20%;">&nbsp;</th>
-                      <th style="padding:2px; text-align: center;">Start Date</th>
-                      <th style="width:40%;">End Date</th>
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width:350px;">Semester</th>
+                    <th style="text-align: center;">Start Date</th>
+                    <th style="text-align: center;">End Date</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tfoot>
+                  <tr>
+                    <td colspan="8" class="table-footer" style="line-height: 1.9em;">
+                      <a href="#" onclick="confirmNewAcademicYear();" class="button round green image-right ic-add text-upper">Set New Academic Year</a>
+                    </td>
+                  </tr>
+                </tfoot>
+                <tbody>
+                  <% @semesters.each do |semester| %>
+                    <tr style="background-color:white;">
+                      <td style="text-align:left; padding: 0.833em 0 0.833em 11.95em;">Semester <%= semester.semester_number %></td>
+                      <td style="text-align: center;">
+                        <a href="#"><%= semester.start_date %></a>
+                      </td>
+                      <td style="text-align: center;">
+                        <a href="#"><%= semester.end_date rescue '' %></a>
+                      </td>
+                      <td>
+                        <a semester_id="<%= semester.id %>" onclick="editMe(this)" class="table-actions-button ic-table-edit"></a>
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    <% @semesters.each do |semester| %>
-                      <tr style="background-color:white;">
-                        <td style="text-align:right; padding-right: 1em; font-weight: bold;">Semester <%= semester.semester_number %></td>
-                        <td style="text-align:center;">
-                          <input type="text" value="<%= semester.semester_audits.last.start_date rescue '' %>" name="semesters[<%= semester.id %>][start_date]" class="date-picker"  style="text-align:center;" />
-                        </td>
-                        <td>
-                          <input type="text" value="<%= semester.semester_audits.last.end_date rescue '' %>"name="semesters[<%= semester.id %>][end_date]"  class="date-picker" style="text-align:center;" />
-                        </td>
-                      </tr>
-                    <% end %>
-                  </tbody>
-                </table>
-                <div class="stripe-separator"><!--  --></div>
-                <input type="submit" value="Submit" class="round blue ic-right-arrow" />
-              </form>
+                  <% end %>
+                </tbody>
+              </table>
+
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->
@@ -152,6 +182,10 @@
         view : 'years',
         direction: ['<%=  (Date.today - 100.years).strftime("%Y-%m-%d") %>', '<%=  (Date.today + 10.years).strftime("%Y-%m-%d") %>']
       });
+
+      function confirmNewAcademicYear(){
+        
+      }
     </script>
   </body>
 </html>
