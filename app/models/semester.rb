@@ -46,6 +46,18 @@ class Semester < ActiveRecord::Base
     return "" #No current active semester
   end
 
+  def self.current_semester_start_date
+    open_semester = SemesterAudit.find(:last, :conditions => ["state =?", 'open'])
+    return open_semester.start_date unless open_semester.blank?
+    return ""
+  end
+
+  def self.current_semester_end_date
+    open_semester = SemesterAudit.find(:last, :conditions => ["state =?", 'open'])
+    return open_semester.end_date unless open_semester.blank?
+    return ""
+  end
+
   def self.create_new_semester_without_parameter
     semester_number = 0
     last_semester = Semester.last

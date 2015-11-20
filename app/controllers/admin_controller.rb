@@ -252,10 +252,9 @@ class AdminController < ApplicationController
 
   def semester_management_menu
     @current_year = Date.today.year
-    @current_semester = GlobalProperty.find_by_property("current_semester").value rescue 'Not Set'
-    @current_semester_start_date = GlobalProperty.find_by_property("current_semester_start_date").value rescue 'Not Set'
-    @current_semester_end_date = GlobalProperty.find_by_property("current_semester_end_date").value rescue 'Not Set'
-    
+    @current_semester = Semester.current_semester_number
+    @current_semester_start_date = Semester.current_semester_start_date
+    @current_semester_end_date = Semester.current_semester_end_date    
   end
 
   def payments_overview_menu
