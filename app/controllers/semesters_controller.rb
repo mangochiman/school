@@ -179,8 +179,8 @@ class SemestersController < ApplicationController
 
   def edit_semester_audit
     semester = Semester.find(params[:semester_id])
-    @start_date = semester.start_date
-    @end_date = semester.end_date
+    start_date = semester.start_date
+    end_date = semester.end_date
     @semester = semester
     @semesters = Semester.all
     
@@ -189,10 +189,16 @@ class SemestersController < ApplicationController
       new_start_date = params[:start_date]
       new_end_date = params[:end_date]
 
-      semester_audit = SemesterAudit.find(:last, :conditions => ["semester_id =? AND start_date =? AND
-          end_date=?", params[:semester_id], semester.start_date, semester.end_date]
-      )
-
+      unless (start_date.blank? || end_date.blank?)
+        semester_audit = SemesterAudit.find(:last, :conditions => ["semester_id =? AND start_date =? AND
+          end_date=?", params[:semester_id], start_date, end_date]
+        )
+      else
+        semester_audit = SemesterAudit.find(:last, :conditions => ["semester_id =? AND
+          (start_date IS NULL OR end_date IS NULL)", params[:semester_id]]
+        )
+      end
+      
       semester_audit.start_date = new_start_date
       semester_audit.end_date = new_end_date
       semester_audit.save
