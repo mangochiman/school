@@ -55,6 +55,17 @@
       input[type="submit"] {
         margin-left: 31%;
       }
+
+      .red {
+        background-color: red;
+        color: white;
+        font-size: 8pt;
+        font-weight: bold;
+      }
+
+      a{
+        cursor: pointer;
+      }
     </style>
   </head>
   <body>
@@ -119,13 +130,52 @@
                   <%= flash[:error] %>
                 </div>
               <% end %>
-              <form id="semester" class="autoform" action="/semesters/create_semester" method="POST">
+              <% unless @semesters.blank? %>
+                <table>
+                  <thead>
+                    <tr style="font-size: 12pt; font-weight: bold;">
+                      <td colspan="4">
+                        Total Semesters: <span class="notice badge badge-info"><%= @semesters.count %></span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th style="width:350px;">Semester</th>
+                      <th style="text-align: center;">Start Date</th>
+                      <th style="text-align: center;">End Date</th>
+                    </tr>
+                  </thead>
+                  <tfoot>
+                    <tr>
+                      <td colspan="3" class="table-footer" style="line-height: 1.9em;">
+                        <a href="#" onclick="confirmNewSemester();" class="button round red image-right ic-add text-upper">Add New Semester</a>
+                      </td>
+                    </tr>
+                  </tfoot>
+                  <tbody>
+                    <% @semesters.each do |semester| %>
+                      <tr style="background-color:white;">
+                        <td style="text-align:left; padding: 0.833em 0 0.833em 11.95em;">Semester <%= semester.semester_number %></td>
+                        <td style="text-align: center;">
+                          <a href="#"><%= semester.start_date %></a>
+                        </td>
+                        <td style="text-align: center;">
+                          <a href="#"><%= semester.end_date rescue '' %></a>
+                        </td>
+                      </tr>
+                    <% end %>
+                  </tbody>
+                </table>
 
-                <div><label for="text">Total Semesters</label><input type="text" name="total_semesters" class="text required" value="<%= @total_semesters %>" style="text-align:center;" /></div>
+              <% else %>
+              
+                <form id="semester" class="autoform" action="/semesters/create_semester" method="POST">
 
-                <div class="stripe-separator"><!--  --></div>
-                <input type="submit" value="Submit" class="round blue ic-right-arrow" />
-              </form>
+                  <div><label for="text">Total Semesters</label><input type="text" name="total_semesters" class="text required" value="<%= @total_semesters %>" style="text-align:center;" /></div>
+
+                  <div class="stripe-separator"><!--  --></div>
+                  <input type="submit" value="Submit" class="round blue ic-right-arrow" />
+                </form>
+              <% end %>
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->

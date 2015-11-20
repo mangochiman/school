@@ -8,7 +8,9 @@ class SemestersController < ApplicationController
   end
 
   def semester_settings
-    @total_semesters = Semester.all.count   
+    semesters = Semester.all
+    @total_semesters = semesters.count
+    @semesters = semesters
   end
 
   def set_total_semesters
@@ -17,7 +19,7 @@ class SemestersController < ApplicationController
 
   def set_current_semester
     @total_semesters = Semester.all.count
-    @current_semester_number = GlobalProperty.find_by_property("current_semester").value rescue 0
+    @current_semester_number = Semester.current_semester_number #Returns digit e.g 1, 2, 3, 4
     @semesters = Semester.find(:all)
     if (request.method == :post)
       SemesterAudit.set_current_semester(params[:semester_id])

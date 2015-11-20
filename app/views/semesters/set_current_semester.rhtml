@@ -19,10 +19,18 @@
     <%= stylesheet_link_tag("bootstrap") %>
 
     <script type="text/javascript">
+      var currentSemesterNumber = '<%= @current_semester_number%>'
       function showCurrentActiveSemester(){
-        $("button[semester_number='<%= @current_semester_number%>']")[0].id = 'active-semester-button';
-        $("button[semester_number='<%= @current_semester_number%>']")[0].innerHTML='Active Semester'
+        activeSemesterButton = $("button[semester_number='" + currentSemesterNumber + "']")[0];
+        if (activeSemesterButton){
+          activeSemesterButton.id = 'active-semester-button';
+          activeSemesterButton.innerHTML='Active Semester';
+          activeSemesterButton.onmousedown = function(){
+            //Just Disable the onmouse event. It's already active
+          }
+        }
       }
+
       window.setTimeout("showCurrentActiveSemester();", 50);
         
       function setCurrentSemester(obj){
@@ -30,7 +38,7 @@
         semesterNumber = obj.getAttribute("semester_number")
         jQuery.confirm({
           title:"Current Semester Confirmation",
-          text:"Are you sure you want to set <b>semester " + semesterNumber + "</b> as your current semester?",
+          text:"Are you sure you want to set <b>Semester " + semesterNumber + "</b> as your current semester?",
           confirm: function(button) {
             jQuery.ajax({
               type: "POST",
@@ -176,6 +184,11 @@
               <% end %>
               <table>
                 <thead>
+                  <tr style="font-size: 12pt; font-weight: bold;">
+                    <td colspan="4">
+                      Total Semesters: <span class="notice badge badge-info"><%= @semesters.count %></span>
+                    </td>
+                  </tr>
                   <tr>
                     <th style="background-color:white; border-style: none; width:10%;">&nbsp;</th>
                     <th style="text-align: center;">Start Date</th>
