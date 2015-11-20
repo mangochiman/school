@@ -23,6 +23,21 @@
         semesterId = obj.getAttribute("semester_id");
         window.location = "/semesters/edit_semester_audit?semester_id=" + semesterId;
       }
+
+      function confirmNewAcademicYear(){
+        jQuery.confirm({
+          title:"New Academic Year",
+          text:"Please be responsible. Are you really sure you want to set a new academic year?",
+          confirm: function(button) {
+            window.location = "/semesters/new_academic_year";
+          },
+          cancel: function(button) {
+
+          },
+          confirmButton: "Yes I am",
+          cancelButton: "No"
+        });
+      }
       
     </script>
     <style>
@@ -147,7 +162,7 @@
                 </thead>
                 <tfoot>
                   <tr>
-                    <td colspan="8" class="table-footer" style="line-height: 1.9em;">
+                    <td colspan="8" class="table-footer" >
                       <a href="#" onclick="confirmNewAcademicYear();" class="button round green image-right ic-add text-upper">Set New Academic Year</a>
                     </td>
                   </tr>
@@ -188,9 +203,6 @@
         direction: ['<%=  (Date.today - 100.years).strftime("%Y-%m-%d") %>', '<%=  (Date.today + 10.years).strftime("%Y-%m-%d") %>']
       });
 
-      function confirmNewAcademicYear(){
-        
-      }
     </script>
   </body>
 </html>

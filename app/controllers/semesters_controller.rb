@@ -189,5 +189,10 @@ class SemestersController < ApplicationController
     #Need to close one semester??
     redirect_to("/semesters/set_semester_dates") and return
   end
+
+  def new_academic_year
+    SemesterAudit.new_academic_year
+    redirect_to("/semesters/set_semester_dates") and return
+  end
   
 end
