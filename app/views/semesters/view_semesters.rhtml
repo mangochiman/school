@@ -60,6 +60,21 @@
         padding: 6px 12px;
         transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
       }
+
+      .red {
+        background-color: red;
+        color: white;
+        font-size: 10pt;
+        font-weight: bold;
+      }
+
+      table th:first-child {
+        border-style: none none none !important;
+      }
+
+      .green{
+        background-color: green;
+}
     </style>
   </head>
   <body>  
@@ -114,37 +129,42 @@
 
 
             <div class="content-module-main">
-              <table style="width:25%; float: right;">
-                <tr>
-                  <td style="font-size: 12pt; font-weight: bold;">Select Year</td>
-                  <td><%= select_tag("year", options_for_select(@years), {:onchange => "loadSemesterData();"})%></td>
-                </tr>
-              </table>
               <table>
+                <thead>
+                  <tr style="font-size: 12pt; font-weight: bold;">
+                    <td colspan="4">
+                      Total Semesters: <span class="notice badge badge-info"><%= @semesters.count %></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th style="width:350px;">Semester</th>
+                    <th style="text-align: center;">Start Date</th>
+                    <th style="text-align: center;">End Date</th>
+                  </tr>
+                </thead>
+                <tfoot>
+                  <tr>
+                    <td colspan="8" class="table-footer" style="line-height: 1.9em;">
+                      <a href="#" onclick="confirmCloseSemester();" class="button round red image-right ic-power text-upper">Close Semester</a>
+                    </td>
+                  </tr>
+                </tfoot>
                 <tbody>
-                  <% @hash.sort_by{|k, v|k}.each do |semester_id, data| %>
-                  <tr>
-                    <td colspan="4" class="semester_row">Semester <%= semester_id %></td>
-                  </tr>
-                  <tr>
-                    <td class="class_name_header" style="min-width: 20%;">Class</td>
-                    <td class="males_header" style="text-align:center;">Males</td>
-                    <td class="females_header" style="text-align:center;">Females</td>
-                    <td class="total_header">Total</td>
-                  </tr>
-                  <%  @hash[semester_id].each do |class_room_id, students|%>
-                  <tr style="line-height:0.1em;">
-                    <%
-                      males = students["males"]
-                      females = students["males"]
-                      total_students = students["total_students"]
-                    %>
-                    <td><%= @class_room_hash[class_room_id] %></td>
-                    <td style="text-align:center;"><%= males %></td>
-                    <td style="text-align:center;"><%= females %></td>
-                    <td><%= total_students %></td>
-                  </tr>
-                  <% end %>
+                  <% current_semester_semeste_id = @current_semester.semester_id rescue '' %>
+                  <% @semesters.each do |semester| %>
+                    <tr style="background-color:white;">
+                      <% if  current_semester_semeste_id.to_i == semester.semester_id %>
+                      <td style="text-align:left; padding: 0.833em 0 0.833em 11.95em;">Semester <%= semester.semester_number %>&nbsp;&nbsp;<span class="notice badge badge-info green">Current</span></td>
+                      <% else %>
+                        <td style="text-align:left; padding: 0.833em 0 0.833em 11.95em;">Semester <%= semester.semester_number %></td>
+                      <% end %>
+                      <td style="text-align: center;">
+                        <a href="#"><%= semester.start_date %></a>
+                      </td>
+                      <td style="text-align: center;">
+                        <a href="#"><%= semester.end_date rescue '' %></a>
+                      </td>
+                    </tr>
                   <% end %>
                 </tbody>
               </table>
@@ -162,8 +182,8 @@
     <%= javascript_include_tag("zebra_datepicker") %>
     <script>
       $('.date-picker').Zebra_DatePicker({
-            view : 'years',
-            direction: ['<%=  (Date.today - 2.years).strftime("%Y-%m-%d") %>', '<%=  (Date.today + 1.year).strftime("%Y-%m-%d") %>']
+        view : 'years',
+        direction: ['<%=  (Date.today - 2.years).strftime("%Y-%m-%d") %>', '<%=  (Date.today + 1.year).strftime("%Y-%m-%d") %>']
       });
     </script>
   </body>

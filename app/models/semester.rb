@@ -58,6 +58,11 @@ class Semester < ActiveRecord::Base
     return ""
   end
 
+  def self.current
+    semester = SemesterAudit.find(:last, :conditions => ["state =?", 'open']).semester rescue ''
+    return semester
+  end
+
   def self.create_new_semester_without_parameter
     semester_number = 0
     last_semester = Semester.last

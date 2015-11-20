@@ -83,48 +83,8 @@ class SemestersController < ApplicationController
   end
   
   def view_semesters
-    semesters = Semester.find(:all)
-    @class_room_hash = {}
-    start_year = (Date.today.year - 5)
-    end_year = Date.today.year
-    @years = (start_year..end_year).to_a.reverse
-    
-    (ClassRoom.all || []).each do |class_room|
-      @class_room_hash[class_room.id] = class_room.name
-    end
-
-    @hash = {}
-    (semesters || []).each do |semester|
-      semester_id = semester.id
-      @hash[semester_id] = {}
-      class_room_students = ClassRoomStudent.find(:all, :conditions => ["semester_id =?", semester_id])
-      class_room_students.each do |crs|
-        next if crs.class_room.blank?
-        class_room_id = crs.class_room.id
-        @hash[semester_id][class_room_id] = {} if @hash[semester_id][class_room_id].blank?
-        total_students_per_class = ClassRoomStudent.find(:all, :conditions => ["semester_id =? AND class_room_id =?",
-            semester_id, class_room_id])
-      
-        total_males = 0
-        total_females = 0
-        (total_students_per_class || []).each do |crs|
-          next if crs.student.blank?
-          if (crs.student.gender.upcase == 'MALE')
-            total_males += 1
-          end
-          if (crs.student.gender.upcase == 'FEMALE')
-            total_females += 1
-          end
-        end
-        
-        @hash[semester_id][class_room_id]["total_students"] = total_students_per_class.count
-        @hash[semester_id][class_room_id]["males"] = total_males
-        @hash[semester_id][class_room_id]["females"] = total_females
-      end
-
-    end
-
-    
+    @semesters = Semester.find(:all)
+    @current_semester = Semester.current
   end
 
   def load_semester_data
