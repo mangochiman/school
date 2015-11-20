@@ -182,5 +182,9 @@ class SemestersController < ApplicationController
     semester = Semester.create_new_semester_without_parameter
     redirect_to ("/semesters/edit_semester_audit?semester_id=#{semester.semester_id}") and return
   end
+
+  def close_open_semester
+    
+  end
   
 end

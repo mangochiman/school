@@ -9,30 +9,59 @@
 
     <!-- jQuery & JS files -->
     <%= javascript_include_tag("jquery") %>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("jquery.confirm") %>
     <%= javascript_include_tag("script") %>
+    <%= javascript_include_tag("gvalidator") %>
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("metallic") %>
+    <%= stylesheet_link_tag("gvalidator") %>
+    <%= stylesheet_link_tag("bootstrap") %>
 
     <script>
-      var classRoomHash = eval("(" + '<%= @class_room_hash.to_json %>' + ")");
+      var currentSemesterId = '<%= (@current_semester.semester_id rescue "") %>'
+      function confirmCloseSemester(){
+        if (currentSemesterId != ''){
+          jQuery.confirm({
+            title:"Confirm Semester Closure",
+            text:"Are you sure you want to close the current semester?",
+            confirm: function(button) {
+              window.location = "/semesters/close_open_semester"
+            },
+            cancel: function(button) {
 
-      function loadSemesterData(){
-        year = document.getElementById('year').value;
+            },
+            confirmButton: "Yes I am",
+            cancelButton: "No"
+          });
+        }
+        else{
+          jQuery.confirm({
+            title:"OPERATION ABORTED",
+            text:"No active semeser found",
+            confirm: function(button) {
 
-        jQuery.ajax({
-          type: "POST",
-          url: "/semesters/load_semester_data",
-          data: "year=" + year,
-          success: function(results){
-            results = eval('(' + results + ')');
-            console.log(results);
-          }
+            },
+            cancel: function(button) {
 
-        });
+            },
+            confirmButton: "Okay"
+          });
+
+          $('.cancel').hide(); //Hide the cancel button
+        }
       }
       
     </script>
     <style>
+      .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: red;
+      }
+
       .semester_row{
         background-color: lightskyblue;
         border-left: 1px solid #747c8a;
@@ -74,7 +103,7 @@
 
       .green{
         background-color: green;
-}
+      }
     </style>
   </head>
   <body>  
@@ -154,7 +183,7 @@
                   <% @semesters.each do |semester| %>
                     <tr style="background-color:white;">
                       <% if  current_semester_semeste_id.to_i == semester.semester_id %>
-                      <td style="text-align:left; padding: 0.833em 0 0.833em 11.95em;">Semester <%= semester.semester_number %>&nbsp;&nbsp;<span class="notice badge badge-info green">Current</span></td>
+                        <td style="text-align:left; padding: 0.833em 0 0.833em 11.95em;">Semester <%= semester.semester_number %>&nbsp;&nbsp;<span class="notice badge badge-info green">Current</span></td>
                       <% else %>
                         <td style="text-align:left; padding: 0.833em 0 0.833em 11.95em;">Semester <%= semester.semester_number %></td>
                       <% end %>
@@ -178,13 +207,8 @@
 
     </div> <!-- end content -->
 
-    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("bootstrap") %>
     <%= javascript_include_tag("zebra_datepicker") %>
-    <script>
-      $('.date-picker').Zebra_DatePicker({
-        view : 'years',
-        direction: ['<%=  (Date.today - 2.years).strftime("%Y-%m-%d") %>', '<%=  (Date.today + 1.year).strftime("%Y-%m-%d") %>']
-      });
-    </script>
+
   </body>
 </html>
