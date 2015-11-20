@@ -26,7 +26,7 @@
             title:"Confirm Semester Closure",
             text:"Are you sure you want to close the current semester?",
             confirm: function(button) {
-              window.location = "/semesters/close_open_semester"
+              window.location = "/semesters/close_open_semester?semester_id=" + currentSemesterId
             },
             cancel: function(button) {
 

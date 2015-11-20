@@ -184,7 +184,10 @@ class SemestersController < ApplicationController
   end
 
   def close_open_semester
-    
+    #semester_id = params[:semester_id]
+    SemesterAudit.close_open_semesters #Since we can not have two open semesters. Close all in case there is more than one
+    #Need to close one semester??
+    redirect_to("/semesters/set_semester_dates") and return
   end
   
 end
