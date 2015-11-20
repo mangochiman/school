@@ -18,6 +18,24 @@
     <%= stylesheet_link_tag("gvalidator") %>
     <%= stylesheet_link_tag("bootstrap") %>
 
+    <script type="text/javascript">
+      function confirmNewSemester(){
+
+        jQuery.confirm({
+          title:"New Semester Addition",
+          text:"Are you sure you want to add new semester?",
+          confirm: function(button) {
+            window.location = "/semesters/add_new_semester"
+          },
+          cancel: function(button) {
+
+          },
+          confirmButton: "Yes I am",
+          cancelButton: "No"
+        });
+      }
+
+    </script>
     <style>
       .modal-title {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -167,7 +185,7 @@
                 </table>
 
               <% else %>
-              
+
                 <form id="semester" class="autoform" action="/semesters/create_semester" method="POST">
 
                   <div><label for="text">Total Semesters</label><input type="text" name="total_semesters" class="text required" value="<%= @total_semesters %>" style="text-align:center;" /></div>

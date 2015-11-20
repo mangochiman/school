@@ -46,4 +46,16 @@ class Semester < ActiveRecord::Base
     return "" #No current active semester
   end
 
+  def self.create_new_semester_without_parameter
+    semester_number = 0
+    last_semester = Semester.last
+    semester_number = last_semester.semester_number.to_i unless last_semester.blank?
+    start_date = '' #Not Set AT This Time
+    end_date = '' #Not Set AT This Time
+    semester = Semester.create({:semester_number => semester_number + 1})
+    SemesterAudit.initial_semester(semester.semester_id, start_date, end_date)
+    SemesterAudit.new_semester(semester.semester_id, start_date, end_date)
+    return semester
+  end
+  
 end

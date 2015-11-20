@@ -71,8 +71,8 @@ class SemestersController < ApplicationController
           end_date = dates[:end_date].to_date
           
           #Semester Audit States: Initial, New, Open, Close
-         SemesterAudit.initial_semester(semester_id, start_date, end_date)
-         SemesterAudit.new_semester(semester_id, start_date, end_date)
+          SemesterAudit.initial_semester(semester_id, start_date, end_date)
+          SemesterAudit.new_semester(semester_id, start_date, end_date)
 
         end
         
@@ -196,9 +196,25 @@ class SemestersController < ApplicationController
       semester_audit.start_date = new_start_date
       semester_audit.end_date = new_end_date
       semester_audit.save
+
+      initial_semester_audit = SemesterAudit.find(:last, :conditions => ["semester_id =? AND state =? AND
+        (start_date IS NULL OR end_date iS NULL)", params[:semester_id], 'initial'])
+      
+      unless initial_semester_audit.blank?
+        #Update initial record. For other reasons it might have null values of start and end_date fields
+        initial_semester_audit.start_date = new_start_date
+        initial_semester_audit.end_date = new_end_date
+        initial_semester_audit.save
+      end
+
       redirect_to ("/semesters/set_semester_dates") and return
     end
 
+  end
+
+  def add_new_semester
+    semester = Semester.create_new_semester_without_parameter
+    redirect_to ("/semesters/edit_semester_audit?semester_id=#{semester.semester_id}") and return
   end
   
 end
