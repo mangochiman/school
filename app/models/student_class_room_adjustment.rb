@@ -10,12 +10,15 @@ class StudentClassRoomAdjustment < ActiveRecord::Base
   before_save :add_dates
 
   def add_dates
-    start_date = GlobalProperty.find_by_property("current_semester_start_date").value rescue ''
-    end_date = GlobalProperty.find_by_property("current_semester_end_date").value rescue ''
-    semester = GlobalProperty.find_by_property("current_semester").value rescue ''
     
-    self.semester_id = semester
+    semester_audit_id = Semester.current_active_semester_audit.semester_audit_id rescue ''
+    start_date = Semester.current_semester_start_date
+    end_date = Semester.current_semester_end_date
+    raise "Please set active semester first before proceeding. Operation Aborted".to_yaml if semester_audit_id.blank?
+    raise "Please set dates for active semester first before proceeding. Operation Aborted".to_yaml if (start_date.blank? || end_date.blank?)
+    self.semester_audit_id = semester_audit_id
     self.start_date = start_date
     self.end_date = end_date
   end
+  
 end

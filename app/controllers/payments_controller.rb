@@ -154,7 +154,7 @@ class PaymentsController < ApplicationController
     
     @current_student_payments = Payment.find(:all, :conditions => ["student_id =?",
         params[:student_id]])
-    @current_semester_id = GlobalProperty.find_by_property("current_semester").value rescue ""
+    @current_semester_id = Semester.current_active_semester_audit.semester_id rescue ''
 
     @payment_types_hash = {}
     (PaymentType.all || []).each do |payment_type|
@@ -183,24 +183,21 @@ class PaymentsController < ApplicationController
   end
 
   def create_student_payment
+    #TODO: pull all semester_audits. Back payments are allowed
     student_id = params[:student_id]
     payment_type = params[:payment_type]
-    semester = params[:semester]
+    #semester = params[:semester] TODO: pull all semester_audits. Back payments are allowed
     amount_paid = params[:amount]
     date_paid = params[:payment_date]
-    if (Payment.create({
-            :student_id => student_id,
-            :payment_type_id => payment_type,
-            :semester_id => semester,
-            :amount_paid => amount_paid,
-            :date => date_paid
-          }))
+
+    if (Payment.new_payment(student_id, payment_type, amount_paid, date_paid))
       flash[:notice] = "Operation successful"
       redirect_to :controller => "payments", :action => "add_student_payment", :student_id => student_id
     else
       flash[:error] = "Unable to save the details. Check for the errors and try again"
       render :controller => "payments", :action => "add_student_payment", :student_id => student_id
     end
+    
   end
   
 end
