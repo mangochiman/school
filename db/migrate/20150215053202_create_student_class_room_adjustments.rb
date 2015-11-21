@@ -5,7 +5,7 @@ class CreateStudentClassRoomAdjustments < ActiveRecord::Migration
       t.integer :teacher_id
       t.integer :old_class_room_id
       t.integer :new_class_room_id
-      t.integer :semester_id
+      t.integer :semester_audit_id
       t.date :start_date
       t.date :end_date
       t.string :status
