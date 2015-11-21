@@ -202,10 +202,10 @@
                       Semester <%= semester.semester_number %>
                     </td>
                     <td style="text-align:center;">
-                      <%= semester.start_date || 'Not Set' %>
+                      <%= semester.start_date %>
                     </td>
                     <td style="text-align: center;">
-                      <%= semester.end_date || 'Not Set' %>
+                      <%= semester.end_date %>
                     </td>
                     <td>
                       <button semester_id="<%= semester.id %>" onmousedown="setCurrentSemester(this);" class="btn btn-primary" semester_number="<%= semester.semester_number %>">Set As Active</button>

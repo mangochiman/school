@@ -71,7 +71,7 @@ class SemestersController < ApplicationController
           end_date = dates[:end_date].to_date
           
           #Semester Audit States: Initial, New, Open, Close
-          SemesterAudit.initial_semester(semester_id, start_date, end_date)
+          #SemesterAudit.initial_semester(semester_id, start_date, end_date)
           SemesterAudit.new_semester(semester_id, start_date, end_date)
 
         end
@@ -126,10 +126,12 @@ class SemestersController < ApplicationController
 
   def create_semester
     total_semesters = params[:total_semesters].to_i
-
+    start_date = ''
+    end_date = ''
     ActiveRecord::Base.transaction do
-      (1..total_semesters).each do |semester|
-        Semester.create_new_semester(semester)
+      (1..total_semesters).each do |i|
+        semester = Semester.create_new_semester(i)
+        SemesterAudit.initial_semester(semester.semester_id, start_date, end_date)
       end
     end
     
@@ -179,7 +181,10 @@ class SemestersController < ApplicationController
   end
 
   def add_new_semester
+    start_date = ''
+    end_date = ''
     semester = Semester.create_new_semester_without_parameter
+    SemesterAudit.initial_semester(semester.semester_id, start_date, end_date)
     redirect_to ("/semesters/edit_semester_audit?semester_id=#{semester.semester_id}") and return
   end
 
