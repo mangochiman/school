@@ -15,13 +15,12 @@
     <script>
       function queryReportData(){
         classRoomID = document.getElementById('class_room').value;
-        semesterID = document.getElementById('semester').value;
-        year = document.getElementById('year').value;
-        
+        semesterAuditID = document.getElementById('semester').value;
+
         jQuery.ajax({
           type: "POST",
           url: "/report/students_per_class_report",
-          data: "class_room=" + classRoomID + "&semester=" + semesterID + "&year=" + year,
+          data: "class_room=" + classRoomID + "&semester_audit_id=" + semesterAuditID,
           success: function(results){
             html = "<table>";
             html += "<thead>";
@@ -161,10 +160,6 @@
                   <tr>
                     <td style="min-width:30%; text-align: left;"><span style="font-size:1.4em;">Class</span></td>
                     <td><%= select_tag("class_room", options_for_select(@class_rooms), {:style => 'text-align:center'})%></td>
-                  </tr>
-                  <tr>
-                    <td style="min-width:30%; text-align: left;"><span style="font-size:1.4em;">Year</span></td>
-                    <td><%= select_tag("year", options_for_select(@years), {:style => 'text-align:center'})%></td>
                   </tr>
                   <tr>
                     <td style="text-align: left;"><span style="font-size:1.4em;">Semester</span></td>

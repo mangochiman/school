@@ -14,13 +14,12 @@
 
     <script>
       function queryReportData(){
-        year = document.getElementById('year').value;
-        semesterID = document.getElementById('semester').value;
+        semesterAuditID = document.getElementById('semester').value;
         
         jQuery.ajax({
           type: "POST",
           url: "/report/students_per_semester_report",
-          data: "year=" + year + "&semester_id=" + semesterID,
+          data: "semester_audit_id=" + semesterAuditID,
           success: function(results){
             html = "<table>";
             html += "<thead>";
