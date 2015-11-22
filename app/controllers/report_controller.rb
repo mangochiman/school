@@ -316,8 +316,8 @@ class ReportController < ApplicationController
       class_room_id = params[:class_room]
       hash = {}
       
-        hash[class_room_id] = {}
-        students = Student.find_by_sql("SELECT s.*, e.start_date as exam_date, er.marks as grade FROM exam e
+      hash[class_room_id] = {}
+      students = Student.find_by_sql("SELECT s.*, e.start_date as exam_date, er.marks as grade FROM exam e
           LEFT JOIN exam_result er ON e.exam_id = er.exam_id
           INNER JOIN student_class_room_adjustment scra ON e.class_room_id = scra.new_class_room_id
           INNER JOIN student s ON scra.student_id = s.student_id
@@ -325,37 +325,28 @@ class ReportController < ApplicationController
           WHERE e.class_room_id = '#{class_room_id}' AND e.exam_type_id = '#{exam_type}' AND e.course_id = '#{course}'
           AND scra.semester_audit_id = '#{semester_audit_id}'" )
 
-        students.each do |student|
-          student_id = student.student_id
-          hash[class_room_id][student_id] = {}
-          student_name = student.fname.capitalize.to_s + ' ' + student.lname.capitalize.to_s
-          hash[class_room_id][student_id]["name"] = student_name
-          hash[class_room_id][student_id]["dob"] = student.dob
-          hash[class_room_id][student_id]["email"] = student.email
-          hash[class_room_id][student_id]["gender"] = student.gender
-          hash[class_room_id][student_id]["exam_date"] = student.exam_date.to_date.strftime("%d-%b-%Y")
-          hash[class_room_id][student_id]["grade"] = student.grade
-        end
+      students.each do |student|
+        student_id = student.student_id
+        hash[class_room_id][student_id] = {}
+        student_name = student.fname.capitalize.to_s + ' ' + student.lname.capitalize.to_s
+        hash[class_room_id][student_id]["name"] = student_name
+        hash[class_room_id][student_id]["dob"] = student.dob
+        hash[class_room_id][student_id]["email"] = student.email
+        hash[class_room_id][student_id]["gender"] = student.gender
+        hash[class_room_id][student_id]["exam_date"] = student.exam_date.to_date.strftime("%d-%b-%Y")
+        hash[class_room_id][student_id]["grade"] = student.grade
+      end
 
       render :text => hash.to_json and return
     end
   end
 
   def students_with_balances
-    start_year = Date.today.year - 5
-    end_year = Date.today.year
 
     @payment_types = [["Select Payment Type", ""]]
     @payment_types += PaymentType.all.collect{|p|[p.name, p.payment_type_id]}
-    
-    @years = [["Select Year", ""]]
-    @years += (start_year..end_year).to_a.reverse
 
-    @semesters = [["Select Semester", ""]]
-    @semesters += Semester.find(:all).collect{|s|[s.semester_number, s.semester_id]}
-
-    @class_rooms = ["All"]
-    @class_rooms += ClassRoom.all.collect{|cr|[cr.name, cr.class_room_id]}
+    @class_rooms = ClassRoom.all.collect{|cr|[cr.name, cr.class_room_id]}
 
     @class_room_hash = {}
     (ClassRoom.all || []).each do |class_room|
@@ -364,39 +355,31 @@ class ReportController < ApplicationController
 
     if (request.method == :post)
       payment_type = params[:payment_type]
-      semester_id = params[:semester]
-      year = params[:year]
-
-      class_rooms = ClassRoom.all if params[:class_room].match(/ALL/i)
-      class_rooms = [ClassRoom.find(params[:class_room])] unless params[:class_room].match(/ALL/i)
+      semester_audit_id = params[:semester_audit_id]
+      class_room_id = params[:class_room]
 
       hash = {}
-      
-      class_rooms.each do |class_room|
-        class_room_id = class_room.class_room_id
-        hash[class_room_id] = {}
-        students = Student.find_by_sql("SELECT s.*, SUM(p.amount_paid) as total_amount_paid,
+
+      hash[class_room_id] = {}
+      students = Student.find_by_sql("SELECT s.*, SUM(p.amount_paid) as total_amount_paid,
               pt.amount_required as amount_required FROM student s
               INNER JOIN payment p ON s.student_id = p.student_id
               INNER JOIN student_class_room_adjustment scra ON s.student_id = scra.student_id
               INNER JOIN payment_type pt ON p.payment_type_id = pt.payment_type_id
-              WHERE DATE_FORMAT(p.date, '%Y') = #{year} AND scra.new_class_room_id = #{class_room.class_room_id} AND
-              p.semester_id = #{semester_id} AND pt.payment_type_id = #{payment_type}
+              WHERE scra.new_class_room_id = '#{class_room_id}' AND
+              p.semester_audit_id = '#{semester_audit_id}' AND pt.payment_type_id = #{payment_type}
               GROUP BY student_id HAVING total_amount_paid < amount_required")
 
-        students.each do |student|
-          student_id = student.student_id
-          total_amount_paid = student.total_amount_paid
-          hash[class_room_id][student_id] = {}
-          student_name = student.fname.capitalize.to_s + ' ' + student.lname.capitalize.to_s
-          hash[class_room_id][student_id]["name"] = student_name
-          hash[class_room_id][student_id]["dob"] = student.dob
-          hash[class_room_id][student_id]["email"] = student.email
-          hash[class_room_id][student_id]["gender"] = student.gender
-          hash[class_room_id][student_id]["total_amount_paid"] = ActionController::Base.helpers.number_to_currency(total_amount_paid, :unit => 'MK')
-        end
-
-        hash.delete(class_room_id) if hash[class_room_id].blank?
+      students.each do |student|
+        student_id = student.student_id
+        total_amount_paid = student.total_amount_paid
+        hash[class_room_id][student_id] = {}
+        student_name = student.fname.capitalize.to_s + ' ' + student.lname.capitalize.to_s
+        hash[class_room_id][student_id]["name"] = student_name
+        hash[class_room_id][student_id]["dob"] = student.dob
+        hash[class_room_id][student_id]["email"] = student.email
+        hash[class_room_id][student_id]["gender"] = student.gender
+        hash[class_room_id][student_id]["total_amount_paid"] = ActionController::Base.helpers.number_to_currency(total_amount_paid, :unit => 'MK')
       end
 
       render :text => hash.to_json and return
@@ -404,20 +387,11 @@ class ReportController < ApplicationController
   end
 
   def students_without_balances
-    start_year = Date.today.year - 5
-    end_year = Date.today.year
 
     @payment_types = [["Select Payment Type", ""]]
     @payment_types += PaymentType.all.collect{|p|[p.name, p.payment_type_id]}
 
-    @years = [["Select Year", ""]]
-    @years += (start_year..end_year).to_a.reverse
-
-    @semesters = [["Select Semester", ""]]
-    @semesters += Semester.find(:all).collect{|s|[s.semester_number, s.semester_id]}
-
-    @class_rooms = ["All"]
-    @class_rooms += ClassRoom.all.collect{|cr|[cr.name, cr.class_room_id]}
+    @class_rooms = ClassRoom.all.collect{|cr|[cr.name, cr.class_room_id]}
 
     @class_room_hash = {}
     (ClassRoom.all || []).each do |class_room|
@@ -426,39 +400,33 @@ class ReportController < ApplicationController
 
     if (request.method == :post)
       payment_type = params[:payment_type]
-      semester_id = params[:semester]
+      semester_audit_id = params[:semester_audit_id]
       year = params[:year]
 
-      class_rooms = ClassRoom.all if params[:class_room].match(/ALL/i)
-      class_rooms = [ClassRoom.find(params[:class_room])] unless params[:class_room].match(/ALL/i)
+      class_room_id = params[:class_room]
 
       hash = {}
 
-      class_rooms.each do |class_room|
-        class_room_id = class_room.class_room_id
-        hash[class_room_id] = {}
-        students = Student.find_by_sql("SELECT s.*, SUM(p.amount_paid) as total_amount_paid,
+      hash[class_room_id] = {}
+      students = Student.find_by_sql("SELECT s.*, SUM(p.amount_paid) as total_amount_paid,
               pt.amount_required as amount_required FROM student s
               INNER JOIN payment p ON s.student_id = p.student_id
               INNER JOIN student_class_room_adjustment scra ON s.student_id = scra.student_id
               INNER JOIN payment_type pt ON p.payment_type_id = pt.payment_type_id
-              WHERE DATE_FORMAT(p.date, '%Y') = #{year} AND scra.new_class_room_id = #{class_room.class_room_id} AND
-              p.semester_id = #{semester_id} AND pt.payment_type_id = #{payment_type}
+              WHERE scra.new_class_room_id = #{class_room_id} AND
+              p.semester_audit_id = '#{semester_audit_id}' AND pt.payment_type_id = #{payment_type}
               GROUP BY student_id HAVING total_amount_paid >= amount_required")
 
-        students.each do |student|
-          student_id = student.student_id
-          total_amount_paid = student.total_amount_paid
-          hash[class_room_id][student_id] = {}
-          student_name = student.fname.capitalize.to_s + ' ' + student.lname.capitalize.to_s
-          hash[class_room_id][student_id]["name"] = student_name
-          hash[class_room_id][student_id]["dob"] = student.dob
-          hash[class_room_id][student_id]["email"] = student.email
-          hash[class_room_id][student_id]["gender"] = student.gender
-          hash[class_room_id][student_id]["total_amount_paid"] = ActionController::Base.helpers.number_to_currency(total_amount_paid, :unit => 'MK')
-        end
-
-        hash.delete(class_room_id) if hash[class_room_id].blank?
+      students.each do |student|
+        student_id = student.student_id
+        total_amount_paid = student.total_amount_paid
+        hash[class_room_id][student_id] = {}
+        student_name = student.fname.capitalize.to_s + ' ' + student.lname.capitalize.to_s
+        hash[class_room_id][student_id]["name"] = student_name
+        hash[class_room_id][student_id]["dob"] = student.dob
+        hash[class_room_id][student_id]["email"] = student.email
+        hash[class_room_id][student_id]["gender"] = student.gender
+        hash[class_room_id][student_id]["total_amount_paid"] = ActionController::Base.helpers.number_to_currency(total_amount_paid, :unit => 'MK')
       end
 
       render :text => hash.to_json and return
@@ -466,14 +434,14 @@ class ReportController < ApplicationController
     
   end
 
-  def students_who_paid(semester_id, class_room_id, payment_type, year_paid)
+  def students_who_paid(semester_audit_id, class_room_id, payment_type)
     students = Student.find_by_sql("SELECT s.*, SUM(p.amount_paid) as total_amount_paid,
               pt.amount_required as amount_required FROM student s
               INNER JOIN payment p ON s.student_id = p.student_id
               INNER JOIN student_class_room_adjustment scra ON s.student_id = scra.student_id
               INNER JOIN payment_type pt ON p.payment_type_id = pt.payment_type_id
-              WHERE DATE_FORMAT(p.date, '%Y') = #{year_paid} AND scra.new_class_room_id = #{class_room_id} AND
-              p.semester_id = #{semester_id} AND pt.payment_type_id = #{payment_type}
+              WHERE scra.new_class_room_id = #{class_room_id} AND
+              p.semester_audit_id = '#{semester_audit_id}' AND pt.payment_type_id = #{payment_type}
               GROUP BY student_id HAVING total_amount_paid > 0")
 
     return students.map(&:student_id)
@@ -481,20 +449,11 @@ class ReportController < ApplicationController
   end
 
   def students_without_payments
-    start_year = Date.today.year - 5
-    end_year = Date.today.year
 
     @payment_types = [["Select Payment Type", ""]]
     @payment_types += PaymentType.all.collect{|p|[p.name, p.payment_type_id]}
 
-    @years = [["Select Year", ""]]
-    @years += (start_year..end_year).to_a.reverse
-
-    @semesters = [["Select Semester", ""]]
-    @semesters += Semester.find(:all).collect{|s|[s.semester_number, s.semester_id]}
-
-    @class_rooms = ["All"]
-    @class_rooms += ClassRoom.all.collect{|cr|[cr.name, cr.class_room_id]}
+    @class_rooms = ClassRoom.all.collect{|cr|[cr.name, cr.class_room_id]}
 
     @class_room_hash = {}
     (ClassRoom.all || []).each do |class_room|
@@ -503,39 +462,31 @@ class ReportController < ApplicationController
 
     if (request.method == :post)
       payment_type = params[:payment_type]
-      semester_id = params[:semester]
-      year = params[:year]
+      semester_audit_id = params[:semester_audit_id]
 
-      class_rooms = ClassRoom.all if params[:class_room].match(/ALL/i)
-      class_rooms = [ClassRoom.find(params[:class_room])] unless params[:class_room].match(/ALL/i)
+      class_room_id = params[:class_room]
 
       hash = {}
 
-      class_rooms.each do |class_room|
-        class_room_id = class_room.class_room_id
-        hash[class_room_id] = {}
+      hash[class_room_id] = {}
 
-        students_who_paid_ids = students_who_paid(semester_id, class_room_id, payment_type, year).join(', ')
-        students_who_paid_ids = '0' if students_who_paid_ids.blank?
+      students_who_paid_ids = students_who_paid(semester_audit_id, class_room_id, payment_type).join(', ')
+      students_who_paid_ids = '0' if students_who_paid_ids.blank?
         
-        students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra
+      students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra
               ON s.student_id = scra.student_id 
-              INNER JOIN semesters ss ON scra.semester_id = ss.semester_id
-              WHERE scra.new_class_room_id = #{class_room_id} AND
-              (DATE_FORMAT(ss.start_date, '%Y') = #{year} OR DATE_FORMAT(ss.end_date, '%Y') = #{year}) AND
-              scra.semester_id = #{semester_id} AND s.student_id NOT IN (#{students_who_paid_ids})")
+              INNER JOIN semester_audit sa ON scra.semester_audit_id = sa.semester_audit_id
+              WHERE scra.new_class_room_id = #{class_room_id} AND sa.semester_audit_id = '#{semester_audit_id}'
+              AND s.student_id NOT IN (#{students_who_paid_ids})")
 
-        students.each do |student|
-          student_id = student.student_id
-          hash[class_room_id][student_id] = {}
-          student_name = student.fname.capitalize.to_s + ' ' + student.lname.capitalize.to_s
-          hash[class_room_id][student_id]["name"] = student_name
-          hash[class_room_id][student_id]["dob"] = student.dob
-          hash[class_room_id][student_id]["email"] = student.email
-          hash[class_room_id][student_id]["gender"] = student.gender
-        end
-
-        hash.delete(class_room_id) if hash[class_room_id].blank?
+      students.each do |student|
+        student_id = student.student_id
+        hash[class_room_id][student_id] = {}
+        student_name = student.fname.capitalize.to_s + ' ' + student.lname.capitalize.to_s
+        hash[class_room_id][student_id]["name"] = student_name
+        hash[class_room_id][student_id]["dob"] = student.dob
+        hash[class_room_id][student_id]["email"] = student.email
+        hash[class_room_id][student_id]["gender"] = student.gender
       end
 
       render :text => hash.to_json and return

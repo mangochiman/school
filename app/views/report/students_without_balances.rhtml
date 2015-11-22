@@ -19,7 +19,7 @@
 
     <script>
       var classRoomHash = eval('(' + '<%= @class_room_hash.to_json %>' + ')');
-      requiredData = {'payment_type':' Payment Type', 'class_room':'Class Room', 'semester':'Semester', 'year':'Year'}
+      requiredData = {'payment_type':' Payment Type', 'class_room':'Class Room', 'semester':'Semester'}
 
       function queryReportData(){
         missingFields = []
@@ -47,12 +47,11 @@
           paymentType = document.getElementById('payment_type').value;
           classRoomID = document.getElementById('class_room').value;
           semesterID = document.getElementById('semester').value;
-          year = document.getElementById('year').value;
         
           jQuery.ajax({
             type: "POST",
             url: "/report/students_without_balances",
-            data: "class_room=" + classRoomID + "&semester=" + semesterID + "&year=" + year + '&payment_type=' + paymentType,
+            data: "class_room=" + classRoomID + "&semester=" + semesterID + '&payment_type=' + paymentType,
             success: function(results){
               html = "<table>";
               html += "<thead>";
