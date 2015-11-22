@@ -125,7 +125,7 @@
         height: 34px;
         line-height: 1.42857;
         padding: 6px 12px;
-        min-width: 208px;
+        min-width: 305px;
         transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
       }
 
@@ -201,18 +201,19 @@
                   </tr>
 
                   <tr>
-                    <td style="min-width:30%; text-align: left;"><span style="font-size:1.4em;">Year</span></td>
-                    <td><%= select_tag("year", options_for_select(@years), {:style => 'text-align:center'})%></td>
-                  </tr>
-
-                  <tr>
                     <td style="min-width:30%; text-align: left;"><span style="font-size:1.4em;">Class</span></td>
                     <td><%= select_tag("class_room", options_for_select(@class_rooms), {:style => 'text-align:center'})%></td>
                   </tr>
 
                   <tr>
                     <td style="text-align: left;"><span style="font-size:1.4em;">Semester</span></td>
-                    <td><%= select_tag("semester", options_for_select(@semesters), {:style => 'text-align:center'})%></td>
+                    <td>
+                      <select id="semester">
+                        <% semester_data.each do |semester_audit_id, semester_number, start_date, end_date|%>
+                          <option value="<%= semester_audit_id %>">Semester <%= semester_number.to_s + " (#{start_date.to_s} - #{end_date.to_s})" %></option>
+                        <% end %>
+                      </select>
+                    </td>
                   </tr>
                 </table>
                 <div class="stripe-separator"><!-- --></div>

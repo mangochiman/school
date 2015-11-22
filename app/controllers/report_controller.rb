@@ -57,8 +57,16 @@ class ReportController < ApplicationController
     @years = ["ALL"]
     @years += (start_year..end_year).to_a.reverse
     @semesters = ["ALL"]
-    @semesters += Semester.find(:all).collect{|s|[s.semester_number, s.semester_id]}
-    
+    #@semesters += Semester.find(:all).collect{|s|[s.semester_number, s.semester_id]}
+
+    semester_audits = SemesterAudit.find(:all)
+    @semesters = semester_audits.collect do |semester_audit|
+      semester_number = semester_audit.semester.semester_number
+      semester_audit_id = semester_audit.semester_id
+      start_date = semester_audit.start_date.strftime("%d/%b/%Y") rescue  semester_audit.start_date
+      end_date = semester_audit.end_date.strftime("%d/%b/%Y") rescue  semester_audit.end_date
+      [semester_audit_id, semester_number, start_date, end_date]
+    end
   end
 
   def students_per_year_report

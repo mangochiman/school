@@ -253,8 +253,11 @@ class AdminController < ApplicationController
   def semester_management_menu
     @current_year = Date.today.year
     @current_semester = Semester.current_semester_number
+    @current_semester = 'Not Set' if @current_semester.blank?
     @current_semester_start_date = Semester.current_semester_start_date
-    @current_semester_end_date = Semester.current_semester_end_date    
+    @current_semester_start_date = 'Not Set' if @current_semester_start_date.blank?
+    @current_semester_end_date = Semester.current_semester_end_date
+    @current_semester_end_date = 'Not Set' if @current_semester_end_date.blank?
   end
 
   def payments_overview_menu

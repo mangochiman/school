@@ -21,7 +21,7 @@ module ApplicationHelper
       notifications["semesters"]["caption"] = "Add Semesters"
     end
 
-    current_semester = GlobalProperty.find_by_property("current_semester").value rescue nil
+    current_semester = Semester.current_active_semester_audit
     if (current_semester.blank?)
       sort_weight = sort_weight + 1
       notifications["current_semester"] = {} if notifications["current_semester"].blank?
@@ -176,4 +176,32 @@ module ApplicationHelper
 
     return notifications
   end
+
+  def semester_data
+    semester_audits = SemesterAudit.find(:all)
+    
+    semesters = semester_audits.collect do |semester_audit|
+      semester_number = semester_audit.semester.semester_number
+      semester_audit_id = semester_audit.semester_id
+      start_date = semester_audit.start_date.strftime("%d/%b/%Y") rescue  semester_audit.start_date
+      end_date = semester_audit.end_date.strftime("%d/%b/%Y") rescue  semester_audit.end_date
+      [semester_audit_id, semester_number, start_date, end_date]
+    end
+
+    return semesters
+  end
+
+  def years
+    start_year = SemesterAudit.find(:all, :conditions => ["start_date IS NOT NULL"]).sort_by{|sa|
+      sa.start_date.to_date rescue sa.start_date
+    }.collect{|s| s.start_date.to_date.year rescue s.start_date}.first
+
+    end_year= SemesterAudit.find(:all, :conditions => ["end_date IS NOT NULL"]).sort_by{|sa|
+      sa.end_date.to_date rescue sa.end_date
+    }.collect{|s| s.end_date.to_date.year rescue s.end_date}.last
+
+    return [start_year, end_year].sort #Sort Just In case the start_year > end_year
+
+  end
+  
 end

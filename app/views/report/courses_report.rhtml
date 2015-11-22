@@ -64,7 +64,7 @@
         height: 34px;
         line-height: 1.42857;
         padding: 6px 12px;
-        min-width: 208px;
+        min-width: 305px;
         transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
       }
 
@@ -143,7 +143,7 @@
                 <table>
                   <tr>
                     <td style="min-width:30%; text-align: left;"><span style="font-size:1.4em;">Year</span></td>
-                    <td><%= select_tag("year", options_for_select(@years), {:style => 'text-align:center'})%></td>
+                    <td><%= select_tag("year", options_for_select((years[0]..years[1]).to_a), {:style => 'text-align:center'})%></td>
                   </tr>
                 </table>
                 <div class="stripe-separator"><!-- --></div>
