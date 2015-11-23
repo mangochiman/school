@@ -147,7 +147,7 @@ module ApplicationHelper
       students.each do |student|
         next if student.current_class.blank? #Not Interested in students without classes
         latest_class_name = student.current_class #Returns Class Name
-        class_room_id = ClassRoom.find_all_by_name(latest_class_name).id
+        class_room_id = ClassRoom.find_by_name(latest_class_name).class_room_id
         latest_student_courses = student.student_class_room_courses.find(:all,
           :conditions => ["class_room_id =?", class_room_id])
         if (latest_student_courses.blank?)

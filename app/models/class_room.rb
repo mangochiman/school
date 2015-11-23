@@ -24,4 +24,10 @@ class ClassRoom < ActiveRecord::Base
     self.student_class_room_adjustments.find(:all, :conditions => ["status =?", 'Active'])
   end
 
+  def self.new_class_room(class_name)
+    ClassRoom.create({
+        :name => class_name
+      })
+  end
+  
 end

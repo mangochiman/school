@@ -2,7 +2,7 @@ class Student < ActiveRecord::Base
   set_table_name :student
 	set_primary_key :student_id
 
-  has_one :class_room_student, :foreign_key => :student_id
+  has_one :class_room_student, :foreign_key => :student_id #Not in use
   has_one :student_archive, :foreign_key => :student_id
   has_many :student_courses, :foreign_key => :student_id
   has_many :student_class_room_courses, :foreign_key => :student_id

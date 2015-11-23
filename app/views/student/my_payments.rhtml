@@ -154,12 +154,12 @@
                     </div>
                   <% end %>
                   <table>
-                    <% @payment_hash.each do |semester_id, values| %>
+                    <% @payment_hash.each do |semester_audit_id, values| %>
 
                       <% values.each do |payment_type, payment_details| %>
                         <tr>
                           <th colspan="2" style="text-align:left; border-bottom: 2px solid white !important; background-color: #006dcc;">
-                            <span style="padding-left:20px;">Semester : <i style="font-weight:bold;"><%= Semester.find(semester_id).semester_number %></i></span>
+                            <span style="padding-left:20px;">Semester : <i style="font-weight:bold;"><%= SemesterAudit.find(semester_audit_id).semester.semester_number %></i></span>
                             <span style="padding-left:20px;">Payment Type : <i style="font-weight:bold;"><%= PaymentType.find(payment_type).name %></i></span>
                             <span style="padding-left:20px;">Amount Required : <i style="font-weight:bold;"><%= number_to_currency(payment_details["amount_required"], :unit => 'MK') %></i></span>
                             <span style="padding-left:20px;">Balance : <i style="font-weight:bold;"><%= number_to_currency(payment_details["balance"], :unit => 'MK') %></i></span>
