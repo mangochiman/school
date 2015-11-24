@@ -178,11 +178,11 @@ module ApplicationHelper
   end
 
   def semester_data
-    semester_audits = SemesterAudit.find(:all)
-    
+    semester_audits = SemesterAudit.find(:all, :conditions => ["state IN (?)", ['close', 'open']], :order => 'semester_id ASC')
+
     semesters = semester_audits.collect do |semester_audit|
       semester_number = semester_audit.semester.semester_number
-      semester_audit_id = semester_audit.semester_id
+      semester_audit_id = semester_audit.semester_audit_id
       start_date = semester_audit.start_date.strftime("%d/%b/%Y") rescue  semester_audit.start_date
       end_date = semester_audit.end_date.strftime("%d/%b/%Y") rescue  semester_audit.end_date
       [semester_audit_id, semester_number, start_date, end_date]

@@ -12,17 +12,20 @@ class AdminController < ApplicationController
 
   def load_enrollment_by_gender_data
     if (request.method == :post)
-      year = params[:year]
+      semester_audit_id = params[:semester_audit_id]
       enrollment_data = {}
-      males = Student.find_by_sql("SELECT * FROM student WHERE gender = 'MALE' AND
-          DATE_FORMAT(created_at, '%Y') = #{year}").count
+      males = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id WHERE scra.semester_audit_id = #{semester_audit_id}
+          AND s.gender = 'MALE'").count
 
-      females = Student.find_by_sql("SELECT * FROM student WHERE gender = 'FEMALE' AND
-          DATE_FORMAT(created_at, '%Y') = #{year}").count
+      females = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id WHERE scra.semester_audit_id = #{semester_audit_id}
+          AND s.gender = 'FEMALE'").count
 
+      semester_data = SemesterAudit.formatted_semester_details(semester_audit_id)
       enrollment_data["males"] = males
       enrollment_data["females"] = females
-      enrollment_data["year"] = year
+      enrollment_data["semester_data"] = semester_data
       render :text => enrollment_data.to_json and return
     end
   end

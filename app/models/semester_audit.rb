@@ -77,5 +77,11 @@ class SemesterAudit < ActiveRecord::Base
     end #Open new semesters
 
   end
-  
+
+  def self.formatted_semester_details(semester_audit_id)
+      sa = SemesterAudit.find(semester_audit_id)
+      semester_number = sa.semester.semester_number
+      dates = sa.start_date.to_date.strftime("%d/%b/%Y") + ' - ' + sa.end_date.to_date.strftime("%d/%b/%Y")
+      "Semester #{semester_number}(#{dates})"
+  end
 end
