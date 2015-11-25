@@ -28,7 +28,7 @@
             text: 'Students Enrollment By Gender'
           },
           subtitle: {
-            text: '<%= Date.today.year %>'
+            text: '<%= @semester_data %>'
           },
           tooltip: {
             pointFormat: '{series.name}: <b>{point.percentage}%</b>',
@@ -65,14 +65,14 @@
       });
 
       function plotGraph(){
-        year = document.getElementById('year').value;
+        semesterAuditId = document.getElementById('semester').value;
         jQuery.ajax({
           type: "POST",
           url: "/admin/load_enrollment_by_gender_data",
-          data: "year=" + year,
+          data: "semester_audit_id=" + semesterAuditId,
           success: function(results){
             results = eval('(' + results + ')')
-            year = results['year'];
+            semester_data = results['semester_data'];
             totalMales = results['males'];
             totalFemales = results['females'];
 
@@ -86,7 +86,7 @@
                 text: 'Students Enrollment By Gender'
               },
               subtitle: {
-                text: year
+                text: semester_data
               },
               tooltip: {
                 pointFormat: '{series.name}: <b>{point.percentage}%</b>',
@@ -148,7 +148,7 @@
         font-size: 14px;
       }
 
-      #year{
+      #semester{
         background-color: #fff;
         background-image: none;
         border: 1px solid #ccc;
@@ -169,7 +169,7 @@
       }
     </style>
   </head>
-  <body> 
+  <body>
     <!-- HEADER -->
     <div id="header-with-tabs">
 
@@ -213,8 +213,14 @@
                 <div style="margin-right:2%;">
                   <table style="width:22%; float: right;">
                     <tr style="background-color: white;">
-                      <td style="text-align: left; font-size: 1.2em; width: 10em;"><span>Year</span></td>
-                      <td><%= select_tag("year", options_for_select(@years),{:style=>'text-align:center'})%></td>
+                      <td style="text-align: left; font-size: 1.2em; width: 10em;"><span>Semester</span></td>
+                      <td>
+                        <select id="semester">
+                          <% semester_data.each do |semester_audit_id, semester_number, start_date, end_date|%>
+                            <option value="<%= semester_audit_id %>">Semester <%= semester_number.to_s + " (#{start_date.to_s} - #{end_date.to_s})" %></option>
+                          <% end %>
+                        </select>
+                      </td>
                       <td><a onclick="plotGraph();" class="button round blue image-right ic-refresh text-upper">Plot</a></td>
                     </tr>
                   </table>
