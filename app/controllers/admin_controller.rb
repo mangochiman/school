@@ -1,13 +1,18 @@
 class AdminController < ApplicationController
   skip_before_filter :authenticate_user, :only => [:school_logo]
   def home
-    start_year = Date.today.year - 5
-    end_year = Date.today.year
-    @years = (start_year..end_year).to_a.reverse
-    @males = Student.find_by_sql("SELECT * FROM student WHERE gender = 'MALE' AND
-          DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
-    @females = Student.find_by_sql("SELECT * FROM student WHERE gender = 'FEMALE' AND
-          DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
+    current_semester_audit = Semester.current_active_semester_audit
+    semester_audit_id = current_semester_audit.semester_audit_id unless current_semester_audit.blank?
+    semester_audit_id = SemesterAudit.last.semester_audit_id if current_semester_audit.blank?
+
+    @semester_data = SemesterAudit.formatted_semester_details(semester_audit_id)
+    @males = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id WHERE scra.semester_audit_id = #{semester_audit_id}
+          AND s.gender = 'MALE'").count
+
+    @females = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id WHERE scra.semester_audit_id = #{semester_audit_id}
+          AND s.gender = 'FEMALE'").count
   end
 
   def load_enrollment_by_gender_data
@@ -288,112 +293,161 @@ class AdminController < ApplicationController
   end
 
   def time_table_dashboard
-    start_year = Date.today.year - 5
-    end_year = Date.today.year
-    @years = (start_year..end_year).to_a.reverse
-    @males = Student.find_by_sql("SELECT * FROM student WHERE gender = 'MALE' AND
-          DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
-    @females = Student.find_by_sql("SELECT * FROM student WHERE gender = 'FEMALE' AND
-          DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
+    current_semester_audit = Semester.current_active_semester_audit
+    semester_audit_id = current_semester_audit.semester_audit_id unless current_semester_audit.blank?
+    semester_audit_id = SemesterAudit.last.semester_audit_id if current_semester_audit.blank?
+
+    @semester_data = SemesterAudit.formatted_semester_details(semester_audit_id)
+    @males = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id WHERE scra.semester_audit_id = #{semester_audit_id}
+          AND s.gender = 'MALE'").count
+
+    @females = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id WHERE scra.semester_audit_id = #{semester_audit_id}
+          AND s.gender = 'FEMALE'").count
     
   end
 
   def subject_groups_dashboard
-    start_year = Date.today.year - 5
-    end_year = Date.today.year
-    @years = (start_year..end_year).to_a.reverse
-    @males = Student.find_by_sql("SELECT * FROM student WHERE gender = 'MALE' AND
-          DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
-    @females = Student.find_by_sql("SELECT * FROM student WHERE gender = 'FEMALE' AND
-          DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
+    current_semester_audit = Semester.current_active_semester_audit
+    semester_audit_id = current_semester_audit.semester_audit_id unless current_semester_audit.blank?
+    semester_audit_id = SemesterAudit.last.semester_audit_id if current_semester_audit.blank?
+
+    @semester_data = SemesterAudit.formatted_semester_details(semester_audit_id)
+    @males = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id WHERE scra.semester_audit_id = #{semester_audit_id}
+          AND s.gender = 'MALE'").count
+
+    @females = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id WHERE scra.semester_audit_id = #{semester_audit_id}
+          AND s.gender = 'FEMALE'").count
     
   end
 
   def semester_management_dashboard
-    start_year = Date.today.year - 5
-    end_year = Date.today.year
-    @years = (start_year..end_year).to_a.reverse
-    @males = Student.find_by_sql("SELECT * FROM student WHERE gender = 'MALE' AND
-          DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
-    @females = Student.find_by_sql("SELECT * FROM student WHERE gender = 'FEMALE' AND
-          DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
+    current_semester_audit = Semester.current_active_semester_audit
+    semester_audit_id = current_semester_audit.semester_audit_id unless current_semester_audit.blank?
+    semester_audit_id = SemesterAudit.last.semester_audit_id if current_semester_audit.blank?
+
+    @semester_data = SemesterAudit.formatted_semester_details(semester_audit_id)
+    @males = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id WHERE scra.semester_audit_id = #{semester_audit_id}
+          AND s.gender = 'MALE'").count
+
+    @females = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id WHERE scra.semester_audit_id = #{semester_audit_id}
+          AND s.gender = 'FEMALE'").count
     
   end
 
   def payments_overview_dashboard
-    start_year = Date.today.year - 5
-    end_year = Date.today.year
-    @years = (start_year..end_year).to_a.reverse
-    @males = Student.find_by_sql("SELECT * FROM student WHERE gender = 'MALE' AND
-          DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
-    @females = Student.find_by_sql("SELECT * FROM student WHERE gender = 'FEMALE' AND
-          DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
+    current_semester_audit = Semester.current_active_semester_audit
+    semester_audit_id = current_semester_audit.semester_audit_id unless current_semester_audit.blank?
+    semester_audit_id = SemesterAudit.last.semester_audit_id if current_semester_audit.blank?
+
+    @semester_data = SemesterAudit.formatted_semester_details(semester_audit_id)
+    @males = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id WHERE scra.semester_audit_id = #{semester_audit_id}
+          AND s.gender = 'MALE'").count
+
+    @females = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id WHERE scra.semester_audit_id = #{semester_audit_id}
+          AND s.gender = 'FEMALE'").count
     
   end
 
   def print_teacher_time_table_dashboard
-    start_year = Date.today.year - 5
-    end_year = Date.today.year
-    @years = (start_year..end_year).to_a.reverse
-    @males = Student.find_by_sql("SELECT * FROM student WHERE gender = 'MALE' AND
-          DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
-    @females = Student.find_by_sql("SELECT * FROM student WHERE gender = 'FEMALE' AND
-          DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
+    current_semester_audit = Semester.current_active_semester_audit
+    semester_audit_id = current_semester_audit.semester_audit_id unless current_semester_audit.blank?
+    semester_audit_id = SemesterAudit.last.semester_audit_id if current_semester_audit.blank?
+
+    @semester_data = SemesterAudit.formatted_semester_details(semester_audit_id)
+    @males = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id WHERE scra.semester_audit_id = #{semester_audit_id}
+          AND s.gender = 'MALE'").count
+
+    @females = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id WHERE scra.semester_audit_id = #{semester_audit_id}
+          AND s.gender = 'FEMALE'").count
     
   end
 
   def documents_management_dashboard
-    start_year = Date.today.year - 5
-    end_year = Date.today.year
-    @years = (start_year..end_year).to_a.reverse
-    @males = Student.find_by_sql("SELECT * FROM student WHERE gender = 'MALE' AND
-          DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
-    @females = Student.find_by_sql("SELECT * FROM student WHERE gender = 'FEMALE' AND
-          DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
+    current_semester_audit = Semester.current_active_semester_audit
+    semester_audit_id = current_semester_audit.semester_audit_id unless current_semester_audit.blank?
+    semester_audit_id = SemesterAudit.last.semester_audit_id if current_semester_audit.blank?
+
+    @semester_data = SemesterAudit.formatted_semester_details(semester_audit_id)
+    @males = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id WHERE scra.semester_audit_id = #{semester_audit_id}
+          AND s.gender = 'MALE'").count
+
+    @females = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id WHERE scra.semester_audit_id = #{semester_audit_id}
+          AND s.gender = 'FEMALE'").count
     
   end
 
   def barcode_scanning_dashboard
-    start_year = Date.today.year - 5
-    end_year = Date.today.year
-    @years = (start_year..end_year).to_a.reverse
-    @males = Student.find_by_sql("SELECT * FROM student WHERE gender = 'MALE' AND
-          DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
-    @females = Student.find_by_sql("SELECT * FROM student WHERE gender = 'FEMALE' AND
-          DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
-    
+    current_semester_audit = Semester.current_active_semester_audit
+    semester_audit_id = current_semester_audit.semester_audit_id unless current_semester_audit.blank?
+    semester_audit_id = SemesterAudit.last.semester_audit_id if current_semester_audit.blank?
+
+    @semester_data = SemesterAudit.formatted_semester_details(semester_audit_id)
+    @males = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id WHERE scra.semester_audit_id = #{semester_audit_id}
+          AND s.gender = 'MALE'").count
+
+    @females = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id WHERE scra.semester_audit_id = #{semester_audit_id}
+          AND s.gender = 'FEMALE'").count
   end
 
   def system_configuration_dashboard
-    start_year = Date.today.year - 5
-    end_year = Date.today.year
-    @years = (start_year..end_year).to_a.reverse
-    @males = Student.find_by_sql("SELECT * FROM student WHERE gender = 'MALE' AND
-          DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
-    @females = Student.find_by_sql("SELECT * FROM student WHERE gender = 'FEMALE' AND
-          DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
+    current_semester_audit = Semester.current_active_semester_audit
+    semester_audit_id = current_semester_audit.semester_audit_id unless current_semester_audit.blank?
+    semester_audit_id = SemesterAudit.last.semester_audit_id if current_semester_audit.blank?
+
+    @semester_data = SemesterAudit.formatted_semester_details(semester_audit_id)
+    @males = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id WHERE scra.semester_audit_id = #{semester_audit_id}
+          AND s.gender = 'MALE'").count
+
+    @females = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id WHERE scra.semester_audit_id = #{semester_audit_id}
+          AND s.gender = 'FEMALE'").count
     
   end
 
   def backup_data_dashboard
-    start_year = Date.today.year - 5
-    end_year = Date.today.year
-    @years = (start_year..end_year).to_a.reverse
-    @males = Student.find_by_sql("SELECT * FROM student WHERE gender = 'MALE' AND
-          DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
-    @females = Student.find_by_sql("SELECT * FROM student WHERE gender = 'FEMALE' AND
-          DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
+    current_semester_audit = Semester.current_active_semester_audit
+    semester_audit_id = current_semester_audit.semester_audit_id unless current_semester_audit.blank?
+    semester_audit_id = SemesterAudit.last.semester_audit_id if current_semester_audit.blank?
+
+    @semester_data = SemesterAudit.formatted_semester_details(semester_audit_id)
+    @males = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id WHERE scra.semester_audit_id = #{semester_audit_id}
+          AND s.gender = 'MALE'").count
+
+    @females = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id WHERE scra.semester_audit_id = #{semester_audit_id}
+          AND s.gender = 'FEMALE'").count
     
   end
 
   def class_management_dashboard
-    start_year = Date.today.year - 5
-    end_year = Date.today.year
-    @years = (start_year..end_year).to_a.reverse
-    @males = Student.find_by_sql("SELECT * FROM student WHERE gender = 'MALE' AND
-          DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
-    @females = Student.find_by_sql("SELECT * FROM student WHERE gender = 'FEMALE' AND
-          DATE_FORMAT(created_at, '%Y') = #{Date.today.year}").count
+    current_semester_audit = Semester.current_active_semester_audit
+    semester_audit_id = current_semester_audit.semester_audit_id unless current_semester_audit.blank?
+    semester_audit_id = SemesterAudit.last.semester_audit_id if current_semester_audit.blank?
+
+    @semester_data = SemesterAudit.formatted_semester_details(semester_audit_id)
+    @males = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id WHERE scra.semester_audit_id = #{semester_audit_id}
+          AND s.gender = 'MALE'").count
+
+    @females = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id WHERE scra.semester_audit_id = #{semester_audit_id}
+          AND s.gender = 'FEMALE'").count
     
   end
 
