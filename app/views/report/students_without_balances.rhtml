@@ -69,29 +69,19 @@
                 html += "</tr>";
               }
 
-              for (var classRoom in results){
-
-                if (!jQuery.isEmptyObject(results[classRoom])){
-                  html += "<tr style='font-size:1.4em; background-color:#2069b4; color:white;'>";
-                  html += "<td colspan='5'>" + classRoomHash[classRoom] + "</td>";
-                  html += "</tr>";
-                }
-
-                for (var studentID in results[classRoom]){
-                  html += "<tr>";
-                  console.log(results[classRoom][studentID])
-                  studentName = results[classRoom][studentID]["name"];
-                  studentGender = results[classRoom][studentID]["gender"];
-                  studentEmail = results[classRoom][studentID]["email"];
-                  studentDOB = results[classRoom][studentID]["dob"];
-                  totalAmountPaid = results[classRoom][studentID]["total_amount_paid"];
-                  html += "<td>" + studentName + "</td>";
-                  html += "<td><a href='#'>" + studentEmail + "</a></td>";
-                  html += "<td>" + studentGender + "</td>";
-                  html += "<td>" + studentDOB + "</td>";
-                  html += "<td>" + totalAmountPaid + "</td>";
-                  html += "</tr>";
-                }
+              for (var studentID in results){
+                html += "<tr>";
+                studentName = results[studentID]["name"];
+                studentGender = results[studentID]["gender"];
+                studentEmail = results[studentID]["email"];
+                studentDOB = results[studentID]["dob"];
+                totalAmountPaid = results[studentID]["total_amount_paid"];
+                html += "<td>" + studentName + "</td>";
+                html += "<td><a href='#'>" + studentEmail + "</a></td>";
+                html += "<td>" + studentGender + "</td>";
+                html += "<td>" + studentDOB + "</td>";
+                html += "<td>" + totalAmountPaid + "</td>";
+                html += "</tr>";
               }
 
               html += "</tbody>";

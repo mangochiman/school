@@ -303,9 +303,6 @@ class ReportController < ApplicationController
     @years = [["Select Year", ""]]
     @years += (start_year..end_year).to_a.reverse
 
-    @semesters = [["Select Semester", ""]]
-    @semesters += Semester.find(:all).collect{|s|[s.semester_number, s.semester_id]}
-
     @class_rooms = ClassRoom.all.collect{|cr|[cr.name, cr.class_room_id]}
 
     @class_room_hash = {}
@@ -321,7 +318,6 @@ class ReportController < ApplicationController
       class_room_id = params[:class_room]
       hash = {}
       
-      hash[class_room_id] = {}
       students = Student.find_by_sql("SELECT s.*, e.start_date as exam_date, er.marks as grade FROM exam e
           LEFT JOIN exam_result er ON e.exam_id = er.exam_id
           INNER JOIN student_class_room_adjustment scra ON e.class_room_id = scra.new_class_room_id
@@ -332,14 +328,14 @@ class ReportController < ApplicationController
 
       students.each do |student|
         student_id = student.student_id
-        hash[class_room_id][student_id] = {}
+        hash[student_id] = {}
         student_name = student.fname.capitalize.to_s + ' ' + student.lname.capitalize.to_s
-        hash[class_room_id][student_id]["name"] = student_name
-        hash[class_room_id][student_id]["dob"] = student.dob
-        hash[class_room_id][student_id]["email"] = student.email
-        hash[class_room_id][student_id]["gender"] = student.gender
-        hash[class_room_id][student_id]["exam_date"] = student.exam_date.to_date.strftime("%d-%b-%Y")
-        hash[class_room_id][student_id]["grade"] = student.grade
+        hash[student_id]["name"] = student_name
+        hash[student_id]["dob"] = student.dob
+        hash[student_id]["email"] = student.email
+        hash[student_id]["gender"] = student.gender
+        hash[student_id]["exam_date"] = student.exam_date.to_date.strftime("%d-%b-%Y")
+        hash[student_id]["grade"] = student.grade
       end
 
       render :text => hash.to_json and return
@@ -365,7 +361,6 @@ class ReportController < ApplicationController
 
       hash = {}
 
-      hash[class_room_id] = {}
       students = Student.find_by_sql("SELECT s.*, SUM(p.amount_paid) as total_amount_paid,
               pt.amount_required as amount_required FROM student s
               INNER JOIN payment p ON s.student_id = p.student_id
@@ -378,13 +373,13 @@ class ReportController < ApplicationController
       students.each do |student|
         student_id = student.student_id
         total_amount_paid = student.total_amount_paid
-        hash[class_room_id][student_id] = {}
+        hash[student_id] = {}
         student_name = student.fname.capitalize.to_s + ' ' + student.lname.capitalize.to_s
-        hash[class_room_id][student_id]["name"] = student_name
-        hash[class_room_id][student_id]["dob"] = student.dob
-        hash[class_room_id][student_id]["email"] = student.email
-        hash[class_room_id][student_id]["gender"] = student.gender
-        hash[class_room_id][student_id]["total_amount_paid"] = ActionController::Base.helpers.number_to_currency(total_amount_paid, :unit => 'MK')
+        hash[student_id]["name"] = student_name
+        hash[student_id]["dob"] = student.dob
+        hash[student_id]["email"] = student.email
+        hash[student_id]["gender"] = student.gender
+        hash[student_id]["total_amount_paid"] = ActionController::Base.helpers.number_to_currency(total_amount_paid, :unit => 'MK')
       end
 
       render :text => hash.to_json and return
@@ -406,13 +401,9 @@ class ReportController < ApplicationController
     if (request.method == :post)
       payment_type = params[:payment_type]
       semester_audit_id = params[:semester_audit_id]
-      year = params[:year]
-
       class_room_id = params[:class_room]
 
       hash = {}
-
-      hash[class_room_id] = {}
       students = Student.find_by_sql("SELECT s.*, SUM(p.amount_paid) as total_amount_paid,
               pt.amount_required as amount_required FROM student s
               INNER JOIN payment p ON s.student_id = p.student_id
@@ -425,13 +416,13 @@ class ReportController < ApplicationController
       students.each do |student|
         student_id = student.student_id
         total_amount_paid = student.total_amount_paid
-        hash[class_room_id][student_id] = {}
+        hash[student_id] = {}
         student_name = student.fname.capitalize.to_s + ' ' + student.lname.capitalize.to_s
-        hash[class_room_id][student_id]["name"] = student_name
-        hash[class_room_id][student_id]["dob"] = student.dob
-        hash[class_room_id][student_id]["email"] = student.email
-        hash[class_room_id][student_id]["gender"] = student.gender
-        hash[class_room_id][student_id]["total_amount_paid"] = ActionController::Base.helpers.number_to_currency(total_amount_paid, :unit => 'MK')
+        hash[student_id]["name"] = student_name
+        hash[student_id]["dob"] = student.dob
+        hash[student_id]["email"] = student.email
+        hash[student_id]["gender"] = student.gender
+        hash[student_id]["total_amount_paid"] = ActionController::Base.helpers.number_to_currency(total_amount_paid, :unit => 'MK')
       end
 
       render :text => hash.to_json and return

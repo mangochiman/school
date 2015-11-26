@@ -64,37 +64,22 @@
               console.log(results)
               html += "<tbody>";
 
-              if (jQuery.isEmptyObject(results)){
-                html += "<tr style='font-size:1.2em; '>";
-                html += "<td colspan='5'>No data in this report</td>";
+              for (var studentID in results){
+                html += "<tr>";
+                console.log(results[studentID])
+                studentName = results[studentID]["name"];
+                studentGender = results[studentID]["gender"];
+                studentEmail = results[studentID]["email"];
+                studentDOB = results[studentID]["dob"];
+                exam_date = results[studentID]["exam_date"];
+                grade = results[studentID]["grade"];
+
+                html += "<td>" + studentName + "</td>";
+                html += "<td><a href='#'>" + studentEmail + "</a></td>";
+                html += "<td>" + studentGender + "</td>";
+                html += "<td>" + exam_date + "</td>";
+                html += "<td style='color: green; font-weight: bold;'>" + grade + "</td>";
                 html += "</tr>";
-              }
-
-              for (var classRoom in results){
-
-                if (!jQuery.isEmptyObject(results[classRoom])){
-                  html += "<tr style='font-size:1.4em; background-color:#2069b4; color:white;'>";
-                  html += "<td colspan='5'>" + classRoomHash[classRoom] + "</td>";
-                  html += "</tr>";
-                }
-
-                for (var studentID in results[classRoom]){
-                  html += "<tr>";
-                  console.log(results[classRoom][studentID])
-                  studentName = results[classRoom][studentID]["name"];
-                  studentGender = results[classRoom][studentID]["gender"];
-                  studentEmail = results[classRoom][studentID]["email"];
-                  studentDOB = results[classRoom][studentID]["dob"];
-                  exam_date = results[classRoom][studentID]["exam_date"];
-                  grade = results[classRoom][studentID]["grade"];
-
-                  html += "<td>" + studentName + "</td>";
-                  html += "<td><a href='#'>" + studentEmail + "</a></td>";
-                  html += "<td>" + studentGender + "</td>";
-                  html += "<td>" + exam_date + "</td>";
-                  html += "<td style='color: green; font-weight: bold;'>" + grade + "</td>";
-                  html += "</tr>";
-                }
               }
 
               html += "</tbody>";
@@ -227,9 +212,9 @@
                     <td style="text-align: left;"><span style="font-size:1.4em;">Semester</span></td>
                     <td>
                       <select id="semester">
-                          <% semester_data.each do |semester_audit_id, semester_number, start_date, end_date|%>
-                              <option value="<%= semester_audit_id %>">Semester <%= semester_number.to_s + " (#{start_date.to_s} - #{end_date.to_s})" %></option>
-                          <% end %>
+                        <% semester_data.each do |semester_audit_id, semester_number, start_date, end_date|%>
+                          <option value="<%= semester_audit_id %>">Semester <%= semester_number.to_s + " (#{start_date.to_s} - #{end_date.to_s})" %></option>
+                        <% end %>
                       </select>
                     </td>
                   </tr>

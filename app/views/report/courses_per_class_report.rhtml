@@ -33,32 +33,20 @@
             console.log(results)
             html += "<tbody>";
             count = 0
-            for (var year in results){
-              if (!jQuery.isEmptyObject(results[year])){
-                html += "<tr style='font-size:1.4em; background-color:#2069b4; color:white;'>";
-                html += "<td colspan='4'>" + year + "</td>";
-                html += "</tr>";
-              }
 
-              for (var classRoom in results[year]){
-                classRoomId = parseInt(classRoom);
-                html += "<tr style='font-size:1.2em; background-color:gray; color:white;'>";
-                html += "<td colspan='4' style='text-align:left; font-weight:bold; padding-left:10%;'>" + classRoomHash[classRoomId] + "</td>";
-                html += "</tr>";
-                for (var courseID in results[year][classRoom]){
-                  html += "<tr>";
-                  count = count + 1
-                  courseName = results[year][classRoom][courseID]["course_name"];
-                  dateCreated = results[year][classRoom][courseID]["date_created"];
+            for (var courseID in results){
+              html += "<tr>";
+              count = count + 1
+              courseName = results[courseID]["course_name"];
+              dateCreated = results[courseID]["date_created"];
 
-                  html += "<tr>";
-                  html += "<td style='font-weight:bold;'>" + count + "</td>";
-                  html += "<td style='padding-left:25%;'>" + courseName + "</td>";
-                  html += "<td>" + dateCreated + "</td>";
-                  html += "</tr>";
-                }
-              }
+              html += "<tr>";
+              html += "<td style='font-weight:bold;'>" + count + "</td>";
+              html += "<td style='padding-left:25%;'>" + courseName + "</td>";
+              html += "<td>" + dateCreated + "</td>";
+              html += "</tr>";
             }
+            
             html += "</tbody>";
             html += "</table>";
             reportData = document.getElementById('report_data');

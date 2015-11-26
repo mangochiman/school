@@ -31,30 +31,23 @@
             results = eval('(' + results + ')');
             console.log(results)
             html += "<tbody>";
-            for (var year in results){
-              if (!jQuery.isEmptyObject(results[year])){
-                html += "<tr style='font-size:1.4em; background-color:#2069b4; color:white;'>";
-                html += "<td colspan='5'>" + year + "</td>";
-                html += "</tr>";
-              }
 
-              for (var classRoom in results[year]){
-                for (var studentID in results[year][classRoom]){
-                  html += "<tr>";
-                  studentName = results[year][classRoom][studentID]["name"];
-                  studentGender = results[year][classRoom][studentID]["gender"];
-                  studentEmail = results[year][classRoom][studentID]["email"];
-                  studentDOB = results[year][classRoom][studentID]["dob"];
-                  studentClassRoom = results[year][classRoom][studentID]["class_room"];
-                  html += "<td>" + studentName + "</td>";
-                  html += "<td><a href='#'>" + studentEmail + "</a></td>";
-                  html += "<td>" + studentGender + "</td>";
-                  html += "<td>" + studentDOB + "</td>";
-                  html += "<td>" + studentClassRoom + "</td>";
-                  html += "</tr>";
-                }
-              }
+            for (var studentID in results){
+              html += "<tr>";
+              studentName = results[studentID]["name"];
+              studentGender = results[studentID]["gender"];
+              studentEmail = results[studentID]["email"];
+              studentDOB = results[studentID]["dob"];
+              studentClassRoom = results[studentID]["class_room"];
+              html += "<td>" + studentName + "</td>";
+              html += "<td><a href='#'>" + studentEmail + "</a></td>";
+              html += "<td>" + studentGender + "</td>";
+              html += "<td>" + studentDOB + "</td>";
+              html += "<td>" + studentClassRoom + "</td>";
+              html += "</tr>";
             }
+
+            
             html += "</tbody>";
             html += "</table>";
             reportData = document.getElementById('report_data');
