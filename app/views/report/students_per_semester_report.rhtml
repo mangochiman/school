@@ -8,9 +8,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <!-- jQuery & JS files -->
+    <%= javascript_include_tag("jquery") %>
     <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("jquery.confirm") %>
     <%= javascript_include_tag("script") %>
+    <%= javascript_include_tag("gvalidator") %>
+    <%= javascript_include_tag("bootstrap") %>
+    <%= javascript_include_tag("excellentexport") %>
     <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("metallic") %>
+    <%= stylesheet_link_tag("gvalidator") %>
+    <%= stylesheet_link_tag("bootstrap") %>
 
     <script>
       function queryReportData(){
@@ -21,7 +29,7 @@
           url: "/report/students_per_semester_report",
           data: "semester_audit_id=" + semesterAuditID,
           success: function(results){
-            html = "<table>";
+            html = "<table id='report_table'>";
             html += "<thead>";
             html += "<tr>";
             html += "<th style='min-width:30%;'>Name</th><th>Email</th><th>Gender</th><th>Date of Birth</th><th>Class Room</th>";
@@ -29,28 +37,28 @@
             html += "</thead>";
             results = eval('(' + results + ')');
             console.log(results)
-            html += "</tbody>";
+            html += "<tbody>";
 
-              /*if (!jQuery.isEmptyObject(results[year])){
+            /*if (!jQuery.isEmptyObject(results[year])){
                 html += "<tr style='font-size:1.4em; background-color:#2069b4; color:white;'>";
                 html += "<td colspan='5'>" + year + "</td>";
                 html += "</tr>";
               }*/
               
-              for (var studentID in results){
-                html += "<tr>";
-                studentName = results[studentID]["name"];
-                studentGender = results[studentID]["gender"];
-                studentEmail = results[studentID]["email"];
-                studentDOB = results[studentID]["dob"];
-                studentClassRoom = results[studentID]["class_room"];
-                html += "<td>" + studentName + "</td>";
-                html += "<td><a href='#'>" + studentEmail + "</a></td>";
-                html += "<td>" + studentGender + "</td>";
-                html += "<td>" + studentDOB + "</td>";
-                html += "<td>" + studentClassRoom + "</td>";
-                html += "</tr>";
-              }
+            for (var studentID in results){
+              html += "<tr>";
+              studentName = results[studentID]["name"];
+              studentGender = results[studentID]["gender"];
+              studentEmail = results[studentID]["email"];
+              studentDOB = results[studentID]["dob"];
+              studentClassRoom = results[studentID]["class_room"];
+              html += "<td>" + studentName + "</td>";
+              html += "<td><a href='#'>" + studentEmail + "</a></td>";
+              html += "<td>" + studentGender + "</td>";
+              html += "<td>" + studentDOB + "</td>";
+              html += "<td>" + studentClassRoom + "</td>";
+              html += "</tr>";
+            }
             
             html += "</tbody>";
             html += "</table>";
@@ -157,9 +165,9 @@
 
                     <td>
                       <select id="semester">
-                          <% semester_data.each do |semester_audit_id, semester_number, start_date, end_date|%>
-                              <option value="<%= semester_audit_id %>">Semester <%= semester_number.to_s + " (#{start_date.to_s} - #{end_date.to_s})" %></option>
-                          <% end %>
+                        <% semester_data.each do |semester_audit_id, semester_number, start_date, end_date|%>
+                          <option value="<%= semester_audit_id %>">Semester <%= semester_number.to_s + " (#{start_date.to_s} - #{end_date.to_s})" %></option>
+                        <% end %>
                       </select>
                     </td>
 
@@ -185,8 +193,27 @@
               </div> 
 
               <div class="content-module-main cf">
+                <div class="dropdown" style="float: right; padding-bottom: 3px;">
+                  <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Export As
+                    <span class="caret"></span></button>
+                  <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+                    <li role="presentation">
+                      <a role="menuitem" tabindex="-1" download="students_per_semester.xls" href="#"
+                         onclick="return ExcellentExport.excel(this, 'report_table', 'Sheet Name Here');">Excel</a>
+                    </li>
+                    <li role="presentation" class="divider"></li>
+                    <li role="presentation">
+                      <a role="menuitem" tabindex="-1" download="students_per_semester.csv" href="#"
+                         onclick="return ExcellentExport.csv(this, 'report_table');">CSV</a>
+                    </li>
+                    <li role="presentation" class="divider"></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">PDF</a></li>
+                  </ul>
+                </div>
+                
                 <div id="report_data">
                 </div>
+
               </div> 
 
             </div> 

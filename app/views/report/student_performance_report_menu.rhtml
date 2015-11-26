@@ -12,6 +12,7 @@
     <%= javascript_include_tag("jquery.confirm") %>
     <%= javascript_include_tag("script") %>
     <%= javascript_include_tag("gvalidator") %>
+    <%= javascript_include_tag("excellentexport") %>
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("metallic") %>
     <%= stylesheet_link_tag("gvalidator") %>
@@ -54,7 +55,7 @@
             url: "/report/student_performance_report_menu",
             data: "class_room=" + classRoomID + "&semester_audit_id=" + semesterAuditID + '&course=' + course + '&exam_type=' + examType,
             success: function(results){
-              html = "<table>";
+              html = "<table id='report_table'>";
               html += "<thead>";
               html += "<tr>";
               html += "<th style='min-width:30%;'>Name</th><th>Email</th><th>Gender</th><th>Exam Date</th><th>Grade</th>";
@@ -243,6 +244,23 @@
               </div> <!-- end content-module-heading -->
 
               <div class="content-module-main cf">
+                <div class="dropdown" style="float: right; padding-bottom: 3px;">
+                  <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Export As
+                    <span class="caret"></span></button>
+                  <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+                    <li role="presentation">
+                      <a role="menuitem" tabindex="-1" download="students_performance.xls" href="#"
+                         onclick="return ExcellentExport.excel(this, 'report_table', 'Sheet Name Here');">Excel</a>
+                    </li>
+                    <li role="presentation" class="divider"></li>
+                    <li role="presentation">
+                      <a role="menuitem" tabindex="-1" download="students_performance.csv" href="#"
+                         onclick="return ExcellentExport.csv(this, 'report_table');">CSV</a>
+                    </li>
+                    <li role="presentation" class="divider"></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">PDF</a></li>
+                  </ul>
+                </div>
                 <div id="report_data">
                 </div>
               </div> <!-- end content-module-main -->

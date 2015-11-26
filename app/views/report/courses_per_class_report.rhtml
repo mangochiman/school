@@ -8,9 +8,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <!-- jQuery & JS files -->
+    <%= javascript_include_tag("jquery") %>
     <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("jquery.confirm") %>
     <%= javascript_include_tag("script") %>
+    <%= javascript_include_tag("gvalidator") %>
+    <%= javascript_include_tag("bootstrap") %>
+    <%= javascript_include_tag("excellentexport") %>
     <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("metallic") %>
+    <%= stylesheet_link_tag("gvalidator") %>
+    <%= stylesheet_link_tag("bootstrap") %>
 
     <script>
       var classRoomHash = eval('(' + '<%= @class_room_hash.to_json %>' + ')');
@@ -23,7 +31,7 @@
           url: "/report/courses_per_class_report",
           data: "class_room=" + classRoomID + "&semester_audit_id=" + semesterAuditID,
           success: function(results){
-            html = "<table>";
+            html = "<table id='report_table'>";
             html += "<thead>";
             html += "<tr>";
             html += "<th style='font-weight:bold;'>#</th><th style='text-align:center;'>Course Name</th><th style='min-width:30%;'>Date Created</th>";
@@ -188,6 +196,23 @@
 
 
               <div class="content-module-main cf">
+                <div class="dropdown" style="float: right; padding-bottom: 3px;">
+                  <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Export As
+                    <span class="caret"></span></button>
+                  <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+                    <li role="presentation">
+                      <a role="menuitem" tabindex="-1" download="courses_per_class.xls" href="#"
+                         onclick="return ExcellentExport.excel(this, 'report_table', 'Sheet Name Here');">Excel</a>
+                    </li>
+                    <li role="presentation" class="divider"></li>
+                    <li role="presentation">
+                      <a role="menuitem" tabindex="-1" download="courses_per_class.csv" href="#"
+                         onclick="return ExcellentExport.csv(this, 'report_table');">CSV</a>
+                    </li>
+                    <li role="presentation" class="divider"></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">PDF</a></li>
+                  </ul>
+                </div>
                 <div id="report_data">
                 </div>
               </div> <!-- end content-module-main -->
