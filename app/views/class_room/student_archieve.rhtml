@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>SimpleAdmin - Dashboard</title>
+    <!-- Optimize for mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!-- jQuery & JS files -->
+
+    <%= javascript_include_tag("jquery") %>
+    <%= javascript_include_tag("script") %>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("jquery.confirm") %>
+    <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("bootstrap") %>
+    <script>
+
+    </script>
+    <style>
+      .label {
+        border-radius: 1.5em;
+        color: #fff;
+        display: inline;
+        background-color: #5bc0de;
+        font-size: 1.2em;
+        font-weight: bold;
+        line-height: 1;
+        padding-left: 20%;
+        padding-right: 20%;
+        padding-top:2%;
+        padding-bottom:2%;
+        text-align: center;
+        vertical-align: baseline;
+        white-space: nowrap;
+        cursor: pointer;
+      }
+
+      table{
+        margin-left:15%;
+        width: 60%;
+      }
+      table td #simple-input{
+        float: right;
+      }
+
+      table label{
+        text-align: left;
+      }
+      #simple-input{
+        font-size: 10pt !important;
+      }
+
+      #registration input[type="text"], input[type="password"], textarea {
+        border: 1px solid #d9dbdd;
+        outline: medium none;
+        padding: 0.5em 0.225em;
+      }
+      input[type="submit"] {
+        margin-left: 37%;
+      }
+      table th:first-child {
+        border-style: none none none !important;
+      }
+
+      .classes{
+        position: relative;
+        margin-left: 0%;
+        width: 100%;
+      }
+
+      .classes th, tbody{
+        text-align: center;
+      }
+
+      .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: #317eac;
+      }
+
+      a{
+        cursor: pointer;
+      }
+
+      #search-student-form fieldset {
+        border: 1px solid gray;
+        float: left;
+        margin-bottom: 15px;
+        padding: 0px;
+        float: none;
+      }
+      #search-student-form legend {
+        color: #abda0f;
+        font-size: 14px;
+        font-weight: 100;
+        margin-left: 14px;
+        padding: 2px;
+        width: initial;
+        margin-bottom: initial;
+        border-style: none;
+      }
+
+      #search-student-form fieldset input {
+        color: #505050;
+        float: left;
+        margin-right: 5px;
+        width: 250px;
+        padding: 6px;
+        font-size: 14px;
+        border: 1px solid #d9dbdd;
+        outline: medium none;
+      }
+
+      #search-student-form table td{
+        border-left: none;
+      }
+
+      form.autoform input, select {
+        font-size: 0.8em !important;
+        font-weight: bold;
+      }
+
+      .orange{
+        background-color: #EEEE00 !important;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <div id="header-with-tabs">
+
+      <div class="page-full-width cf">
+
+        <ul id="tabs" class="fl">
+          <li><a href="/class_room/switch_class_room_menu?class_room_id=<%= params[:class_room_id] %>" class="active-tab dashboard-tab orange"><%= @class_room.name %></a></li>
+          <li><a href="/class_room/admissions_tab?class_room_id=<%= params[:class_room_id] %>" class="active-tab">Admissions/Registrations</a></li>
+          <li><a href="/class_room/attendance_tab?class_room_id=<%= params[:class_room_id] %>">Attendance Register</a></li>
+          <li><a href="/class_room/behavior_tab?class_room_id=<%= params[:class_room_id] %>">Behavior</a></li>
+          <li><a href="/class_room/examinations_tab?class_room_id=<%= params[:class_room_id] %>">Examinations</a></li>
+          <li><a href="/class_room/payments_tab?class_room_id=<%= params[:class_room_id] %>">Payments</a></li>
+          <li><a href="/class_room/courses_tab?class_room_id=<%= params[:class_room_id] %>">Courses</a></li>
+          <li><a href="/class_room/teachers_tab?class_room_id=<%= params[:class_room_id] %>">Teachers</a></li>
+        </ul> <!-- end tabs -->
+
+        <!-- Change this image to your own company's logo -->
+        <!-- The logo will automatically be resized to 30px height. -->
+        <a href="#" id="company-branding-small" class="fr"><%= image_tag("/admin/school_logo", :alt => 'Logo Missing')%></a>
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end header -->
+
+
+
+    <!-- MAIN CONTENT -->
+    <div id="content">
+
+      <div class="page-full-width cf">
+
+        <div class="side-menu fl">
+
+          <h3>Task</h3>
+          <ul>
+            <li><a href="/class_room/student_admissions?class_room_id=<%= params[:class_room_id] %>">Student Admission</a></li>
+            <li><a href="/class_room/student_courses?class_room_id=<%= params[:class_room_id] %>">Assign/Edit Student Courses</a></li>
+            <li><a href="/class_room/student_guardians?class_room_id=<%= params[:class_room_id] %>">Assign/Edit Student Guardian</a></li>
+            <li><a href="/class_room/student_archieve?class_room_id=<%= params[:class_room_id] %>">Archive Non Active Students</a></li>
+            <li><a href="/class_room/student_view?class_room_id=<%= params[:class_room_id] %>">View Students</a></li>
+          </ul>
+
+        </div> <!-- end side-menu -->
+
+        <div class="side-content fr">
+
+          <div class="content-module">
+
+            <div class="content-module-heading cf">
+
+              <h3 class="fl">Archive Students</h3>
+              <span class="fr expand-collapse-text">Click to collapse</span>
+              <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+            </div> <!-- end content-module-heading -->
+
+
+            <div class="content-module-main">
+              <% if flash[:notice] %>
+                <div class="confirmation-box round">
+                  <%= flash[:notice] %>
+                </div>
+              <% end %>
+              <% if flash[:error] %>
+                <div class="error-box round">
+                  <%= flash[:error] %>
+                </div>
+              <% end %>
+
+              <form id="search-student-form" action="#">
+                <fieldset>
+                  <legend>Search</legend>
+                  <div style="margin-left:2%;">
+                    <table style="width: 45%; float: right;">
+                      <tr>
+                        <td style="font-size: 13pt;">Name</td>
+                        <td style="width: 50px !important;"><input type="text" class="class_room_search"/></td>
+                        <td style="width: 20px"><a onclick="loadSearchResults();" class="button round blue image-right ic-search text-upper">Search</a></td>
+                      </tr>
+                    </table>
+                  </div>
+                </fieldset>
+              </form>
+
+            </div> <!-- end content-module-main -->
+
+          </div> <!-- end content-module -->
+
+        </div> <!-- end side-content -->
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end content -->
+
+    <%= javascript_include_tag("bootstrap") %>
+
+    <script>
+
+      $(".view-courses").confirm({
+        title:"Form 1",
+        text:html,
+        confirm: function(button) {
+        },
+        cancel: function(button) {
+        },
+        confirmButton: "Done"
+      });
+
+      function hideCancelButton(){
+        if ($("button.cancel")[0]){
+          $("button.cancel")[0].style.display='none';
+        }
+      }
+      window.setInterval("hideCancelButton();", 300);
+    </script>
+  </body>
+</html>

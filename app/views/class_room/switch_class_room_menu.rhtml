@@ -62,7 +62,7 @@
 
       .orange{
         background-color: #EEEE00 !important;
-}
+      }
     </style>
   </head>
   <body>
@@ -72,14 +72,14 @@
       <div class="page-full-width cf">
 
         <ul id="tabs" class="fl">
-          <li><a href="#" class="active-tab dashboard-tab orange"><%= @class_room.name %></a></li>
-          <li><a href="#">Admissions/Registrations</a></li>
-          <li><a href="#">Attendance Register</a></li>
-          <li><a href="#">Behavior</a></li>
-          <li><a href="#">Examinations</a></li>
-          <li><a href="#">Payments</a></li>
-          <li><a href="#">Courses</a></li>
-          <li><a href="#">Teachers</a></li>
+          <li><a href="/class_room/switch_class_room_menu?class_room_id=<%= params[:class_room_id] %>" class="active-tab dashboard-tab orange"><%= @class_room.name %></a></li>
+          <li><a href="/class_room/admissions_tab?class_room_id=<%= params[:class_room_id] %>">Admissions/Registrations</a></li>
+          <li><a href="/class_room/attendance_tab?class_room_id=<%= params[:class_room_id] %>">Attendance Register</a></li>
+          <li><a href="/class_room/behavior_tab?class_room_id=<%= params[:class_room_id] %>">Behavior</a></li>
+          <li><a href="/class_room/examinations_tab?class_room_id=<%= params[:class_room_id] %>">Examinations</a></li>
+          <li><a href="/class_room/payments_tab?class_room_id=<%= params[:class_room_id] %>">Payments</a></li>
+          <li><a href="/class_room/courses_tab?class_room_id=<%= params[:class_room_id] %>">Courses</a></li>
+          <li><a href="/class_room/teachers_tab?class_room_id=<%= params[:class_room_id] %>">Teachers</a></li>
         </ul> <!-- end tabs -->
 
         <!-- Change this image to your own company's logo -->
@@ -110,7 +110,7 @@
 
           <div class="content-module-main">
             <form id="filter-graph-form" action="#">
-              
+
             </form>
             <div id="container">
             </div>

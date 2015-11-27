@@ -339,5 +339,90 @@ class ClassRoomController < ApplicationController
   def switch_class_room_menu
     @class_room = ClassRoom.find(params[:class_room_id])
   end
+
+  def admissions_tab
+    @class_room = ClassRoom.find(params[:class_room_id])
+  end
+
+  def attendance_tab
+    @class_room = ClassRoom.find(params[:class_room_id])
+  end
+
+  def behavior_tab
+    @class_room = ClassRoom.find(params[:class_room_id])
+  end
+
+  def examinations_tab
+    @class_room = ClassRoom.find(params[:class_room_id])
+  end
+
+  def payments_tab
+    @class_room = ClassRoom.find(params[:class_room_id])
+  end
+
+  def courses_tab
+    @class_room = ClassRoom.find(params[:class_room_id])
+  end
+
+  def teachers_tab
+    @class_room = ClassRoom.find(params[:class_room_id])
+  end
+
+  def student_admissions
+    @class_room = ClassRoom.find(params[:class_room_id])
+    if (request.method == :post)
+      first_name = params[:firstname]
+      last_name = params[:lastname]
+      gender = params[:gender]
+      email = params[:email]
+      phone = params[:phone]
+      date_of_birth = params[:dob].to_date
+
+      ActiveRecord::Base.transaction do
+        student = Student.create({
+            :fname => first_name,
+            :lname => last_name,
+            :gender => gender,
+            :email => email,
+            :phone => phone,
+            :dob => date_of_birth
+          })
+        
+        student.student_class_room_adjustments.create({
+            :old_class_room_id => 0,
+            :new_class_room_id => params[:class_room_id],
+            :status => 'active'
+          })
+
+        class_room_courses = ClassRoom.find(params[:class_room_id]).class_room_courses
+        (class_room_courses || []).each do |course|
+          StudentClassRoomCourse.create({
+              :student_id => student.student_id,
+              :class_room_id => params[:class_room_id],
+              :course_id => course.course_id
+            })
+        end
+        
+      end
+
+    end
+    
+  end
+
+  def student_courses
+    @class_room = ClassRoom.find(params[:class_room_id])
+  end
+
+  def student_guardians
+    @class_room = ClassRoom.find(params[:class_room_id])
+  end
+
+  def student_archieve
+    @class_room = ClassRoom.find(params[:class_room_id])
+  end
+
+  def student_view
+    @class_room = ClassRoom.find(params[:class_room_id])
+  end
   
 end
