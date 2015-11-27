@@ -4,6 +4,10 @@ class ReportController < ApplicationController
   end
 
   def students_per_semester_report
+    current_semester_audit = Semester.current_active_semester_audit
+    @current_semester_audit_id = current_semester_audit.semester_audit_id unless current_semester_audit.blank?
+    @current_semester_audit_id = SemesterAudit.last.semester_audit_id if current_semester_audit.blank?
+
     if (request.method == :post)
       semester_audit_id = params[:semester_audit_id]
 
@@ -52,7 +56,10 @@ class ReportController < ApplicationController
   end
 
   def students_per_class_report
-
+    current_semester_audit = Semester.current_active_semester_audit
+    @current_semester_audit_id = current_semester_audit.semester_audit_id unless current_semester_audit.blank?
+    @current_semester_audit_id = SemesterAudit.last.semester_audit_id if current_semester_audit.blank?
+    
     if (request.method == :post)
       class_room_id = params[:class_room]
       semester_audit_id = params[:semester_audit_id]
@@ -104,7 +111,10 @@ class ReportController < ApplicationController
   end
   
   def courses_per_class_report
-
+    current_semester_audit = Semester.current_active_semester_audit
+    @current_semester_audit_id = current_semester_audit.semester_audit_id unless current_semester_audit.blank?
+    @current_semester_audit_id = SemesterAudit.last.semester_audit_id if current_semester_audit.blank?
+    
     if (request.method == :post)
       class_room_id = params[:class_room]
       semester_audit_id = params[:semester_audit_id]
@@ -275,7 +285,8 @@ class ReportController < ApplicationController
     current_semester_audit = Semester.current_active_semester_audit
     semester_audit_id = current_semester_audit.semester_audit_id unless current_semester_audit.blank?
     semester_audit_id = SemesterAudit.last.semester_audit_id if current_semester_audit.blank?
-
+    @current_semester_audit_id = (semester_audit_id rescue 0)
+    
     @semester_data = SemesterAudit.formatted_semester_details(semester_audit_id)
     @males = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
           s.student_id = scra.student_id WHERE scra.semester_audit_id = #{semester_audit_id}
@@ -292,16 +303,11 @@ class ReportController < ApplicationController
   end
 
   def student_performance_report_menu
-    start_year = Date.today.year - 5
-    end_year = Date.today.year
     @exam_types = [["Select Exam Type", ""]]
     @exam_types += ExaminationType.all.collect{|e|[e.name, e.exam_type_id]}
 
     @courses = [["Select Course", ""]]
     @courses += Course.all.collect{|c|[c.name, c.course_id]}
-
-    @years = [["Select Year", ""]]
-    @years += (start_year..end_year).to_a.reverse
 
     @class_rooms = ClassRoom.all.collect{|cr|[cr.name, cr.class_room_id]}
 
@@ -310,6 +316,10 @@ class ReportController < ApplicationController
       @class_room_hash[class_room.id] = class_room.name
     end
 
+    current_semester_audit = Semester.current_active_semester_audit
+    @current_semester_audit_id = current_semester_audit.semester_audit_id unless current_semester_audit.blank?
+    @current_semester_audit_id = SemesterAudit.last.semester_audit_id if current_semester_audit.blank?
+    
     if (request.method == :post)
       exam_type = params[:exam_type]
       course = params[:course]
@@ -354,6 +364,10 @@ class ReportController < ApplicationController
       @class_room_hash[class_room.id] = class_room.name
     end
 
+    current_semester_audit = Semester.current_active_semester_audit
+    @current_semester_audit_id = current_semester_audit.semester_audit_id unless current_semester_audit.blank?
+    @current_semester_audit_id = SemesterAudit.last.semester_audit_id if current_semester_audit.blank?
+    
     if (request.method == :post)
       payment_type = params[:payment_type]
       semester_audit_id = params[:semester_audit_id]
@@ -398,6 +412,10 @@ class ReportController < ApplicationController
       @class_room_hash[class_room.id] = class_room.name
     end
 
+    current_semester_audit = Semester.current_active_semester_audit
+    @current_semester_audit_id = current_semester_audit.semester_audit_id unless current_semester_audit.blank?
+    @current_semester_audit_id = SemesterAudit.last.semester_audit_id if current_semester_audit.blank?
+    
     if (request.method == :post)
       payment_type = params[:payment_type]
       semester_audit_id = params[:semester_audit_id]
@@ -456,6 +474,10 @@ class ReportController < ApplicationController
       @class_room_hash[class_room.id] = class_room.name
     end
 
+    current_semester_audit = Semester.current_active_semester_audit
+    @current_semester_audit_id = current_semester_audit.semester_audit_id unless current_semester_audit.blank?
+    @current_semester_audit_id = SemesterAudit.last.semester_audit_id if current_semester_audit.blank?
+    
     if (request.method == :post)
       payment_type = params[:payment_type]
       semester_audit_id = params[:semester_audit_id]

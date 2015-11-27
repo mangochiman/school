@@ -24,7 +24,7 @@ class StudentPhotosController < ApplicationController
   def delete_photos
     student_photo = StudentPhoto.find(params[:student_photo_id])
     student_photo.delete
-    render :text => "true and return"
+    render :text => "true" and return
   end
   
 end

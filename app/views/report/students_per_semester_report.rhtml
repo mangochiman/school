@@ -69,6 +69,18 @@
         });
       }
 
+      function selectCurrentSemester(){
+        currentSemesterAuditId='<%=  @current_semester_audit_id.to_i %>'
+        options = document.getElementById('semester').getElementsByTagName('option');
+        for (var i=0; i<=options.length - 1; i++){
+          if (options[i].value == currentSemesterAuditId){
+            options[i].selected = true;
+            break;
+          }
+        }
+      }
+
+      window.setTimeout("selectCurrentSemester();", 100);
     </script>
     <style>
       #year, #semester{
@@ -210,7 +222,7 @@
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="#">PDF</a></li>
                   </ul>
                 </div>
-                
+
                 <div id="report_data">
                 </div>
 

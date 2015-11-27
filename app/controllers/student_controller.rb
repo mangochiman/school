@@ -712,6 +712,7 @@ class StudentController < ApplicationController
     current_semester_audit = Semester.current_active_semester_audit
     semester_audit_id = current_semester_audit.semester_audit_id unless current_semester_audit.blank?
     semester_audit_id = SemesterAudit.last.semester_audit_id if current_semester_audit.blank?
+    @current_semester_audit_id = (semester_audit_id rescue 0)
 
     @semester_data = SemesterAudit.formatted_semester_details(semester_audit_id)
     @males = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
@@ -728,7 +729,8 @@ class StudentController < ApplicationController
     current_semester_audit = Semester.current_active_semester_audit
     semester_audit_id = current_semester_audit.semester_audit_id unless current_semester_audit.blank?
     semester_audit_id = SemesterAudit.last.semester_audit_id if current_semester_audit.blank?
-
+    @current_semester_audit_id = (semester_audit_id rescue 0)
+    
     @semester_data = SemesterAudit.formatted_semester_details(semester_audit_id)
     @males = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
           s.student_id = scra.student_id WHERE scra.semester_audit_id = #{semester_audit_id}
@@ -744,7 +746,8 @@ class StudentController < ApplicationController
     current_semester_audit = Semester.current_active_semester_audit
     semester_audit_id = current_semester_audit.semester_audit_id unless current_semester_audit.blank?
     semester_audit_id = SemesterAudit.last.semester_audit_id if current_semester_audit.blank?
-
+    @current_semester_audit_id = (semester_audit_id rescue 0)
+    
     @semester_data = SemesterAudit.formatted_semester_details(semester_audit_id)
     @males = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
           s.student_id = scra.student_id WHERE scra.semester_audit_id = #{semester_audit_id}
@@ -760,7 +763,8 @@ class StudentController < ApplicationController
     current_semester_audit = Semester.current_active_semester_audit
     semester_audit_id = current_semester_audit.semester_audit_id unless current_semester_audit.blank?
     semester_audit_id = SemesterAudit.last.semester_audit_id if current_semester_audit.blank?
-
+    @current_semester_audit_id = (semester_audit_id rescue 0)
+    
     @semester_data = SemesterAudit.formatted_semester_details(semester_audit_id)
     @males = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
           s.student_id = scra.student_id WHERE scra.semester_audit_id = #{semester_audit_id}
@@ -776,7 +780,8 @@ class StudentController < ApplicationController
     current_semester_audit = Semester.current_active_semester_audit
     semester_audit_id = current_semester_audit.semester_audit_id unless current_semester_audit.blank?
     semester_audit_id = SemesterAudit.last.semester_audit_id if current_semester_audit.blank?
-
+    @current_semester_audit_id = (semester_audit_id rescue 0)
+    
     @semester_data = SemesterAudit.formatted_semester_details(semester_audit_id)
     @males = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
           s.student_id = scra.student_id WHERE scra.semester_audit_id = #{semester_audit_id}
@@ -792,7 +797,8 @@ class StudentController < ApplicationController
     current_semester_audit = Semester.current_active_semester_audit
     semester_audit_id = current_semester_audit.semester_audit_id unless current_semester_audit.blank?
     semester_audit_id = SemesterAudit.last.semester_audit_id if current_semester_audit.blank?
-
+    @current_semester_audit_id = (semester_audit_id rescue 0)
+    
     @semester_data = SemesterAudit.formatted_semester_details(semester_audit_id)
     @males = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
           s.student_id = scra.student_id WHERE scra.semester_audit_id = #{semester_audit_id}
@@ -808,7 +814,8 @@ class StudentController < ApplicationController
     current_semester_audit = Semester.current_active_semester_audit
     semester_audit_id = current_semester_audit.semester_audit_id unless current_semester_audit.blank?
     semester_audit_id = SemesterAudit.last.semester_audit_id if current_semester_audit.blank?
-
+    @current_semester_audit_id = (semester_audit_id rescue 0)
+    
     @semester_data = SemesterAudit.formatted_semester_details(semester_audit_id)
     @males = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
           s.student_id = scra.student_id WHERE scra.semester_audit_id = #{semester_audit_id}
