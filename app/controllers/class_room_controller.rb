@@ -336,4 +336,8 @@ class ClassRoomController < ApplicationController
     render :json => hash
   end
 
+  def switch_class_room_menu
+    @class_room = ClassRoom.find(params[:class_room_id])
+  end
+  
 end

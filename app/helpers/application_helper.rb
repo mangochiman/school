@@ -203,5 +203,18 @@ module ApplicationHelper
     return [start_year, end_year].sort #Sort Just In case the start_year > end_year
 
   end
+
+  def available_class_rooms
+    class_rooms = ClassRoom.find(:all)
+    data = []
+
+    class_rooms.each do |class_room|
+      class_room_id = class_room.class_room_id
+      class_room_name = class_room.name
+      data << [class_room_id, class_room_name]
+    end
+    
+    return data
+  end
   
 end

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Time Table Dashboard</title>
+    <!-- Optimize for mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!-- jQuery & JS files -->
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("highcharts") %>
+    <%= javascript_include_tag("script") %>
+
+    <%= javascript_include_tag("exporting") %>
+    <%= stylesheet_link_tag("style") %>
+    <script type="text/javascript">
+      
+    </script>
+
+    <style>
+      #filter-graph-form fieldset {
+        border: 1px solid gray;
+        padding: 0px;
+        width: 98.7%;
+      }
+      #filter-graph-form legend {
+        color: #abda0f;
+        font-size: 14px;
+        font-weight: 100;
+        margin-left: 14px;
+        padding: 2px;
+      }
+      #filter-graph-form fieldset input {
+        color: #505050;
+        float: left;
+        margin-right: 5px;
+        width: 140px;
+        padding: 0px;
+        font-size: 14px;
+      }
+
+      #semester{
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        color: #555;
+        display: block;
+        font-size: 14px;
+        height: 34px;
+        line-height: 1.42857;
+        padding: 6px 12px;
+        min-width: 167px;
+        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+      }
+
+      a{
+        cursor: pointer;
+      }
+
+      .orange{
+        background-color: #EEEE00 !important;
+}
+    </style>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <div id="header-with-tabs">
+
+      <div class="page-full-width cf">
+
+        <ul id="tabs" class="fl">
+          <li><a href="#" class="active-tab dashboard-tab orange"><%= @class_room.name %></a></li>
+          <li><a href="#">Admissions/Registrations</a></li>
+          <li><a href="#">Attendance Register</a></li>
+          <li><a href="#">Behavior</a></li>
+          <li><a href="#">Examinations</a></li>
+          <li><a href="#">Payments</a></li>
+          <li><a href="#">Courses</a></li>
+          <li><a href="#">Teachers</a></li>
+        </ul> <!-- end tabs -->
+
+        <!-- Change this image to your own company's logo -->
+        <!-- The logo will automatically be resized to 30px height. -->
+        <a href="#" id="company-branding-small" class="fr"><%= image_tag("/admin/school_logo", :alt => 'Logo Missing')%></a>
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end header -->
+
+
+
+    <!-- MAIN CONTENT -->
+    <div id="content">
+
+      <div class="page-full-width cf">
+
+        <div class="content-module">
+
+          <div class="content-module-heading cf">
+
+            <h3 class="fl">Summary</h3>
+            <span class="fr expand-collapse-text">Click to collapse</span>
+            <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+          </div> <!-- end content-module-heading -->
+
+
+          <div class="content-module-main">
+            <form id="filter-graph-form" action="#">
+              
+            </form>
+            <div id="container">
+            </div>
+          </div> <!-- end content-module-main -->
+
+        </div> <!-- end content-module -->
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end content -->
+
+  </body>
+</html>
