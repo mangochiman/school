@@ -73,6 +73,58 @@
 
         });
       }
+
+      function confirmAddStudentCourse(obj, singleEntry){
+        courseId = obj.getAttribute("course_id");
+        courseName = obj.getAttribute("course_name");
+        jQuery.confirm({
+          title:"Confirm Student Course Delete",
+          text:"Are you really really sure you want to assign the selected student course(s) to this student</i><b> <b><i>" + studentName + "</i><b> ?",
+          confirm: function(button) {
+            if (singleEntry){
+              addStudentCourse(courseId);//single record
+            }
+            else{
+              addMultipeStudentCourse()
+            }
+
+          },
+          cancel: function(button) {
+          },
+          confirmButton: "Done"
+        });
+      }
+
+      function addStudentCourse(courseId){
+        jQuery.ajax({
+          type: "POST",
+          url: "/class_room/add_student_class_room_courses",
+          data: "class_room_id=" + classRoomId + "&student_id=" + studentId + "&course_id=" + courseId + "&mode=single_entry",
+          success: function(){
+            window.location = location;
+          }
+
+        });
+      }
+
+      function addMultipeStudentCourse(){
+        courseIds = [];
+        $('input[type=checkbox]:checked').each(function(){
+          courseIds.push($(this).val())
+        })
+        if (courseIds.length > 0){
+          jQuery.ajax({
+            type: "POST",
+            url: "/class_room/add_student_class_room_courses",
+            data: "class_room_id=" + classRoomId + "&student_id=" + studentId + "&course_ids=" + courseIds,
+            success: function(){
+              window.location = location;
+            }
+
+          });
+        }
+      }
+      
     </script>
 
     <style>
@@ -224,7 +276,7 @@
 
                 <div class="content-module-heading cf">
 
-                  <h3 class="fl">Total Courses: (<%= @student_courses.count %>)</h3>
+                  <h3 class="fl">Total Assigned Courses: (<%= @student_courses.count %>)</h3>
                   <span class="fr expand-collapse-text">Click to collapse</span>
                   <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -253,7 +305,7 @@
                             <tr>
                               <th>#</th>
                               <th>Course</th>
-                              <th>&nbsp;</th>
+                              <th>Action</th>
                             </tr>
                           </thead>
                           <tfoot>
@@ -286,13 +338,13 @@
                             <tr>
                               <th>#</th>
                               <th>Course</th>
-                              <th>&nbsp;</th>
+                              <th>Action</th>
                             </tr>
                           </thead>
                           <tfoot>
                             <tr>
                               <td class="table-footer" colspan="3">
-                                <a onmousedown="assignStudentCourses(this)"class="button round blue image-right ic-right-arrow text-upper" href="#">Assign</a>
+                                <a onmousedown="confirmAddStudentCourse(this)"class="button round blue image-right ic-right-arrow text-upper" href="#">Assign</a>
                               </td>
                             </tr>
                           </tfoot>
@@ -302,7 +354,7 @@
                                 <td><input type="checkbox" value="<%= student_course.course_id %>"/></td>
                                 <td><%= student_course.name %></td>
                                 <td>
-                                  <a class="button round blue image-right ic-right-arrow text-upper" onmousedown="assignStudentCourse(this)" href="#" course_id="<%= student_course.course_id %>">Assign</a>
+                                  <a class="button round blue image-right ic-right-arrow text-upper" onmousedown="confirmAddStudentCourse(this, 'single_entry')" href="#" course_id="<%= student_course.course_id %>">Assign</a>
                                 </td>
                               </tr>
                             <% end %>

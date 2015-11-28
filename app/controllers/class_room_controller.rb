@@ -489,4 +489,26 @@ class ClassRoomController < ApplicationController
     render :text => "true" and return
   end
 
+  def add_student_class_room_courses
+    if (params[:mode] == 'single_entry')
+      StudentClassRoomCourse.create({
+          :student_id => params[:student_id],
+          :class_room_id => params[:class_room_id],
+          :course_id => params[:course_id]
+        })
+      render :text => "true" and return
+    end
+
+    course_ids = params[:course_ids].split(",")
+    (course_ids || []).each do |course_id|
+      StudentClassRoomCourse.create({
+          :student_id => params[:student_id],
+          :class_room_id => params[:class_room_id],
+          :course_id => course_id
+        })
+    end
+
+    render :text => "true" and return
+  end
+
 end
