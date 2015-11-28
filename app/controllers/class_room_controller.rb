@@ -411,8 +411,24 @@ class ClassRoomController < ApplicationController
 
   def student_courses
     @class_room = ClassRoom.find(params[:class_room_id])
+    @students = Student.find_by_sql("SELECT s.* FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id LEFT JOIN student_archive sa
+          ON s.student_id = sa.student_id WHERE scra.new_class_room_id = #{params[:class_room_id]}
+          AND scra.status = 'active' AND sa.student_id IS NULL")
   end
 
+  def student_class_room_courses
+    @class_room = ClassRoom.find(params[:class_room_id])
+    @student = Student.find(params[:student_id])
+    @student_courses = @student.student_class_room_courses.find(:all,
+      :conditions => ["class_room_id =?",  params[:class_room_id]]).collect{|scrc|scrc.course}
+    @un_assigned_courses = ClassRoomCourse.find_by_sql("SELECT crc.* FROM class_room_course crc 
+        LEFT JOIN student_class_room_course scrc ON scrc.course_id = crc.course_id
+        AND scrc.student_id = #{params[:student_id]} WHERE crc.class_room_id=#{params[:class_room_id]}
+        AND scrc.course_id IS NULL;
+      ").collect{|scrc|scrc.course}
+  end
+  
   def student_guardians
     @class_room = ClassRoom.find(params[:class_room_id])
   end
@@ -424,5 +440,53 @@ class ClassRoomController < ApplicationController
   def student_view
     @class_room = ClassRoom.find(params[:class_room_id])
   end
-  
+
+  def class_room_students_search
+    first_name = params[:first_name]
+    last_name = params[:last_name]
+    class_room_id = params[:class_room_id]
+    
+    students = Student.find_by_sql("SELECT s.* FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id LEFT JOIN student_archive sa
+          ON s.student_id = sa.student_id WHERE scra.new_class_room_id = #{class_room_id}
+          AND scra.status = 'active' AND sa.student_id IS NULL
+          AND s.fname LIKE '%#{first_name}%' AND s.lname LIKE '%#{last_name}%'")
+    
+    hash = {}
+    students.each do |student|
+      student_id = student.id.to_s
+      hash[student_id] = {}
+      hash[student_id]["fname"] = student.fname.to_s
+      hash[student_id]["lname"] = student.lname.to_s
+      hash[student_id]["phone"] = student.phone
+      hash[student_id]["email"] = student.email
+      hash[student_id]["gender"] = student.gender
+      hash[student_id]["dob"] = student.dob.to_date.strftime("%d-%b-%Y")
+      hash[student_id]["join_date"] = student.created_at.to_date.strftime("%d-%b-%Y")
+    end
+
+    render :json => hash
+  end
+
+  def delete_student_class_room_courses
+    if (params[:mode] == 'single_entry')
+      student_class_room_course = StudentClassRoomCourse.find(:last,
+        :conditions => ["student_id =? AND class_room_id =? AND course_id =?",
+          params[:student_id], params[:class_room_id], params[:course_id]])
+      student_class_room_course.delete
+      render :text => "true" and return
+    end
+
+    course_ids = params[:course_ids].split(",")
+
+    (course_ids || []).each do |course_id|
+      student_class_room_course = StudentClassRoomCourse.find(:last,
+        :conditions => ["student_id =? AND class_room_id =?  AND course_id =?",
+          params[:student_id], params[:class_room_id], course_id])
+      student_class_room_course.delete
+    end
+
+    render :text => "true" and return
+  end
+
 end
