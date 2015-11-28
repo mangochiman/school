@@ -441,6 +441,10 @@ class ClassRoomController < ApplicationController
     @class_room = ClassRoom.find(params[:class_room_id])
     @student = Student.find(params[:student_id])
     @guardians = @student.student_parents.collect{|sp|sp.parent}
+    @un_assigned_guardians = Parent.find_by_sql("SELECT p.* FROM parent p
+        LEFT JOIN student_parent sp ON p.parent_id = sp.parent_id
+        AND sp.student_id = #{params[:student_id]} WHERE sp.parent_id IS NULL
+      ")
   end
 
   def create_student_parent
@@ -483,6 +487,16 @@ class ClassRoomController < ApplicationController
     end
 
     redirect_to("/class_room/student_class_room_guardians?class_room_id=#{params[:class_room_id]}&student_id=#{params[:student_id]}") and return
+  end
+
+  def create_student_select_guardian
+    url =  request.referrer
+    StudentParent.create({
+        :student_id => params[:student_id],
+        :parent_id => params[:parent_id]
+      })
+    
+   redirect_to(url) and return
   end
   
   def student_archieve

@@ -82,6 +82,25 @@
         url = "/class_room/student_class_room_guardians?class_room_id=" + classRoomId + "&student_id=" + studentId;
         window.location = url;
       }
+
+      function confirmGuardianAssignment(obj){
+        guardianName = obj.getAttribute("guardian_name");
+        jQuery.confirm({
+          title:"Confirm Guardian Assignment",
+          text:"Are you really really sure you want to assign <b><i>" + studentName + "(student)</i><b> to <b><i>" + guardianName + "(guardian)</i><b> ?",
+          confirm: function(button) {
+            selectGuardian(obj);
+          },
+          cancel: function(button) {
+          },
+          confirmButton: "Done"
+        });
+      }
+
+      function selectGuardian(obj){
+        parentId = obj.getAttribute("parent_id");
+        window.location = "/class_room/create_student_select_guardian?parent_id=" + parentId + "&student_id=" + studentId;
+      }
       
     </script>
 
@@ -373,7 +392,41 @@
 
                     &nbsp;
                     <a onmousedown="newGuardian();" class="button round blue image-right ic-right-arrow text-upper" href="#">New Guardian</a>
+                    <br /><br />
+                    <form action="#" id="search-student-form">
+                      <fieldset>
+                        <legend>Available Guardians</legend>
+                        <table>
+                          <thead>
+                            <tr>
+                              <th style="min-width:20%;">Name</th>
+                              <th>Email</th>
+                              <th>Gender</th>
+                              <th>Date Of Birth</th>
+                              <th>Phone #</th>
+                              <th>Action</th>
+                            </tr>
+                          </thead>
+                          <tbody id="parents">
+                            <% @un_assigned_guardians.each do |parent| %>
+                              <tr>
+                                <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= parent.fname.capitalize.to_s + ' ' + parent.lname.capitalize.to_s %></td>
+                                <td><a href="#"><%=  parent.email %></a></td>
+                                <td><%=  parent.gender %></td>
+                                <td><%=  parent.dob.to_date.strftime("%d-%b-%Y") %></td>
+                                <td><%=  parent.phone %></td>
+                                <td>
+                                  <a parent_id="<%= parent.id %>" guardian_name="<%= parent.name %>" onclick="confirmGuardianAssignment(this)" class="button round blue image-right text-upper ic-right-arrow">Select</a>
+                                </td>
+                              </tr>
+                            <% end %>
+                          </tbody>
+                        </table>
+                      </fieldset>
+                    </form>
+                    &nbsp;
                   <% end %>
+
                 </div> <!-- end content-module-main -->
 
               </div> <!-- end content-module -->
