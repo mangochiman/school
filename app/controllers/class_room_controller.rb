@@ -431,8 +431,60 @@ class ClassRoomController < ApplicationController
   
   def student_guardians
     @class_room = ClassRoom.find(params[:class_room_id])
+    @students = Student.find_by_sql("SELECT s.* FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id LEFT JOIN student_archive sa
+          ON s.student_id = sa.student_id WHERE scra.new_class_room_id = #{params[:class_room_id]}
+          AND scra.status = 'active' AND sa.student_id IS NULL")
   end
 
+  def student_class_room_guardians
+    @class_room = ClassRoom.find(params[:class_room_id])
+    @student = Student.find(params[:student_id])
+    @guardians = @student.student_parents.collect{|sp|sp.parent}
+  end
+
+  def create_student_parent
+    first_name = params[:firstname]
+    last_name = params[:lastname]
+    gender = params[:gender]
+    email = params[:email]
+    phone = params[:phone]
+    date_of_birth = params[:dob].to_date
+
+    password = params[:password]
+    password_confirm = params[:password_confirm]
+    errors = ""
+    user_exists = Parent.find_by_username(params[:username])
+    errors += 'Username already exists.' if user_exists
+    errors += ' Password mismatch.' if (password != password_confirm)
+
+    unless (errors.blank?)
+      flash[:error] = "#{errors}"
+      redirect_to("/class_room/student_class_room_guardians?class_room_id=#{params[:class_room_id]}&student_id=#{params[:student_id]}") and return
+    end
+
+    ActiveRecord::Base.transaction do
+      parent = Parent.create({
+          :fname => first_name,
+          :lname => last_name,
+          :password => password,
+          :username => params[:username],
+          :gender => gender,
+          :email => email,
+          :phone => phone,
+          :dob => date_of_birth
+        })
+
+      StudentParent.create({
+          :student_id => params[:student_id],
+          :parent_id => parent.parent_id
+        })
+
+    end
+
+    redirect_to("/class_room/student_class_room_guardians?class_room_id=#{params[:class_room_id]}&student_id=#{params[:student_id]}") and return
+  end
+  
   def student_archieve
     @class_room = ClassRoom.find(params[:class_room_id])
   end
