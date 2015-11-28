@@ -447,6 +447,25 @@ class ClassRoomController < ApplicationController
       ")
   end
 
+  def delete_student_guardian
+    if (params[:mode] == 'single_entry')
+      student_parent = StudentParent.find(:last, :conditions => ["student_id =? AND
+         parent_id =?", params[:student_id], params[:guardian_id]])
+      student_parent.delete
+      render :text => "true" and return
+    end
+
+    parent_ids = params[:guardian_ids].split(",")
+
+    (parent_ids || []).each do |parent_id|
+      student_parent = StudentParent.find(:last, :conditions => ["student_id =? AND
+         parent_id =?", params[:student_id], parent_id])
+      student_parent.delete
+    end
+
+    render :text => "true" and return
+  end
+  
   def create_student_parent
     first_name = params[:firstname]
     last_name = params[:lastname]
@@ -496,7 +515,7 @@ class ClassRoomController < ApplicationController
         :parent_id => params[:parent_id]
       })
     
-   redirect_to(url) and return
+    redirect_to(url) and return
   end
   
   def student_archieve
