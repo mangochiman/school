@@ -50,7 +50,7 @@
               date_archived = results[student_id]["date_archived"];
               archive_reason = results[student_id]["archive_reason"];
 
-              html+="<tr><td><input id='" + student_id + "' type='checkbox' student_id='" + student_id + "'/></td>";
+              html+="<tr id='" + student_id + "'><td><input type='checkbox' student_id='" + student_id + "'/></td>";
               html+="<td style='text-align:left; padding: 0.833em 0 0.833em 1.25em;'>" + firstName + ' ' + lastName +  "</td>";
               html+="<td><a href='#'>" + email +  "</a></td>";
               html+="<td>" + gender +  "</td>";
