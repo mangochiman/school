@@ -347,6 +347,8 @@
                       <div class="stripe-separator"><!--  --></div>
 
                       <%= hidden_field_tag("student_id", params[:student_id]) %>
+                      <%= hidden_field_tag("class_room_id", params[:class_room_id]) %>
+                      
                       <input type="submit" value="Submit" class="round blue ic-right-arrow" />
                       <a style="float: left;" onmousedown="cancel();" class="button round blue image-right ic-cancel text-upper" href="#">Cancel</a>
                     </form>

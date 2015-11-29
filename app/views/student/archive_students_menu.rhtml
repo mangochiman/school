@@ -15,8 +15,9 @@
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("bootstrap") %>
 
-    <script>
-
+    <script type="text/javascript">
+      var classRoomId = '<%= params[:class_room_id] %>';
+      
       function loadSearchResults(){
         names = document.getElementById('name_search').value.split(/\W+/);
         firstName = names[0];
@@ -24,11 +25,11 @@
         if (typeof lastName == 'undefined'){
           lastName = '';
         }
-        gender = document.getElementsByClassName('gender_search')[0].value;
+        
         jQuery.ajax({
           type: "POST",
-          url: "/student/archive_students_seach",
-          data: "first_name=" + firstName + "&last_name=" + lastName + "&gender=" + gender,
+          url: "/class_room/class_room_students_search",
+          data: "first_name=" + firstName + "&last_name=" + lastName + '&class_room_id=' + classRoomId,
           success: function(results){
             //results = eval("(" + results  + ")");
             html = "";

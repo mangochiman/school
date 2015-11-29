@@ -520,8 +520,53 @@ class ClassRoomController < ApplicationController
   
   def student_archieve
     @class_room = ClassRoom.find(params[:class_room_id])
+    @students = Student.find_by_sql("SELECT s.* FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id LEFT JOIN student_archive sa
+          ON s.student_id = sa.student_id WHERE scra.new_class_room_id = #{params[:class_room_id]}
+          AND scra.status = 'active' AND sa.student_id IS NULL")
   end
 
+  def view_class_archived_students
+    @class_room = ClassRoom.find(params[:class_room_id])
+    @archived_students = Student.find_by_sql("SELECT s.* FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id LEFT JOIN student_archive sa
+          ON s.student_id = sa.student_id WHERE scra.new_class_room_id = #{params[:class_room_id]}
+          AND scra.status = 'active' AND sa.student_id IS NOT NULL")
+  end
+
+  def search_class_archived_students
+    first_name = params[:first_name]
+    last_name = params[:last_name]
+    class_room_id = params[:class_room_id]
+
+    students = Student.find_by_sql("SELECT s.* FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id LEFT JOIN student_archive sa
+          ON s.student_id = sa.student_id WHERE scra.new_class_room_id = #{class_room_id}
+          AND scra.status = 'active' AND sa.student_id IS NOT NULL
+          AND s.fname LIKE '%#{first_name}%' AND s.lname LIKE '%#{last_name}%'")
+
+    hash = {}
+    students.each do |student|
+      student_id = student.id.to_s
+      hash[student_id] = {}
+      hash[student_id]["fname"] = student.fname.to_s
+      hash[student_id]["lname"] = student.lname.to_s
+      hash[student_id]["phone"] = student.phone
+      hash[student_id]["email"] = student.email
+      hash[student_id]["gender"] = student.gender
+      hash[student_id]["dob"] = student.dob.to_date.strftime("%d-%b-%Y")
+      hash[student_id]["join_date"] = student.created_at.to_date.strftime("%d-%b-%Y") rescue ''
+      hash[student_id]["current_class"] = student.current_class
+      hash[student_id]["current_active_class"] = student.current_active_class
+      hash[student_id]["total_photos"] = student.student_photos.count
+      hash[student_id]["guardian_details"] = student.guardian_details
+      hash[student_id]["date_archived"] = student.student_archive.date_archived.to_date.strftime("%d-%b-%Y") rescue ''
+      hash[student_id]["archive_reason"] = student.student_archive.reason
+    end
+
+    render :json => hash
+  end
+  
   def student_view
     @class_room = ClassRoom.find(params[:class_room_id])
   end
