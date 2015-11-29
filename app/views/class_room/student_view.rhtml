@@ -37,41 +37,8 @@
         cursor: pointer;
       }
 
-      table{
-        margin-left:15%;
-        width: 60%;
-      }
-      table td #simple-input{
-        float: right;
-      }
-
-      table label{
-        text-align: left;
-      }
-      #simple-input{
-        font-size: 10pt !important;
-      }
-
-      #registration input[type="text"], input[type="password"], textarea {
-        border: 1px solid #d9dbdd;
-        outline: medium none;
-        padding: 0.5em 0.225em;
-      }
-      input[type="submit"] {
-        margin-left: 37%;
-      }
       table th:first-child {
         border-style: none none none !important;
-      }
-
-      .classes{
-        position: relative;
-        margin-left: 0%;
-        width: 100%;
-      }
-
-      .classes th, tbody{
-        text-align: center;
       }
 
       .modal-title {
@@ -94,7 +61,6 @@
         float: none;
       }
       #search-student-form legend {
-        color: #abda0f;
         font-size: 14px;
         font-weight: 100;
         margin-left: 14px;
@@ -201,16 +167,62 @@
 
               <form id="search-student-form" action="#">
                 <fieldset>
-                  <legend>Search</legend>
-                  <div style="margin-left:2%;">
-                    <table style="width: 45%; float: right;">
+                  <legend>Active Students <span class="notice badge badge-info"><%= @active_students.count %></span></legend>
+                  <table>
+                    <thead>
                       <tr>
-                        <td style="font-size: 13pt;">Name</td>
-                        <td style="width: 50px !important;"><input type="text" class="class_room_search"/></td>
-                        <td style="width: 20px"><a onclick="loadSearchResults();" class="button round blue image-right ic-search text-upper">Search</a></td>
+                        <th style="min-width:15%;">Name</th>
+                        <th>Email</th>
+                        <th>Gender</th>
+                        <th>Date Of Birth</th>
+                        <th>Phone #</th>
+                        <th style="min-width:13%;">Guardian Details</th>
                       </tr>
-                    </table>
-                  </div>
+                    </thead>
+
+                    <tbody id="active-students">
+                      <% @active_students.each do |student| %>
+                        <tr id="<%= student.id %>">
+                          <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= student.fname.capitalize.to_s + ' ' + student.lname.capitalize.to_s %></td>
+                          <td><a href="#"><%=  student.email %></a></td>
+                          <td><%=  student.gender %></td>
+                          <td><%=  student.dob.to_date.strftime("%d-%b-%Y") %></td>
+                          <td><%=  student.phone %></td>
+                          <td><%=  student.guardian_details %></td>
+                        </tr>
+                      <% end %>
+                    </tbody>
+                  </table>
+                </fieldset>
+                &nbsp;
+
+                <fieldset>
+                  <legend>Archived Students <span class="notice badge badge-info"><%= @archived_students.count %></span></legend>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th style="min-width:15%;">Name</th>
+                        <th>Email</th>
+                        <th>Gender</th>
+                        <th>Date Of Birth</th>
+                        <th>Phone #</th>
+                        <th style="min-width:13%;">Guardian Details</th>
+                      </tr>
+                    </thead>
+
+                    <tbody id="archive-students">
+                      <% @archived_students.each do |student| %>
+                        <tr id="<%= student.id %>">
+                          <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= student.fname.capitalize.to_s + ' ' + student.lname.capitalize.to_s %></td>
+                          <td><a href="#"><%=  student.email %></a></td>
+                          <td><%=  student.gender %></td>
+                          <td><%=  student.dob.to_date.strftime("%d-%b-%Y") %></td>
+                          <td><%=  student.phone %></td>
+                          <td><%=  student.guardian_details %></td>
+                        </tr>
+                      <% end %>
+                    </tbody>
+                  </table>
                 </fieldset>
               </form>
 
