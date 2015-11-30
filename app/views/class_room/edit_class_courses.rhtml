@@ -22,7 +22,38 @@
         courseId = obj.getAttribute("course_id");
         window.location = "/class_room/edit_me_class_course?class_room_id=" + classRoomId + '&course_id=' + courseId;
       }
-      
+
+      function loadSearchResults(){
+        courseName = document.getElementById('name_search').value;
+
+        jQuery.ajax({
+          type: "POST",
+          url: "/class_room/search_class_room_courses",
+          data: "class_room_id=" + classRoomId + "&course_name=" + courseName,
+          success: function(results){
+            //results = eval("(" + results  + ")");
+            html = "";
+            tbody = document.getElementById("courses-data");
+            var count = 0;
+            for (var course_id in results){
+              count = count + 1;
+              courseName = results[course_id]["course_name"];
+
+              html+="<tr>";
+              html+="<td>" + count +  "</td>";
+              html+="<td style='text-align: center;'>" + courseName +  "</td>";
+              html+="<td><a onclick='editMe(this)' class='table-actions-button ic-table-edit' course_id='" + course_id + "'></a></td>";
+              html+="</tr>";
+
+            }
+
+            tbody.innerHTML = html;
+
+          }
+
+        });
+
+      }
     </script>
     
     <style type="text/css">
@@ -211,7 +242,7 @@
                   </tr>
                 </thead>
 
-                <tbody>
+                <tbody id="courses-data">
                   <% count = 0 %>
                   <% @courses.each do |course| %>
                     <tr>

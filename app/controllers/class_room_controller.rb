@@ -431,7 +431,7 @@ class ClassRoomController < ApplicationController
 
   def add_class_course
     @class_room = ClassRoom.find(params[:class_room_id])
-    @courses = @class_room.class_room_courses.collect{|crc|crc.course}
+    @courses = @class_room.class_room_courses.collect{|crc|crc.course rescue ''}.compact
   end
 
   def add_new_class_course
@@ -489,19 +489,34 @@ class ClassRoomController < ApplicationController
 
   end
 
+  def search_class_room_courses
+    courses = Course.find_by_sql("SELECT c.* FROM course c INNER JOIN class_room_course crc 
+      ON c.course_id = crc.course_id WHERE crc.class_room_id = '#{params[:class_room_id]}'
+      AND c.name LIKE '%#{params[:course_name]}%'")
+
+    hash = {}
+    courses.each do |course|
+      course_id = course.course_id
+      hash[course_id] = {}
+      hash[course_id]["course_name"] = course.name
+    end
+    
+    render :json => hash and return
+  end
+
   def edit_class_courses
     @class_room = ClassRoom.find(params[:class_room_id])
-    @courses = @class_room.class_room_courses.collect{|crc|crc.course}
+    @courses = @class_room.class_room_courses.collect{|crc|crc.course rescue ''}.compact
   end
 
   def view_class_courses
     @class_room = ClassRoom.find(params[:class_room_id])
-    @courses = @class_room.class_room_courses.collect{|crc|crc.course}
+    @courses = @class_room.class_room_courses.collect{|crc|crc.course rescue ''}.compact
   end
 
   def void_class_courses
     @class_room = ClassRoom.find(params[:class_room_id])
-    @courses = @class_room.class_room_courses.collect{|crc|crc.course}
+    @courses = @class_room.class_room_courses.collect{|crc|crc.course rescue ''}.compact
   end
   
   def teachers_tab

@@ -15,8 +15,119 @@
     <%= javascript_include_tag("jquery.confirm") %>
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("bootstrap") %>
-    <script>
+    <script type="text/javascript">
+      var classRoomId = "<%=params[:class_room_id]%>";
+      
+      function loadSearchResults(){
+        courseName = document.getElementById('name_search').value;
 
+        jQuery.ajax({
+          type: "POST",
+          url: "/class_room/search_class_room_courses",
+          data: "class_room_id=" + classRoomId + "&course_name=" + courseName,
+          success: function(results){
+            //results = eval("(" + results  + ")");
+            html = "";
+            tbody = document.getElementById("courses-data");
+            for (var course_id in results){
+              courseName = results[course_id]["course_name"];
+
+              html+="<tr id='" + course_id + "'>";
+              html+="<td><input type='checkbox' course_id='" + course_id + "'/></td>";
+              html+="<td style='text-align: center;'>" + courseName +  "</td>";
+              html+="<td><a onmousedown='setCurrentCourseId(this);' class='table-actions-button ic-table-delete confirm' course_id='" + course_id + "'></a></td>";
+              html+="</tr>";
+
+            }
+
+            tbody.innerHTML = html;
+            
+            $(".confirm").confirm({
+              title:"Delete confirmation",
+              text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+              confirm: function(button) {
+                deleteSingleEntry();
+              },
+              cancel: function(button) {
+
+              },
+              confirmButton: "Yes I am",
+              cancelButton: "No"
+            });
+          }
+
+        });
+
+      }
+
+
+      function selectAll(){
+        selectAllInput = document.getElementById('table-select-all');
+        inputs = document.getElementsByTagName("input");
+        if (selectAllInput.checked){
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+              inputs[i].checked = true;
+            }
+          }
+        }
+        else{
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+              inputs[i].checked = false;
+            }
+          }
+        }
+      }
+
+      function deleteCourses(){
+        inputs = document.getElementsByTagName("input");
+        courseIDs = []
+        for (var i=0; i<=inputs.length - 1; i++){
+          if (inputs[i].type == 'checkbox'){
+            if (inputs[i].checked){
+              if (inputs[i].hasAttribute("course_id")){
+                courseId = inputs[i].getAttribute("course_id");
+                courseIDs.push(courseId);
+              }
+            }
+          }
+        }
+
+        jQuery.ajax({
+          type: "POST",
+          url: "/course/delete_courses",
+          data: "course_ids=" + courseIDs,
+          success: function(){
+            for (var x=0; x<= courseIDs.length - 1; x++){
+              id = courseIDs[x];
+              element = document.getElementById(id);
+              element.parentNode.removeChild(element)
+            }
+          }
+
+        });
+      }
+      var currentCourseId = "";
+      function setCurrentCourseId(obj){
+        currentCourseId = obj.getAttribute("course_id");
+      }
+
+      function deleteSingleEntry(){
+        jQuery.ajax({
+          type: "POST",
+          url: "/course/delete_courses",
+          data: "course_id=" + currentCourseId + "&mode=single_entry",
+          success: function(){
+            element = document.getElementById(currentCourseId);
+            element.parentNode.removeChild(element);
+          }
+
+        });
+      }
+      
     </script>
     <style>
       .label {
@@ -35,21 +146,6 @@
         vertical-align: baseline;
         white-space: nowrap;
         cursor: pointer;
-      }
-
-      table{
-        margin-left:15%;
-        width: 60%;
-      }
-      table td #simple-input{
-        float: right;
-      }
-
-      table label{
-        text-align: left;
-      }
-      #simple-input{
-        font-size: 10pt !important;
       }
 
       #registration input[type="text"], input[type="password"], textarea {
@@ -198,6 +294,47 @@
                 </div>
               <% end %>
 
+              <form id="search-student-form" action="#">
+                <fieldset>
+                  <legend>Search</legend>
+                  <div style="margin-left:2%;">
+                    <table style="width: 45%; float: right;">
+                      <tr>
+                        <td style="font-size: 13pt;">Name</td>
+                        <td style="width: 50px !important;"><input type="text" id="name_search"/></td>
+                        <td style="width: 20px"><a onclick="loadSearchResults();" class="button round blue image-right ic-search text-upper">Search</a></td>
+                      </tr>
+                    </table>
+                  </div>
+                </fieldset>
+              </form>
+
+              <table id="courses">
+                <thead>
+                  <tr>
+                    <th style="min-width: 15%;"><input type="checkbox" onclick="selectAll();" id="table-select-all"/></th>
+                    <th style="text-align: center;">Course</th>
+                    <th style="min-width: 15%;">Action</th>
+                  </tr>
+                </thead>
+                <tfoot>
+                  <tr>
+                    <td colspan="3" class="table-footer">
+                      <a style="font-size: 10pt;" href="#" class="button round blue image-right ic-delete text-upper delete-multiple">Delete</a>
+                    </td>
+                  </tr>
+                </tfoot>
+
+                <tbody id="courses-data">
+                  <% @courses.each do |course| %>
+                    <tr id="<%= course.course_id %>">
+                      <td><input type="checkbox" course_id="<%= course.id %>"/></td>
+                      <td style="text-align: center;"><%= course.name %></td>
+                      <td><a class="table-actions-button ic-table-delete confirm" onmousedown="setCurrentCourseId(this);" course_id="<%= course.course_id %>"></a></td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->
@@ -210,5 +347,33 @@
 
     <%= javascript_include_tag("bootstrap") %>
 
+    <script type="text/javascript">
+
+      $(".delete-multiple").confirm({
+        title:"Delete confirmation",
+        text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+        confirm: function(button) {
+          deleteCourses();
+        },
+        cancel: function(button) {
+          alert("You aborted the operation.");
+        },
+        confirmButton: "Yes I am",
+        cancelButton: "No"
+      });
+
+      $(".confirm").confirm({
+        title:"Delete confirmation",
+        text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+        confirm: function(button) {
+          deleteSingleEntry();
+        },
+        cancel: function(button) {
+
+        },
+        confirmButton: "Yes I am",
+        cancelButton: "No"
+      });
+    </script>
   </body>
 </html>

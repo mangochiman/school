@@ -37,41 +37,8 @@
         cursor: pointer;
       }
 
-      table{
-        margin-left:15%;
-        width: 60%;
-      }
-      table td #simple-input{
-        float: right;
-      }
-
-      table label{
-        text-align: left;
-      }
-      #simple-input{
-        font-size: 10pt !important;
-      }
-
-      #registration input[type="text"], input[type="password"], textarea {
-        border: 1px solid #d9dbdd;
-        outline: medium none;
-        padding: 0.5em 0.225em;
-      }
-      input[type="submit"] {
-        margin-left: 37%;
-      }
       table th:first-child {
         border-style: none none none !important;
-      }
-
-      .classes{
-        position: relative;
-        margin-left: 0%;
-        width: 100%;
-      }
-
-      .classes th, tbody{
-        text-align: center;
       }
 
       .modal-title {
@@ -197,6 +164,36 @@
                   <%= flash[:error] %>
                 </div>
               <% end %>
+
+              <form id="search-student-form" action="#">
+                <fieldset>
+                  <legend>Search</legend>
+                  <div style="margin-left:2%;">
+
+                  </div>
+                </fieldset>
+              </form>
+
+              <table id="courses">
+                <thead>
+                  <tr>
+                    <th style="min-width: 15%;">#</th>
+                    <th style="text-align: center;">Course</th>
+                    <th style="min-width: 15%;">Date Created</th>
+                  </tr>
+                </thead>
+
+                <tbody id="courses-data">
+                  <% count = 0 %>
+                  <% @courses.each do |course| %>
+                    <tr>
+                      <td><%= count = count + 1 %></td>
+                      <td style="text-align: center;"><%= course.name %></td>
+                      <td><%= course.created_at.to_date.strftime("%d-%b-%Y") %></td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
 
             </div> <!-- end content-module-main -->
 
