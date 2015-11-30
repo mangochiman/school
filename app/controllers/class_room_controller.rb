@@ -360,6 +360,22 @@ class ClassRoomController < ApplicationController
           AND scra.status = 'active' AND sa.student_id IS NULL")
   end
 
+  def view_class_punishments
+    @class_room = ClassRoom.find(params[:class_room_id])
+    @students = Student.find_by_sql("SELECT s.* FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id LEFT JOIN student_archive sa
+          ON s.student_id = sa.student_id WHERE scra.new_class_room_id = #{params[:class_room_id]}
+          AND scra.status = 'active' AND sa.student_id IS NULL")
+  end
+
+  def void_class_punishments
+    @class_room = ClassRoom.find(params[:class_room_id])
+    @students = Student.find_by_sql("SELECT s.* FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id LEFT JOIN student_archive sa
+          ON s.student_id = sa.student_id WHERE scra.new_class_room_id = #{params[:class_room_id]}
+          AND scra.status = 'active' AND sa.student_id IS NULL")
+  end
+  
   def examinations_tab
     @class_room = ClassRoom.find(params[:class_room_id])
   end
@@ -413,6 +429,81 @@ class ClassRoomController < ApplicationController
     @class_room = ClassRoom.find(params[:class_room_id])
   end
 
+  def add_class_course
+    @class_room = ClassRoom.find(params[:class_room_id])
+    @courses = @class_room.class_room_courses.collect{|crc|crc.course}
+  end
+
+  def add_new_class_course
+    @class_room = ClassRoom.find(params[:class_room_id])
+  end
+
+  def create_new_class_course
+    course_exists = Course.find_by_name(params[:course_name])
+
+    if course_exists
+      flash[:error] = "Unable to save. Course name already exists"
+      redirect_to("/class_room/add_new_class_course?class_room_id=#{params[:class_room_id]}")and return
+    end
+
+    optional = false
+    optional = true if params[:optional]
+
+    ActiveRecord::Base.transaction do
+      course = Course.create({
+          :name => params[:course_name],
+          :optional => optional
+        })
+
+      ClassRoomCourse.create({
+          :class_room_id => params[:class_room_id],
+          :course_id => course.course_id
+        })
+    end
+
+    flash[:notice] = "Operation successful"
+    redirect_to("/class_room/add_class_course?class_room_id=#{params[:class_room_id]}")and return
+
+  end
+
+  def edit_me_class_course
+    @class_room = ClassRoom.find(params[:class_room_id])
+    class_room_course = ClassRoomCourse.find(:last, :conditions => ["class_room_id =? AND course_id =?",
+        params[:class_room_id], params[:course_id]])
+    @course = class_room_course.course
+    
+    if request.method ==:post
+      optional = false
+      optional = true if params[:optional]
+      if (@course.update_attributes({
+              :name => params[:course_name],
+              :optional => optional
+            }))
+        flash[:notice] = "You have successfully edited the details"
+        redirect_to "/class_room/edit_class_courses?class_room_id=#{params[:class_room_id]}" and return
+      else
+        flash[:error] = "Process aborted. Check for errors and try again"
+        redirect_to "/class_room/edit_me_class_course?class_room_id=#{params[:class_room_id]}&course_id=#{params[:course_id]}" and return
+      end
+    end
+
+  end
+
+  def edit_class_courses
+    @class_room = ClassRoom.find(params[:class_room_id])
+    @courses = @class_room.class_room_courses.collect{|crc|crc.course}
+  end
+
+  def view_class_courses
+    @class_room = ClassRoom.find(params[:class_room_id])
+    @courses = @class_room.class_room_courses.collect{|crc|crc.course}
+  end
+
+  def void_class_courses
+    @class_room = ClassRoom.find(params[:class_room_id])
+    @courses = @class_room.class_room_courses.collect{|crc|crc.course}
+  end
+  
   def teachers_tab
     @class_room = ClassRoom.find(params[:class_room_id])
   end

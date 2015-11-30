@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>SimpleAdmin - Dashboard</title>
+    <!-- Optimize for mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!-- jQuery & JS files -->
+
+    <%= javascript_include_tag("jquery") %>
+    <%= javascript_include_tag("script") %>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("jquery.confirm") %>
+    <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("bootstrap") %>
+    <script type="text/javascript">
+      var classRoomId = '<%= params[:class_room_id] %>';
+      
+      function voidStudentPunishments(obj){
+        studentId = obj.getAttribute("student_id");
+        window.location = "/class_room/void_student_punishments?class_room_id=" + classRoomId + '&student_id=' + studentId;
+      }
+
+      function loadSearchResults(){
+        names = document.getElementById('name_search').value.split(/\W+/);
+        firstName = names[0];
+        lastName = names[1];
+        if (typeof lastName == 'undefined'){
+          lastName = '';
+        }
+
+        jQuery.ajax({
+          type: "POST",
+          url: "/class_room/class_room_students_search",
+          data: "first_name=" + firstName + "&last_name=" + lastName + '&class_room_id=' + classRoomId,
+          success: function(results){
+            //results = eval("(" + results  + ")");
+            html = "";
+            tbody = document.getElementById("students");
+
+            for (var student_id in results){
+              firstName = results[student_id]["fname"];
+              lastName = results[student_id]["lname"];
+              gender = results[student_id]["gender"];
+              phone = results[student_id]["phone"];
+              if (phone == null) phone = '';
+              email = results[student_id]["email"];
+              if (email == null) email = '';
+              dob = results[student_id]["dob"];
+              current_active_class = results[student_id]["current_active_class"];
+              join_date = results[student_id]["join_date"];
+              html+="<tr>";
+              html+="<td style='text-align:left; padding: 0.833em 0 0.833em 1.25em;'>" + firstName + ' ' + lastName +  "</td>";
+              html+="<td><a href='#'>" + email +  "</a></td>";
+              html+="<td>" + gender +  "</td>";
+              html+="<td>" + dob +  "</td>";
+              html+="<td>" + phone +  "</td>";
+              html+="<td><a student_id=" + student_id + " onclick='voidStudentPunishments(this)' href='#' class='button round blue image-right ic-right-arrow text-upper'>Void Punishments &nbsp;</a></td>";
+              html+="</tr>";
+            }
+
+            tbody.innerHTML = html
+          }
+
+        });
+
+      }
+    </script>
+
+    <style>
+      .label {
+        border-radius: 1.5em;
+        color: #fff;
+        display: inline;
+        background-color: #5bc0de;
+        font-size: 1.2em;
+        font-weight: bold;
+        line-height: 1;
+        padding-left: 20%;
+        padding-right: 20%;
+        padding-top:2%;
+        padding-bottom:2%;
+        text-align: center;
+        vertical-align: baseline;
+        white-space: nowrap;
+        cursor: pointer;
+      }
+
+      input[type="submit"] {
+        margin-left: 37%;
+      }
+
+      table th:first-child {
+        border-style: none none none !important;
+      }
+
+      .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: #317eac;
+      }
+
+      a{
+        cursor: pointer;
+      }
+
+      #search-student-form fieldset {
+        border: 1px solid gray;
+        float: left;
+        margin-bottom: 15px;
+        padding: 0px;
+        float: none;
+      }
+      #search-student-form legend {
+        color: #abda0f;
+        font-size: 14px;
+        font-weight: 100;
+        margin-left: 14px;
+        padding: 2px;
+        width: initial;
+        margin-bottom: initial;
+        border-style: none;
+      }
+
+      #search-student-form fieldset input {
+        color: #505050;
+        float: left;
+        margin-right: 5px;
+        width: 250px;
+        padding: 6px;
+        font-size: 14px;
+        border: 1px solid #d9dbdd;
+        outline: medium none;
+      }
+
+      #search-student-form table td{
+        border-left: none;
+      }
+
+      form.autoform input, select {
+        font-size: 0.8em !important;
+        font-weight: bold;
+      }
+
+      .orange{
+        background-color: #EEEE00 !important;
+      }
+
+    </style>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <div id="header-with-tabs">
+
+      <div class="page-full-width cf">
+
+        <ul id="tabs" class="fl">
+          <li><a href="/class_room/switch_class_room_menu?class_room_id=<%= params[:class_room_id] %>" class="active-tab dashboard-tab orange"><%= @class_room.name %></a></li>
+          <li><a href="/class_room/admissions_tab?class_room_id=<%= params[:class_room_id] %>">Admissions/Registrations</a></li>
+          <li><a href="/class_room/attendance_tab?class_room_id=<%= params[:class_room_id] %>">Attendance Register</a></li>
+          <li><a href="/class_room/behavior_tab?class_room_id=<%= params[:class_room_id] %>" class="active-tab">Behavior</a></li>
+          <li><a href="/class_room/examinations_tab?class_room_id=<%= params[:class_room_id] %>">Examinations</a></li>
+          <li><a href="/class_room/payments_tab?class_room_id=<%= params[:class_room_id] %>">Payments</a></li>
+          <li><a href="/class_room/courses_tab?class_room_id=<%= params[:class_room_id] %>">Courses</a></li>
+          <li><a href="/class_room/teachers_tab?class_room_id=<%= params[:class_room_id] %>">Teachers</a></li>
+        </ul> <!-- end tabs -->
+
+        <!-- Change this image to your own company's logo -->
+        <!-- The logo will automatically be resized to 30px height. -->
+        <a href="#" id="company-branding-small" class="fr"><%= image_tag("/admin/school_logo", :alt => 'Logo Missing')%></a>
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end header -->
+
+
+
+    <!-- MAIN CONTENT -->
+    <div id="content">
+
+      <div class="page-full-width cf">
+
+        <div class="side-menu fl">
+
+          <h3>Task</h3>
+          <ul>
+            <li><a href="/class_room/add_class_punishments?class_room_id=<%= params[:class_room_id] %>">Add/Edit Punishment</a></li>
+            <li><a href="/class_room/view_class_punishments?class_room_id=<%= params[:class_room_id] %>">View Punishments</a></li>
+            <li><a href="/class_room/void_class_punishments?class_room_id=<%= params[:class_room_id] %>">Void Punishments</a></li>
+          </ul>
+
+        </div> <!-- end side-menu -->
+
+        <div class="side-content fr">
+
+          <div class="content-module">
+
+            <div class="content-module-heading cf">
+
+              <h3 class="fl">Void Punishments</h3>
+              <span class="fr expand-collapse-text">Click to collapse</span>
+              <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+            </div> <!-- end content-module-heading -->
+
+
+            <div class="content-module-main">
+              <% if flash[:notice] %>
+                <div class="confirmation-box round">
+                  <%= flash[:notice] %>
+                </div>
+              <% end %>
+              <% if flash[:error] %>
+                <div class="error-box round">
+                  <%= flash[:error] %>
+                </div>
+              <% end %>
+
+              <form id="search-student-form" action="#">
+                <fieldset>
+                  <legend>Search</legend>
+                  <div style="margin-left:2%;">
+                    <table style="width: 45%; float: right;">
+                      <tr>
+                        <td style="font-size: 13pt;">Name</td>
+                        <td style="width: 50px !important;"><input type="text" id="name_search"/></td>
+                        <td style="width: 20px"><a onclick="loadSearchResults();" class="button round blue image-right ic-search text-upper">Search</a></td>
+                      </tr>
+                    </table>
+                  </div>
+                </fieldset>
+              </form>
+
+              <table>
+
+                <thead>
+
+                  <tr>
+                    <th style="min-width:15%;">Name</th>
+                    <th>Email</th>
+                    <th>Gender</th>
+                    <th>Date Of Birth</th>
+                    <th>Phone #</th>
+                    <th style="min-width:14%;">Action</th>
+                  </tr>
+
+                </thead>
+
+                <tbody id="students">
+                  <% @students.each do |student| %>
+                    <tr>
+                      <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= student.fname.capitalize.to_s + ' ' + student.lname.capitalize.to_s %></td>
+                      <td><a href="#"><%=  student.email %></a></td>
+                      <td><%=  student.gender %></td>
+                      <td><%=  student.dob.to_date.strftime("%d-%b-%Y") %></td>
+                      <td><%=  student.phone %></td>
+                      <td>
+                        <a student_id="<%= student.id %>" onclick="voidStudentPunishments(this)" href="#" class="button round blue image-right ic-right-arrow text-upper">Void Punishments &nbsp;</a>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+
+              </table>
+            </div> <!-- end content-module-main -->
+
+          </div> <!-- end content-module -->
+
+        </div> <!-- end side-content -->
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end content -->
+
+    <%= javascript_include_tag("bootstrap") %>
+
+    <script>
+
+    </script>
+  </body>
+</html>
