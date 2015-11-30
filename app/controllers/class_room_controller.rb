@@ -581,7 +581,7 @@ class ClassRoomController < ApplicationController
         LEFT JOIN student_class_room_course scrc ON scrc.course_id = crc.course_id
         AND scrc.student_id = #{params[:student_id]} WHERE crc.class_room_id=#{params[:class_room_id]}
         AND scrc.course_id IS NULL;
-      ").collect{|scrc|scrc.course}
+      ").collect{|scrc|scrc.course}.compact
   end
   
   def student_guardians
