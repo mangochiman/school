@@ -456,13 +456,59 @@ class ClassRoomController < ApplicationController
     @courses += courses.collect{|c|[c.name, c.id]}
 
   end
+
+  def update_exam_assignment
+    exam_id = params[:exam_id]
+    exam_type = params[:exam_type]
+    course_id = params[:course]
+    exam_date = params[:exam_date]
+    exam = Examination.find(exam_id)
+
+    ActiveRecord::Base.transaction do
+      exam.update_attributes({
+          :exam_type_id => exam_type,
+          :course_id => course_id,
+          :start_date => exam_date
+        })
+
+
+      exam.exam_attendees.each do |exam_attend|
+        exam_attend.delete
+      end
+
+      (params[:students] || []).each do |student_id, details|
+        exam_attendee = ExamAttendee.new
+        exam_attendee.exam_id = exam_id
+        exam_attendee.student_id = student_id
+        exam_attendee.save!
+      end
+
+    end
+
+    flash[:notice] = "Operation successful"
+    redirect_to("/class_room/edit_examination?class_room_id=#{params[:class_room_id]}") and return
+  end
   
   def view_examination
     @class_room = ClassRoom.find(params[:class_room_id])
+    @exams = @class_room.examinations
+
+    @exam_types = [["---Select Exam Type---", ""]]
+    @exam_types += ExaminationType.all.collect{|e|[e.name, e.id]}
+
+    @courses = [["---Select Course---", ""]]
+    @courses += @class_room.class_room_courses.collect{|crc|[crc.course.name, crc.course.course_id]}
   end
 
   def void_examination
     @class_room = ClassRoom.find(params[:class_room_id])
+    @exams = @class_room.examinations
+
+    @exam_types = [["---Select Exam Type---", ""]]
+    @exam_types += ExaminationType.all.collect{|e|[e.name, e.id]}
+
+    @courses = [["---Select Course---", ""]]
+    @courses += @class_room.class_room_courses.collect{|crc|[crc.course.name, crc.course.course_id]}
   end
 
   def add_examination_results
