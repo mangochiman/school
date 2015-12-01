@@ -380,6 +380,107 @@ class ClassRoomController < ApplicationController
     @class_room = ClassRoom.find(params[:class_room_id])
   end
 
+  def add_examination
+    @class_room = ClassRoom.find(params[:class_room_id])
+    @students = Student.find_by_sql("SELECT s.* FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id LEFT JOIN student_archive sa
+          ON s.student_id = sa.student_id WHERE scra.new_class_room_id = #{params[:class_room_id]}
+          AND scra.status = 'active' AND sa.student_id IS NULL")
+    
+    @exam_types = [["---Select Exam Type---", ""]]
+    @exam_types += ExaminationType.all.collect{|e|[e.name, e.id]}
+
+    @courses = [["---Select Course---", ""]]
+    @courses += @class_room.class_room_courses.collect{|crc|[crc.course.name, crc.course.course_id]}
+
+    @examinations = Examination.find(:all)
+  end
+
+  def create_exam_assignment
+    class_room_id = params[:class_room_id] #Add semester field in an exam table
+    exam_type = params[:exam_type]
+    course_id = params[:course]
+    exam_date = params[:exam_date]
+
+    ActiveRecord::Base.transaction do
+      exam = Examination.new
+      exam.class_room_id = class_room_id
+      exam.exam_type_id = exam_type
+      exam.course_id = course_id
+      exam.start_date = exam_date.to_date
+      exam.save!
+
+      (params[:students] || []).each do |student_id, details|
+        exam_attendee = ExamAttendee.new
+        exam_attendee.exam_id = exam.id
+        exam_attendee.student_id = student_id
+        exam_attendee.save!
+      end
+
+    end
+    
+    flash[:notice] = "Operation successful"
+    redirect_to("/class_room/add_examination?class_room_id=#{params[:class_room_id]}") and return
+
+  end
+
+  def edit_examination
+    @class_room = ClassRoom.find(params[:class_room_id])
+    @exams = @class_room.examinations
+    
+    @exam_types = [["---Select Exam Type---", ""]]
+    @exam_types += ExaminationType.all.collect{|e|[e.name, e.id]}
+
+    @courses = [["---Select Course---", ""]]
+    @courses += @class_room.class_room_courses.collect{|crc|[crc.course.name, crc.course.course_id]}
+  end
+
+  def exam_record_edit
+    @class_room = ClassRoom.find(params[:class_room_id])
+    @students = Student.find_by_sql("SELECT s.* FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id LEFT JOIN student_archive sa
+          ON s.student_id = sa.student_id WHERE scra.new_class_room_id = #{params[:class_room_id]}
+          AND scra.status = 'active' AND sa.student_id IS NULL")
+    
+    exam = Examination.find(params[:exam_id])
+    @exam_date = exam.start_date.to_date.strftime("%Y-%m-%d")
+
+    @exam_attendees = exam.students.map(&:id)
+    @exam_types = [["---Select Exam Type---", ""]]
+    @exam_types += ExaminationType.all.collect{|e|[e.name, e.id]}
+    @selected_exam_type = [exam.examination_type.name, exam.examination_type.id]
+
+    @courses = [["---Select Course---", ""]]
+    @selected_course = [(exam.course.name rescue nil), (exam.course.id rescue nil)]
+    courses = exam.class_room.class_room_courses.collect{|crc|crc.course}
+    @courses += courses.collect{|c|[c.name, c.id]}
+
+  end
+  
+  def view_examination
+    @class_room = ClassRoom.find(params[:class_room_id])
+  end
+
+  def void_examination
+    @class_room = ClassRoom.find(params[:class_room_id])
+  end
+
+  def add_examination_results
+    @class_room = ClassRoom.find(params[:class_room_id])
+  end
+
+  def edit_examination_results
+    @class_room = ClassRoom.find(params[:class_room_id])
+  end
+
+  def view_examination_results
+    @class_room = ClassRoom.find(params[:class_room_id])
+  end
+
+  def void_examination_results
+    @class_room = ClassRoom.find(params[:class_room_id])
+  end
+
   def payments_tab
     @class_room = ClassRoom.find(params[:class_room_id])
   end

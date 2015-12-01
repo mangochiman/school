@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>SimpleAdmin - Dashboard</title>
+    <!-- Optimize for mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!-- jQuery & JS files -->
+
+    <%= javascript_include_tag("jquery") %>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("jquery.confirm") %>
+    <%= javascript_include_tag("script") %>
+    <%= javascript_include_tag("gvalidator") %>
+    <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("metallic") %>
+    <%= stylesheet_link_tag("gvalidator") %>
+    <%= stylesheet_link_tag("bootstrap") %>
+
+    <script type="text/javascript">
+      var classRoomID = '<%= params[:class_room_id] %>';
+      
+      function selectAll(){
+        selectAllInput = document.getElementById('table-select-all');
+        inputs = document.getElementsByTagName("input");
+        if (selectAllInput.checked){
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+              inputs[i].checked = true;
+            }
+          }
+        }
+        else{
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+              inputs[i].checked = false;
+            }
+          }
+        }
+      }
+
+      function checkExamAttendees(){
+        <% @exam_attendees.each do |exam_attend_id| %>
+              examAttendCheckBox = document.getElementById("<%= exam_attend_id %>");
+              if (examAttendCheckBox) examAttendCheckBox.checked = true;
+        <% end %>
+      }
+
+  function loadClassCourses(classRoomId){
+    selectedCourse = eval('<%= @selected_course.to_json %>');
+    selectedCourseName = selectedCourse[0];
+    selectedCourseID = selectedCourse[1];
+    console.log(selectedCourse)
+    jQuery.ajax({
+      type: "POST",
+      url: "/examination/class_room_courses",
+      data: "class_room_id=" + classRoomId,
+      success: function(result){
+        result = eval(result);
+        options = "";
+        for (var x=0; x<= (result.length - 1); x++){
+          courseData = (eval(result[x]))
+          courseId = courseData[0];
+          courseName = courseData[1];
+          if (parseInt(courseId) == parseInt(selectedCourseID)){
+            options += "<option value=" + courseId + " selected=" + courseName + ">" + courseName + "</option>";
+            continue;
+          }
+          options += "<option value=" + courseId + ">" + courseName + "</option>";
+        }
+        document.getElementById("course").innerHTML = options;
+      }
+
+    });
+  }
+    </script>
+
+    <style>
+      .label {
+        border-radius: 1.5em;
+        color: #fff;
+        display: inline;
+        background-color: #5bc0de;
+        font-size: 1.2em;
+        font-weight: bold;
+        line-height: 1;
+        padding-left: 20%;
+        padding-right: 20%;
+        padding-top:2%;
+        padding-bottom:2%;
+        text-align: center;
+        vertical-align: baseline;
+        white-space: nowrap;
+        cursor: pointer;
+      }
+
+
+      input[type="submit"] {
+        margin-left: 25%;
+      }
+
+      table th:first-child {
+        border-style: none none none !important;
+      }
+
+      .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: #317eac;
+      }
+
+      a{
+        cursor: pointer;
+      }
+
+      #search-student-form fieldset {
+        border: 1px solid gray;
+        float: left;
+        margin-bottom: 15px;
+        padding: 0px;
+        float: none;
+      }
+      #search-student-form legend {
+        color: #abda0f;
+        font-size: 14px;
+        font-weight: 100;
+        margin-left: 14px;
+        padding: 2px;
+        width: initial;
+        margin-bottom: initial;
+        border-style: none;
+      }
+
+      #search-student-form fieldset input {
+        color: #505050;
+        float: left;
+        margin-right: 5px;
+        width: 250px;
+        padding: 6px;
+        font-size: 14px;
+        border: 1px solid #d9dbdd;
+        outline: medium none;
+      }
+
+      #search-student-form table td{
+        border-left: none;
+      }
+
+      .orange{
+        background-color: #EEEE00 !important;
+      }
+
+      .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: #317eac;
+      }
+
+      form.autoform .msg.icon {
+        margin: 0 10px;
+        padding: 5px 5px 5px 30px;
+        position: unset;
+        font-size: 10pt;
+      }
+
+      form label {
+        font-size: 0.9em;
+        font-weight: bold;
+      }
+
+      form.autoform input, select{
+        font-size: 0.8em !important;
+        font-weight: bold;
+      }
+
+      #course option{
+        padding-left: 40px;
+      }
+
+      #exam_type option{
+        padding-left: 30px;
+      }
+
+      #class_room option{
+        padding-left: 40px;
+      }
+
+      #class_courses tbody td{
+        padding: 0.3em 0.1em 0.3em 0.3em;
+        border-bottom: 0px;
+        border-left: 0px;
+      }
+
+      #exam_assignment input[type="text"], input[type="password"], textarea {
+        border: 1px solid #d9dbdd;
+        outline: medium none;
+        padding: 0.5em 0.225em;
+      }
+
+      #class_room, #exam_type, #course{
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        color: #555;
+        font-size: 14px;
+        height: 34px;
+        line-height: 1.42857;
+        padding: 6px 12px;
+        min-width: 208px;
+        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+      }
+
+      .badge{
+        cursor: pointer;
+      }
+
+      .Zebra_DatePicker_Icon_Wrapper .msg{
+        margin-left: 14px !Important;
+      }
+
+      #exam_assignment{
+        margin-left: 20%;
+      }
+
+      form.autoform {
+        border: none;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <div id="header-with-tabs">
+
+      <div class="page-full-width cf">
+
+        <ul id="tabs" class="fl">
+          <li><a href="/class_room/switch_class_room_menu?class_room_id=<%= params[:class_room_id] %>" class="active-tab dashboard-tab orange"><%= @class_room.name %></a></li>
+          <li><a href="/class_room/admissions_tab?class_room_id=<%= params[:class_room_id] %>">Admissions/Registrations</a></li>
+          <li><a href="/class_room/attendance_tab?class_room_id=<%= params[:class_room_id] %>">Attendance Register</a></li>
+          <li><a href="/class_room/behavior_tab?class_room_id=<%= params[:class_room_id] %>" >Behavior</a></li>
+          <li><a href="/class_room/examinations_tab?class_room_id=<%= params[:class_room_id] %>" class="active-tab">Examinations</a></li>
+          <li><a href="/class_room/payments_tab?class_room_id=<%= params[:class_room_id] %>">Payments</a></li>
+          <li><a href="/class_room/courses_tab?class_room_id=<%= params[:class_room_id] %>">Courses</a></li>
+          <li><a href="/class_room/teachers_tab?class_room_id=<%= params[:class_room_id] %>">Teachers</a></li>
+        </ul> <!-- end tabs -->
+
+        <!-- Change this image to your own company's logo -->
+        <!-- The logo will automatically be resized to 30px height. -->
+        <a href="#" id="company-branding-small" class="fr"><%= image_tag("/admin/school_logo", :alt => 'Logo Missing')%></a>
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end header -->
+
+
+
+    <!-- MAIN CONTENT -->
+    <div id="content">
+
+      <div class="page-full-width cf">
+
+        <div class="side-menu fl">
+
+          <h3>Task</h3>
+          <ul>
+            <li><a href="/class_room/add_examination?class_room_id=<%= params[:class_room_id] %>">Add Examination</a></li>
+            <li><a href="/class_room/edit_examination?class_room_id=<%= params[:class_room_id] %>">Edit Examination</a></li>
+            <li><a href="/class_room/view_examination?class_room_id=<%= params[:class_room_id] %>">View Examination</a></li>
+            <li><a href="/class_room/void_examination?class_room_id=<%= params[:class_room_id] %>">Void Examination</a></li>
+            <li><a href="/class_room/add_examination_results?class_room_id=<%= params[:class_room_id] %>">Add Exam Result</a></li>
+            <li><a href="/class_room/edit_examination_results?class_room_id=<%= params[:class_room_id] %>">Edit Exam Result</a></li>
+            <li><a href="/class_room/view_examination_results?class_room_id=<%= params[:class_room_id] %>">View Exam Result</a></li>
+            <li><a href="/class_room/void_examination_results?class_room_id=<%= params[:class_room_id] %>">Void Exam Result</a></li>
+          </ul>
+
+        </div> <!-- end side-menu -->
+
+        <div class="side-content fr">
+
+          <div class="content-module">
+
+            <div class="content-module-heading cf">
+
+              <h3 class="fl">Edit Exam Assignment</h3>
+              <span class="fr expand-collapse-text">Click to collapse</span>
+              <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+            </div> <!-- end content-module-heading -->
+
+
+            <div class="content-module-main">
+              <% if flash[:notice] %>
+                <div class="confirmation-box round">
+                  <%= flash[:notice] %>
+                </div>
+              <% end %>
+              <% if flash[:error] %>
+                <div class="error-box round">
+                  <%= flash[:error] %>
+                </div>
+              <% end %>
+
+              <form id="exam_assignment" class="autoform" method="POST" action="/class_room/update_exam_assignment">
+
+                <div>
+                  <label for="text" style="width:100px;">Exam Type</label>
+                  <%= select_tag("exam_type", options_for_select(@exam_types, @selected_exam_type), {
+                      :class => "text required"})%>
+                </div>
+
+                <div>
+                  <label for="text" style="width:100px;">Course</label>
+                  <%= select_tag("course", options_for_select(@courses, @selected_course), {
+                      :class => "text required"})%>
+                </div>
+
+                <div>
+                  <label for="text" style="width:100px;">Exam Date</label><input type="text" name="exam_date" class="text required date-picker" value="<%= @exam_date %>"/>
+                </div>
+
+                <table style='width:500px;'>
+                  <tr>
+                    <td colspan='4' style='font-weight:bold; font-size: 1.1em;'>SELECT STUDENTS</td>
+                  </tr>
+                  <tr style='background-color:white;'>
+                    <td colspan='6' style='border-bottom:1px solid black;'>
+                      <span style='margin-left:11%;'><input type='checkbox' id='table-select-all' onclick='selectAll();'/>Select All</span>
+                    </td>
+                  </tr>
+                  <% @students.in_groups_of(3).each do |students| %>
+                    <tr>
+
+                      <% students.compact.each do |student| %>
+                        <td>
+                          <span style='float:right'>
+                            <input type='checkbox' id="<%= student.student_id %>" name=students[<%= student.student_id %>]></input>
+                          </span>
+                        </td>
+                        <td style='text-align:left;'><%= student.name%></td>
+                      <% end %>
+                    </tr>
+                  <% end %>
+                </table>
+
+                <div class="stripe-separator"><!--  --></div>
+                <%= hidden_field_tag("exam_id", params[:exam_id]) %>
+                <%= hidden_field_tag("class_room_id", params[:class_room_id]) %>
+                <input type="submit" value="Submit" class="round blue ic-right-arrow" style="" />
+
+              </form>
+            </div> <!-- end content-module-main -->
+
+          </div> <!-- end content-module -->
+
+        </div> <!-- end side-content -->
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end content -->
+
+    <%= javascript_include_tag("bootstrap") %>
+
+    <script>
+      function hideCancelButton(){
+        if ($("button.cancel")[0]){
+          $("button.cancel")[0].style.display='none';
+        }
+      }
+      window.setInterval("hideCancelButton();", 300);
+      checkExamAttendees();
+    </script>
+
+  </body>
+</html>

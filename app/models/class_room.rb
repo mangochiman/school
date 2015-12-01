@@ -5,6 +5,7 @@ class ClassRoom < ActiveRecord::Base
   has_many :class_room_courses
   has_many :class_room_teachers
   has_many :class_room_students
+  has_many :examinations
   has_many :student_class_room_adjustments, :foreign_key => :new_class_room_id
   
   def current_students
