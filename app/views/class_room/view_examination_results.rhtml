@@ -8,17 +8,200 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <!-- jQuery & JS files -->
-
     <%= javascript_include_tag("jquery") %>
     <%= javascript_include_tag("script") %>
     <%= javascript_include_tag("jquery-1.9.1.min") %>
     <%= javascript_include_tag("jquery.confirm") %>
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("bootstrap") %>
-    <script>
+    <script type="text/javascript">
+      var classRoomID = '<%= params[:class_room_id] %>';
 
+      function loadExamStudents(obj){
+        jQuery.ajax({
+          type: "POST",
+          url: "/examination/render_students",
+          data: "exam_id=" + obj.getAttribute("exam_id"),
+          success: function(results){
+            table = "<table style='width:60%; margin-left:10%;'>";
+            table+="<tr>";
+            table+="<th>#</th>";
+            table+="<th>Student Name</th>";
+            table+="</tr>";
+            var pos = 0
+            className = results[0]
+            results = results[1];
+            for (var i=0; i<=results.length - 1; i++){
+              studentName = results[i];
+              table+="<tr style='background-color:white;'>";
+              table+="<td>" + (pos = pos + 1) + "</td>";
+              table+="<td style='text-align:left; padding-left:18%;'>" + studentName + "</td>";
+              table+="</tr>";
+            }
+
+            table += "</table>";
+            students = table;
+
+            jQuery.confirm({
+              title:className,
+              text:students,
+              confirm: function(button) {
+              },
+              cancel: function(button) {
+              },
+              confirmButton: "Done"
+            });
+          }});
+      }
+
+      function loadExamResults(obj){
+        jQuery.ajax({
+          type: "POST",
+          url: "/examination/render_exam_results",
+          data: "exam_id=" + obj.getAttribute("exam_id"),
+          success: function(results){
+            table = "<table style='width:60%; margin-left:10%;'>";
+            table+="<tr>";
+            table+="<th style='width:60%;'>Student Name</th>";
+            table+="<th>Marks</th>";
+            table+="</tr>";
+            className = results[0]
+            results = results[1];
+            for (var i=0; i<=results.length - 1; i++){
+              studentName = results[i];
+              table+="<tr style='background-color:white;'>";
+              table+="<td style='text-align:left; padding-left:15%;'>" + results[i].name + "</td>";
+              table+="<td style='text-align:center; font-weight:bold;'>" + results[i].marks + "</td>";
+              table+="</tr>";
+            }
+
+            table += "</table>";
+            students = table;
+
+            jQuery.confirm({
+              title:className,
+              text:students,
+              confirm: function(button) {
+              },
+              cancel: function(button) {
+              },
+              confirmButton: "Done"
+            });
+          }});
+      }
+
+      function loadSearchResults(){
+        courseID = $('.course')[0].value;
+        examTypeID = $('.exam_type')[0].value;
+        jQuery.ajax({
+          type: "POST",
+          url: "/examination/filter_exams_with_results",
+          data: "class_room_id=" + classRoomID + '&course_id=' + courseID + '&exam_type_id=' + examTypeID,
+          success: function(results){
+            results = eval("(" + results  + ")");
+            html = "";
+            tbody = document.getElementById("exams");
+            for (var exam_id in results){
+              exam_type = results[exam_id]["exam_type"];
+              course = results[exam_id]["course"];
+              exam_date = results[exam_id]["exam_date"];
+              exam_attendees = results[exam_id]["exam_attendees"];
+
+              html+="<tr>";
+              html+="<td style='text-align:left; padding: 0.833em 0 0.833em 1.25em;'>" + exam_type +  "</td>";
+              html+="<td style='text-align: center;'>" + course +  "</td>";
+              html+="<td style='text-align: center;'>" + exam_date +  "</td>";
+              html+="<td><span style='margin-left:20%;' onmousedown='loadExamStudents(this);' class='label' exam_id= " + exam_id + ">" + exam_attendees +  "</span></td>";
+              html+="<td><span style='margin-left:10%;' onmousedown='loadExamResults(this);' class='label' exam_id=" + exam_id + ">View Results</span></td>"
+              html+="</tr>";
+            }
+            tbody.innerHTML = html
+
+          }});
+      }
     </script>
     <style>
+      .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: #317eac;
+      }
+
+      #filter td{
+        border: none;
+      }
+
+      #dropdown-actions{
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        color: #555;
+        font-size: 14px;
+        height: 34px;
+        line-height: 1.42857;
+        margin-left: 30%;
+        min-width: 108px;
+        padding: 6px 12px;
+        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+        margin-left: 0%;
+      }
+
+      #dropdown-actions option{
+        padding-left: 20px;
+      }
+
+      #search-student-form fieldset {
+        border: 1px solid gray;
+        float: left;
+        margin-bottom: 15px;
+        padding: 5px;
+        width: 98.7%;
+      }
+      #search-student-form legend {
+        color: #abda0f;
+        font-size: 14px;
+        font-weight: 100;
+        margin-left: 14px;
+        padding: 2px;
+
+        -moz-border-bottom-colors: none;
+        -moz-border-left-colors: none;
+        -moz-border-right-colors: none;
+        -moz-border-top-colors: none;
+        border-color: none;
+        border-image: none;
+        border-style: none;
+        border-width: 0;
+
+        margin-bottom: 0px;
+        padding: 0;
+        width: auto;
+      }
+
+      #search-student-form fieldset input {
+        color: #505050;
+        float: left;
+        margin-right: 5px;
+        width: 140px;
+        padding: 3px;
+        font-size: 14px;
+      }
+
+      table th:first-child {
+        border-style: none none none !important;
+      }
+
+      .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: #317eac;
+      }
       .label {
         border-radius: 1.5em;
         color: #fff;
@@ -37,95 +220,8 @@
         cursor: pointer;
       }
 
-      table{
-        margin-left:15%;
-        width: 60%;
-      }
-      table td #simple-input{
-        float: right;
-      }
-
-      table label{
-        text-align: left;
-      }
-      #simple-input{
-        font-size: 10pt !important;
-      }
-
-      #registration input[type="text"], input[type="password"], textarea {
-        border: 1px solid #d9dbdd;
-        outline: medium none;
-        padding: 0.5em 0.225em;
-      }
-      input[type="submit"] {
-        margin-left: 37%;
-      }
-      table th:first-child {
-        border-style: none none none !important;
-      }
-
-      .classes{
-        position: relative;
-        margin-left: 0%;
-        width: 100%;
-      }
-
-      .classes th, tbody{
-        text-align: center;
-      }
-
-      .modal-title {
-        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-        font-weight: 500;
-        line-height: 1.1;
-        font-size: 1.2em;
-        color: #317eac;
-      }
-
       a{
-        cursor: pointer;
-      }
-
-      #search-student-form fieldset {
-        border: 1px solid gray;
-        float: left;
-        margin-bottom: 15px;
-        padding: 0px;
-        float: none;
-      }
-      #search-student-form legend {
-        color: #abda0f;
-        font-size: 14px;
-        font-weight: 100;
-        margin-left: 14px;
-        padding: 2px;
-        width: initial;
-        margin-bottom: initial;
-        border-style: none;
-      }
-
-      #search-student-form fieldset input {
-        color: #505050;
-        float: left;
-        margin-right: 5px;
-        width: 250px;
-        padding: 6px;
-        font-size: 14px;
-        border: 1px solid #d9dbdd;
-        outline: medium none;
-      }
-
-      #search-student-form table td{
-        border-left: none;
-      }
-
-      form.autoform input, select {
-        font-size: 0.8em !important;
-        font-weight: bold;
-      }
-
-      .orange{
-        background-color: #EEEE00 !important;
+        cursor: pointer
       }
     </style>
   </head>
@@ -183,7 +279,7 @@
 
             <div class="content-module-heading cf">
 
-              <h3 class="fl">View Examination Results</h3>
+              <h3 class="fl">View Exam Results</h3>
               <span class="fr expand-collapse-text">Click to collapse</span>
               <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -208,14 +304,60 @@
                   <div style="margin-left:2%;">
                     <table style="width: 45%; float: right;">
                       <tr>
-                        <td style="font-size: 13pt;">Name</td>
-                        <td style="width: 50px !important;"><input type="text" class="class_room_search"/></td>
-                        <td style="width: 20px"><a onclick="loadSearchResults();" class="button round blue image-right ic-search text-upper">Search</a></td>
+                        <td style="text-align:right;">Course</td>
+                        <td style="">
+                          <%= select_tag:course, options_for_select(@courses), {
+                            :id => "dropdown-actions", :class => "course"} %>
+                        </td>
+                        <td style="text-align:right;">Exam</td>
+                        <td>
+                          <%= select_tag:exam_type, options_for_select(@exam_types), {
+                            :id => "dropdown-actions" , :class => "exam_type"} %>
+                        </td>
+                        <td>
+                          <a onclick="loadSearchResults();" class="button round blue image-right ic-search text-upper">Filter</a>
+                        </td>
                       </tr>
                     </table>
                   </div>
                 </fieldset>
               </form>
+
+              <table>
+
+                <thead>
+
+                  <tr>
+                    <th style="text-align: center; min-width: 15%;">Exam Type</th>
+                    <th style="text-align: center;">Course</th>
+                    <th style="text-align: center;">Exam Date</th>
+                    <th style="max-width:10%; text-align: center;">Exam Attendees</th>
+                    <th style="min-width:16%; text-align: center;">Exam Results</th>
+                  </tr>
+
+                </thead>
+
+                <tbody id="exams">
+                  <% @exams.each do |exam| %>
+                    <tr id="<%= exam.id %>">
+                      <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%=  exam.examination_type.name.titleize %></td>
+                      <td style="text-align: center;"><%=  exam.course.name rescue nil %></td>
+                      <td style="text-align: center;"><%=  exam.start_date.to_date.strftime("%d/%b/%Y")%></td>
+                      <td>
+                        <span exam_id="<%= exam.id %>" class="label" onmousedown="loadExamStudents(this);" style="margin-left:20%;">
+                          <%=  exam.students.count %>
+                        </span>
+                      </td>
+                      <td>
+                        <span exam_id="<%= exam.id %>" class="label" onmousedown="loadExamResults(this);" style="margin-left:10%;">
+                          View Results
+                        </span>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+
+              </table>
 
             </div> <!-- end content-module-main -->
 

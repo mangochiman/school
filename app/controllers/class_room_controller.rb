@@ -597,6 +597,14 @@ class ClassRoomController < ApplicationController
 
   def view_examination_results
     @class_room = ClassRoom.find(params[:class_room_id])
+    
+    @exam_types = [["---Select Exam Type---", ""]]
+    @exam_types += ExaminationType.all.collect{|e|[e.name, e.id]}
+
+    @courses = [["---Select Course---", ""]]
+    @courses += @class_room.class_room_courses.collect{|crc|[crc.course.name, crc.course.course_id]}
+    @exams = Examination.find_by_sql("SELECT e.* FROM exam e INNER JOIN exam_result er
+      ON e.exam_id = er.exam_id AND e.class_room_id = #{params[:class_room_id]}")
   end
 
   def void_examination_results
