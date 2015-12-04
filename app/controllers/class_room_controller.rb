@@ -513,10 +513,86 @@ class ClassRoomController < ApplicationController
 
   def add_examination_results
     @class_room = ClassRoom.find(params[:class_room_id])
+    @exams = Examination.find_by_sql("SELECT e.* FROM exam e LEFT JOIN exam_result er
+      ON e.exam_id = er.exam_id AND e.class_room_id = #{params[:class_room_id]}
+     WHERE er.exam_id IS NULL") #Exams without results
+
+    @exam_types = [["---Select Exam Type---", ""]]
+    @exam_types += ExaminationType.all.collect{|e|[e.name, e.id]}
+
+    @courses = [["---Select Course---", ""]]
+    @courses += @class_room.class_room_courses.collect{|crc|[crc.course.name, crc.course.course_id]}
+    
   end
 
+  def add_exam_result
+    @class_room = ClassRoom.find(params[:class_room_id])
+
+    @exam = Examination.find(params[:exam_id])
+    @students = @exam.students
+
+    @exams_without_results = Examination.find_by_sql("SELECT e.* FROM exam e LEFT JOIN exam_result er
+      ON e.exam_id = er.exam_id AND e.class_room_id = #{params[:class_room_id]} WHERE er.exam_id IS NULL")
+  end
+
+  def create_exam_result
+    ActiveRecord::Base.transaction do
+      (params[:students] || []).each do |student_id, result|
+        next if result.blank?
+        ExaminationResult.create({
+            :exam_id => params[:exam_id],
+            :student_id => student_id,
+            :marks => result.to_i
+          })
+      end
+    end
+
+    flash[:notice] = "Operation successful"
+    redirect_to("/class_room/add_examination_results?class_room_id=#{params[:class_room_id]}") and return
+  end
+  
   def edit_examination_results
     @class_room = ClassRoom.find(params[:class_room_id])
+    
+    @exam_types = [["---Select Exam Type---", ""]]
+    @exam_types += ExaminationType.all.collect{|e|[e.name, e.id]}
+
+    @courses = [["---Select Course---", ""]]
+    @courses += @class_room.class_room_courses.collect{|crc|[crc.course.name, crc.course.course_id]}
+
+    @exams = Examination.find_by_sql("SELECT e.* FROM exam e INNER JOIN exam_result er
+      ON e.exam_id = er.exam_id AND e.class_room_id = #{params[:class_room_id]}")
+  end
+
+  def edit_exam_result_record
+    @class_room = ClassRoom.find(params[:class_room_id])
+
+    @exam = Examination.find(params[:exam_id])
+    @students = @exam.students
+    @exams_with_results = Examination.find_by_sql("SELECT e.* FROM exam e INNER JOIN exam_result er
+      ON e.exam_id = er.exam_id AND e.class_room_id = #{params[:class_room_id]}")
+  end
+
+  def update_exam_result_record
+    @exam = Examination.find(params[:exam_id])
+    ActiveRecord::Base.transaction do
+
+      @exam.examination_results.each do |result|
+        result.delete
+      end
+
+      (params[:students] || []).each do |student_id, result|
+        next if result.blank?
+        ExaminationResult.create({
+            :exam_id => params[:exam_id],
+            :student_id => student_id,
+            :marks => result.to_i
+          })
+      end
+      flash[:notice] = "Operation successful"
+    end
+
+    redirect_to("/class_room/edit_examination_results?class_room_id=#{params[:class_room_id]}") and return
   end
 
   def view_examination_results

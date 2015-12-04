@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Exam Type Management</title>
+    <!-- Optimize for mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!-- jQuery & JS files -->
+    <%= javascript_include_tag("jquery") %>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("jquery.confirm") %>
+    <%= javascript_include_tag("script") %>
+    <%= javascript_include_tag("gvalidator") %>
+    <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("metallic") %>
+    <%= stylesheet_link_tag("gvalidator") %>
+    <%= stylesheet_link_tag("bootstrap") %>
+
+    <style>
+      #results_entry #exams input{
+        padding: 3px 3px 5px 3px;
+        width: 55%;
+        margin-top: 3%;
+      }
+
+      .results{
+        background-color: #fff;
+        border: 1px solid #ccc;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        transition: border 0.2s linear 0s, box-shadow 0.2s linear 0s;
+        border-radius: 4px;
+        color: green;
+        text-align: center;
+        display: inline-block;
+        font-size: 14px;
+        height: 20px;
+        line-height: 20px;
+        margin-bottom: 10px;
+        padding: 4px 6px;
+      }
+
+      .results:focus{
+        border-color: rgba(82, 168, 236, 0.8);
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(82, 168, 236, 0.6);
+        outline: 0 none;
+      }
+
+      #filter td{
+        border: none;
+      }
+
+      #dropdown-actions{
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        color: #555;
+        font-size: 14px;
+        height: 34px;
+        line-height: 1.42857;
+        margin-left: 30%;
+        min-width: 108px;
+        padding: 6px 12px;
+        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+        margin-left: 0%;
+      }
+
+      #dropdown-actions option{
+        padding-left: 20px;
+      }
+
+      #search-student-form fieldset {
+        border: 1px solid gray;
+        float: left;
+        margin-bottom: 15px;
+        padding: 5px;
+        width: 98.7%;
+      }
+      #search-student-form legend {
+        color: #abda0f;
+        font-size: 14px;
+        font-weight: 100;
+        margin-left: 14px;
+        padding: 2px;
+
+        -moz-border-bottom-colors: none;
+        -moz-border-left-colors: none;
+        -moz-border-right-colors: none;
+        -moz-border-top-colors: none;
+        border-color: none;
+        border-image: none;
+        border-style: none;
+        border-width: 0;
+        margin-bottom: 0px;
+        padding: 0;
+        width: auto;
+
+
+      }
+      #search-student-form fieldset input {
+        color: #505050;
+        float: left;
+        margin-right: 5px;
+        width: 140px;
+        padding: 3px;
+        font-size: 14px;
+      }
+
+      table th:first-child {
+        border-style: none none none !important;
+      }
+
+      .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: #317eac;
+      }
+      .label {
+        border-radius: 1.5em;
+        color: #fff;
+        display: inline;
+        background-color: #5bc0de;
+        font-size: 1.2em;
+        font-weight: bold;
+        line-height: 1;
+        padding-left: 20%;
+        padding-right: 20%;
+        padding-top:2%;
+        padding-bottom:2%;
+        text-align: center;
+        vertical-align: baseline;
+        white-space: nowrap;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <div id="header-with-tabs">
+
+      <div class="page-full-width cf">
+
+        <ul id="tabs" class="fl">
+          <li><a href="/class_room/switch_class_room_menu?class_room_id=<%= params[:class_room_id] %>" class="active-tab dashboard-tab orange"><%= @class_room.name %></a></li>
+          <li><a href="/class_room/admissions_tab?class_room_id=<%= params[:class_room_id] %>">Admissions/Registrations</a></li>
+          <li><a href="/class_room/attendance_tab?class_room_id=<%= params[:class_room_id] %>">Attendance Register</a></li>
+          <li><a href="/class_room/behavior_tab?class_room_id=<%= params[:class_room_id] %>" >Behavior</a></li>
+          <li><a href="/class_room/examinations_tab?class_room_id=<%= params[:class_room_id] %>" class="active-tab">Examinations</a></li>
+          <li><a href="/class_room/payments_tab?class_room_id=<%= params[:class_room_id] %>">Payments</a></li>
+          <li><a href="/class_room/courses_tab?class_room_id=<%= params[:class_room_id] %>">Courses</a></li>
+          <li><a href="/class_room/teachers_tab?class_room_id=<%= params[:class_room_id] %>">Teachers</a></li>
+        </ul> <!-- end tabs -->
+
+        <!-- Change this image to your own company's logo -->
+        <!-- The logo will automatically be resized to 30px height. -->
+        <a href="#" id="company-branding-small" class="fr"><%= image_tag("/admin/school_logo", :alt => 'Logo Missing')%></a>
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end header -->
+
+
+
+    <!-- MAIN CONTENT -->
+    <div id="content">
+
+      <div class="page-full-width cf">
+
+        <div class="side-menu fl">
+
+          <h3>Task</h3>
+          <ul>
+            <li><a href="/class_room/add_examination?class_room_id=<%= params[:class_room_id] %>">Add Examination</a></li>
+            <li><a href="/class_room/edit_examination?class_room_id=<%= params[:class_room_id] %>">Edit Examination</a></li>
+            <li><a href="/class_room/view_examination?class_room_id=<%= params[:class_room_id] %>">View Examination</a></li>
+            <li><a href="/class_room/void_examination?class_room_id=<%= params[:class_room_id] %>">Void Examination</a></li>
+            <li><a href="/class_room/add_examination_results?class_room_id=<%= params[:class_room_id] %>">Add Exam Result</a></li>
+            <li><a href="/class_room/edit_examination_results?class_room_id=<%= params[:class_room_id] %>">Edit Exam Result</a></li>
+            <li><a href="/class_room/view_examination_results?class_room_id=<%= params[:class_room_id] %>">View Exam Result</a></li>
+            <li><a href="/class_room/void_examination_results?class_room_id=<%= params[:class_room_id] %>">Void Exam Result</a></li>
+          </ul>
+
+        </div> <!-- end side-menu -->
+
+        <div class="side-content fr">
+
+          <div class="content-module">
+
+            <div class="half-size-column fl" style="width:69%;">
+
+              <div class="content-module">
+
+                <div class="content-module-heading cf">
+
+                  <h3 class="fl">Edit Exam Results</h3>
+                  <span class="fr expand-collapse-text">Click to collapse</span>
+                  <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+                </div> <!-- end content-module-heading -->
+
+
+                <div class="content-module-main">
+                  <% if flash[:notice] %>
+                    <div class="confirmation-box round">
+                      <%= flash[:notice] %>
+                    </div>
+                  <% end %>
+                  <% if flash[:error] %>
+                    <div class="error-box round">
+                      <%= flash[:error] %>
+                    </div>
+                  <% end %>
+
+                  <form id="results_entry" action="/class_room/update_exam_result_record" method="post">
+                    <table>
+
+                      <thead>
+                        <tr>
+                          <th colspan="6" style="text-align:left; border-bottom: 2px solid white !important; background-color: #f89406;">
+                            <span style="padding-left:10%;">
+                              Class: <span style="font-weight:bold;"><%= @exam.class_room.name %></span>
+                            </span>
+                            <span style="padding-left:10%;">
+                              Course: <span style="font-weight:bold;"><%= @exam.course.name %></span>
+                            </span>
+                            <span style="padding-left:10%;">
+                              Exam Date: <span style="font-weight:bold;"><%= @exam.start_date.to_date.strftime("%d-%b-%Y") %></span>
+                            </span>
+                          </th>
+                        </tr>
+                        <tr>
+                          <th style="width:30%;">Name</th>
+                          <th style="text-align:center;">Email</th>
+                          <th style="text-align:center;">Gender</th>
+                          <th style="min-width:20%;">Marks (out of 100)</th>
+                        </tr>
+
+                      </thead>
+
+                      <tbody id="exams">
+                        <% @students.each do |student| %>
+                          <% exam_result = @exam.examination_results.find_by_student_id(student.id) %>
+                          <tr>
+                            <td style="text-align:left; padding: 0.833em 0 0.833em 4.25em;"><%= student.fname.capitalize.to_s + ' ' + student.lname.capitalize.to_s %></td>
+                            <td style="text-align:center;"><a href="#"><%=  student.email %></a></td>
+                            <td style="text-align:center;"><%=  student.gender %></td>
+                            <td>
+                              <input type="text" value="<%= exam_result.marks.to_i rescue ''%>" name="students[<%= student.id %>]" class="results" />
+                            </td>
+                          </tr>
+                        <% end %>
+                      </tbody>
+
+                    </table>
+                    <div class="stripe-separator"><!--  --></div>
+                    <%= hidden_field_tag("exam_id", params[:exam_id]) %>
+                    <%= hidden_field_tag("class_room_id", params[:class_room_id]) %>
+                    <input type="submit" value="Submit" class="round blue ic-right-arrow" />
+                  </form>
+                </div> <!-- end content-module-main -->
+
+              </div> <!-- end content-module -->
+
+            </div>
+            <div class="half-size-column fr" style="width:30%">
+
+              <div class="content-module">
+
+                <div class="content-module-heading cf">
+
+                  <h3 class="fl">Exams With Results (<%= @exams_with_results.count %>)</h3>
+                  <span class="fr expand-collapse-text">Click to collapse</span>
+                  <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+                </div> <!-- end content-module-heading -->
+
+
+                <div class="content-module-main cf">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th style="padding: 4px; font-weight: bold; min-width: 45%;">Course</th>
+                        <th style="padding: 4px; text-align: center; font-weight: bold;">Exam Date</th>
+                        <th style="font-weight: bold; width:25%;">Results</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% @exams_with_results.each do |exam| %>
+                        <tr>
+                          <td style="padding:2px; text-align: left; padding-left: 10px;"><%= exam.course.name %></td>
+                          <td style="padding:2px;"><%= exam.start_date.to_date.strftime("%d/%b/%Y") %></td>
+                          <td style="padding:2px;">
+                            <a href="/class_room/edit_exam_result_record?class_room_id=<%= params[:class_room_id] %>&exam_id=<%= exam.id %>" class="button round blue image-right ic-right-arrow text-upper">Capture</a>
+                          </td>
+                        </tr>
+                      <% end %>
+                    </tbody>
+                  </table>
+                </div> <!-- end content-module-main -->
+
+              </div> <!-- end content-module -->
+
+            </div>
+
+          </div> <!-- end content-module -->
+
+
+
+
+        </div> <!-- end side-content -->
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end content -->
+
+    <%= javascript_include_tag("bootstrap") %>
+
+    <script>
+      function hideCancelButton(){
+        if ($("button.cancel")[0]){
+          $("button.cancel")[0].style.display='none';
+        }
+      }
+      window.setInterval("hideCancelButton();", 300);
+    </script>
+  </body>
+</html>
