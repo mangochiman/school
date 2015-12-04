@@ -184,9 +184,8 @@
               exam_date = results[exam_id]["exam_date"];
               exam_attendees = results[exam_id]["exam_attendees"];
 
-              html+="<tr>";
-              html+="<td><input type='checkbox' exam_id=" + exam_id + "/></td>"
-              html+="<td>" + class_room +  "</td>";
+              html+="<tr id='" + exam_id + "'>";
+              html+="<td><input type='checkbox' exam_id=" + exam_id + "/></td>";
               html+="<td style='text-align: center;'>" + exam_type +  "</td>";
               html+="<td style='text-align: center;'>" + course +  "</td>";
               html+="<td style='text-align: center;'>" + exam_date +  "</td>";
@@ -417,7 +416,6 @@
 
                   <tr>
                     <th><input type="checkbox" id="table-select-all" onclick="selectAll();"/></th>
-                    <th style="min-width:15%;">Class</th>
                     <th style="text-align: center;">Exam Type</th>
                     <th style="text-align: center;">Course</th>
                     <th style="text-align: center;">Exam Date</th>
@@ -440,7 +438,6 @@
                   <% @exams.each do |exam| %>
                     <tr id="<%= exam.id %>">
                       <td><input type="checkbox" exam_id="<%= exam.id %>"/></td>
-                      <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= exam.class_room.name %></td>
                       <td style="text-align: center;"><%=  exam.examination_type.name.titleize %></td>
                       <td style="text-align: center;"><%=  exam.course.name rescue nil %></td>
                       <td style="text-align: center;"><%=  exam.start_date.to_date.strftime("%d/%b/%Y")%></td>
