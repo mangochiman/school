@@ -67,7 +67,7 @@
       }
 
       input[type="submit"] {
-        margin-left: 31%;
+        margin-left: 24%;
       }
 
       #payment, #semester {
@@ -91,9 +91,13 @@
         width: 191px !important;
         text-align: center;
       }
-      
+
       #amount{
         text-align: center;
+      }
+
+      .orange{
+        background-color: #EEEE00 !important;
       }
     </style>
   </head>
@@ -104,8 +108,14 @@
       <div class="page-full-width cf">
 
         <ul id="tabs" class="fl">
-          <li><a href="/payments/payments_management_dashboard" class="dashboard-tab">Dashboard</a></li>
-          <li><a href="/payments/payments_management_menu" class="active-tab">Payments</a></li>
+          <li><a href="/class_room/switch_class_room_menu?class_room_id=<%= params[:class_room_id] %>" class="active-tab dashboard-tab orange"><%= @class_room.name %></a></li>
+          <li><a href="/class_room/admissions_tab?class_room_id=<%= params[:class_room_id] %>">Admissions/Registrations</a></li>
+          <li><a href="/class_room/attendance_tab?class_room_id=<%= params[:class_room_id] %>">Attendance Register</a></li>
+          <li><a href="/class_room/behavior_tab?class_room_id=<%= params[:class_room_id] %>">Behavior</a></li>
+          <li><a href="/class_room/examinations_tab?class_room_id=<%= params[:class_room_id] %>">Examinations</a></li>
+          <li><a href="/class_room/payments_tab?class_room_id=<%= params[:class_room_id] %>" class="active-tab">Payments</a></li>
+          <li><a href="/class_room/courses_tab?class_room_id=<%= params[:class_room_id] %>">Courses</a></li>
+          <li><a href="/class_room/teachers_tab?class_room_id=<%= params[:class_room_id] %>">Teachers</a></li>
         </ul> <!-- end tabs -->
 
         <!-- Change this image to your own company's logo -->
@@ -127,11 +137,11 @@
 
           <h3>Task</h3>
           <ul>
-            <li><a href="/payments/add_payment">Add Payment</a></li>
-            <li><a href="/payments/edit_payment">Edit Payment</a></li>
-            <li><a href="/payments/void_payments">Void Payment</a></li>
-            <li><a href="/payments/view_payments">View Payment</a></li>
-            <li><a href="/payment_types/payment_types_menu">Set Payment Types</a></li>
+            <li><a href="/class_room/add_student_payment?class_room_id=<%= params[:class_room_id] %>">Add Student Payment</a></li>
+            <li><a href="/class_room/edit_student_payments?class_room_id=<%= params[:class_room_id] %>">Edit Student Payments</a></li>
+            <li><a href="/class_room/view_student_payments?class_room_id=<%= params[:class_room_id] %>">View Student Payments</a></li>
+            <li><a href="/class_room/view_class_payments?class_room_id=<%= params[:class_room_id] %>">View Class Payments</a></li>
+            <li><a href="/class_room/void_student_payments?class_room_id=<%= params[:class_room_id] %>">Void Student Payments</a></li>
           </ul>
 
         </div> <!-- end side-menu -->
@@ -164,7 +174,7 @@
                       <%= flash[:error] %>
                     </div>
                   <% end %>
-                  <form id="payment_type" class="autoform" action="/payments/edit_particular_payment" method="POST">
+                  <form id="payment_type" class="autoform" action="/class_room/edit_particular_payment" method="POST">
 
                     <div>
                       <label for="amount" style="width:101px;">Amount</label><input type="text" name="amount" id="amount" class="text required" value="<%= @payment.amount_paid.to_i %>" onkeyup="validateAmount(this)"/>
@@ -176,6 +186,7 @@
 
                     <div class="stripe-separator"><!--  --></div>
                     <%= hidden_field_tag("payment_id", params[:payment_id]) %>
+                    <%= hidden_field_tag("class_room_id", params[:class_room_id]) %>
                     <input type="submit" value="Submit" class="round blue ic-right-arrow" />
                   </form>
                 </div> <!-- end content-module-main -->

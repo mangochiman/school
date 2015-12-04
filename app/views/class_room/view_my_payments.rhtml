@@ -19,22 +19,6 @@
     <%= stylesheet_link_tag("gvalidator") %>
     <%= stylesheet_link_tag("bootstrap") %>
 
-    <script type="text/javascript">
-      
-      function validateAmount(){
-        amountInput = document.getElementById('amount');
-        amount = parseInt(amountInput.value).toString();
-        console.log(amount)
-        if (amount == 'NaN'){
-          amountInput.value = '';
-        }
-        else{
-          amountInput.value = amount;
-        }
-      }
-
-    </script>
-
     <style>
       .modal-title {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -91,21 +75,36 @@
         width: 191px !important;
         text-align: center;
       }
-      
-      #amount{
-        text-align: center;
+
+      table th:first-child {
+        border-style: none none none !important;
       }
+
+      a{
+        cursor: pointer;
+      }
+
+      .orange{
+        background-color: #EEEE00 !important;
+      }
+      
     </style>
   </head>
-  <body>
+  <body>   
     <!-- HEADER -->
     <div id="header-with-tabs">
 
       <div class="page-full-width cf">
 
         <ul id="tabs" class="fl">
-          <li><a href="/payments/payments_management_dashboard" class="dashboard-tab">Dashboard</a></li>
-          <li><a href="/payments/payments_management_menu" class="active-tab">Payments</a></li>
+          <li><a href="/class_room/switch_class_room_menu?class_room_id=<%= params[:class_room_id] %>" class="active-tab dashboard-tab orange"><%= @class_room.name %></a></li>
+          <li><a href="/class_room/admissions_tab?class_room_id=<%= params[:class_room_id] %>">Admissions/Registrations</a></li>
+          <li><a href="/class_room/attendance_tab?class_room_id=<%= params[:class_room_id] %>">Attendance Register</a></li>
+          <li><a href="/class_room/behavior_tab?class_room_id=<%= params[:class_room_id] %>">Behavior</a></li>
+          <li><a href="/class_room/examinations_tab?class_room_id=<%= params[:class_room_id] %>">Examinations</a></li>
+          <li><a href="/class_room/payments_tab?class_room_id=<%= params[:class_room_id] %>" class="active-tab">Payments</a></li>
+          <li><a href="/class_room/courses_tab?class_room_id=<%= params[:class_room_id] %>">Courses</a></li>
+          <li><a href="/class_room/teachers_tab?class_room_id=<%= params[:class_room_id] %>">Teachers</a></li>
         </ul> <!-- end tabs -->
 
         <!-- Change this image to your own company's logo -->
@@ -127,11 +126,11 @@
 
           <h3>Task</h3>
           <ul>
-            <li><a href="/payments/add_payment">Add Payment</a></li>
-            <li><a href="/payments/edit_payment">Edit Payment</a></li>
-            <li><a href="/payments/void_payments">Void Payment</a></li>
-            <li><a href="/payments/view_payments">View Payment</a></li>
-            <li><a href="/payment_types/payment_types_menu">Set Payment Types</a></li>
+            <li><a href="/class_room/add_student_payment?class_room_id=<%= params[:class_room_id] %>">Add Student Payment</a></li>
+            <li><a href="/class_room/edit_student_payments?class_room_id=<%= params[:class_room_id] %>">Edit Student Payments</a></li>
+            <li><a href="/class_room/view_student_payments?class_room_id=<%= params[:class_room_id] %>">View Student Payments</a></li>
+            <li><a href="/class_room/view_class_payments?class_room_id=<%= params[:class_room_id] %>">View Class Payments</a></li>
+            <li><a href="/class_room/void_student_payments?class_room_id=<%= params[:class_room_id] %>">Void Student Payments</a></li>
           </ul>
 
         </div> <!-- end side-menu -->
@@ -146,7 +145,7 @@
 
                 <div class="content-module-heading cf">
 
-                  <h3 class="fl">Edit Payment</h3>
+                  <h3 class="fl">View Payments</h3>
                   <span class="fr expand-collapse-text">Click to collapse</span>
                   <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -164,20 +163,32 @@
                       <%= flash[:error] %>
                     </div>
                   <% end %>
-                  <form id="payment_type" class="autoform" action="/payments/edit_particular_payment" method="POST">
-
-                    <div>
-                      <label for="amount" style="width:101px;">Amount</label><input type="text" name="amount" id="amount" class="text required" value="<%= @payment.amount_paid.to_i %>" onkeyup="validateAmount(this)"/>
+                  
+                  <% if @payments_hash.blank? %>
+                    <div class="error-box round">
+                      No payments found
                     </div>
-
-                    <div>
-                      <label for="dop" style="width:101px;">Date Paid</label><input type="text" name="payment_date" id="dop" class="text required date-picker" value="<%= @payment.date.to_date.strftime("%Y-%m-%d") %>"/>
-                    </div>
-
-                    <div class="stripe-separator"><!--  --></div>
-                    <%= hidden_field_tag("payment_id", params[:payment_id]) %>
-                    <input type="submit" value="Submit" class="round blue ic-right-arrow" />
-                  </form>
+                  <% end %>
+                  
+                  <table>
+                    <% @payments_hash.each do |payment_type_id, values| %>
+                      <tr>
+                        <th colspan="3" style="font-weight:bold;"><%= @payment_types_hash[payment_type_id] %></th>
+                      </tr>
+                      <tr>
+                        <th style="border-top:1px solid white !important">Date of Payment</th>
+                        <th style="border-top:1px solid white; border-left:1px solid white; padding:0px; text-align: center;">Amount Paid</th>
+                        <th style="border-top:1px solid white; border-left:1px solid white;">Date Created</th>
+                      </tr>
+                      <% values.each do |payment_id, data| %>
+                        <tr>
+                          <td style="width:20em;"><%= data["date_paid"] %></td>
+                          <td style="text-align: center;"><%= number_to_currency(data["amount_paid"], :unit => 'MK') %></td>
+                          <td style="width:20em;"><%= data["date_created"] %></td>
+                        </tr>
+                      <% end %>
+                    <% end %>
+                  </table>
                 </div> <!-- end content-module-main -->
 
               </div> <!-- end content-module -->
@@ -189,7 +200,7 @@
 
                 <div class="content-module-heading cf">
 
-                  <h3 class="fl">Previous Payments</h3>
+                  <h3 class="fl">Student Details</h3>
                   <span class="fr expand-collapse-text">Click to collapse</span>
                   <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -197,42 +208,28 @@
 
 
                 <div class="content-module-main cf">
-                  <span style="font-size: 0.9em; font-weight: bold;">Name</span>:
-                  <span style="font-size:0.9em;">
-                    <a href="#"><%= @student.fname.to_s + ' ' + @student.lname.to_s + ' (' + @student.gender.first.capitalize.to_s + ')' %></a>
-                  </span><br />
-                  <span style="font-size: 0.9em; font-weight: bold;">Class:</span>
-                  <span style="font-size:0.9em;">
-                    <a href="#"><%= @student.current_class %></a>
-                  </span><br />
-
-                  <% if @payments_hash.blank? %>
-                    <table>
-                      <tr>
-                        <th colspan="2" style="font-weight: bold;">No Previous Payments</th>
-                      </tr>
-                    </table>
-                  <% end %>
-
-                  <% @payments_hash.each do |payment_type_id, values| %>
-                    <table>
-                      <tr>
-                        <th colspan="2" style="font-weight: bold;"><%= @payment_types_hash[payment_type_id].to_s + ' ('+  number_to_currency(values["amount_required"], :unit => 'MK').to_s + ')' %></th>
-                      </tr>
-                      <tr>
-                        <td style="text-align: left;">Previous Payments</td>
-                        <td style="text-align: right; font-weight: bold;"><%= number_to_currency(values["amount_paid"], :unit => 'MK') %></td>
-                      </tr>
-                      <tr>
-                        <td style="text-align: left;">Balance</td>
-                        <td style="text-align: right; font-weight: bold;"><%= number_to_currency(values["balance"], :unit => 'MK') %></td>
-                      </tr>
-                      <tr>
-                        <td style="text-align: left;">Latest Date Paid</td>
-                        <td style="text-align: right; font-weight: bold;"><%= values["latest_date_paid"] %></td>
-                      </tr>
-                    </table>
-                  <% end %>
+                  <table>
+                    <tr>
+                      <td style="text-align:left; font-weight: bold;">Name</td>
+                      <th style="text-align:left;">
+                        <%= @student.fname.to_s + ' ' + @student.lname.to_s + ' (' + @student.gender.first.capitalize.to_s + ')' %>
+                      </th>
+                    </tr>
+                    <tr>
+                      <td style="text-align:left; font-weight: bold;">Class</td>
+                      <th style="text-align:left; border-top: 2px solid white;">
+                        <%= @student.current_class %>
+                      </th>
+                    </tr>
+                    <tr>
+                      <td style="text-align:left; font-weight: bold; ">E-mail</td>
+                      <th style="text-align:left; border-top: 2px solid white;"><%= @student.email %></th>
+                    </tr>
+                    <tr>
+                      <td style="text-align:left; font-weight: bold;">Phone</td>
+                      <th style="text-align:left; border-top: 2px solid white;"><%= @student.phone %></th>
+                    </tr>
+                  </table>
                 </div> <!-- end content-module-main -->
 
               </div> <!-- end content-module -->
@@ -240,6 +237,9 @@
             </div>
 
           </div> <!-- end content-module -->
+
+
+
 
         </div> <!-- end side-content -->
 
@@ -252,7 +252,7 @@
     <script>
       $('.date-picker').Zebra_DatePicker({
         view : 'years',
-        direction: ['<%=  (Date.today - 100.years).strftime("%Y-%m-%d") %>', '<%=  Date.today.strftime("%Y-%m-%d") %>']
+        direction: ['<%=  (Date.today - 10.years).strftime("%Y-%m-%d") %>', '<%=  Date.today.strftime("%Y-%m-%d") %>']
       });
     </script>
   </body>

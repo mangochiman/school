@@ -631,6 +631,59 @@ class ClassRoomController < ApplicationController
           AND scra.status = 'active' AND sa.student_id IS NULL")
   end
 
+  def create_student_payment
+    @class_room = ClassRoom.find(params[:class_room_id])
+    @student = Student.find(params[:student_id])
+
+    @payment_types = [["[Payment Type]", ""]]
+    @payment_types += PaymentType.all.collect{|c|[c.name, c.id]}
+
+    @current_student_payments = Payment.find(:all, :conditions => ["student_id =?",
+        params[:student_id]])
+    @current_semester_audit_id = Semester.current_active_semester_audit.semester_audit_id rescue ''
+    #@current_semester_id = Semester.current_active_semester_audit.semester_id rescue ''
+
+    @payment_types_hash = {}
+    (PaymentType.all || []).each do |payment_type|
+      @payment_types_hash[payment_type.id] = payment_type.name
+    end
+
+    previous_payments = @student.payments
+
+    @payments_hash = {}
+
+    previous_payments.each do |payment|
+      payment_type_id = payment.payment_type_id
+      @payments_hash[payment_type_id] = {} if @payments_hash[payment_type_id].blank?
+      latest_payment = @student.payments.find(:first, :order => "DATE(date) DESC",
+        :conditions => ["payment_type_id =?", payment_type_id]) if @payments_hash[payment_type_id].blank?
+
+      @payments_hash[payment_type_id]["amount_required"] = payment.payment_type.amount_required.to_i
+      @payments_hash[payment_type_id]["amount_paid"] = 0 if @payments_hash[payment_type_id]["amount_paid"].blank?
+      @payments_hash[payment_type_id]["amount_paid"] += payment.amount_paid.to_i
+      @payments_hash[payment_type_id]["balance"] = payment.payment_type.amount_required.to_i if @payments_hash[payment_type_id]["balance"].blank?
+      @payments_hash[payment_type_id]["balance"] -= payment.amount_paid.to_i
+      @payments_hash[payment_type_id]["latest_date_paid"] = latest_payment.date.to_date.strftime("%d-%b-%Y") if latest_payment
+    end
+
+    if (request.method == :post)
+      student_id = params[:student_id]
+      payment_type = params[:payment_type]
+      semester_audit_id = params[:semester]
+      amount_paid = params[:amount]
+      date_paid = params[:payment_date]
+
+      if (Payment.new_payment(student_id, payment_type, amount_paid, date_paid, semester_audit_id))
+        flash[:notice] = "Operation successful"
+        redirect_to("/class_room/add_student_payment?class_room_id=#{params[:class_room_id]}") and return
+      else
+        flash[:error] = "Unable to save the details. Check for the errors and try again"
+        redirect_to("/class_room/create_student_payment?class_room_id=#{params[:class_room_id]}&student_id=#{student_id}") and return
+      end
+    end
+    
+  end
+
   def edit_student_payments
     @class_room = ClassRoom.find(params[:class_room_id])
     @students = Student.find_by_sql("SELECT s.* FROM student s INNER JOIN student_class_room_adjustment scra ON
@@ -639,6 +692,67 @@ class ClassRoomController < ApplicationController
           AND scra.status = 'active' AND sa.student_id IS NULL")
   end
 
+  def edit_selected_student_payment
+    @class_room = ClassRoom.find(params[:class_room_id])
+    @student = Student.find(params[:student_id])
+    @payments_hash = {}
+    @payment_types_hash = {}
+
+    (PaymentType.all || []).each do |payment_type|
+      @payment_types_hash[payment_type.id] = payment_type.name
+    end
+
+    @student.payments.each do |payment|
+      payment_id = payment.id
+      payment_type_id = payment.payment_type_id
+      @payments_hash[payment_type_id] = {} if @payments_hash[payment_type_id].blank?
+      @payments_hash[payment_type_id][payment_id] = {}
+      @payments_hash[payment_type_id][payment_id]["amount_paid"] = payment.amount_paid.to_i
+      @payments_hash[payment_type_id][payment_id]["date_paid"] = payment.date.to_date.strftime("%d-%b-%Y")
+    end
+  end
+
+  def edit_particular_payment
+    @class_room = ClassRoom.find(params[:class_room_id])
+    
+    payment_id = params[:payment_id]
+    @payment = Payment.find(payment_id)
+    @student = Student.find(@payment.student_id)
+    previous_payments = @student.payments
+    @payments_hash = {}
+    @payment_types_hash = {}
+    (PaymentType.all || []).each do |payment_type|
+      @payment_types_hash[payment_type.id] = payment_type.name
+    end
+
+    previous_payments.each do |payment|
+      payment_type_id = payment.payment_type_id
+      @payments_hash[payment_type_id] = {} if @payments_hash[payment_type_id].blank?
+      latest_payment = @student.payments.find(:first, :order => "DATE(date) DESC",
+        :conditions => ["payment_type_id =?", payment_type_id]) if @payments_hash[payment_type_id].blank?
+
+      @payments_hash[payment_type_id]["amount_required"] = payment.payment_type.amount_required.to_i
+      @payments_hash[payment_type_id]["amount_paid"] = 0 if @payments_hash[payment_type_id]["amount_paid"].blank?
+      @payments_hash[payment_type_id]["amount_paid"] += payment.amount_paid.to_i
+      @payments_hash[payment_type_id]["balance"] = payment.payment_type.amount_required.to_i if @payments_hash[payment_type_id]["balance"].blank?
+      @payments_hash[payment_type_id]["balance"] -= payment.amount_paid.to_i
+      @payments_hash[payment_type_id]["latest_date_paid"] = latest_payment.date.to_date.strftime("%d-%b-%Y") if latest_payment
+    end
+
+    if request.method == :post
+      amount_paid = params[:amount]
+      date_paid = params[:payment_date]
+      if (@payment.update_attributes({:amount_paid => amount_paid, :date => date_paid}))
+        flash[:notice] = "Operation successful"
+        redirect_to("/class_room/edit_selected_student_payment?class_room_id=#{params[:class_room_id]}&student_id=#{@student.student_id}")
+      else
+        flash[:error] = "Unable to save the details. Check for the errors and try again"
+        render :controller => "payments", :action => "edit_my_payments_menu", :student_id => @student.student_id and return
+      end
+    end
+    
+  end
+  
   def view_student_payments
     @class_room = ClassRoom.find(params[:class_room_id])
     @students = Student.find_by_sql("SELECT s.* FROM student s INNER JOIN student_class_room_adjustment scra ON
@@ -647,6 +761,29 @@ class ClassRoomController < ApplicationController
           AND scra.status = 'active' AND sa.student_id IS NULL")
   end
 
+  def view_my_payments
+    @class_room = ClassRoom.find(params[:class_room_id])
+    student_id = params[:student_id]
+    @student = Student.find(student_id)
+    @payments_hash = {}
+    @payment_types_hash = {}
+
+    (PaymentType.all || []).each do |payment_type|
+      @payment_types_hash[payment_type.id] = payment_type.name
+    end
+
+    @student.payments.each do |payment|
+      payment_id = payment.id
+      payment_type_id = payment.payment_type_id
+      @payments_hash[payment_type_id] = {} if @payments_hash[payment_type_id].blank?
+      @payments_hash[payment_type_id][payment_id] = {}
+      @payments_hash[payment_type_id][payment_id]["amount_paid"] = payment.amount_paid.to_i
+      @payments_hash[payment_type_id][payment_id]["date_paid"] = payment.date.to_date.strftime("%d-%b-%Y")
+      @payments_hash[payment_type_id][payment_id]["date_created"] = payment.created_at.to_date.strftime("%d-%b-%Y")
+    end
+    
+  end
+  
   def view_class_payments
     @class_room = ClassRoom.find(params[:class_room_id])
     @students = Student.find_by_sql("SELECT s.* FROM student s INNER JOIN student_class_room_adjustment scra ON

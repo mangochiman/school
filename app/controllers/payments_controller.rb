@@ -198,11 +198,11 @@ class PaymentsController < ApplicationController
     #TODO: pull all semester_audits. Back payments are allowed
     student_id = params[:student_id]
     payment_type = params[:payment_type]
-    #semester = params[:semester] TODO: pull all semester_audits. Back payments are allowed
+    semester_audit_id = params[:semester]
     amount_paid = params[:amount]
     date_paid = params[:payment_date]
 
-    if (Payment.new_payment(student_id, payment_type, amount_paid, date_paid))
+    if (Payment.new_payment(student_id, payment_type, amount_paid, date_paid, semester_audit_id))
       flash[:notice] = "Operation successful"
       redirect_to :controller => "payments", :action => "add_student_payment", :student_id => student_id
     else
