@@ -786,10 +786,36 @@ class ClassRoomController < ApplicationController
   
   def view_class_payments
     @class_room = ClassRoom.find(params[:class_room_id])
-    @students = Student.find_by_sql("SELECT s.* FROM student s INNER JOIN student_class_room_adjustment scra ON
+    students = Student.find_by_sql("SELECT s.* FROM student s INNER JOIN student_class_room_adjustment scra ON
           s.student_id = scra.student_id LEFT JOIN student_archive sa
           ON s.student_id = sa.student_id WHERE scra.new_class_room_id = #{params[:class_room_id]}
           AND scra.status = 'active' AND sa.student_id IS NULL")
+
+    @payments_hash = {}
+    @payment_types_hash = {}
+
+    current_semester_audit_id = Semester.current_active_semester_audit.semester_audit_id rescue ''
+    
+    (PaymentType.all || []).each do |payment_type|
+      @payment_types_hash[payment_type.id] = payment_type.name
+    end
+
+    students.each do |student|
+      student_id = student.student_id
+      student_payments = student.payments.find(:all,
+        :conditions => ["semester_audit_id =?", current_semester_audit_id])
+      
+      student_payments.each do |payment|
+        payment_type_id = payment.payment_type_id
+        @payments_hash[payment_type_id] = {} if @payments_hash[payment_type_id].blank?
+        @payments_hash[payment_type_id][student_id] = {} if @payments_hash[payment_type_id][student_id].blank?
+        @payments_hash[payment_type_id][student_id][payment_type_id] = {} if @payments_hash[payment_type_id][student_id][payment_type_id].blank?
+        @payments_hash[payment_type_id][student_id][payment_type_id]["total_amount_paid"] = 0 if @payments_hash[payment_type_id][student_id][payment_type_id]["total_amount_paid"].blank?
+        @payments_hash[payment_type_id][student_id][payment_type_id]["total_amount_paid"] += payment.amount_paid.to_i
+      end
+
+    end
+    
   end
 
   
