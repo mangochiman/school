@@ -371,6 +371,31 @@ class ClassRoomController < ApplicationController
     @student = Student.find(params[:student_id])
     @teachers = Teacher.all
     @punishment_types = PunishmentType.all
+
+    if request.method == :post
+      punishment_type_id = params[:punishment_type_id]
+      teacher_id = params[:teacher_id]
+      start_date = params[:start_date]
+      end_date = params[:end_date]
+      punishment_details = params[:punishment_details]
+
+      punishment =  Punishment.create({
+          :teacher_id => teacher_id,
+          :punishment_type_id => punishment_type_id,
+          :start_date => start_date,
+          :end_date => end_date,
+          :details => punishment_details,
+        })
+
+        StudentPunishment.create({
+            :student_id => params[:student_id],
+            :punishment_id => punishment.punishment_id,
+            :completed => 0
+          })
+
+      redirect_to("/class_room/create_student_punishment?class_room_id=#{params[:class_room_id]}&student_id=#{params[:student_id]}") and return
+    end
+
   end
   
   def view_class_punishments

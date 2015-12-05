@@ -239,7 +239,7 @@
                     </div>
                   <% end %>
 
-                  <form id="registration" class="autoform" action="#" method="POST">
+                  <form id="registration" class="autoform" action="/class_room/new_punishment" method="POST">
 
                     <div>
                       <label for="start_date">Start Date</label>
@@ -253,7 +253,7 @@
 
                     <div>
                       <label for="teacher">Teacher</label>
-                      <select id="teacher" name="teacher" class="select required">
+                      <select id="teacher" name="teacher_id" class="select required">
                         <option value="">[select Teacher]</option>
                         <% @teachers.each do |teacher| %>
                           <option value="<%= teacher.teacher_id %>"><%= teacher.name_and_gender %></option>
@@ -263,7 +263,7 @@
 
                     <div>
                       <label for="punishment_type" style="min-width: 23%;">Punishment Type</label>
-                      <select id="punishment_type" name="punishment_type" class="select required">
+                      <select id="punishment_type" name="punishment_type_id" class="select required">
                         <option value="">[Punishment Type]</option>
                         <% @punishment_types.each do |punishment_type| %>
                           <option value="<%= punishment_type.punishment_type_id %>"><%= punishment_type.name %></option>
@@ -273,9 +273,11 @@
 
                     <div>
                       <label for="punishment_details" style="min-width: 24.5%;">Punishment Details</label>
-                      <textarea placeholder='Punishment to be given...' id='punishment_details' class='text required' cols='28' rows='2'></textarea>
+                      <textarea name="punishment_details" placeholder='Punishment to be given...' id='punishment_details' class='text required' cols='28' rows='2'></textarea>
                     </div>
 
+                    <%= hidden_field_tag("class_room_id", params[:class_room_id]) %>
+                    <%= hidden_field_tag("student_id", params[:student_id]) %>
                     <input type="submit" value="Submit" class="round blue ic-right-arrow" />
                   </form>
                 </div> <!-- end content-module-main -->
