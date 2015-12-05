@@ -360,6 +360,12 @@ class ClassRoomController < ApplicationController
           AND scra.status = 'active' AND sa.student_id IS NULL")
   end
 
+  def create_student_punishment
+    @class_room = ClassRoom.find(params[:class_room_id])
+    @student = Student.find(params[:student_id])
+    @student_punishments = @student.student_punishments
+  end
+  
   def view_class_punishments
     @class_room = ClassRoom.find(params[:class_room_id])
     @students = Student.find_by_sql("SELECT s.* FROM student s INNER JOIN student_class_room_adjustment scra ON
@@ -368,12 +374,24 @@ class ClassRoomController < ApplicationController
           AND scra.status = 'active' AND sa.student_id IS NULL")
   end
 
+  def view_student_punishments
+    @class_room = ClassRoom.find(params[:class_room_id])
+    @student = Student.find(params[:student_id])
+    @student_punishments = @student.student_punishments
+  end
+  
   def void_class_punishments
     @class_room = ClassRoom.find(params[:class_room_id])
     @students = Student.find_by_sql("SELECT s.* FROM student s INNER JOIN student_class_room_adjustment scra ON
           s.student_id = scra.student_id LEFT JOIN student_archive sa
           ON s.student_id = sa.student_id WHERE scra.new_class_room_id = #{params[:class_room_id]}
           AND scra.status = 'active' AND sa.student_id IS NULL")
+  end
+
+  def void_student_punishments
+    @class_room = ClassRoom.find(params[:class_room_id])
+    @student = Student.find(params[:student_id])
+    @student_punishments = @student.student_punishments
   end
   
   def examinations_tab

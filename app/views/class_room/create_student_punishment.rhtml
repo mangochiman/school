@@ -20,46 +20,7 @@
     <%= stylesheet_link_tag("bootstrap") %>
 
     <script type="text/javascript">
-      function validateAmount(){
-        amountInput = document.getElementById('amount');
-        amount = parseInt(amountInput.value).toString();
-        console.log(amount)
-        if (amount == 'NaN'){
-          amountInput.value = '';
-        }
-        else{
-          amountInput.value = amount;
-        }
-      }
-
-      function selectCurrentSemester(){
-<% unless @current_semester_audit_id.blank? %>
-      currentSemesterAuditId = '<%=  @current_semester_audit_id.to_i %>'
-      options = document.getElementById('semester').getElementsByTagName('option');
-      for (var i=0; i<=options.length - 1; i++){
-        if (options[i].value == currentSemesterAuditId){
-          options[i].selected = true;
-        }
-      }
-<% end %>
-  }
-
-  window.setTimeout("selectCurrentSemester();", 100);
-
-  function confirmSkip(){
-    jQuery.confirm({
-      title:"Skip Payments",
-      text:"Are you really really sure you want to skip this process? But you can do it later",
-      confirm: function() {
-        window.location="/student/my_page?student_id=<%= params[:student_id] %>"
-      },
-      cancel: function() {
-
-      },
-      confirmButton: "Yes I am",
-      cancelButton: "No"
-    });
-  }
+  
   
     </script>
 
@@ -130,7 +91,7 @@
         color:white;
         background-color: #CD0000;
       }
-
+      
       a{
         cursor: pointer;
       }
@@ -150,9 +111,9 @@
           <li><a href="/class_room/switch_class_room_menu?class_room_id=<%= params[:class_room_id] %>" class="active-tab dashboard-tab orange"><%= @class_room.name %></a></li>
           <li><a href="/class_room/admissions_tab?class_room_id=<%= params[:class_room_id] %>">Admissions/Registrations</a></li>
           <li><a href="/class_room/attendance_tab?class_room_id=<%= params[:class_room_id] %>">Attendance Register</a></li>
-          <li><a href="/class_room/behavior_tab?class_room_id=<%= params[:class_room_id] %>">Behavior</a></li>
+          <li><a href="/class_room/behavior_tab?class_room_id=<%= params[:class_room_id] %>" class="active-tab">Behavior</a></li>
           <li><a href="/class_room/examinations_tab?class_room_id=<%= params[:class_room_id] %>">Examinations</a></li>
-          <li><a href="/class_room/payments_tab?class_room_id=<%= params[:class_room_id] %>" class="active-tab">Payments</a></li>
+          <li><a href="/class_room/payments_tab?class_room_id=<%= params[:class_room_id] %>">Payments</a></li>
           <li><a href="/class_room/courses_tab?class_room_id=<%= params[:class_room_id] %>">Courses</a></li>
           <li><a href="/class_room/teachers_tab?class_room_id=<%= params[:class_room_id] %>">Teachers</a></li>
         </ul> <!-- end tabs -->
@@ -173,13 +134,12 @@
       <div class="page-full-width cf">
 
         <div class="side-menu fl">
+
           <h3>Task</h3>
           <ul>
-            <li><a href="/class_room/add_student_payment?class_room_id=<%= params[:class_room_id] %>">Add Student Payment</a></li>
-            <li><a href="/class_room/edit_student_payments?class_room_id=<%= params[:class_room_id] %>">Edit Student Payments</a></li>
-            <li><a href="/class_room/view_student_payments?class_room_id=<%= params[:class_room_id] %>">View Student Payments</a></li>
-            <li><a href="/class_room/view_class_payments?class_room_id=<%= params[:class_room_id] %>">View Class Payments</a></li>
-            <li><a href="/class_room/void_student_payments?class_room_id=<%= params[:class_room_id] %>">Void Student Payments</a></li>
+            <li><a href="/class_room/add_class_punishments?class_room_id=<%= params[:class_room_id] %>">Add/Edit Punishment</a></li>
+            <li><a href="/class_room/view_class_punishments?class_room_id=<%= params[:class_room_id] %>">View Punishments</a></li>
+            <li><a href="/class_room/void_class_punishments?class_room_id=<%= params[:class_room_id] %>">Void Punishments</a></li>
           </ul>
 
         </div> <!-- end side-menu -->
@@ -194,7 +154,7 @@
 
                 <div class="content-module-heading cf">
 
-                  <h3 class="fl">New Payment</h3>
+                  <h3 class="fl">New Punishment</h3>
                   <span class="fr expand-collapse-text">Click to collapse</span>
                   <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -212,33 +172,7 @@
                       <%= flash[:error] %>
                     </div>
                   <% end %>
-                  <form id="payment_type" class="autoform" action="/class_room/create_student_payment" method="POST">
-                    <div>
-                      <label for="payment" style="width:101px;">Payment Type</label>
-                      <%= select_tag("payment", options_for_select(@payment_types), {:name => "payment_type", :class => "select required"}) %>
-                    </div>
-
-                    <div>
-                      <label for="semester" style="width:101px;">Semester</label>
-                      <select id="semester" class="select required" name="semester">
-                        <% semester_data.each do |semester_audit_id, semester_number, start_date, end_date|%>
-                          <option value="<%= semester_audit_id %>">Semester <%= semester_number.to_s + " (#{start_date.to_s} - #{end_date.to_s})" %></option>
-                        <% end %>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label for="amount" style="width:101px;">Amount</label><input type="text" name="amount" id="amount" class="text required" onkeyup="validateAmount(this)"/>
-                    </div>
-
-                    <div>
-                      <label for="dop" style="width:101px;">Date Paid</label><input type="text" name="payment_date" id="dop" class="text required date-picker" value="<%= Date.today.strftime("%Y-%m-%d") %>"/>
-                    </div>
-                    <div class="stripe-separator"><!--  --></div>
-                    <%= hidden_field_tag("student_id", params[:student_id]) %>
-                    <%= hidden_field_tag("class_room_id", params[:class_room_id]) %>
-                    <input type="submit" value="Submit" class="round blue ic-right-arrow" />
-                  </form>
+                  
                 </div> <!-- end content-module-main -->
 
               </div> <!-- end content-module -->
@@ -250,7 +184,7 @@
 
                 <div class="content-module-heading cf">
 
-                  <h3 class="fl">Previous Payments</h3>
+                  <h3 class="fl">Student Details</h3>
                   <span class="fr expand-collapse-text">Click to collapse</span>
                   <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -267,33 +201,6 @@
                     <a href="#"><%= @student.current_class %></a>
                   </span><br />
 
-                  <% if @payments_hash.blank? %>
-                    <table>
-                      <tr>
-                        <th colspan="2" style="font-weight: bold;">No Previous Payments</th>
-                      </tr>
-                    </table>
-                  <% end %>
-
-                  <% @payments_hash.each do |payment_type_id, values| %>
-                    <table>
-                      <tr>
-                        <th colspan="2" style="font-weight: bold;"><%= @payment_types_hash[payment_type_id].to_s + ' ('+  number_to_currency(values["amount_required"], :unit => 'MK').to_s + ')' %></th>
-                      </tr>
-                      <tr>
-                        <td style="text-align: left;">Previous Payments</td>
-                        <td style="text-align: right; font-weight: bold;"><%= number_to_currency(values["amount_paid"], :unit => 'MK') %></td>
-                      </tr>
-                      <tr>
-                        <td style="text-align: left;">Balance</td>
-                        <td style="text-align: right; font-weight: bold;"><%= number_to_currency(values["balance"], :unit => 'MK') %></td>
-                      </tr>
-                      <tr>
-                        <td style="text-align: left;">Latest Date Paid</td>
-                        <td style="text-align: right; font-weight: bold;"><%= values["latest_date_paid"] %></td>
-                      </tr>
-                    </table>
-                  <% end %>
                 </div> <!-- end content-module-main -->
 
               </div> <!-- end content-module -->
