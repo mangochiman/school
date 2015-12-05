@@ -798,7 +798,7 @@ class ClassRoomController < ApplicationController
     active_semester_audit = Semester.current_active_semester_audit
     start_date = Semester.current_semester_start_date.to_date.strftime("%d-%b-%Y") rescue '??/??/????'
     end_date = Semester.current_semester_end_date.to_date.strftime("%d-%b-%Y") rescue '??/??/????'
-    @semester_details = active_semester_audit.semester_id.to_s + ' (' +  start_date + 'to' + end_date + ')'
+    @semester_details = active_semester_audit.semester_id.to_s + ' (' +  start_date + ' to ' + end_date + ')'
 
     (PaymentType.all || []).each do |payment_type|
       @payment_types_hash[payment_type.id] = payment_type.name
@@ -823,6 +823,49 @@ class ClassRoomController < ApplicationController
     
   end
 
+  def class_room_payments_search
+    students = Student.find_by_sql("SELECT s.* FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id LEFT JOIN student_archive sa
+          ON s.student_id = sa.student_id WHERE scra.new_class_room_id = #{params[:class_room_id]}
+          AND scra.status = 'active' AND sa.student_id IS NULL")
+
+    payments_hash = {}
+    payment_types_hash = {}
+
+    semester_audit_id = params[:semester_audit_id]
+    selected_semester_audit = SemesterAudit.find(semester_audit_id)
+    start_date = selected_semester_audit.start_date.to_date.strftime("%d-%b-%Y") rescue '??/??/????'
+    end_date = selected_semester_audit.end_date.to_date.strftime("%d-%b-%Y") rescue '??/??/????'
+    semester_details = selected_semester_audit.semester_id.to_s + ' (' +  start_date + ' to ' + end_date + ')'
+
+    (PaymentType.all || []).each do |payment_type|
+      payment_types_hash[payment_type.id] = payment_type.name
+    end
+
+    students.each do |student|
+      student_id = student.student_id
+      student_name = student.name
+      student_payments = student.payments.find(:all,
+        :conditions => ["semester_audit_id =?", params[:semester_audit_id]])
+
+      student_payments.each do |payment|
+        payment_type_id = payment.payment_type_id
+        payments_hash[payment_type_id] = {} if payments_hash[payment_type_id].blank?
+        payments_hash[payment_type_id][student_id] = {} if payments_hash[payment_type_id][student_id].blank?
+        payments_hash[payment_type_id][student_id][payment_type_id] = {} if payments_hash[payment_type_id][student_id][payment_type_id].blank?
+        payments_hash[payment_type_id][student_id][payment_type_id]["total_amount_paid"] = 0 if payments_hash[payment_type_id][student_id][payment_type_id]["total_amount_paid"].blank?
+        payments_hash[payment_type_id][student_id][payment_type_id]["total_amount_paid"] += payment.amount_paid.to_i
+        total_amount_paid = payments_hash[payment_type_id][student_id][payment_type_id]["total_amount_paid"]
+        payments_hash[payment_type_id][student_id][payment_type_id]["total_amount_paid_formatted"] = ActionController::Base.helpers.number_to_currency(total_amount_paid, :unit => 'MK')
+        payments_hash[payment_type_id][student_id][payment_type_id]["semester_audit_id"] = semester_audit_id
+        payments_hash[payment_type_id][student_id][payment_type_id]["student_name"] = student_name
+      end
+
+    end
+
+    render :json => [semester_details, payments_hash, payment_types_hash] and return
+  end
+  
   def student_payment_details
     @class_room = ClassRoom.find(params[:class_room_id])
     @student = Student.find(params[:student_id])
