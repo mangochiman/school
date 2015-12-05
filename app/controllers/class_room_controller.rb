@@ -369,6 +369,8 @@ class ClassRoomController < ApplicationController
   def new_punishment
     @class_room = ClassRoom.find(params[:class_room_id])
     @student = Student.find(params[:student_id])
+    @teachers = Teacher.all
+    @punishment_types = PunishmentType.all
   end
   
   def view_class_punishments

@@ -57,7 +57,7 @@
 
 
       input[type="submit"] {
-        margin-left: 23%;
+        margin-left: 38%;
       }
 
       #payment, #semester {
@@ -118,6 +118,7 @@
         margin-left: 62px;
         transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
         width: 212px;
+        margin-left: 71px;
       }
 
       #punishment_type{
@@ -132,6 +133,7 @@
         line-height: 1.42857;
         transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
         width: 212px;
+        margin-left: 9px;
       }
 
       form.autoform .msg.icon {
@@ -153,11 +155,15 @@
       }
 
       .Zebra_DatePicker_Icon_Wrapper #start_date{
-        margin-left: 64px !Important;
+        margin-left: 70px !Important;
       }
 
       .Zebra_DatePicker_Icon_Wrapper #end_date{
-        margin-left: 64px !Important;
+        margin-left: 70px !Important;
+      }
+
+      form.autoform textarea {
+        width: 194px;
       }
     </style>
   </head>
@@ -237,25 +243,21 @@
 
                     <div>
                       <label for="start_date">Start Date</label>
-                      <input type="text" value='<%= Date.today.strftime('%Y-%m-%d') %>' id="start_date" name="start_date" class="text date-picker required"/>
+                      <input type="text" id="start_date" name="start_date" class="text date-picker required"/>
                     </div>
 
                     <div>
                       <label for="end_date">End Date</label>
-                      <input type="text" value='<%= Date.today.strftime('%Y-%m-%d') %>' id="end_date" name="end_date" class="text date-picker required"/>
+                      <input type="text" id="end_date" name="end_date" class="text date-picker required"/>
                     </div>
-
-                    <!--<div>
-                      <label for="punishment_details">Punishment Details</label>
-                      <textarea placeholder='Punishment to be given...' id='punishment_details' class='text' cols='28' rows='2'></textarea>
-                    </div>-->
 
                     <div>
                       <label for="teacher">Teacher</label>
                       <select id="teacher" name="teacher" class="select required">
                         <option value="">[select Teacher]</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
+                        <% @teachers.each do |teacher| %>
+                          <option value="<%= teacher.teacher_id %>"><%= teacher.name_and_gender %></option>
+                        <% end %>
                       </select>
                     </div>
 
@@ -263,9 +265,15 @@
                       <label for="punishment_type" style="min-width: 23%;">Punishment Type</label>
                       <select id="punishment_type" name="punishment_type" class="select required">
                         <option value="">[Punishment Type]</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
+                        <% @punishment_types.each do |punishment_type| %>
+                          <option value="<%= punishment_type.punishment_type_id %>"><%= punishment_type.name %></option>
+                        <% end %>
                       </select>
+                    </div>
+
+                    <div>
+                      <label for="punishment_details" style="min-width: 24.5%;">Punishment Details</label>
+                      <textarea placeholder='Punishment to be given...' id='punishment_details' class='text required' cols='28' rows='2'></textarea>
                     </div>
 
                     <input type="submit" value="Submit" class="round blue ic-right-arrow" />
