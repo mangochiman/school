@@ -783,6 +783,30 @@ class ClassRoomController < ApplicationController
     end
     
   end
+
+  def student_class_room_payments_search
+    student_id = params[:student_id]
+    student = Student.find(student_id)
+    payments_hash = {}
+    payment_types_hash = {}
+
+    (PaymentType.all || []).each do |payment_type|
+      payment_types_hash[payment_type.id] = payment_type.name
+    end
+
+    student_payments = student.payments.find(:all, :conditions => ["semester_audit_id =?", params[:semester_audit_id]])
+    student_payments.each do |payment|
+      payment_id = payment.id
+      payment_type_id = payment.payment_type_id
+      payments_hash[payment_type_id] = {} if payments_hash[payment_type_id].blank?
+      payments_hash[payment_type_id][payment_id] = {}
+      payments_hash[payment_type_id][payment_id]["amount_paid"] = ActionController::Base.helpers.number_to_currency(payment.amount_paid.to_i, :unit => 'MK')
+      payments_hash[payment_type_id][payment_id]["date_paid"] = payment.date.to_date.strftime("%d-%b-%Y")
+      payments_hash[payment_type_id][payment_id]["date_created"] = payment.created_at.to_date.strftime("%d-%b-%Y")
+    end
+
+    render :json => [payments_hash, payment_types_hash] and return
+  end
   
   def view_class_payments
     @class_room = ClassRoom.find(params[:class_room_id])
