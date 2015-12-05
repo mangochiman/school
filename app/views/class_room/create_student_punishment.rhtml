@@ -91,7 +91,7 @@
         color:white;
         background-color: #CD0000;
       }
-      
+
       a{
         cursor: pointer;
       }
@@ -99,6 +99,11 @@
       .orange{
         background-color: #EEEE00 !important;
       }
+
+      table th:first-child {
+        border-style: none none none !important;
+      }
+
     </style>
   </head>
   <body>    
@@ -172,7 +177,43 @@
                       <%= flash[:error] %>
                     </div>
                   <% end %>
-                  
+
+                  <table>
+
+                    <thead>
+
+                      <tr>
+                        <th style="min-width:17%;">Punishment Type</th>
+                        <th>Punishment Details</th>
+                        <th>Teacher Responsible</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tfoot>
+                      <tr>
+                        <td colspan="6" style="text-align: left; padding-top:10px;">
+                          <a style="font-size:10pt;" class="button round blue image-right ic-right-arrow text-upper" onclick="">New Punishment</a>
+                        </td>
+                      </tr>
+                    </tfoot>
+                    <tbody id="punishments">
+                      <% @student_punishments.each do |punishment| %>
+                        <tr id="<%= punishment.punishment_id %>">
+                          <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= punishment.punishment_type.name %></td>
+                          <td><%=  punishment.details %></td>
+                          <td><%=  punishment.teacher.fname + ' ' + punishment.teacher.lname%></td>
+                          <td><%=  punishment.start_date.to_date.strftime("%d-%b-%Y") %></td>
+                          <td><%=  punishment.end_date.to_date.strftime("%d-%b-%Y") %></td>
+                          <td>
+                            <a class="table-actions-button ic-table-edit" onclick="editMe(this)" punishment_id="<%= punishment.punishment_id %>"></a>
+                          </td>
+                        </tr>
+                      <% end %>
+                    </tbody>
+
+                  </table>
                 </div> <!-- end content-module-main -->
 
               </div> <!-- end content-module -->
