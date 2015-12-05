@@ -365,6 +365,11 @@ class ClassRoomController < ApplicationController
     @student = Student.find(params[:student_id])
     @student_punishments = @student.student_punishments.collect{|sp|sp.punishment}
   end
+
+  def new_punishment
+    @class_room = ClassRoom.find(params[:class_room_id])
+    @student = Student.find(params[:student_id])
+  end
   
   def view_class_punishments
     @class_room = ClassRoom.find(params[:class_room_id])

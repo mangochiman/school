@@ -49,16 +49,12 @@
         font-size: 0.9em;
         font-weight: bold;
       }
+
       form.autoform input, select{
         font-size: 0.8em !important;
         font-weight: bold;
       }
 
-      #payment_type input[type="text"]{
-        border: 1px solid #d9dbdd;
-        outline: medium none;
-        width: 187px;
-      }
 
       input[type="submit"] {
         margin-left: 23%;
@@ -109,6 +105,60 @@
         border-style: none none none !important;
       }
 
+      #teacher{
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        color: #555;
+        font-size: 14px;
+        height: 34px;
+        line-height: 1.42857;
+        margin-left: 62px;
+        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+        width: 212px;
+      }
+
+      #punishment_type{
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        color: #555;
+        font-size: 14px;
+        height: 34px;
+        line-height: 1.42857;
+        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+        width: 212px;
+      }
+
+      form.autoform .msg.icon {
+        font-size: 10pt;
+        margin: 0 10px;
+        padding: 5px 5px 5px 30px;
+        position: unset;
+      }
+
+      form label {
+        font-size: 0.9em;
+        font-weight: bold;
+      }
+
+      form.autoform label {
+        display: block;
+        float: left;
+        width: 84px;
+      }
+
+      .Zebra_DatePicker_Icon_Wrapper #start_date{
+        margin-left: 64px !Important;
+      }
+
+      .Zebra_DatePicker_Icon_Wrapper #end_date{
+        margin-left: 64px !Important;
+      }
     </style>
   </head>
   <body>    
@@ -164,7 +214,7 @@
 
                 <div class="content-module-heading cf">
 
-                  <h3 class="fl">Assign/Edit Punishment</h3>
+                  <h3 class="fl">New Punishment</h3>
                   <span class="fr expand-collapse-text">Click to collapse</span>
                   <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -183,42 +233,43 @@
                     </div>
                   <% end %>
 
-                  <table>
+                  <form id="registration" class="autoform" action="#" method="POST">
 
-                    <thead>
+                    <div>
+                      <label for="start_date">Start Date</label>
+                      <input type="text" value='<%= Date.today.strftime('%Y-%m-%d') %>' id="start_date" name="start_date" class="text date-picker required"/>
+                    </div>
 
-                      <tr>
-                        <th style="min-width:17%;">Punishment Type</th>
-                        <th>Punishment Details</th>
-                        <th>Teacher Responsible</th>
-                        <th>Start Date</th>
-                        <th>End Date</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tfoot>
-                      <tr>
-                        <td colspan="6" style="text-align: left; padding-top:10px;">
-                          <a style="font-size:10pt;" class="button round blue image-right ic-right-arrow text-upper" onclick="newPunishmentPath();">New Punishment</a>
-                        </td>
-                      </tr>
-                    </tfoot>
-                    <tbody id="punishments">
-                      <% @student_punishments.each do |punishment| %>
-                        <tr id="<%= punishment.punishment_id %>">
-                          <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= punishment.punishment_type.name %></td>
-                          <td><%=  punishment.details %></td>
-                          <td><%=  punishment.teacher.fname + ' ' + punishment.teacher.lname%></td>
-                          <td><%=  punishment.start_date.to_date.strftime("%d-%b-%Y") %></td>
-                          <td><%=  punishment.end_date.to_date.strftime("%d-%b-%Y") %></td>
-                          <td>
-                            <a class="table-actions-button ic-table-edit" onclick="editMe(this)" punishment_id="<%= punishment.punishment_id %>"></a>
-                          </td>
-                        </tr>
-                      <% end %>
-                    </tbody>
+                    <div>
+                      <label for="end_date">End Date</label>
+                      <input type="text" value='<%= Date.today.strftime('%Y-%m-%d') %>' id="end_date" name="end_date" class="text date-picker required"/>
+                    </div>
 
-                  </table>
+                    <!--<div>
+                      <label for="punishment_details">Punishment Details</label>
+                      <textarea placeholder='Punishment to be given...' id='punishment_details' class='text' cols='28' rows='2'></textarea>
+                    </div>-->
+
+                    <div>
+                      <label for="teacher">Teacher</label>
+                      <select id="teacher" name="teacher" class="select required">
+                        <option value="">[select Teacher]</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label for="punishment_type" style="min-width: 23%;">Punishment Type</label>
+                      <select id="punishment_type" name="punishment_type" class="select required">
+                        <option value="">[Punishment Type]</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                      </select>
+                    </div>
+
+                    <input type="submit" value="Submit" class="round blue ic-right-arrow" />
+                  </form>
                 </div> <!-- end content-module-main -->
 
               </div> <!-- end content-module -->
@@ -266,10 +317,11 @@
 
     <%= javascript_include_tag("bootstrap") %>
     <%= javascript_include_tag("zebra_datepicker") %>
-    <script>
+
+    <script type="text/javascript">
       $('.date-picker').Zebra_DatePicker({
         view : 'years',
-        direction: ['<%=  (Date.today - 100.years).strftime("%Y-%m-%d") %>', '<%=  Date.today.strftime("%Y-%m-%d") %>']
+        direction: ['<%=  (Date.today - 2.years).strftime("%Y-%m-%d") %>', '<%=  Date.today.strftime("%Y-%m-%d") %>']
       });
     </script>
   </body>
