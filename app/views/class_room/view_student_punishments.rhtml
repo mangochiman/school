@@ -21,7 +21,41 @@
     <%= stylesheet_link_tag("bootstrap") %>
 
     <script type="text/javascript">
-  
+      var studentId = '<%= params[:student_id] %>';
+      
+      function loadSearchResults(){
+        sortKey = document.getElementById('sort_by').value;
+        if (sortKey != ''){
+          jQuery.ajax({
+            type: "POST",
+            url: "/class_room/sort_punishments",
+            data: "sort_key=" + sortKey + '&student_id=' + studentId,
+            success: function(results){
+              //results = eval("(" + results  + ")");
+              html = "";
+              tbody = document.getElementById("punishments");
+              for (var i=0; i<= results.length - 1; i++){
+                punishment_type = results[i][0];
+                punishment_details = results[i][1];
+                responsible_teacher = results[i][2];
+                start_date = results[i][3];
+                end_date = results[i][4];
+
+                html+="<tr>";
+                html+="<td style='text-align:left; padding: 0.833em 0 0.833em 1.25em;'>" + punishment_type +  "</td>";
+                html+="<td>" + punishment_details + "</td>";
+                html+="<td>" + responsible_teacher +  "</td>";
+                html+="<td>" + start_date +  "</td>";
+                html+="<td>" + end_date +  "</td>";
+                html+="</tr>";
+              }
+
+              tbody.innerHTML = html
+            }
+
+          });
+        }
+      }
   
     </script>
 
@@ -153,7 +187,7 @@
         width: 190px;
         font-weight: bold;
       }
-      
+
     </style>
   </head>
   <body>    

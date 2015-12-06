@@ -459,7 +459,29 @@ class ClassRoomController < ApplicationController
     @student_punishments = @student.student_punishments.collect{|sp|sp.punishment}
     @punishment_types = PunishmentType.all
   end
+
+  def sort_punishments
+    sort_key = params["sort_key"]
+    field = sort_key.split(' ')[0]
+    asc_or_desc = sort_key.split(' ')[1]
   
+    punishments = Punishment.find_by_sql("SELECT p.* FROM punishment p INNER JOIN student_punishment sp
+        ON p.punishment_id = sp.punishment_id AND sp.student_id = #{params[:student_id]}
+        ORDER BY p.#{field} #{asc_or_desc}")
+
+    punishment_data = []
+    punishments.each do |punishment|
+      punishment_type = punishment.punishment_type.name
+      punishment_details = punishment.details
+      teacher = punishment.teacher.name
+      start_date = punishment.start_date.to_date.strftime("%d-%b-%Y")
+      end_date = punishment.end_date.to_date.strftime("%d-%b-%Y")
+      punishment_data << [punishment_type, punishment_details, teacher, start_date, end_date]
+    end
+
+    render :json => punishment_data and return
+  end
+
   def examinations_tab
     @class_room = ClassRoom.find(params[:class_room_id])
   end
