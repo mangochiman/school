@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>SimpleAdmin - Dashboard</title>
+    <!-- Optimize for mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!-- jQuery & JS files -->
+
+    <%= javascript_include_tag("jquery") %>
+    <%= javascript_include_tag("script") %>
+    <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("jquery.confirm") %>
+    <%= javascript_include_tag("handsontable.full") %>
+    <%= stylesheet_link_tag("handsontable.full") %>
+    <%= stylesheet_link_tag("style") %>
+
+    <style type="text/css">
+      table { width: 100%; margin-bottom: 1.25em; /* 20/16 */ }
+
+      table th {
+        background-color: #5d6677;
+        color: white;
+        text-transform: uppercase;
+        border-left: inherit;
+      }
+
+      table tbody td {
+        padding: inherit; /* 10/12 15/12 */
+        border-left: inherit;
+        border-bottom: inherit;
+      }
+
+      table td:first-child, table th:first-child {
+        width: inherit /* 48/12 */;
+        text-align: inherit;
+        padding: inherit;
+        border-bottom: 1px solid #ccc;
+        border-right: 1px solid #ccc;
+      }
+
+      table td:last-child, table th:last-child {
+        width: 7em; /* 84/12 */
+        text-align: center;
+        padding: 0;
+      }
+
+    </style>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <div id="header-with-tabs">
+
+      <div class="page-full-width cf">
+
+        <ul id="tabs" class="fl">
+          <li><a href="/class_room/switch_class_room_menu?class_room_id=<%= params[:class_room_id] %>" class="active-tab dashboard-tab orange"><%= @class_room.name %></a></li>
+          <li><a href="/class_room/admissions_tab?class_room_id=<%= params[:class_room_id] %>">Admissions/Registrations</a></li>
+          <li><a href="/class_room/attendance_tab?class_room_id=<%= params[:class_room_id] %>" class="active-tab">Attendance Register</a></li>
+          <li><a href="/class_room/behavior_tab?class_room_id=<%= params[:class_room_id] %>">Behavior</a></li>
+          <li><a href="/class_room/examinations_tab?class_room_id=<%= params[:class_room_id] %>">Examinations</a></li>
+          <li><a href="/class_room/payments_tab?class_room_id=<%= params[:class_room_id] %>">Payments</a></li>
+          <li><a href="/class_room/courses_tab?class_room_id=<%= params[:class_room_id] %>">Courses</a></li>
+          <li><a href="/class_room/teachers_tab?class_room_id=<%= params[:class_room_id] %>">Teachers</a></li>
+        </ul> <!-- end tabs -->
+
+        <!-- Change this image to your own company's logo -->
+        <!-- The logo will automatically be resized to 30px height. -->
+        <a href="#" id="company-branding-small" class="fr"><%= image_tag("/admin/school_logo", :alt => 'Logo Missing')%></a>
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end header -->
+
+
+
+    <!-- MAIN CONTENT -->
+    <div id="content">
+
+      <div class="page-full-width cf">
+
+        <div class="side-menu fl">
+
+          <h3>Task</h3>
+          <ul>
+            <li><a href="/class_room/add_class_attendance?class_room_id=<%= params[:class_room_id] %>">Add Class Attendance</a></li>
+            <li><a href="/class_room/edit_class_attendance?class_room_id=<%= params[:class_room_id] %>">Edit Class Attendance</a></li>
+            <li><a href="/class_room/view_class_attendance?class_room_id=<%= params[:class_room_id] %>">View Class Attendance</a></li>
+            <li><a href="/class_room/void_class_attendance?class_room_id=<%= params[:class_room_id] %>">Void Class Attendance</a></li>
+          </ul>
+
+        </div> <!-- end side-menu -->
+
+        <div class="side-content fr">
+
+          <div class="content-module">
+
+            <div class="content-module-heading cf">
+
+              <h3 class="fl">Add Attendance Data</h3>
+              <span class="fr expand-collapse-text">Click to collapse</span>
+              <span class="fr expand-collapse-text initial-expand">Click to expand</span>
+
+            </div> <!-- end content-module-heading -->
+
+
+            <div class="content-module-main">
+              <% if flash[:notice] %>
+                <div class="confirmation-box round">
+                  <%= flash[:notice] %>
+                </div>
+              <% end %>
+              <% if flash[:error] %>
+                <div class="error-box round">
+                  <%= flash[:error] %>
+                </div>
+              <% end %>
+              <div id="example1"></div>
+
+
+            </div> <!-- end content-module-main -->
+
+          </div> <!-- end content-module -->
+
+        </div> <!-- end side-content -->
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end content -->
+
+    <script type="text/javascript">
+      function getCarData() {
+        return [
+          {car: 'Nissan', year: 2009, chassis: 'black', bumper: 'black'},
+          {car: 'Nissan', year: 2006, chassis: 'blue', bumper: 'blue'},
+          {car: 'Chrysler', year: 2004, chassis: 'yellow', bumper: 'black'},
+          {car: 'Volvo', year: 2012, chassis: 'white', bumper: 'gray'}
+        ];
+      }
+    </script>
+
+    <script data-jsfiddle="example1">
+      var container1 = document.getElementById('example1'),
+      hot1;
+
+      hot1 = new Handsontable(container1, {
+        data: getCarData(),
+        minSpareRows: 1,
+        colHeaders: ['Car', 'Year', 'Chassis color', 'Bumper color'],
+        columns: [
+          {
+            data: 'car',
+            readOnly: true
+          },
+          {
+            data: 'year'
+          },
+          {
+            data: 'chassis'
+          },
+          {
+            data: 'bumper'
+          }
+        ]
+      });
+    </script>
+  </body>
+</html>
