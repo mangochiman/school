@@ -387,17 +387,50 @@ class ClassRoomController < ApplicationController
           :details => punishment_details,
         })
 
-        StudentPunishment.create({
-            :student_id => params[:student_id],
-            :punishment_id => punishment.punishment_id,
-            :completed => 0
-          })
+      StudentPunishment.create({
+          :student_id => params[:student_id],
+          :punishment_id => punishment.punishment_id,
+          :completed => 0
+        })
 
       redirect_to("/class_room/create_student_punishment?class_room_id=#{params[:class_room_id]}&student_id=#{params[:student_id]}") and return
     end
 
   end
-  
+
+  def edit_punishment
+    @class_room = ClassRoom.find(params[:class_room_id])
+    @punishment = Punishment.find(params[:punishment_id])
+    @student = Student.find(params[:student_id])
+    @teachers = Teacher.all
+    @punishment_types = PunishmentType.all
+  end
+
+  def update_punishment
+    @punishment = Punishment.find(params[:punishment_id])
+    if (request.method == :post)
+      punishment_type_id = params[:punishment_type_id]
+      teacher_id = params[:teacher_id]
+      start_date = params[:start_date]
+      end_date = params[:end_date]
+      punishment_details = params[:punishment_details]
+
+      if (@punishment.update_attributes({
+              :teacher_id => teacher_id,
+              :punishment_type_id => punishment_type_id,
+              :start_date => start_date,
+              :end_date => end_date,
+              :details => punishment_details,
+            }))
+        flash[:notice] = "Operation successful"
+        redirect_to("/class_room/create_student_punishment?class_room_id=#{params[:class_room_id]}&student_id=#{params[:student_id]}") and return
+      else
+        flash[:error] = "Unable to save. Check for errors and try again"
+        redirect_to("/class_room/edit_punishment?class_room_id=#{params[:class_room_id]}&punishment_id=#{params[:punishment_id]}&student_id=#{params[:student_id]}") and return
+      end
+    end
+  end
+
   def view_class_punishments
     @class_room = ClassRoom.find(params[:class_room_id])
     @students = Student.find_by_sql("SELECT s.* FROM student s INNER JOIN student_class_room_adjustment scra ON
