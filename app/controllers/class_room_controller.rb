@@ -348,6 +348,10 @@ class ClassRoomController < ApplicationController
     @class_room = ClassRoom.find(params[:class_room_id])
   end
 
+  def add_class_attendance
+    @class_room = ClassRoom.find(params[:class_room_id])
+  end
+
   def behavior_tab
     @class_room = ClassRoom.find(params[:class_room_id])
   end
