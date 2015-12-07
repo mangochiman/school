@@ -350,6 +350,7 @@ class ClassRoomController < ApplicationController
 
   def add_class_attendance
     @class_room = ClassRoom.find(params[:class_room_id])
+    @today = "08/DEC/2015"#Date.today.strftime("%d/%b/%Y").upcase
   end
 
   def behavior_tab

@@ -33,8 +33,12 @@
         border-bottom: inherit;
       }
 
+      table th:first-child {
+        min-width: 150px;
+      }
+
       table td:first-child, table th:first-child {
-        width: inherit /* 48/12 */;
+
         text-align: inherit;
         padding: inherit;
         border-bottom: 1px solid #ccc;
@@ -117,8 +121,12 @@
                   <%= flash[:error] %>
                 </div>
               <% end %>
-              <div id="example1"></div>
 
+              <div id="students">
+
+              </div><br />
+
+              <a style="font-size: 10pt;" class="button round blue image-right ic-right-arrow text-upper" onclick="saveData();">Save Data</a>
 
             </div> <!-- end content-module-main -->
 
@@ -131,40 +139,149 @@
     </div> <!-- end content -->
 
     <script type="text/javascript">
-      function getCarData() {
-        return [
-          {car: 'Nissan', year: 2009, chassis: 'black', bumper: 'black'},
-          {car: 'Nissan', year: 2006, chassis: 'blue', bumper: 'blue'},
-          {car: 'Chrysler', year: 2004, chassis: 'yellow', bumper: 'black'},
-          {car: 'Volvo', year: 2012, chassis: 'white', bumper: 'gray'}
-        ];
-      }
+      var today = '<%= @today %>';
+      var todaysCol = 0;
     </script>
 
-    <script data-jsfiddle="example1">
-      var container1 = document.getElementById('example1'),
-      hot1;
+    <script data-jsfiddle="students">
+      var data = [
+        ['','Student Name', '07/Dec/2015', '08/Dec/2015', '09/Dec/2015', '10/Dec/2015', '10/Dec/2015', '10/Dec/2015'],
+        ["1", "Ernest Matola", "", "", "", "", "", ""],
+        ["2", "Mphatso Bakili", "", "", "", "", "", ""],
+        ["3", "Khwima Mkamanga", "", "", "", "", "", ""],
+        ["4", "Elliot Sannie", "", "", "", "", "", ""],
+        ["5", "John Luka", "", "", "", "", "", ""],
+      ];
 
-      hot1 = new Handsontable(container1, {
-        data: getCarData(),
-        minSpareRows: 1,
-        colHeaders: ['Car', 'Year', 'Chassis color', 'Bumper color'],
+      function firstRowRenderer(instance, td, row, col, prop, value, cellProperties) {
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+        td.style.fontWeight = 'bold';
+        td.style.color = '#222';
+        td.style.background = '#eee';
+        td.style.padding = '2px 4px';
+        td.style.textAlign = 'center';
+        
+        cellProperties.readOnly = true;
+        
+      }
+
+      function firstColumnRenderer(instance, td, row, col, prop, value, cellProperties){
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+        td.style.color = '#222';
+        if (col != 1){
+          td.style.textAlign = 'center';
+        }
+        
+        td.style.background = '#eee';
+        cellProperties.readOnly = true;
+        
+      }
+      
+      function readOnlyRenderer(instance, td, row, col, prop, value, cellProperties) {
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+
+        if (col == 3) {
+          td.style.textAlign = 'center';
+          td.style.background = '#eee';
+          cellProperties.readOnly = true;
+        }
+
+        if (col > 2) {
+          td.style.background = '#EEE';
+          cellProperties.readOnly = true;
+        }
+
+      }
+
+      // maps function to lookup string
+      Handsontable.renderers.registerRenderer('readOnlyRenderer', readOnlyRenderer);
+      Handsontable.renderers.registerRenderer('firstColumnRenderer', firstColumnRenderer);
+
+      var container = document.getElementById('students');
+
+      var studentAttendance = new Handsontable(container,
+      {
+        data: data,
+        minSpareRows: 2,
+        columnSorting: true,
+        currentRowClassName: 'currentRow',
+        currentColClassName: 'currentCol',
+        autoWrapRow: true,
+        maxRows: 6,
         columns: [
           {
-            data: 'car',
-            readOnly: true
+            data: 0
           },
           {
-            data: 'year'
+            data: 1
           },
           {
-            data: 'chassis'
+            data: 2,
+            type: 'dropdown',
+            source: ['Present', 'Absent', 'Sick', 'Leave', 'Late']
           },
           {
-            data: 'bumper'
+            data: 3,
+            type: 'dropdown',
+            source: ['Present', 'Absent', 'Sick', 'Leave', 'Late']
+          },
+          {
+            data: 4,
+            type: 'dropdown',
+            source: ['Present', 'Absent', 'Sick', 'Leave', 'Late']
+          },
+          {
+            data: 5,
+            type: 'dropdown',
+            source: ['Present', 'Absent', 'Sick', 'Leave', 'Late']
+          },
+          {
+            data: 6,
+            type: 'dropdown',
+            source: ['Present', 'Absent', 'Sick', 'Leave', 'Late']
+          },
+          {
+            data: 7,
+            type: 'dropdown',
+            source: ['Present', 'Absent', 'Sick', 'Leave', 'Late']
           }
-        ]
+        ],
+        onSelection: function (row, col, row2, col2) {
+          var meta = this.getCellMeta(row2, col2);
+
+          if (meta.readOnly) {
+            this.updateSettings({fillHandle: false});
+          }
+          else {
+            this.updateSettings({fillHandle: true});
+          }
+        },
+        cells: function (row, col, prop) {
+          if (col == 0 || col == 1){
+            var cellProperties = {};
+            cellProperties.renderer = "firstColumnRenderer";
+          }
+
+          if (row === 0) {
+            var cellProperties = {};
+            cellProperties.renderer = firstRowRenderer; // uses function directly
+          }
+          else{
+            if (col > 2){
+              var cellProperties = {};
+              cellProperties.renderer = "readOnlyRenderer";
+            }
+
+          }
+
+          return cellProperties;
+        }
       });
+
+      window.setInterval(function(){
+        document.getElementsByTagName("col")[0].style.width = '100px';
+      }, 10)
+      
     </script>
   </body>
 </html>
