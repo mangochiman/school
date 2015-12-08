@@ -360,28 +360,23 @@ class ClassRoomController < ApplicationController
     this_week_end_date = this_week_start_date + 4.days
     @this_week_dates = (this_week_start_date..this_week_end_date).to_a.collect{|d|d.strftime("%d/%b/%Y").upcase}
     data = []
-    header = ['','Student Name'] + @this_week_dates
+    header = ['student_id', '#','Student Name'] + @this_week_dates
     data << header
-
+    count = 1;
     @students.each do |student|
       student_id = student.student_id
       student_name = student.name
-      student_data = [student_id, student_name]
+      student_data = [student_id, count, student_name]
       student_attendance_data = []
       @this_week_dates.each do |date|
         #pull attendance value on this date
-        value = ["Present", "Absent", "Sick", "Leave", "Late"].shuffle.first
-        if date.to_date > Date.today
-          value = 'N/A'
-        end
-        
-        if date.to_date == Date.today
-          value = ''
-        end
-
+        value = StudentAttendance.find(:last, :conditions => ["student_id =? AND
+            date =?", student_id, date.to_date.to_s]).status rescue ''
+        value = 'N/A' if date.to_date > Date.today
+  
         student_attendance_data << value
       end
-      
+      count = count + 1
       weekly_data = (student_data + student_attendance_data)
       data << weekly_data
     end
@@ -389,6 +384,43 @@ class ClassRoomController < ApplicationController
     @data  = data.to_json
   end
 
+  def save_attendance_data
+    attendance_data = params[:attendance_data]
+    header = attendance_data["0"]
+    # Remove these fields from the header "student_id", "#", "Student Name"
+    #We want dates only
+    #["student_id", "#", "Student Name", "07/DEC/2015", "08/DEC/2015", "09/DEC/2015", "10/DEC/2015", "11/DEC/2015"]
+    weekly_dates = []
+    3.upto(header.length - 1) do |i|
+      weekly_dates << header[i]
+    end
+
+    attendance_data.delete("0") #Remove the first row with "0" as its key
+    attendance_data.each do |key, values|
+      student_id = values[0]
+      student_data = []
+      #"1"=>["1", "1", "Joseph Banda", "Present", "Sick", "N/A", "N/A", "N/A"]
+      3.upto(values.length - 1) do |i|
+        student_data << values[i]
+      end
+
+      student_data.each_with_index do |value, index|
+        date_of_attendance = weekly_dates[index]
+        attendance_value = value
+        next if date_of_attendance.to_date > Date.today #Ignore the future dates
+        student_attendance = StudentAttendance.find(:last, :conditions => ["student_id =? AND
+            date =?", student_id, date_of_attendance.to_date.to_s])
+        student_attendance = StudentAttendance.new if student_attendance.blank?
+        student_attendance.student_id = student_id
+        student_attendance.date = date_of_attendance.to_date
+        student_attendance.status = attendance_value
+        student_attendance.save
+      end
+    end
+
+    render :text => true and return
+  end
+  
   def behavior_tab
     @class_room = ClassRoom.find(params[:class_room_id])
   end

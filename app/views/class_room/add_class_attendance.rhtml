@@ -51,6 +51,10 @@
         padding: 0;
       }
 
+      a{
+        cursor: pointer;
+      }
+      
     </style>
   </head>
   <body>
@@ -142,6 +146,22 @@
       var today = '<%= @today %>';
       var todaysCol = 0;
       var maxRows = parseInt('<%= @students.count %>');
+
+      function saveData(){
+        attendanceData = studentAttendance.getSourceData();
+        console.log(attendanceData);
+
+        jQuery.ajax({
+          type: "POST",
+          url: "/class_room/save_attendance_data",
+          data: {attendance_data: attendanceData},
+          success: function(results){
+            window.location = location.href;
+          }
+        });
+        
+      }
+      
     </script>
 
     <script data-jsfiddle="students">
@@ -189,14 +209,11 @@
       var studentAttendance = new Handsontable(container,
       {
         data: data,
-        minSpareRows: 3,
+        minSpareRows: 0,
         columnSorting: true,
         autoWrapRow: true,
-        maxRows: 3,
+ 
         columns: [
-          {
-            data: 0
-          },
           {
             data: 1
           },
@@ -222,6 +239,12 @@
           },
           {
             data: 6,
+            type: 'dropdown',
+            source: ['Present', 'Absent', 'Sick', 'Leave', 'Late']
+          }
+          ,
+          {
+            data: 7,
             type: 'dropdown',
             source: ['Present', 'Absent', 'Sick', 'Leave', 'Late']
           }
