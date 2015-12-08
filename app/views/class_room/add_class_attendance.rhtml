@@ -18,7 +18,7 @@
     <%= stylesheet_link_tag("style") %>
 
     <style type="text/css">
-      table { width: 100%; margin-bottom: 1.25em; /* 20/16 */ }
+      table { width: 80%; margin-bottom: 1.25em; /* 20/16 */ }
 
       table th {
         background-color: #5d6677;
@@ -141,20 +141,17 @@
     <script type="text/javascript">
       var today = '<%= @today %>';
       var todaysCol = 0;
+      var maxRows = parseInt('<%= @students.count %>');
     </script>
 
     <script data-jsfiddle="students">
-      var data = [
-        ['','Student Name', '07/Dec/2015', '08/Dec/2015', '09/Dec/2015', '10/Dec/2015', '10/Dec/2015', '10/Dec/2015'],
-        ["1", "Ernest Matola", "", "", "", "", "", ""],
-        ["2", "Mphatso Bakili", "", "", "", "", "", ""],
-        ["3", "Khwima Mkamanga", "", "", "", "", "", ""],
-        ["4", "Elliot Sannie", "", "", "", "", "", ""],
-        ["5", "John Luka", "", "", "", "", "", ""],
-      ];
+      var data = eval('<%= @data %>');
 
       function firstRowRenderer(instance, td, row, col, prop, value, cellProperties) {
         Handsontable.renderers.TextRenderer.apply(this, arguments);
+        if (value.trim() == today.trim()){
+          todaysCol = col;
+        }
         td.style.fontWeight = 'bold';
         td.style.color = '#222';
         td.style.background = '#eee';
@@ -179,18 +176,8 @@
       
       function readOnlyRenderer(instance, td, row, col, prop, value, cellProperties) {
         Handsontable.renderers.TextRenderer.apply(this, arguments);
-
-        if (col == 3) {
-          td.style.textAlign = 'center';
-          td.style.background = '#eee';
-          cellProperties.readOnly = true;
-        }
-
-        if (col > 2) {
-          td.style.background = '#EEE';
-          cellProperties.readOnly = true;
-        }
-
+        td.style.background = '#EEE';
+        cellProperties.readOnly = true;
       }
 
       // maps function to lookup string
@@ -202,12 +189,10 @@
       var studentAttendance = new Handsontable(container,
       {
         data: data,
-        minSpareRows: 2,
+        minSpareRows: 3,
         columnSorting: true,
-        currentRowClassName: 'currentRow',
-        currentColClassName: 'currentCol',
         autoWrapRow: true,
-        maxRows: 6,
+        maxRows: 3,
         columns: [
           {
             data: 0
@@ -239,11 +224,6 @@
             data: 6,
             type: 'dropdown',
             source: ['Present', 'Absent', 'Sick', 'Leave', 'Late']
-          },
-          {
-            data: 7,
-            type: 'dropdown',
-            source: ['Present', 'Absent', 'Sick', 'Leave', 'Late']
           }
         ],
         onSelection: function (row, col, row2, col2) {
@@ -267,7 +247,7 @@
             cellProperties.renderer = firstRowRenderer; // uses function directly
           }
           else{
-            if (col > 2){
+            if (col > todaysCol){
               var cellProperties = {};
               cellProperties.renderer = "readOnlyRenderer";
             }
@@ -279,7 +259,7 @@
       });
 
       window.setInterval(function(){
-        document.getElementsByTagName("col")[0].style.width = '100px';
+        //document.getElementsByTagName("col")[0].style.width = '50px';
       }, 10)
       
     </script>

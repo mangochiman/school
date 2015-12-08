@@ -350,7 +350,43 @@ class ClassRoomController < ApplicationController
 
   def add_class_attendance
     @class_room = ClassRoom.find(params[:class_room_id])
-    @today = "08/DEC/2015"#Date.today.strftime("%d/%b/%Y").upcase
+    @students = Student.find_by_sql("SELECT s.* FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id LEFT JOIN student_archive sa
+          ON s.student_id = sa.student_id WHERE scra.new_class_room_id = #{params[:class_room_id]}
+          AND scra.status = 'active' AND sa.student_id IS NULL")
+    
+    @today = Date.today.strftime("%d/%b/%Y").upcase
+    this_week_start_date = Date.today.beginning_of_week#Monday
+    this_week_end_date = this_week_start_date + 4.days
+    @this_week_dates = (this_week_start_date..this_week_end_date).to_a.collect{|d|d.strftime("%d/%b/%Y").upcase}
+    data = []
+    header = ['','Student Name'] + @this_week_dates
+    data << header
+
+    @students.each do |student|
+      student_id = student.student_id
+      student_name = student.name
+      student_data = [student_id, student_name]
+      student_attendance_data = []
+      @this_week_dates.each do |date|
+        #pull attendance value on this date
+        value = ["Present", "Absent", "Sick", "Leave", "Late"].shuffle.first
+        if date.to_date > Date.today
+          value = 'N/A'
+        end
+        
+        if date.to_date == Date.today
+          value = ''
+        end
+
+        student_attendance_data << value
+      end
+      
+      weekly_data = (student_data + student_attendance_data)
+      data << weekly_data
+    end
+
+    @data  = data.to_json
   end
 
   def behavior_tab
