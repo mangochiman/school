@@ -382,8 +382,37 @@ class ClassRoomController < ApplicationController
     end
 
     @data  = data.to_json
+    @years = [2015, 2014, 2013]
+    @months = Date::MONTHNAMES.compact
   end
 
+  def get_weekly_dates
+    month = params[:month]
+    year = params[:year]
+    selected_date = "01-#{month}-#{year}".to_date
+    beginning_of_month = selected_date.beginning_of_month
+    end_of_month = selected_date.end_of_month
+    if (beginning_of_month.strftime("%A").match(/SATURDAY/i))
+      beginning_of_month = beginning_of_month + 2.days #We want Monday
+    end
+
+    if (beginning_of_month.strftime("%A").match(/SUNDAY/i))
+      beginning_of_month = beginning_of_month + 1.day #We want Monday
+    end
+
+    unless (beginning_of_month.strftime("%A").match(/SATURDAY|SUNDAY/i))
+      beginning_of_month = beginning_of_month.beginning_of_week #We want Monday
+    end
+
+    month_dates = (beginning_of_month..end_of_month).to_a.collect do |month_date|
+      next if month_date.strftime("%A").match(/SATURDAY|SUNDAY/i)
+      month_date.strftime("%d-%b-%Y").upcase
+    end
+
+    month_dates = month_dates.compact.in_groups_of(5).collect{|week|week.compact}
+    render :json => month_dates and return
+  end
+  
   def save_attendance_data
     attendance_data = params[:attendance_data]
     header = attendance_data["0"]

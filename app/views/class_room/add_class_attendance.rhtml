@@ -17,6 +17,31 @@
     <%= stylesheet_link_tag("handsontable.full") %>
     <%= stylesheet_link_tag("style") %>
 
+    <script type="text/javascript">
+      function updateWeekValue(obj){
+        year = document.getElementsByClassName("year")[0].value
+        month = obj.value
+
+        jQuery.ajax({
+          type: "POST",
+          url: "/class_room/get_weekly_dates",
+          data: "year=" + year + "&month=" + month,
+          success: function(results){
+            html = ""
+            for (i=0; i<=results.length - 1; i++){
+              week_dates = results[i];
+              first_week_date = week_dates[0]
+              last_week_date = week_dates[week_dates.length - 1]
+              date_range = first_week_date + ' to ' + last_week_date
+              html+="<option value='" + first_week_date + '|' + last_week_date + "'>" + date_range + " </option>"
+            }
+            
+            document.getElementsByClassName("week")[0].innerHTML = html;
+          }
+        });
+      }
+    </script>
+
     <style type="text/css">
       table { width: 80%; margin-bottom: 1.25em; /* 20/16 */ }
 
@@ -54,7 +79,64 @@
       a{
         cursor: pointer;
       }
-      
+
+      #search-student-form fieldset {
+        border: 1px solid gray;
+        float: left;
+        margin-bottom: 15px;
+        padding: 0px;
+        float: none;
+      }
+      #search-student-form legend {
+        color: #abda0f;
+        font-size: 14px;
+        font-weight: 100;
+        margin-left: 14px;
+        padding: 2px;
+        width: initial;
+        margin-bottom: initial;
+        border-style: none;
+      }
+
+      #search-student-form fieldset input {
+        color: #505050;
+        float: left;
+        margin-right: 5px;
+        width: 250px;
+        padding: 6px;
+        font-size: 14px;
+        border: 1px solid #d9dbdd;
+        outline: medium none;
+      }
+
+      #search-student-form table td{
+        border-left: none;
+      }
+
+      .orange{
+        background-color: #EEEE00 !important;
+      }
+
+      #dropdown-actions{
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        color: #555;
+        display: block;
+        font-size: 14px;
+        height: 34px;
+        line-height: 1.42857;
+        min-width: 167px;
+        padding: 6px 12px;
+        text-align: center;
+        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+      }
+
+      #search-student-form table td:first-child {
+        border-style: none none none !important;
+      }
     </style>
   </head>
   <body>
@@ -125,6 +207,42 @@
                   <%= flash[:error] %>
                 </div>
               <% end %>
+
+              <form id="search-student-form" action="#">
+                <fieldset>
+                  <legend>Search</legend>
+                  <div style="margin-left:2%;">
+                    <table style="width: 45%; float: right;">
+                      <tr>
+                        <td style="text-align:right; font-size: 1.2em; padding-right: 5px;">Year</td>
+                        <td style="">
+                          <select name="year" id="dropdown-actions" class="year">
+                            <% @years.each do |year| %>
+                              <option value="<%= year %>"><%= year %></option>
+                            <% end %>
+                          </select>
+                        </td>
+                        <td style="text-align:right; font-size: 1.2em; padding-left: 20px; padding-right: 5px;">Month</td>
+                        <td>
+                          <select name="month" id="dropdown-actions" class="month" onchange="updateWeekValue(this)">
+                            <% @months.each do |month| %>
+                              <option value="<%=  month %>"><%= month %></option>
+                            <% end %>
+                          </select>
+                        </td>
+                        <td style="text-align:right; font-size: 1.2em; padding-left: 20px; padding-right: 5px;">Week</td>
+                        <td>
+                          <select name="week" id="dropdown-actions" class="week">
+                          </select>
+                        </td>
+                        <td>
+                          <a onclick="loadSearchResults();" class="button round blue image-right ic-search text-upper">Search</a>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                </fieldset>
+              </form>
 
               <div id="students">
 
