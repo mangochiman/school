@@ -18,8 +18,10 @@
     <%= stylesheet_link_tag("style") %>
 
     <script type="text/javascript">
+      var classRoomId = '<%= params[:class_room_id] %>';
+
       function updateWeekValue(obj){
-        year = document.getElementsByClassName("year")[0].value
+        year = document.getElementsByClassName("year")[0].value;
         month = obj.value
 
         jQuery.ajax({
@@ -40,6 +42,94 @@
           }
         });
       }
+
+      function loadClassAttendanceData(){
+        date_range = document.getElementsByClassName("week")[0].value
+        jQuery.ajax({
+          type: "POST",
+          url: "/class_room/search_class_attendance_data",
+          data: "class_room_id=" + classRoomId + "&date_range=" + date_range,
+          success: function(results){
+            data = results;
+            document.getElementById('students').innerHTML = '';
+            studentAttendance = new Handsontable(container,
+            {
+              data: data,
+              minSpareRows: 0,
+              columnSorting: true,
+              autoWrapRow: true,
+
+              columns: [
+                {
+                  data: 1
+                },
+                {
+                  data: 2,
+                  type: 'dropdown',
+                  source: ['Present', 'Absent', 'Sick', 'Leave', 'Late']
+                },
+                {
+                  data: 3,
+                  type: 'dropdown',
+                  source: ['Present', 'Absent', 'Sick', 'Leave', 'Late']
+                },
+                {
+                  data: 4,
+                  type: 'dropdown',
+                  source: ['Present', 'Absent', 'Sick', 'Leave', 'Late']
+                },
+                {
+                  data: 5,
+                  type: 'dropdown',
+                  source: ['Present', 'Absent', 'Sick', 'Leave', 'Late']
+                },
+                {
+                  data: 6,
+                  type: 'dropdown',
+                  source: ['Present', 'Absent', 'Sick', 'Leave', 'Late']
+                }
+                ,
+                {
+                  data: 7,
+                  type: 'dropdown',
+                  source: ['Present', 'Absent', 'Sick', 'Leave', 'Late']
+                }
+              ],
+              onSelection: function (row, col, row2, col2) {
+                var meta = this.getCellMeta(row2, col2);
+
+                if (meta.readOnly) {
+                  this.updateSettings({fillHandle: false});
+                }
+                else {
+                  this.updateSettings({fillHandle: true});
+                }
+              },
+              cells: function (row, col, prop) {
+                if (col == 0 || col == 1){
+                  var cellProperties = {};
+                  cellProperties.renderer = "firstColumnRenderer";
+                }
+
+                if (row === 0) {
+                  var cellProperties = {};
+                  cellProperties.renderer = firstRowRenderer; // uses function directly
+                }
+                else{
+                  if (col > todaysCol){
+                    var cellProperties = {};
+                    cellProperties.renderer = "readOnlyRenderer";
+                  }
+
+                }
+
+                return cellProperties;
+              }
+            });
+          }
+        });
+      }
+      
     </script>
 
     <style type="text/css">
@@ -236,7 +326,7 @@
                           </select>
                         </td>
                         <td>
-                          <a onclick="loadSearchResults();" class="button round blue image-right ic-search text-upper">Search</a>
+                          <a onclick="loadClassAttendanceData();" class="button round blue image-right ic-search text-upper">Search</a>
                         </td>
                       </tr>
                     </table>

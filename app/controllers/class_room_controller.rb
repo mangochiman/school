@@ -412,6 +412,46 @@ class ClassRoomController < ApplicationController
     month_dates = month_dates.compact.in_groups_of(5).collect{|week|week.compact}
     render :json => month_dates and return
   end
+
+  def search_class_attendance_data
+    students = Student.find_by_sql("SELECT s.* FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id LEFT JOIN student_archive sa
+          ON s.student_id = sa.student_id WHERE scra.new_class_room_id = #{params[:class_room_id]}
+          AND scra.status = 'active' AND sa.student_id IS NULL")
+
+    start_date = params[:date_range].split('|')[0].to_date
+    end_date = params[:date_range].split('|')[1].to_date
+    week_dates = (start_date..end_date).to_a.collect{|d|d.strftime("%d/%b/%Y").upcase}
+
+    while (week_dates.count != 5) #For the HandSontable library  in view to handle it without errors
+      last_date = week_dates.last.to_date
+      added_day = (last_date + 1.day).strftime("%d/%b/%Y").upcase
+      week_dates << added_day
+    end
+
+    data = []
+    header = ['student_id', '#','Student Name'] + week_dates
+    data << header
+    count = 1;
+    students.each do |student|
+      student_id = student.student_id
+      student_name = student.name
+      student_data = [student_id, count, student_name]
+      student_attendance_data = []
+      week_dates.each do |date|
+        value = StudentAttendance.find(:last, :conditions => ["student_id =? AND
+            date =?", student_id, date.to_date.to_s]).status rescue ''
+        value = 'N/A' if date.to_date > Date.today
+
+        student_attendance_data << value
+      end
+      count = count + 1
+      weekly_data = (student_data + student_attendance_data)
+      data << weekly_data
+    end
+
+    render :json => data and return
+  end
   
   def save_attendance_data
     attendance_data = params[:attendance_data]
