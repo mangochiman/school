@@ -413,6 +413,45 @@ class ClassRoomController < ApplicationController
     render :json => month_dates and return
   end
 
+  def edit_class_attendance
+    @class_room = ClassRoom.find(params[:class_room_id])
+    @students = Student.find_by_sql("SELECT s.* FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id LEFT JOIN student_archive sa
+          ON s.student_id = sa.student_id WHERE scra.new_class_room_id = #{params[:class_room_id]}
+          AND scra.status = 'active' AND sa.student_id IS NULL")
+  end
+
+  def student_class_room_attendances
+    @class_room = ClassRoom.find(params[:class_room_id])
+    @student = Student.find(params[:student_id])
+  end
+
+  def view_class_attendance
+    @class_room = ClassRoom.find(params[:class_room_id])
+    @students = Student.find_by_sql("SELECT s.* FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id LEFT JOIN student_archive sa
+          ON s.student_id = sa.student_id WHERE scra.new_class_room_id = #{params[:class_room_id]}
+          AND scra.status = 'active' AND sa.student_id IS NULL")
+  end
+
+  def view_student_class_room_attendances
+    @class_room = ClassRoom.find(params[:class_room_id])
+    @student = Student.find(params[:student_id])
+  end
+
+  def void_class_attendance
+    @class_room = ClassRoom.find(params[:class_room_id])
+    @students = Student.find_by_sql("SELECT s.* FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id LEFT JOIN student_archive sa
+          ON s.student_id = sa.student_id WHERE scra.new_class_room_id = #{params[:class_room_id]}
+          AND scra.status = 'active' AND sa.student_id IS NULL")
+  end
+
+  def void_student_class_room_attendances
+    @class_room = ClassRoom.find(params[:class_room_id])
+    @student = Student.find(params[:student_id])
+  end
+  
   def search_class_attendance_data
     students = Student.find_by_sql("SELECT s.* FROM student s INNER JOIN student_class_room_adjustment scra ON
           s.student_id = scra.student_id LEFT JOIN student_archive sa
@@ -450,7 +489,17 @@ class ClassRoomController < ApplicationController
       data << weekly_data
     end
 
-    render :json => data and return
+    todays_col = 100000#Just set it a as a bigger number. This is for disabling some inputs
+    header.each_with_index do |element, index|
+      d = element.to_date rescue nil
+      next if d.blank?
+      todays_col = index - 1 if d >  Date.today
+      break
+    end
+
+    todays_col = 0 if (start_date > Date.today)
+
+    render :json => [data, todays_col] and return
   end
   
   def save_attendance_data

@@ -50,7 +50,8 @@
           url: "/class_room/search_class_attendance_data",
           data: "class_room_id=" + classRoomId + "&date_range=" + date_range,
           success: function(results){
-            data = results;
+            data = results[0];
+            todaysCol = parseInt(results[1]);
             document.getElementById('students').innerHTML = '';
             studentAttendance = new Handsontable(container,
             {
