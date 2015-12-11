@@ -532,6 +532,38 @@ class ClassRoomController < ApplicationController
 
     render :json => [data, todays_col] and return
   end
+
+  def search_student_class_attendance_data
+    today_col = 0
+    selected_date = "01-#{params[:month]}-#{params[:year]}".to_date
+    month_start_date = selected_date.beginning_of_month
+    month_end_date = selected_date.end_of_month
+    month_dates = (month_start_date..month_end_date).to_a.collect do |month_date|
+      next if month_date.strftime("%A").match(/SATURDAY|SUNDAY/i)
+      month_date.strftime("%d-%b-%Y").upcase
+    end
+
+    month_dates.compact.each_with_index do |ele, index|
+      if (ele.to_date == Date.today)
+        today_col = index + 1
+      end
+    end
+
+    data = []
+    header = ['Date','Status']
+    data << header
+
+    month_dates.compact.each do |date|
+      value = StudentAttendance.find(:last, :conditions => ["student_id =? AND
+            date =?", params[:student_id], date.to_date.to_s]).status rescue ''
+      value = 'N/A' if date.to_date > Date.today
+
+      data << [date, value]
+    end
+
+    data  = data.to_json
+    render :json => [data, today_col] and return
+  end
   
   def save_attendance_data
     attendance_data = params[:attendance_data]

@@ -16,7 +16,73 @@
     <%= javascript_include_tag("handsontable.full") %>
     <%= stylesheet_link_tag("handsontable.full") %>
     <%= stylesheet_link_tag("style") %>
+    <script type="text/javascript">
+      function loadClassAttendanceData(){
+        year = document.getElementsByClassName("year")[0].value;
+        month = document.getElementsByClassName("month")[0].value
+        jQuery.ajax({
+          type: "POST",
+          url: "/class_room/search_student_class_attendance_data",
+          data: "class_room_id=" + classRoomId + "&date_range=" + date_range,
+          success: function(results){
+            data = results[0];
+            todaysCol = parseInt(results[1]);
+            document.getElementById('student_data').innerHTML = '';
+            studentAttendance = new Handsontable(container,
+            {
+              data: data,
+              minSpareRows: 0,
+              columnSorting: true,
+              autoWrapRow: true,
 
+              columns: [
+                {
+                  data: 0,
+                  type: 'dropdown',
+                  source: ['Present', 'Absent', 'Sick', 'Leave', 'Late']
+                },
+                {
+                  data: 1,
+                  type: 'dropdown',
+                  source: ['Present', 'Absent', 'Sick', 'Leave', 'Late']
+                }
+              ],
+              onSelection: function (row, col, row2, col2) {
+                var meta = this.getCellMeta(row2, col2);
+
+                if (meta.readOnly) {
+                  this.updateSettings({fillHandle: false});
+                }
+                else {
+                  this.updateSettings({fillHandle: true});
+                }
+              },
+              cells: function (row, col, prop) {
+                if (col == 0){
+                  var cellProperties = {};
+                  cellProperties.renderer = "firstColumnRenderer";
+                }
+
+                if (row === 0) {
+                  var cellProperties = {};
+                  cellProperties.renderer = firstRowRenderer; // uses function directly
+                }
+                else{
+                  if (row > todaysCol){
+                    var cellProperties = {};
+                    cellProperties.renderer = "readOnlyRenderer";
+                  }
+
+                }
+
+                return cellProperties;
+              }
+            });
+          }
+        });
+      }
+      
+    </script>
     <style type="text/css">
       table { width: 80%; margin-bottom: 1.25em; /* 20/16 */ }
 
