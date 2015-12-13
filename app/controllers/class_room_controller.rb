@@ -480,6 +480,31 @@ class ClassRoomController < ApplicationController
   def view_student_class_room_attendances
     @class_room = ClassRoom.find(params[:class_room_id])
     @student = Student.find(params[:student_id])
+
+    @today = Date.today.strftime("%d/%b/%Y").upcase
+    @today_col = 0 #Disable everything. No Editing
+    this_month_start_date = Date.today.beginning_of_month
+    this_month_end_date = Date.today.end_of_month
+    this_month_dates = (this_month_start_date..this_month_end_date).to_a.collect do |month_date|
+      next if month_date.strftime("%A").match(/SATURDAY|SUNDAY/i)
+      month_date.strftime("%d-%b-%Y").upcase
+    end
+
+    data = []
+    header = ['Date','Status']
+    data << header
+
+    this_month_dates.compact.each do |date|
+      value = StudentAttendance.find(:last, :conditions => ["student_id =? AND
+            date =?", params[:student_id], date.to_date.to_s]).status rescue ''
+      value = 'N/A' if date.to_date > Date.today
+
+      data << [date, value]
+    end
+
+    @data  = data.to_json
+    @years = [2015, 2014, 2013]
+    @months = Date::MONTHNAMES.compact
   end
 
   def void_class_attendance
@@ -616,7 +641,28 @@ class ClassRoomController < ApplicationController
   end
 
   def save_student_monthly_attendance_data
-    raise params.inspect
+    student_id = params[:student_id]
+    attendance_data = params[:attendance_data]
+    attendance_data.delete("0") #Remove the first row with "0" as its key 
+
+    ActiveRecord::Base.transaction do
+      attendance_data.each do |key, values|
+        date_of_attendance = values[0]
+        attendance_value = values[1]
+      
+        next if date_of_attendance.to_date > Date.today #Ignore the future dates
+        student_attendance = StudentAttendance.find(:last, :conditions => ["student_id =? AND
+            date =?", student_id, date_of_attendance.to_date.to_s])
+        student_attendance = StudentAttendance.new if student_attendance.blank?
+        student_attendance.student_id = student_id
+        student_attendance.date = date_of_attendance.to_date
+        student_attendance.status = attendance_value
+        student_attendance.save
+      end
+    end
+    
+    render :text => true and return
+
   end
   
   def behavior_tab
