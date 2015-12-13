@@ -21,6 +21,16 @@
 
     <script type="text/javascript">
       var studentId = '<%= params[:student_id] %>'
+      var this_year = '<%= @this_year %>';
+      var this_month = '<%= @this_month %>';
+
+      function selectDefaults(){
+        document.getElementById(this_year).selected = true;
+        document.getElementById(this_month).selected = true;
+      }
+
+      window.setTimeout("selectDefaults();", 30);
+      
       function loadClassAttendanceData(){
         year = document.getElementsByClassName("year")[0].value;
         month = document.getElementsByClassName("month")[0].value
@@ -305,7 +315,7 @@
                             <td style="">
                               <select name="year" id="dropdown-actions" class="year">
                                 <% @years.each do |year| %>
-                                  <option value="<%= year %>"><%= year %></option>
+                                  <option value="<%= year %>" id="<%= year %>"><%= year %></option>
                                 <% end %>
                               </select>
                             </td>
@@ -313,7 +323,7 @@
                             <td>
                               <select name="month" id="dropdown-actions" class="month">
                                 <% @months.each do |month| %>
-                                  <option value="<%=  month %>"><%= month %></option>
+                                  <option value="<%=  month %>" id="<%=  month %>"><%= month %></option>
                                 <% end %>
                               </select>
                             </td>

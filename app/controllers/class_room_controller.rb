@@ -443,6 +443,8 @@ class ClassRoomController < ApplicationController
     @student = Student.find(params[:student_id])
 
     @today = Date.today.strftime("%d/%b/%Y").upcase
+    @this_year = Date.today.year
+    @this_month = Date.today.strftime("%B")
     @today_col = 0
     this_month_start_date = Date.today.beginning_of_month
     this_month_end_date = Date.today.end_of_month
@@ -488,6 +490,8 @@ class ClassRoomController < ApplicationController
     @student = Student.find(params[:student_id])
 
     @today = Date.today.strftime("%d/%b/%Y").upcase
+    @this_year = Date.today.year
+    @this_month = Date.today.strftime("%B")
     @today_col = 0 #Disable everything. No Editing
     this_month_start_date = Date.today.beginning_of_month
     this_month_end_date = Date.today.end_of_month
@@ -526,6 +530,8 @@ class ClassRoomController < ApplicationController
     @student = Student.find(params[:student_id])
 
     @today = Date.today.strftime("%d/%b/%Y").upcase
+    @this_year = Date.today.year
+    @this_month = Date.today.strftime("%B")
     @today_col = 0 #Disable everything. No Editing
 
 

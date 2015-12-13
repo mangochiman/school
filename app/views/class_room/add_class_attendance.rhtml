@@ -26,13 +26,14 @@
       var this_week_id = '<%= @this_week_id %>';
       
       function selectDefaults(){
-          document.getElementById(this_year).selected = true;
-          document.getElementById(this_month).selected = true;
-          obj = {value: this_month};
-          updateWeekValue(obj);
-          document.getElementById(this_week_id).selected = true;
+        document.getElementById(this_year).selected = true;
+        document.getElementById(this_month).selected = true;
+        obj = {value: this_month};
+        updateWeekValue(obj);
       }
-      
+
+      window.setTimeout("selectDefaults();", 30);
+  
       function updateWeekValue(obj){
         year = document.getElementsByClassName("year")[0].value;
         month = obj.value
@@ -53,6 +54,10 @@
             }
             
             document.getElementsByClassName("week")[0].innerHTML = html;
+            this_week_option = document.getElementById(this_week_id)
+            if (this_week_option){
+              this_week_option.selected = true;
+            }
           }
         });
       }
