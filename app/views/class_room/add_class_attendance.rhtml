@@ -19,7 +19,20 @@
 
     <script type="text/javascript">
       var classRoomId = '<%= params[:class_room_id] %>';
-
+      var years = eval('<%= @years.to_json %>');
+      var months = eval('<%= @months.to_json %>');
+      var this_year = '<%= @this_year %>';
+      var this_month = '<%= @this_month %>';
+      var this_week_id = '<%= @this_week_id %>';
+      
+      function selectDefaults(){
+          document.getElementById(this_year).selected = true;
+          document.getElementById(this_month).selected = true;
+          obj = {value: this_month};
+          updateWeekValue(obj);
+          document.getElementById(this_week_id).selected = true;
+      }
+      
       function updateWeekValue(obj){
         year = document.getElementsByClassName("year")[0].value;
         month = obj.value
@@ -32,10 +45,11 @@
             html = ""
             for (i=0; i<=results.length - 1; i++){
               week_dates = results[i];
-              first_week_date = week_dates[0]
-              last_week_date = week_dates[week_dates.length - 1]
-              date_range = first_week_date + ' to ' + last_week_date
-              html+="<option value='" + first_week_date + '|' + last_week_date + "'>" + date_range + " </option>"
+              first_week_date = week_dates[0];
+              last_week_date = week_dates[week_dates.length - 1];
+              date_range = first_week_date + ' to ' + last_week_date;
+              week_id = first_week_date + '_' + last_week_date;
+              html+="<option value='" + first_week_date + '|' + last_week_date + "' id='" + week_id + "'>" + date_range + " </option>"
             }
             
             document.getElementsByClassName("week")[0].innerHTML = html;
@@ -309,7 +323,7 @@
                         <td style="">
                           <select name="year" id="dropdown-actions" class="year">
                             <% @years.each do |year| %>
-                              <option value="<%= year %>"><%= year %></option>
+                              <option value="<%= year %>" id="<%= year %>"><%= year %></option>
                             <% end %>
                           </select>
                         </td>
@@ -317,7 +331,7 @@
                         <td>
                           <select name="month" id="dropdown-actions" class="month" onchange="updateWeekValue(this)">
                             <% @months.each do |month| %>
-                              <option value="<%=  month %>"><%= month %></option>
+                              <option value="<%=  month %>" id="<%= month %>"><%= month %></option>
                             <% end %>
                           </select>
                         </td>
@@ -370,7 +384,7 @@
         });
         
       }
-      
+
     </script>
 
     <script data-jsfiddle="students">

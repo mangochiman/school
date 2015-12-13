@@ -356,8 +356,14 @@ class ClassRoomController < ApplicationController
           AND scra.status = 'active' AND sa.student_id IS NULL")
     
     @today = Date.today.strftime("%d/%b/%Y").upcase
+    @this_year = Date.today.year
+    @this_month = Date.today.strftime("%B")
+
     this_week_start_date = Date.today.beginning_of_week#Monday
     this_week_end_date = this_week_start_date + 4.days
+
+    @this_week_id = this_week_start_date.strftime("%d-%b-%Y").upcase + '_' + this_week_end_date.strftime("%d-%b-%Y").upcase
+
     @this_week_dates = (this_week_start_date..this_week_end_date).to_a.collect{|d|d.strftime("%d/%b/%Y").upcase}
     data = []
     header = ['student_id', '#','Student Name'] + @this_week_dates
