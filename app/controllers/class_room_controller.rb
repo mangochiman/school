@@ -553,7 +553,7 @@ class ClassRoomController < ApplicationController
     @years = [2015, 2014, 2013]
     @months = Date::MONTHNAMES.compact
   end
-  
+
   def search_class_attendance_data
     students = Student.find_by_sql("SELECT s.* FROM student s INNER JOIN student_class_room_adjustment scra ON
           s.student_id = scra.student_id LEFT JOIN student_archive sa
@@ -668,6 +668,31 @@ class ClassRoomController < ApplicationController
         student_attendance.date = date_of_attendance.to_date
         student_attendance.status = attendance_value
         student_attendance.save
+      end
+    end
+
+    render :text => true and return
+  end
+
+  def delete_attendance_data
+    student_id = params[:student_id]
+    attendance_data = params[:attendance_data]
+    attendance_data.delete("0")
+
+    to_be_deleted = []
+    attendance_data.each do |key, values|
+      date = values[0]
+      #attendance_value = values[1]
+      enabled_or_disabled = values[2]
+      next if enabled_or_disabled.match(/DISABLED/i)
+      to_be_deleted << date
+    end
+
+    ActiveRecord::Base.transaction do
+      to_be_deleted.each do |date_of_attendance|
+        student_attendance = StudentAttendance.find(:last, :conditions => ["student_id =? AND
+            date =?", student_id, date_of_attendance.to_date.to_s])
+        student_attendance.delete unless student_attendance.blank?
       end
     end
 

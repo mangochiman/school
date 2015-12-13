@@ -91,7 +91,7 @@
           title:"Delete confirmation",
           text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
           confirm: function(button) {
-            deleteExams();
+            deleteAttendances();
           },
           cancel: function(button) {
 
@@ -101,7 +101,17 @@
         });
       }
 
-
+      function deleteAttendances(){
+        attendanceData = studentAttendance.getSourceData();
+        jQuery.ajax({
+          type: "POST",
+          url: "/class_room/delete_attendance_data",
+          data: {attendance_data: attendanceData, student_id: studentId},
+          success: function(results){
+            window.location = location.href;
+          }
+        });
+      }
 
     </script>
     <style type="text/css">
