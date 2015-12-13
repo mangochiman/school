@@ -353,7 +353,7 @@
 
     <script type="text/javascript">
       var today = '<%= @today %>';
-      var todaysCol = 0;
+      var todaysCol = parseInt('<%= @todays_col %>');
       var maxRows = parseInt('<%= @students.count %>');
 
       function saveData(){
@@ -378,9 +378,6 @@
 
       function firstRowRenderer(instance, td, row, col, prop, value, cellProperties) {
         Handsontable.renderers.TextRenderer.apply(this, arguments);
-        if (value.trim() == today.trim()){
-          todaysCol = col;
-        }
         td.style.fontWeight = 'bold';
         td.style.color = '#222';
         td.style.background = '#eee';

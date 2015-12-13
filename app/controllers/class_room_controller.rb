@@ -363,6 +363,17 @@ class ClassRoomController < ApplicationController
     header = ['student_id', '#','Student Name'] + @this_week_dates
     data << header
     count = 1;
+
+    @todays_col = 100000#Just set it a as a bigger number. This is for disabling some inputs
+    header.each_with_index do |element, index|
+      d = element.to_date rescue nil
+      next if d.blank?
+      @todays_col = index - 1 if d >  Date.today
+      break
+    end
+
+    @todays_col = 0 if (this_week_start_date > Date.today)
+
     @students.each do |student|
       student_id = student.student_id
       student_name = student.name
@@ -435,8 +446,9 @@ class ClassRoomController < ApplicationController
     end
 
     this_month_dates.compact.each_with_index do |ele, index|
-      if (ele.to_date == Date.today)
-        @today_col = index + 1
+      if (ele.to_date >= Date.today)
+        @today_col = index
+        break
       end
     end
     
@@ -534,7 +546,7 @@ class ClassRoomController < ApplicationController
   end
 
   def search_student_class_attendance_data
-    today_col = 0
+    today_col = 1000000
     selected_date = "01-#{params[:month]}-#{params[:year]}".to_date
     month_start_date = selected_date.beginning_of_month
     month_end_date = selected_date.end_of_month
@@ -544,8 +556,9 @@ class ClassRoomController < ApplicationController
     end
 
     month_dates.compact.each_with_index do |ele, index|
-      if (ele.to_date == Date.today)
-        today_col = index + 1
+      if (ele.to_date >= Date.today)
+        today_col = index
+        break
       end
     end
 
@@ -600,6 +613,10 @@ class ClassRoomController < ApplicationController
     end
 
     render :text => true and return
+  end
+
+  def save_student_monthly_attendance_data
+    raise params.inspect
   end
   
   def behavior_tab

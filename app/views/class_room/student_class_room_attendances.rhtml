@@ -17,15 +17,16 @@
     <%= stylesheet_link_tag("handsontable.full") %>
     <%= stylesheet_link_tag("style") %>
     <script type="text/javascript">
+      var studentId = '<%= params[:student_id] %>'
       function loadClassAttendanceData(){
         year = document.getElementsByClassName("year")[0].value;
         month = document.getElementsByClassName("month")[0].value
         jQuery.ajax({
           type: "POST",
           url: "/class_room/search_student_class_attendance_data",
-          data: "class_room_id=" + classRoomId + "&date_range=" + date_range,
+          data: "student_id=" + studentId + "&year=" + year + "&month=" + month,
           success: function(results){
-            data = results[0];
+            data = eval(results[0]);
             todaysCol = parseInt(results[1]);
             document.getElementById('student_data').innerHTML = '';
             studentAttendance = new Handsontable(container,
@@ -81,7 +82,20 @@
           }
         });
       }
-      
+
+      function saveChanges(){
+        attendanceData = studentAttendance.getSourceData();
+        console.log(attendanceData);
+
+        jQuery.ajax({
+          type: "POST",
+          url: "/class_room/save_student_monthly_attendance_data",
+          data: {attendance_data: attendanceData, student_id: studentId},
+          success: function(results){
+            window.location = location.href;
+          }
+        });
+      }
     </script>
     <style type="text/css">
       table { width: 80%; margin-bottom: 1.25em; /* 20/16 */ }
