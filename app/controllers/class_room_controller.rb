@@ -518,6 +518,40 @@ class ClassRoomController < ApplicationController
   def void_student_class_room_attendances
     @class_room = ClassRoom.find(params[:class_room_id])
     @student = Student.find(params[:student_id])
+
+    @today = Date.today.strftime("%d/%b/%Y").upcase
+    @today_col = 0 #Disable everything. No Editing
+
+
+    this_month_start_date = Date.today.beginning_of_month
+    this_month_end_date = Date.today.end_of_month
+    this_month_dates = (this_month_start_date..this_month_end_date).to_a.collect do |month_date|
+      next if month_date.strftime("%A").match(/SATURDAY|SUNDAY/i)
+      month_date.strftime("%d-%b-%Y").upcase
+    end
+
+    this_month_dates.compact.each_with_index do |ele, index|
+      if (ele.to_date >= Date.today)
+        @today_col = index
+        break
+      end
+    end
+
+    data = []
+    header = ['Date','Status', 'Action']
+    data << header
+    this_month_dates.compact.each do |date|
+      value = StudentAttendance.find(:last, :conditions => ["student_id =? AND
+            date =?", params[:student_id], date.to_date.to_s]).status rescue ''
+      value = 'N/A' if date.to_date > Date.today
+      #html = "<a class=\\\"table-actions-button ic-table-delete\\\" onmousedown=\\\"alert(20)\\\" date=\\\"#{date}\\\"></a>"
+      checkbox = 'Disabled'
+      data << [date, value, checkbox]
+    end
+
+    @data  = data.to_json
+    @years = [2015, 2014, 2013]
+    @months = Date::MONTHNAMES.compact
   end
   
   def search_class_attendance_data

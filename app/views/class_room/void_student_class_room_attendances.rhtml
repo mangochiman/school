@@ -10,17 +10,101 @@
     <!-- jQuery & JS files -->
 
     <%= javascript_include_tag("jquery") %>
+    <%= javascript_include_tag("script") %>
     <%= javascript_include_tag("jquery-1.9.1.min") %>
     <%= javascript_include_tag("jquery.confirm") %>
-    <%= javascript_include_tag("script") %>
-    <%= javascript_include_tag("gvalidator") %>
+    <%= javascript_include_tag("bootstrap") %>
+    <%= javascript_include_tag("handsontable.full") %>
+    <%= stylesheet_link_tag("handsontable.full") %>
     <%= stylesheet_link_tag("style") %>
-    <%= stylesheet_link_tag("metallic") %>
-    <%= stylesheet_link_tag("gvalidator") %>
     <%= stylesheet_link_tag("bootstrap") %>
 
-    <style>
+    <script type="text/javascript">
+      var studentId = '<%= params[:student_id] %>'
+      function loadClassAttendanceData(){
+        year = document.getElementsByClassName("year")[0].value;
+        month = document.getElementsByClassName("month")[0].value
+        jQuery.ajax({
+          type: "POST",
+          url: "/class_room/search_student_class_attendance_data",
+          data: "student_id=" + studentId + "&year=" + year + "&month=" + month,
+          success: function(results){
+            data = eval(results[0]);
+            todaysCol = 0//parseInt(results[1]);We don't want to edit records
+            document.getElementById('student_data').innerHTML = '';
+            studentAttendance = new Handsontable(container,
+            {
+              data: data,
+              minSpareRows: 0,
+              columnSorting: true,
+              autoWrapRow: true,
 
+              columns: [
+                {
+                  data: 0,
+                  type: 'dropdown',
+                  source: ['Present', 'Absent', 'Sick', 'Leave', 'Late']
+                },
+                {
+                  data: 1,
+                  type: 'dropdown',
+                  source: ['Present', 'Absent', 'Sick', 'Leave', 'Late']
+                }
+              ],
+              onSelection: function (row, col, row2, col2) {
+                var meta = this.getCellMeta(row2, col2);
+
+                if (meta.readOnly) {
+                  this.updateSettings({fillHandle: false});
+                }
+                else {
+                  this.updateSettings({fillHandle: true});
+                }
+              },
+              cells: function (row, col, prop) {
+                if (col == 0){
+                  var cellProperties = {};
+                  cellProperties.renderer = "firstColumnRenderer";
+                }
+
+                if (row === 0) {
+                  var cellProperties = {};
+                  cellProperties.renderer = firstRowRenderer; // uses function directly
+                }
+                else{
+                  if (row > todaysCol){
+                    var cellProperties = {};
+                    cellProperties.renderer = "readOnlyRenderer";
+                  }
+
+                }
+
+                return cellProperties;
+              }
+            });
+          }
+        });
+      }
+
+      function deleteSelected(){
+        jQuery.confirm({
+          title:"Delete confirmation",
+          text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+          confirm: function(button) {
+            deleteExams();
+          },
+          cancel: function(button) {
+
+          },
+          confirmButton: "Yes I am",
+          cancelButton: "No"
+        });
+      }
+
+
+
+    </script>
+    <style type="text/css">
       .modal-title {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         font-weight: 500;
@@ -29,14 +113,52 @@
         color: #317eac;
       }
 
+      table { width: 80%; margin-bottom: 1.25em; /* 20/16 */ }
+
+      table th {
+        background-color: #5d6677;
+        color: white;
+        text-transform: uppercase;
+        border-left: inherit;
+      }
+
+      table tbody td {
+        padding: inherit; /* 10/12 15/12 */
+        border-left: inherit;
+        border-bottom: inherit;
+      }
+
+      table th:first-child {
+        min-width: 150px;
+      }
+
+      table td:first-child, table th:first-child {
+
+        text-align: inherit;
+        padding: inherit;
+        border-bottom: 1px solid #ccc;
+        border-right: 1px solid #ccc;
+      }
+
+      table td:last-child, table th:last-child {
+        width: 7em; /* 84/12 */
+        text-align: center;
+        padding: 0;
+      }
+
+      a{
+        cursor: pointer;
+      }
+
       #search-student-form fieldset {
         border: 1px solid gray;
         float: left;
         margin-bottom: 15px;
-        padding: 5px;
-        width: 98.7%;
+        padding: 0px;
+        float: none;
       }
       #search-student-form legend {
+        color: #abda0f;
         font-size: 14px;
         font-weight: 100;
         margin-left: 14px;
@@ -45,29 +167,24 @@
         margin-bottom: initial;
         border-style: none;
       }
+
       #search-student-form fieldset input {
-        border: 1px solid #d9dbdd;
         color: #505050;
         float: left;
-        font-size: 14px;
         margin-right: 5px;
-        outline: medium none;
+        width: 250px;
         padding: 6px;
-        width: 180px;
+        font-size: 14px;
+        border: 1px solid #d9dbdd;
+        outline: medium none;
       }
 
-      table th:first-child {
-        border-style: none none none !important;
+      #search-student-form table td{
+        border-left: none;
       }
 
-      .green {
-        background-color: #458B00;
-        color: white;
-      }
-
-      .green:hover{
-        background-color: #556B2F;
-        color: white;
+      .orange{
+        background-color: #EEEE00 !important;
       }
 
       #dropdown-actions{
@@ -77,36 +194,18 @@
         border-radius: 4px;
         box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
         color: #555;
+        display: block;
         font-size: 14px;
         height: 34px;
         line-height: 1.42857;
-        width: 145px;
-        text-align: center;
+        min-width: 167px;
         padding: 6px 12px;
+        text-align: center;
         transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
       }
 
-      a{
-        cursor: pointer;
-      }
-
-      .red{
-        background-color: #EE0000;
-        color:white;
-        font-weight: bold;
-      }
-
-      .red:hover{
-        color:white;
-        background-color: #CD0000;
-      }
-
-      .orange{
-        background-color: #EEEE00 !important;
-      }
-
-      #assigned_courses tbody{
-        line-height: 0.2em;
+      #search-student-form table td:first-child {
+        border-style: none none none !important;
       }
     </style>
   </head>
@@ -167,7 +266,7 @@
 
                 <div class="content-module-heading cf">
 
-                  <h3 class="fl">Void Student Attendances</h3>
+                  <h3 class="fl">Edit Student Attendances</h3>
                   <span class="fr expand-collapse-text">Click to collapse</span>
                   <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -186,7 +285,44 @@
                     </div>
                   <% end %>
 
-                  &nbsp;
+                  <form id="search-student-form" action="#">
+                    <fieldset>
+                      <legend>Search</legend>
+                      <div style="margin-left:2%;">
+                        <table style="width: 45%; float: right;">
+                          <tr>
+                            <td style="text-align:right; font-size: 1.2em; padding-right: 5px;">Year</td>
+                            <td style="">
+                              <select name="year" id="dropdown-actions" class="year">
+                                <% @years.each do |year| %>
+                                  <option value="<%= year %>"><%= year %></option>
+                                <% end %>
+                              </select>
+                            </td>
+                            <td style="text-align:right; font-size: 1.2em; padding-left: 20px; padding-right: 5px;">Month</td>
+                            <td>
+                              <select name="month" id="dropdown-actions" class="month">
+                                <% @months.each do |month| %>
+                                  <option value="<%=  month %>"><%= month %></option>
+                                <% end %>
+                              </select>
+                            </td>
+
+                            <td>
+                              <a onclick="loadClassAttendanceData();" class="button round blue image-right ic-search text-upper">Search</a>
+                            </td>
+                          </tr>
+                        </table>
+                      </div>
+                    </fieldset>
+                  </form>
+                  <a onclick="deleteSelected();" class="button round blue image-right ic-right-arrow text-upper" style="font-size: 10pt;">Delete Selected</a>
+                  <br /><br />
+                  <div id="student_data">
+
+                  </div><br />
+                  <a onclick="deleteSelected();" class="button round blue image-right ic-right-arrow text-upper" style="font-size: 10pt;">Delete Selected</a>
+                  <br />
 
                 </div> <!-- end content-module-main -->
 
@@ -247,12 +383,124 @@
     </div> <!-- end content -->
 
     <%= javascript_include_tag("bootstrap") %>
-    <%= javascript_include_tag("zebra_datepicker") %>
-    <script>
-      $('.date-picker').Zebra_DatePicker({
-        view : 'years',
-        direction: ['<%=  (Date.today - 30.years).strftime("%Y-%m-%d") %>', '<%=  (Date.today - 12.years).strftime("%Y-%m-%d") %>']
+
+    <script data-jsfiddle="students">
+      var data = eval('<%= @data %>');
+      var today = '<%= @today %>';
+      var todaysCol= parseInt('<%= @today_col %>');
+
+      function firstRowRenderer(instance, td, row, col, prop, value, cellProperties) {
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+        if (value.trim() == today.trim()){
+          todaysCol = col;
+        }
+        td.style.fontWeight = 'bold';
+        td.style.color = '#222';
+        td.style.background = '#eee';
+        td.style.padding = '2px 4px';
+        td.style.textAlign = 'center';
+
+        cellProperties.readOnly = true;
+
+      }
+
+      function firstColumnRenderer(instance, td, row, col, prop, value, cellProperties){
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+        td.style.color = '#222';
+        if (col == 0){
+          td.style.textAlign = 'center';
+          td.style.background = '#eee';
+          cellProperties.readOnly = true;
+        }
+
+      }
+
+      function readOnlyRenderer(instance, td, row, col, prop, value, cellProperties) {
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+        td.style.background = '#eee';
+        cellProperties.readOnly = true;
+        if (col == 0){
+          td.style.textAlign = 'center';
+          td.style.background = '#eee';
+        }
+      }
+
+      // maps function to lookup string
+      Handsontable.renderers.registerRenderer('readOnlyRenderer', readOnlyRenderer);
+      Handsontable.renderers.registerRenderer('firstColumnRenderer', firstColumnRenderer);
+
+      var container = document.getElementById('student_data');
+
+      var studentAttendance = new Handsontable(container,
+      {
+        data: data,
+        minSpareRows: 0,
+        columnSorting: true,
+        autoWrapRow: true,
+        columns: [
+          {
+            data: 0
+          },
+          {
+            data: 1
+          },
+          {
+            data: 2,
+            type: "checkbox",
+            checkedTemplate: 'Enabled',
+            uncheckedTemplate: 'Disabled'
+          }
+        ],
+
+        onSelection: function (row, col, row2, col2) {
+          var meta = this.getCellMeta(row2, col2);
+
+          if (meta.readOnly) {
+            this.updateSettings({fillHandle: false});
+          }
+          else {
+            this.updateSettings({fillHandle: true});
+          }
+        },
+        cells: function (row, col, prop) {
+          if (col == 0){
+            var cellProperties = {};
+            cellProperties.renderer = "firstColumnRenderer";
+          }
+
+          if (row === 0) {
+            var cellProperties = {};
+            cellProperties.renderer = firstRowRenderer; // uses function directly
+          }
+          else{
+            if (row > todaysCol){
+              var cellProperties = {};
+              cellProperties.renderer = "readOnlyRenderer";
+            }
+          }
+          if (row != 0){
+            if (col == 2){
+              if (row < todaysCol){
+                var cellProperties = {};
+              }
+            }
+          }
+          
+          if (col == 1){ //Disable status column
+            var cellProperties = {};
+            cellProperties.renderer = "readOnlyRenderer";
+          }
+          
+          return cellProperties;
+        }
       });
+
+      window.setInterval(function(){
+        //document.getElementsByTagName("col")[0].style.width = '50px';
+      }, 10)
+
     </script>
+
+
   </body>
 </html>
