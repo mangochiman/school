@@ -37,21 +37,6 @@
         cursor: pointer;
       }
 
-      table{
-        margin-left:15%;
-        width: 60%;
-      }
-      table td #simple-input{
-        float: right;
-      }
-
-      table label{
-        text-align: left;
-      }
-      #simple-input{
-        font-size: 10pt !important;
-      }
-
       #registration input[type="text"], input[type="password"], textarea {
         border: 1px solid #d9dbdd;
         outline: medium none;
@@ -127,6 +112,12 @@
       .orange{
         background-color: #EEEE00 !important;
       }
+
+      #students_punishments .badge{
+        min-width: 20px;
+        line-height: 2;
+        cursor: pointer;
+      }
     </style>
   </head>
   <body>
@@ -197,21 +188,27 @@
                 </div>
               <% end %>
 
-              <form id="search-student-form" action="#">
-                <fieldset>
-                  <legend>Search</legend>
-                  <div style="margin-left:2%;">
-                    <table style="width: 45%; float: right;">
-                      <tr>
-                        <td style="font-size: 13pt;">Name</td>
-                        <td style="width: 50px !important;"><input type="text" class="class_room_search"/></td>
-                        <td style="width: 20px"><a onclick="loadSearchResults();" class="button round blue image-right ic-search text-upper">Search</a></td>
-                      </tr>
-                    </table>
-                  </div>
-                </fieldset>
-              </form>
-
+              <h2 style="font-weight: bold;">Top 10 Students With More Punishments</h2>
+              <table id="students_punishments">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Student Name</th>
+                    <th>Gender</th>
+                    <th>Phone #</th>
+                    <th style="width: 20%;">Total Punishments</th>
+                  </tr>
+                <tbody>
+                  <% @student_punishments_data.each do |data| %>
+                    <tr>
+                      <td><%= data[1] %></td>
+                      <td><%= data[2] %></td>
+                      <td><%= data[3] %></td>
+                      <td><span class="badge"><%= data[4] %></span></td>
+                    </tr>
+                  <% end %>
+                </tbody>
+                </thead>
+              </table>
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->

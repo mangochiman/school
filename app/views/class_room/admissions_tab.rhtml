@@ -12,12 +12,76 @@
     <%= javascript_include_tag("jquery") %>
     <%= javascript_include_tag("script") %>
     <%= javascript_include_tag("jquery-1.9.1.min") %>
+    <%= javascript_include_tag("highcharts") %>
+    <%= javascript_include_tag("exporting") %>
     <%= javascript_include_tag("jquery.confirm") %>
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("bootstrap") %>
-    <script>
+
+    <script type="text/javascript">
+      var males = parseInt('<%= @males %>');
+      var females = parseInt('<%= @females %>');
+      var total = parseInt('<%= @total %>');
+
+      var xValues = eval('<%= @x_values.to_json %>');
+      var classRoomName = '<%= @class_room.name %>'
+      $(function () {
+        $('#container').highcharts({
+          chart: {
+            type: 'column'
+          },
+          title: {
+            text: 'Students Statistics'
+          },
+          subtitle: {
+            text: ''
+          },
+          xAxis: {
+            categories: [classRoomName]
+          },
+          yAxis: {
+            min: 0,
+            title: {
+              text: 'Total Students'
+            }
+          },
+          tooltip: {
+            headerFormat: '<span style="font-size:10px; font-weight:bold;">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};text-align:left; padding:3px;">{series.name}: </td>' +
+              '<td style="padding:0"><b>{point.y}</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+          },
+          plotOptions: {
+            column: {
+              pointPadding: 0.2,
+              borderWidth: 0
+            }
+          },
+          series: [
+
+            {
+              name: 'Males',
+              data: [males]
+
+            },
+            {
+              name: 'Females',
+              data: [females]
+
+            },
+            {
+              name: 'Total',
+              data: [total]
+
+            }
+          ]
+        });
+      });
 
     </script>
+
     <style>
       .label {
         border-radius: 1.5em;
@@ -127,6 +191,48 @@
       .orange{
         background-color: #EEEE00 !important;
       }
+
+      #filter-graph-form fieldset {
+        border: 1px solid gray;
+        padding: 0px;
+        width: 98.7%;
+      }
+      #filter-graph-form legend {
+        color: #abda0f;
+        font-size: 14px;
+        font-weight: 100;
+        margin-left: 14px;
+        padding: 2px;
+      }
+      #filter-graph-form fieldset input {
+        color: #505050;
+        float: left;
+        margin-right: 5px;
+        width: 140px;
+        padding: 0px;
+        font-size: 14px;
+      }
+
+      #semester{
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        color: #555;
+        display: block;
+        font-size: 14px;
+        height: 34px;
+        line-height: 1.42857;
+        padding: 6px 12px;
+        min-width: 167px;
+        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+      }
+
+      a{
+        cursor: pointer;
+      }
+
     </style>
   </head>
   <body>
@@ -199,20 +305,28 @@
                 </div>
               <% end %>
 
+
               <form id="search-student-form" action="#">
                 <fieldset>
-                  <legend>Search</legend>
+                  <legend>Student Statistics</legend>
                   <div style="margin-left:2%;">
-                    <table style="width: 45%; float: right;">
-                      <tr>
-                        <td style="font-size: 13pt;">Name</td>
-                        <td style="width: 50px !important;"><input type="text" class="class_room_search"/></td>
-                        <td style="width: 20px"><a onclick="loadSearchResults();" class="button round blue image-right ic-search text-upper">Search</a></td>
-                      </tr>
+                    <table>
+                      <tbody>
+                        <tr>
+                          <td style="font-size: 12pt;">Males</td>
+                          <td><span class="badge"><%= @males %></span></td>
+                          <td style="font-size: 12pt;">Females</td>
+                          <td><span class="badge"><%= @females %></span></td>
+                          <td style="font-size: 12pt;">Total</td>
+                          <td><span class="badge"><%= @total %></span></td>
+                        </tr>
+                      </tbody>
                     </table>
                   </div>
                 </fieldset>
               </form>
+              <div id="container">
+              </div>
 
             </div> <!-- end content-module-main -->
 
@@ -226,24 +340,5 @@
 
     <%= javascript_include_tag("bootstrap") %>
 
-    <script>
-
-      $(".view-courses").confirm({
-        title:"Form 1",
-        text:html,
-        confirm: function(button) {
-        },
-        cancel: function(button) {
-        },
-        confirmButton: "Done"
-      });
-
-      function hideCancelButton(){
-        if ($("button.cancel")[0]){
-          $("button.cancel")[0].style.display='none';
-        }
-      }
-      window.setInterval("hideCancelButton();", 300);
-    </script>
   </body>
 </html>
