@@ -15,10 +15,16 @@
     <%= javascript_include_tag("jquery.confirm") %>
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("bootstrap") %>
-    <script>
 
+    <script type="text/javascript">
+      var classRoomId = '<%= params[:class_room_id] %>';
+      function gotoStudentDetails(studentID){
+        window.location = "/class_room/student_punishment_details?class_room_id=" + classRoomId + "&student_id=" + studentID;
+      }
+      
     </script>
-    <style>
+
+    <style type="text/css">
       .label {
         border-radius: 1.5em;
         color: #fff;
@@ -114,9 +120,11 @@
       }
 
       #students_punishments .badge{
-        min-width: 20px;
+        width: 85%;
         line-height: 2;
         cursor: pointer;
+        font-weight: bold;
+        font-size: 10pt;
       }
     </style>
   </head>
@@ -203,7 +211,7 @@
                       <td><%= data[1] %></td>
                       <td><%= data[2] %></td>
                       <td><%= data[3] %></td>
-                      <td><span class="badge"><%= data[4] %></span></td>
+                      <td><span class="badge" onclick="gotoStudentDetails('<%= data[0] %>');"><%= data[4] %></span></td>
                     </tr>
                   <% end %>
                 </tbody>

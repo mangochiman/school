@@ -875,6 +875,12 @@ class ClassRoomController < ApplicationController
           AND scra.status = 'active' AND sa.student_id IS NULL")
   end
 
+  def student_punishment_details
+    @class_room = ClassRoom.find(params[:class_room_id])
+    @student = Student.find(params[:student_id])
+    @student_punishments = @student.punishments
+  end
+  
   def view_student_punishments
     @class_room = ClassRoom.find(params[:class_room_id])
     @student = Student.find(params[:student_id])
@@ -920,6 +926,8 @@ class ClassRoomController < ApplicationController
 
   def examinations_tab
     @class_room = ClassRoom.find(params[:class_room_id])
+    @latest_class_exams = Examination.find_by_sql("SELECT e.* FROM exam e WHERE class_room_id = #{params[:class_room_id]}
+      ORDER BY DATE(e.created_at) DESC LIMIT 10")
   end
 
   def add_examination
