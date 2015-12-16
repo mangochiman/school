@@ -3,6 +3,7 @@ class Payment < ActiveRecord::Base
   set_primary_key :payment_id
 
   belongs_to :payment_type, :foreign_key => "payment_type_id"
+  belongs_to :student, :foreign_key => "student_id"
   before_save :add_defaults
   
   def add_defaults

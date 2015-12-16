@@ -1171,6 +1171,20 @@ class ClassRoomController < ApplicationController
 
   def payments_tab
     @class_room = ClassRoom.find(params[:class_room_id])
+    student_ids = Student.find_by_sql("SELECT s.* FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id LEFT JOIN student_archive sa
+          ON s.student_id = sa.student_id WHERE scra.new_class_room_id = #{params[:class_room_id]}
+          AND scra.status = 'active' AND sa.student_id IS NULL").map(&:student_id).join(', ')
+    student_ids = '0' if student_ids.blank?
+=begin
+For picking unique student records
+SELECT p1.* FROM payment p1 WHERE DATE(p1.date) = (
+	SELECT MAX(DATE(p2.date)) FROM payment p2 WHERE p1.student_id = p2.student_id
+) GROUP BY p1.student_id ORDER BY p1.date DESC;
+
+=end
+    @latest_students_payments = Payment.find_by_sql("SELECT p.* FROM payment p WHERE p.student_id IN (#{student_ids})
+      ORDER BY DATE(p.date) DESC")
   end
 
   def add_student_payment
