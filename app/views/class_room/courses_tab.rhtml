@@ -15,8 +15,52 @@
     <%= javascript_include_tag("jquery.confirm") %>
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("bootstrap") %>
-    <script>
+    <script type="text/javascript">
+      var classRoomID = '<%= params[:class_room_id] %>';
 
+      function loadCourseStudents(obj){
+        courseId = obj.getAttribute("course_id");
+        courseName = obj.getAttribute("course_name");
+        jQuery.ajax({
+          type: "POST",
+          url: "/class_room/render_class_course_students",
+          data: "course_id=" + courseId + "&class_room_id=" + classRoomID,
+          success: function(results){
+            table = "<table style='width:90%; margin-left:5%;'>";
+            table+="<tr>";
+            table+="<th style='min-width: 45%;'>Student Name</th>";
+            table+="<th>Gender</th>";
+            table+="<th>Phone #</th>";
+            table+="</tr>";
+
+            for (var student_id in results){
+              studentName = results[student_id]["student_name"];
+              gender = results[student_id]["gender"];
+              if (gender == null)gender = '';
+              phone = results[student_id]["phone"];
+              if (phone == null)phone = '';
+              
+              table+="<tr style='background-color:white;'>";
+              table+="<td>" + studentName + "</td>";
+              table+="<td>" + gender + "</td>";
+              table+="<td>" + phone + "</td>";
+              table+="</tr>";
+            }
+
+            table += "</table>";
+            students = table;
+
+            jQuery.confirm({
+              title: courseName,
+              text: students,
+              confirm: function(button) {
+              },
+              cancel: function(button) {
+              },
+              confirmButton: "Done"
+            });
+          }});
+      }
     </script>
     <style>
       .label {
@@ -37,41 +81,8 @@
         cursor: pointer;
       }
 
-      table{
-        margin-left:15%;
-        width: 60%;
-      }
-      table td #simple-input{
-        float: right;
-      }
-
-      table label{
-        text-align: left;
-      }
-      #simple-input{
-        font-size: 10pt !important;
-      }
-
-      #registration input[type="text"], input[type="password"], textarea {
-        border: 1px solid #d9dbdd;
-        outline: medium none;
-        padding: 0.5em 0.225em;
-      }
-      input[type="submit"] {
-        margin-left: 37%;
-      }
       table th:first-child {
         border-style: none none none !important;
-      }
-
-      .classes{
-        position: relative;
-        margin-left: 0%;
-        width: 100%;
-      }
-
-      .classes th, tbody{
-        text-align: center;
       }
 
       .modal-title {
@@ -126,6 +137,14 @@
 
       .orange{
         background-color: #EEEE00 !important;
+      }
+
+      #courses .badge{
+        width: 85%;
+        line-height: 2;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 10pt;
       }
     </style>
   </head>
@@ -197,21 +216,32 @@
                   <%= flash[:error] %>
                 </div>
               <% end %>
+              <h2 style="font-weight: bold;">Courses - Students Summary</h2>
+              <table id="courses">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th style="text-align: center;">Course Name</th>
+                    <th style="width: 20%;">Total Students Taking</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% count = 0 %>
+                  <%  @courses_data.each do |course_id, values|%>
+                    <tr>
+                      <td><%= count = count + 1 %></td>
+                      <td style="text-align: center;"><%= values["course_name"] %></td>
+                      <td>
+                        <span onmousedown="loadCourseStudents(this);" class="badge" course_id="<%= course_id %>" course_name="<%= values["course_name"] %>">
+                          <%= values["total_students"] %>
+                        </span>
+                      </td>
 
-              <form id="search-student-form" action="#">
-                <fieldset>
-                  <legend>Search</legend>
-                  <div style="margin-left:2%;">
-                    <table style="width: 45%; float: right;">
-                      <tr>
-                        <td style="font-size: 13pt;">Name</td>
-                        <td style="width: 50px !important;"><input type="text" class="class_room_search"/></td>
-                        <td style="width: 20px"><a onclick="loadSearchResults();" class="button round blue image-right ic-search text-upper">Search</a></td>
-                      </tr>
-                    </table>
-                  </div>
-                </fieldset>
-              </form>
+                    </tr>
+                  <% end %>
+                  <tr></tr>
+                </tbody>
+              </table>
 
             </div> <!-- end content-module-main -->
 

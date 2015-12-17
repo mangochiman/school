@@ -1494,6 +1494,46 @@ SELECT p1.* FROM payment p1 WHERE DATE(p1.date) = (
   
   def courses_tab
     @class_room = ClassRoom.find(params[:class_room_id])
+    class_room_courses = @class_room.class_room_courses
+    student_ids = Student.find_by_sql("SELECT s.* FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id LEFT JOIN student_archive sa
+          ON s.student_id = sa.student_id WHERE scra.new_class_room_id = #{params[:class_room_id]}
+          AND scra.status = 'active' AND sa.student_id IS NULL").map(&:student_id).join(', ')
+    student_ids = '0' if student_ids.blank?
+    @courses_data = {}
+    class_room_courses.each do |class_room_course|
+      course_id = class_room_course.course_id
+      student_class_room_courses = StudentClassRoomCourse.find(:all,
+        :conditions => ["class_room_id =? AND course_id =? AND student_id IN (#{student_ids})", params[:class_room_id], course_id ])
+      @courses_data[course_id] = {} if @courses_data[course_id].blank?
+      @courses_data[course_id]["course_name"] = class_room_course.course.name
+      @courses_data[course_id]["total_students"] = student_class_room_courses.count
+    end
+
+  end
+
+  def render_class_course_students
+    student_ids = Student.find_by_sql("SELECT s.* FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id LEFT JOIN student_archive sa
+          ON s.student_id = sa.student_id WHERE scra.new_class_room_id = #{params[:class_room_id]}
+          AND scra.status = 'active' AND sa.student_id IS NULL").map(&:student_id).join(', ')
+    student_ids = '0' if student_ids.blank?
+          
+    student_class_room_courses = StudentClassRoomCourse.find(:all, :conditions => ["class_room_id =? AND
+      course_id =? AND student_id IN (#{student_ids})", params[:class_room_id], params[:course_id] ])
+    
+    hash = {}
+    student_class_room_courses.each do |scrc|
+      next if scrc.student.blank?
+      student = scrc.student
+      student_id = student.student_id
+      hash[student_id] = {}
+      hash[student_id]["student_name"] = student.name
+      hash[student_id]["gender"] = student.gender
+      hash[student_id]["phone"] = student.phone
+    end
+    
+    render :json => hash and return
   end
 
   def add_class_course
