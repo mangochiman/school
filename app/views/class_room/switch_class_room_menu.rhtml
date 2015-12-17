@@ -18,50 +18,85 @@
       
     </script>
 
-    <style>
-      #filter-graph-form fieldset {
-        border: 1px solid gray;
-        padding: 0px;
-        width: 98.7%;
-      }
-      #filter-graph-form legend {
-        color: #abda0f;
-        font-size: 14px;
-        font-weight: 100;
-        margin-left: 14px;
-        padding: 2px;
-      }
-      #filter-graph-form fieldset input {
-        color: #505050;
-        float: left;
-        margin-right: 5px;
-        width: 140px;
-        padding: 0px;
-        font-size: 14px;
+    <style type="text/css">
+
+      table th:first-child {
+        border-style: none none none !important;
       }
 
-      #semester{
-        background-color: #fff;
-        background-image: none;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
-        color: #555;
-        display: block;
-        font-size: 14px;
-        height: 34px;
-        line-height: 1.42857;
-        padding: 6px 12px;
-        min-width: 167px;
-        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+      .classes{
+        position: relative;
+        margin-left: 0%;
+        width: 100%;
+      }
+
+      .classes th, tbody{
+        text-align: center;
+      }
+
+      .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: #317eac;
       }
 
       a{
         cursor: pointer;
       }
 
+      #search-student-form fieldset {
+        border: 1px solid gray;
+        float: left;
+        margin-bottom: 15px;
+        padding: 0px;
+        float: none;
+      }
+      #search-student-form legend {
+        font-size: 16px;
+        font-weight: bold;
+        margin-left: 14px;
+        padding: 2px;
+        width: initial;
+        margin-bottom: initial;
+        border-style: none;
+      }
+
+      #search-student-form fieldset input {
+        color: #505050;
+        float: left;
+        margin-right: 5px;
+        width: 250px;
+        padding: 6px;
+        font-size: 14px;
+        border: 1px solid #d9dbdd;
+        outline: medium none;
+      }
+
+      #search-student-form table td{
+        border-left: none;
+      }
+
+      form.autoform input, select {
+        font-size: 0.8em !important;
+        font-weight: bold;
+      }
+
       .orange{
         background-color: #EEEE00 !important;
+      }
+
+      a{
+        cursor: pointer;
+      }
+
+      #students_punishments .badge{
+        width: 85%;
+        line-height: 2;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 10pt;
       }
     </style>
   </head>
@@ -109,9 +144,118 @@
 
 
           <div class="content-module-main">
-            <form id="filter-graph-form" action="#">
+            <form action="#" id="search-student-form">
+              <fieldset>
+                <legend>Students Summary</legend>
+                <div style="margin-left: 30%;">
+                  <table style="width: 50%;">
+                    <tr>
+                      <th style="width:30%;">Total Students <span class="badge" style="font-size: 14pt;"><%= @total_students %></span></th>
+                      <th style="text-align: center;">Males <span class="badge"  style="font-size: 14pt;"><%= @males_count %></span></th>
+                      <th style="width:30%;">Females <span class="badge" style="font-size: 14pt;"><%= @females_count %></span></th>
+                    </tr>
+                  </table>
+                </div>
+                <br />
 
+              </fieldset>
             </form>
+
+            <form action="#" id="search-student-form">
+              <fieldset>
+                <legend>Top 10 Students With More Punishments</legend>
+                <br />
+                <table id="students_punishments">
+                  <thead>
+                    <tr>
+                      <th style="width: 20%;">Student Name</th>
+                      <th>Gender</th>
+                      <th>Phone #</th>
+                      <th style="width: 20%;">Total Punishments</th>
+                    </tr>
+                  <tbody>
+                    <% @student_punishments_data.each do |data| %>
+                      <tr>
+                        <td><%= data[1] %></td>
+                        <td><%= data[2] %></td>
+                        <td><%= data[3] %></td>
+                        <td><span class="badge" onclick="gotoStudentDetails('<%= data[0] %>');"><%= data[4] %></span></td>
+                      </tr>
+                    <% end %>
+                  </tbody>
+                  </thead>
+                </table>
+              </fieldset>
+            </form>
+
+            <form action="#" id="search-student-form">
+              <fieldset>
+                <legend>Latest Ten Student Payments</legend>
+                <br />
+                <table>
+                  <thead>
+                    <tr>
+                      <th style="width: 20%;">Student Name</th>
+                      <th style="text-align: center;">Payment Type</th>
+                      <th style="text-align: center;">Amount Paid</th>
+                      <th style="width: 20%;">Date of Payment</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% @latest_students_payments.each do |payment| %>
+                      <tr>
+                        <td><%= payment.student.name %></td>
+                        <td style="text-align: center;"><%= payment.payment_type.name %></td>
+                        <td style="text-align: center;"><b><%=  number_to_currency(payment.amount_paid, :unit => 'MK') %></b></td>
+                        <td><%= payment.date.to_date.strftime("%d-%b-%Y") %></td>
+                      </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+              </fieldset>
+            </form>
+
+            <form action="#" id="search-student-form">
+              <fieldset>
+                <legend>Ten Latest Exams</legend>
+                <br />
+                <table>
+                  <thead>
+                    <tr>
+                      <th style="width:20%; text-align:center;">Exam</th>
+                      <th style="width:16%; text-align:center;">Course</th>
+                      <th style="width:10%; text-align:center;">Exam Date</th>
+                      <th style="width:10%;">Exam Attendees</th>
+                      <th style="width:10%;">Results</th>
+                    </tr>
+                  </thead>
+                  <tbody id="exams">
+                    <% @latest_class_exams.each do |exam| %>
+                      <tr>
+                        <td><%=  exam.examination_type.name.titleize %></td>
+                        <td><%=  exam.course.name rescue nil %></td>
+                        <td style="text-align:center;"><%=  exam.start_date.to_date.strftime("%d/%b/%Y")%></td>
+                        <td>
+                          <span exam_id="<%= exam.id %>" class="badge" onmousedown="loadExamStudents(this);">
+                            <%= exam.students.count %>
+                          </span>
+                        </td>
+                        <td>
+                          <% unless exam.examination_results.blank? %>
+                            <span exam_id="<%= exam.id %>" class="badge" onmousedown="loadExamResults(this);">
+                              View
+                            </span>
+                          <% else %>
+                            Not Available
+                          <% end %>
+                        </td>
+                      </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+              </fieldset>
+            </form>
+
             <div id="container">
             </div>
           </div> <!-- end content-module-main -->
