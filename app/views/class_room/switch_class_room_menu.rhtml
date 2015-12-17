@@ -11,9 +11,11 @@
     <%= javascript_include_tag("jquery-1.9.1.min") %>
     <%= javascript_include_tag("highcharts") %>
     <%= javascript_include_tag("script") %>
-
     <%= javascript_include_tag("exporting") %>
+    <%= javascript_include_tag("bootstrap") %>
+    <%= javascript_include_tag("excellentexport") %>
     <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("bootstrap") %>
     <script type="text/javascript">
       
     </script>
@@ -164,7 +166,17 @@
             <form action="#" id="search-student-form">
               <fieldset>
                 <legend>Top 10 Students With More Punishments</legend>
-                <br />
+                <div class="dropdown" style="padding-left: 8px;">
+                  <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Export As
+                    <span class="caret"></span></button>
+                  <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+                    <li role="presentation">
+                      <a role="menuitem" tabindex="-1" download="students_punishments.xls" href="#"
+                         onclick="return ExcellentExport.excel(this, 'students_punishments', 'Sheet Name Here');">Excel</a>
+                    </li>
+                  </ul>
+                </div><br />
+
                 <table id="students_punishments">
                   <thead>
                     <tr>
@@ -191,8 +203,17 @@
             <form action="#" id="search-student-form">
               <fieldset>
                 <legend>Latest Ten Student Payments</legend>
-                <br />
-                <table>
+                <div class="dropdown" style="padding-left: 8px;">
+                  <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Export As
+                    <span class="caret"></span></button>
+                  <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+                    <li role="presentation">
+                      <a role="menuitem" tabindex="-1" download="students_payments.xls" href="#"
+                         onclick="return ExcellentExport.excel(this, 'students_payments', 'Sheet Name Here');">Excel</a>
+                    </li>
+                  </ul>
+                </div><br />
+                <table id="students_payments">
                   <thead>
                     <tr>
                       <th style="width: 20%;">Student Name</th>
@@ -218,8 +239,17 @@
             <form action="#" id="search-student-form">
               <fieldset>
                 <legend>Ten Latest Exams</legend>
-                <br />
-                <table>
+                <div class="dropdown" style="padding-left: 8px;">
+                  <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Export As
+                    <span class="caret"></span></button>
+                  <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+                    <li role="presentation">
+                      <a role="menuitem" tabindex="-1" download="latest_exams.xls" href="#"
+                         onclick="return ExcellentExport.excel(this, 'latest_exams', 'Sheet Name Here');">Excel</a>
+                    </li>
+                  </ul>
+                </div><br />
+                <table id="latest_exams">
                   <thead>
                     <tr>
                       <th style="width:20%; text-align:center;">Exam</th>
