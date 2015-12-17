@@ -1951,4 +1951,19 @@ SELECT p1.* FROM payment p1 WHERE DATE(p1.date) = (
     render :text => "true" and return
   end
 
+  def add_new_teacher
+    @class_room = ClassRoom.find(params[:class_room_id])
+  end
+
+  def assign_class_teachers
+    @class_room = ClassRoom.find(params[:class_room_id])
+  end
+
+  def view_class_teachers
+    @class_room = ClassRoom.find(params[:class_room_id])
+  end
+
+  def void_class_teachers
+    @class_room = ClassRoom.find(params[:class_room_id])
+  end
 end

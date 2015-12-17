@@ -131,3 +131,8 @@ Student.all.each do |student|
   Payment.new_payment(student.student_id, payment_type_id, 10000, Date.today)
   class_room_id = class_room_ids.shuffle.first.to_s
 end
+
+position_names = ['teacher']
+position_names.each do |position_name|
+    Position.create({:name => position_name})
+end
