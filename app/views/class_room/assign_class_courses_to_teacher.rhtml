@@ -153,7 +153,7 @@
 
                 <div class="content-module-heading cf">
 
-                  <h3 class="fl">New Teacher</h3>
+                  <h3 class="fl">Assign Class Courses</h3>
                   <span class="fr expand-collapse-text">Click to collapse</span>
                   <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -172,26 +172,6 @@
                     </div>
                   <% end %>
 
-                  <form id="registration" class="autoform" action="/class_room/create_class_room_teacher" method="POST">
-                    <div><label for="firstname">First Name</label><input type="text" name="firstname" class="firstname required" id="firstname" maxlength="30"/></div>
-                    <div><label for="lastname">Last Name</label><input type="text" name="lastname" class="lastname required" id="lastname" maxlength="30"/></div>
-                    <div><label for="phone">Phone</label><input type="text" name="phone" class="phone required" id="phone" maxlength="12"/></div>
-                    <div><label for="email">Email</label><input type="text" name="email" class="email required" id="email" maxlength="60"/></div>
-
-                    <div>
-                      <label for="gender">Gender</label>
-                      <select id="gender" name="gender" class="select required">
-                        <option value="">[select Gender]</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                      </select>
-                    </div>
-
-                    <div><label for="text">Date of Birth</label><input type="text" name="dob" class="text required date-picker"/></div>
-                    <div class="stripe-separator"><!--  --></div>
-                    <%= hidden_field_tag("class_room_id", params[:class_room_id]) %>
-                    <input id="submit" type="submit" value="Submit" class="round blue ic-right-arrow" />
-                  </form>
                 </div> <!-- end content-module-main -->
 
               </div> <!-- end content-module -->
@@ -203,7 +183,7 @@
 
                 <div class="content-module-heading cf">
 
-                  <h3 class="fl">Available Class Room Teachers</h3>
+                  <h3 class="fl">Teacher's Details</h3>
                   <span class="fr expand-collapse-text">Click to collapse</span>
                   <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -211,22 +191,16 @@
 
 
                 <div class="content-module-main cf">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th style="border-style: none;">#</th>
-                        <th style="padding:2px;">Teacher's Name</th>
-                      </tr>
-                    </thead>
+                  <table style="width:100%; margin-left:0%;">
                     <tbody>
-                      <% count = 0 %>
-                      <% @available_teachers.each do |employee| %>
-                        <tr>
-                          <td><%= count = count + 1 %></td>
-                          <td style="padding-left:20px; text-align: left;"><a href="#"><%= employee.name_and_gender %></a></td>
-                        </tr>
-                      <% end %>
-
+                      <tr>
+                        <td style="font-weight: bold; text-align: right; padding-right:20px;">Name</td>
+                        <td style="text-align:left; padding-left:10px;"><a href="#"><%= @employee.name %></a></td>
+                      </tr>
+                      <tr>
+                        <td style="font-weight: bold; text-align: right; padding-right:20px;">Gender</td>
+                        <td style="text-align:left; padding-left:10px;"><a href="#"><%= @employee.gender %></a></td>
+                      </tr>
                     </tbody>
                   </table>
                 </div> <!-- end content-module-main -->
