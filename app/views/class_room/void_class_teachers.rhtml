@@ -17,8 +17,126 @@
     <%= stylesheet_link_tag("bootstrap") %>
     <script type="text/javascript">
 
+      var classRoomID = '<%= params[:class_room_id] %>';
+
+      function selectAll(){
+        selectAllInput = document.getElementById('table-select-all');
+        inputs = document.getElementsByTagName("input");
+        if (selectAllInput.checked){
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+              inputs[i].checked = true;
+            }
+          }
+        }
+        else{
+          for (var i=0; i<=inputs.length - 1; i++){
+            if (inputs[i] == selectAllInput) continue;
+            if (inputs[i].type == 'checkbox'){
+              inputs[i].checked = false;
+            }
+          }
+        }
+      }
+
+      function confirmEmployeeDelete(obj, singleEntry){
+        employeeId = obj.getAttribute("employee_id");
+        jQuery.confirm({
+          title:"Confirm Employee Delete",
+          text:"Are you really really sure you want to delete the selected teacher(s)?. Please be responsible.",
+          confirm: function(button) {
+            if (singleEntry){
+              removeSingleTeacher(employeeId);//single record
+            }
+            else{
+              removeMultipeTeachers()
+            }
+
+          },
+          cancel: function(button) {
+          },
+          confirmButton: "Done"
+        });
+      }
+
+      function removeSingleTeacher(employeeId){
+        jQuery.ajax({
+          type: "POST",
+          url: "/class_room/delete_teacher_employee",
+          data: "employee_id=" + employeeId + "&mode=single_entry",
+          success: function(){
+            window.location = location;
+          }
+
+        });
+      }
+
+      function removeMultipeTeachers(){
+        employeeIDs = [];
+        $('input[type=checkbox]:checked').each(function(){
+          employeeIDs.push($(this).val())
+        })
+
+        jQuery.ajax({
+          type: "POST",
+          url: "/class_room/delete_teacher_employee",
+          data: "employee_id=" + employeeId + "&employ_ids=" + employeeIDs,
+          success: function(){
+            window.location = location;
+          }
+
+        });
+      }
+
+
+
+      function loadSearchResults(){
+        names = document.getElementById('name_search').value.split(/\W+/);
+        firstName = names[0];
+        lastName = names[1];
+        if (typeof lastName == 'undefined'){
+          lastName = '';
+        }
+
+        jQuery.ajax({
+          type: "POST",
+          url: "/class_room/class_room_teachers_search",
+          data: "first_name=" + firstName + "&last_name=" + lastName + '&class_room_id=' + classRoomID,
+          success: function(results){
+            //<a employee_id='1' href='#' onmousedown='confirmEmployeeDelete(this)' class='table-actions-button ic-table-delete confirm'></a>
+            html = "";
+            tbody = document.getElementById("teachers");
+
+            for (var teacher_id in results){
+              firstName = results[teacher_id]["fname"];
+              lastName = results[teacher_id]["lname"];
+              gender = results[teacher_id]["gender"];
+              phone = results[teacher_id]["phone"];
+              if (phone == null) phone = '';
+              email = results[teacher_id]["email"];
+              if (email == null) email = '';
+
+              html+="<tr>";
+              //<input type='checkbox' employee_id='1'>
+              html+="<td><input type='checkbox' employee_id='" + teacher_id + "'/></td>";
+              html+="<td>" + firstName + "</td>";
+              html+="<td style='text-align: center;'>" + lastName +  "</td>";
+              html+="<td style='text-align: center;'>" + gender +  "</td>";
+              html+="<td style='text-align: center;'><a href='#'>" + email +  "</a></td>";
+              html+="<td style='text-align: center;'>" + phone +  "</td>";
+              html+="<td><a employee_id='" + teacher_id + "' href='#' onmousedown='confirmEmployeeDelete(this, true)' class='table-actions-button ic-table-delete confirm'></a></td>";
+              html+="</tr>";
+            }
+
+            tbody.innerHTML = html
+          }
+
+        });
+
+      }
     </script>
-    
+
     <style type="text/css">
       .label {
         border-radius: 1.5em;
@@ -38,41 +156,8 @@
         cursor: pointer;
       }
 
-      table{
-        margin-left:15%;
-        width: 60%;
-      }
-      table td #simple-input{
-        float: right;
-      }
-
-      table label{
-        text-align: left;
-      }
-      #simple-input{
-        font-size: 10pt !important;
-      }
-
-      #registration input[type="text"], input[type="password"], textarea {
-        border: 1px solid #d9dbdd;
-        outline: medium none;
-        padding: 0.5em 0.225em;
-      }
-      input[type="submit"] {
-        margin-left: 37%;
-      }
       table th:first-child {
         border-style: none none none !important;
-      }
-
-      .classes{
-        position: relative;
-        margin-left: 0%;
-        width: 100%;
-      }
-
-      .classes th, tbody{
-        text-align: center;
       }
 
       .modal-title {
@@ -128,6 +213,7 @@
       .orange{
         background-color: #EEEE00 !important;
       }
+
     </style>
   </head>
   <body>
@@ -180,7 +266,7 @@
 
             <div class="content-module-heading cf">
 
-              <h3 class="fl">Void Class Teachers</h3>
+              <h3 class="fl">Assign Class Teacher Courses</h3>
               <span class="fr expand-collapse-text">Click to collapse</span>
               <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -206,14 +292,52 @@
                     <table style="width: 45%; float: right;">
                       <tr>
                         <td style="font-size: 13pt;">Name</td>
-                        <td style="width: 50px !important;"><input type="text" class="class_room_search"/></td>
+                        <td style="width: 50px !important;"><input type="text" id="name_search"/></td>
                         <td style="width: 20px"><a onclick="loadSearchResults();" class="button round blue image-right ic-search text-upper">Search</a></td>
                       </tr>
                     </table>
                   </div>
                 </fieldset>
               </form>
-
+              <table>
+                <thead>
+                  <tr>
+                    <th>
+                      <input type="checkbox" onclick="selectAll();" id="table-select-all"/>
+                    </th>
+                    <th style="min-width: 15%;">First Name</th>
+                    <th style="text-align: center;">Last Name</th>
+                    <th style="text-align: center;">Gender</th>
+                    <th style="text-align: center;">E-mail</th>
+                    <th style="text-align: center;">Phone #</th>
+                    <th style="min-width: 12%;">Action</th>
+                  </tr>
+                </thead>
+                <tfoot>
+                  <tr>
+                    <td class="table-footer" colspan="7">
+                      <a class="button round blue image-right ic-delete text-upper" onmousedown="confirmDeletemultipleEmployees();" href="#">Delete</a>
+                    </td>
+                  </tr>
+                </tfoot>
+                <tbody id="teachers">
+                  <% @teachers.each do |teacher| %>
+                    <tr>
+                      <td>
+                        <input type="checkbox" employee_id="<%= teacher.employee_id %>"/>
+                      </td>
+                      <td><%= teacher.fname %></td>
+                      <td style="text-align: center;"><%= teacher.lname %></td>
+                      <td style="text-align: center;"><%= teacher.gender %></td>
+                      <td style="text-align: center;"><a href="#"><%= teacher.email %></a></td>
+                      <td style="text-align: center;"><%= teacher.mobile %></td>
+                      <td>
+                        <a class="table-actions-button ic-table-delete confirm" onmousedown="confirmEmployeeDelete(this, 'true')" href="#" employee_id="<%= teacher.employee_id %>"></a>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->

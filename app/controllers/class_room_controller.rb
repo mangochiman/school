@@ -2108,5 +2108,34 @@ SELECT p1.* FROM payment p1 WHERE DATE(p1.date) = (
       :conditions => ["teacher_id =? AND class_room_id =?", params[:employee_id], params[:class_room_id]]
     ).map(&:course)
   end
+
+  def delete_teacher_employee
+    if (params[:mode] == 'single_entry')
+      ActiveRecord::Base.transaction do
+        teacher_employee = Employee.find(params[:employee_id])
+        employ_positions = EmployeePosition.find(:all, :conditions => ["employee_id =?", params[:employee_id]])
+        employ_positions.each do |ep|
+          ep.delete
+        end
+        teacher_employee.delete
+      end
+      render :text => "true" and return
+    end
+
+    employee_ids = params[:employee_ids].split(",")
+
+    (employee_ids || []).each do |employee_id|
+      ActiveRecord::Base.transaction do
+        teacher_employee = Employee.find(employee_id)
+        employ_positions = EmployeePosition.find(:all, :conditions => ["employee_id =?", employee_id])
+        employ_positions.each do |ep|
+          ep.delete
+        end
+        teacher_employee.delete
+      end
+    end
+
+    render :text => "true" and return
+  end
   
 end
