@@ -1998,11 +1998,88 @@ SELECT p1.* FROM payment p1 WHERE DATE(p1.date) = (
     
   end
 
+  def class_room_teachers_search
+    first_name = params[:first_name]
+    last_name = params[:last_name]
+
+    teacher_position_id = Position.find_by_name("Teacher").position_id
+    employee_teachers = Employee.find_by_sql("SELECT e.* FROM employee e INNER JOIN employee_position ep
+      ON e.employee_id = ep.employee_id AND ep.position_id = #{teacher_position_id}
+      INNER JOIN class_room_teachers crt ON crt.teacher_id = e.employee_id
+      AND crt.class_room_id=#{params[:class_room_id]} WHERE e.fname LIKE '%#{first_name}%'
+      AND e.lname LIKE '%#{last_name}%'"
+    )
+
+    hash = {}
+    employee_teachers.each do |employee_teacher|
+      employee_teacher_id = employee_teacher.employee_id
+      hash[employee_teacher_id] = {}
+      hash[employee_teacher_id]["fname"] = employee_teacher.fname
+      hash[employee_teacher_id]["lname"] = employee_teacher.lname
+      hash[employee_teacher_id]["gender"] = employee_teacher.gender
+      hash[employee_teacher_id]["phone"] = employee_teacher.mobile
+      hash[employee_teacher_id]["email"] = employee_teacher.email
+    end
+
+    render :json => hash and return
+  end
+  
   def assign_class_courses_to_teacher
     @class_room = ClassRoom.find(params[:class_room_id])
     @employee = Employee.find(params[:employee_id])
+    @assigned_teacher_class_room_courses = TeacherClassRoomCourse.find(:all, 
+      :conditions => ["teacher_id =? AND class_room_id =?", params[:employee_id], params[:class_room_id]]
+    ).map(&:course)
+    
+    course_ids = @assigned_teacher_class_room_courses.map(&:course_id).join(', ')
+    course_ids = '0' if course_ids.blank?
+    @un_assigned_teacher_class_room_courses = @class_room.class_room_courses.find(:all,
+      :conditions => ["course_id NOT IN (#{course_ids})"]).map(&:course)
   end
 
+  def delete_teacher_class_room_courses
+    if (params[:mode] == 'single_entry')
+      teacher_class_room_course = TeacherClassRoomCourse.find(:last,
+        :conditions => ["teacher_id =? AND class_room_id =? AND course_id =?",
+          params[:employee_id], params[:class_room_id], params[:course_id]])
+      teacher_class_room_course.delete
+      render :text => "true" and return
+    end
+
+    course_ids = params[:course_ids].split(",")
+
+    (course_ids || []).each do |course_id|
+      teacher_class_room_course = TeacherClassRoomCourse.find(:last,
+        :conditions => ["teacher_id =? AND class_room_id =?  AND course_id =?",
+          params[:employee_id], params[:class_room_id], course_id])
+      teacher_class_room_course.delete
+    end
+
+    render :text => "true" and return
+  end
+
+  def add_teacher_class_room_courses
+    if (params[:mode] == 'single_entry')
+      TeacherClassRoomCourse.create({
+          :teacher_id => params[:employee_id],
+          :class_room_id => params[:class_room_id],
+          :course_id => params[:course_id]
+        })
+      render :text => "true" and return
+    end
+
+    course_ids = params[:course_ids].split(",")
+    (course_ids || []).each do |course_id|
+      TeacherClassRoomCourse.create({
+          :teacher_id => params[:employee_id],
+          :class_room_id => params[:class_room_id],
+          :course_id => course_id
+        })
+    end
+
+    render :text => "true" and return
+  end
+  
   def view_class_teachers
     @class_room = ClassRoom.find(params[:class_room_id])
   end

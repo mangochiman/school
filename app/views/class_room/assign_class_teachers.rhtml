@@ -16,10 +16,11 @@
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("bootstrap") %>
     <script type="text/javascript">
-      var classRoomID = '<%= params[:class_room_id] %>'
+      var classRoomID = '<%= params[:class_room_id] %>';
+      
       function assignEditCourses(obj){
         employeeID = obj.getAttribute("employee_id")
-        window.location = "/class_room/assign_class_teachers?class_room_id=" + classRoomID + "&employee_id=" + employeeID;
+        window.location = "/class_room/assign_class_courses_to_teacher?class_room_id=" + classRoomID + "&employee_id=" + employeeID;
       }
 
       function loadSearchResults(){
@@ -33,7 +34,7 @@
         jQuery.ajax({
           type: "POST",
           url: "/class_room/class_room_teachers_search",
-          data: "first_name=" + firstName + "&last_name=" + lastName + '&class_room_id=' + classRoomId,
+          data: "first_name=" + firstName + "&last_name=" + lastName + '&class_room_id=' + classRoomID,
           success: function(results){
             //results = eval("(" + results  + ")");
             html = "";
@@ -47,13 +48,13 @@
               if (phone == null) phone = '';
               email = results[teacher_id]["email"];
               if (email == null) email = '';
-              dob = results[student_id]["dob"];
-              current_active_class = results[teacher_id]["current_active_class"];
-              join_date = results[student_id]["join_date"];
+
               html+="<tr>";
               html+="<td>" + firstName + "</td>";
               html+="<td style='text-align: center;'>" + lastName +  "</td>";
               html+="<td style='text-align: center;'>" + gender +  "</td>";
+              html+="<td style='text-align: center;'><a href='#'>" + email +  "</a></td>";
+              html+="<td style='text-align: center;'>" + phone +  "</td>";
               html+="<td><a employee_id='" + teacher_id + "' onclick='assignEditCourses(this)' href='#' class='button round blue image-right ic-right-arrow text-upper'>Assign/Edit Courses &nbsp;</a></td>";
               html+="</tr>";
             }
@@ -234,6 +235,8 @@
                     <th style="min-width: 15%;">First Name</th>
                     <th style="text-align: center;">Last Name</th>
                     <th style="text-align: center;">Gender</th>
+                    <th style="text-align: center;">E-mail</th>
+                    <th style="text-align: center;">Phone #</th>
                     <th style="min-width: 12%;">Action</th>
                   </tr>
                 </thead>
@@ -243,6 +246,8 @@
                       <td><%=  teacher.fname %></td>
                       <td style="text-align: center;"><%= teacher.lname %></td>
                       <td style="text-align: center;"><%= teacher.gender %></td>
+                      <td style="text-align: center;"><a href="#"><%= teacher.email %></a></td>
+                      <td style="text-align: center;"><%= teacher.mobile %></td>
                       <td>
                         <a class="button round blue image-right ic-right-arrow text-upper" href="#" onclick="assignEditCourses(this)" employee_id="<%= teacher.employee_id %>">Assign/Edit Courses &nbsp;</a>
                       </td>
