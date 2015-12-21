@@ -16,8 +16,57 @@
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("bootstrap") %>
     <script type="text/javascript">
+      var classRoomID = '<%= params[:class_room_id] %>';
 
+      function viewClassRoomTeacherCourses(obj){
+        employeeID = obj.getAttribute("employee_id");
+        window.location = "/class_room/view_class_teacher_courses?class_room_id=" + classRoomID + "&employee_id=" + employeeID;
+      }
+
+      function loadSearchResults(){
+        names = document.getElementById('name_search').value.split(/\W+/);
+        firstName = names[0];
+        lastName = names[1];
+        if (typeof lastName == 'undefined'){
+          lastName = '';
+        }
+
+        jQuery.ajax({
+          type: "POST",
+          url: "/class_room/class_room_teachers_search",
+          data: "first_name=" + firstName + "&last_name=" + lastName + '&class_room_id=' + classRoomID,
+          success: function(results){
+            //results = eval("(" + results  + ")");
+            html = "";
+            tbody = document.getElementById("teachers");
+
+            for (var teacher_id in results){
+              firstName = results[teacher_id]["fname"];
+              lastName = results[teacher_id]["lname"];
+              gender = results[teacher_id]["gender"];
+              phone = results[teacher_id]["phone"];
+              if (phone == null) phone = '';
+              email = results[teacher_id]["email"];
+              if (email == null) email = '';
+
+              html+="<tr>";
+              html+="<td>" + firstName + "</td>";
+              html+="<td style='text-align: center;'>" + lastName +  "</td>";
+              html+="<td style='text-align: center;'>" + gender +  "</td>";
+              html+="<td style='text-align: center;'><a href='#'>" + email +  "</a></td>";
+              html+="<td style='text-align: center;'>" + phone +  "</td>";
+              html+="<td><a employee_id='" + teacher_id + "' onclick='viewClassRoomTeacherCourses(this)' href='#' class='button round blue image-right ic-right-arrow text-upper'>View My Courses &nbsp;</a></td>";
+              html+="</tr>";
+            }
+
+            tbody.innerHTML = html
+          }
+
+        });
+
+      }
     </script>
+
     <style type="text/css">
       .label {
         border-radius: 1.5em;
@@ -37,41 +86,8 @@
         cursor: pointer;
       }
 
-      table{
-        margin-left:15%;
-        width: 60%;
-      }
-      table td #simple-input{
-        float: right;
-      }
-
-      table label{
-        text-align: left;
-      }
-      #simple-input{
-        font-size: 10pt !important;
-      }
-
-      #registration input[type="text"], input[type="password"], textarea {
-        border: 1px solid #d9dbdd;
-        outline: medium none;
-        padding: 0.5em 0.225em;
-      }
-      input[type="submit"] {
-        margin-left: 37%;
-      }
       table th:first-child {
         border-style: none none none !important;
-      }
-
-      .classes{
-        position: relative;
-        margin-left: 0%;
-        width: 100%;
-      }
-
-      .classes th, tbody{
-        text-align: center;
       }
 
       .modal-title {
@@ -127,6 +143,7 @@
       .orange{
         background-color: #EEEE00 !important;
       }
+
     </style>
   </head>
   <body>
@@ -205,14 +222,39 @@
                     <table style="width: 45%; float: right;">
                       <tr>
                         <td style="font-size: 13pt;">Name</td>
-                        <td style="width: 50px !important;"><input type="text" class="class_room_search"/></td>
+                        <td style="width: 50px !important;"><input type="text" id="name_search"/></td>
                         <td style="width: 20px"><a onclick="loadSearchResults();" class="button round blue image-right ic-search text-upper">Search</a></td>
                       </tr>
                     </table>
                   </div>
                 </fieldset>
               </form>
-
+              <table>
+                <thead>
+                  <tr>
+                    <th style="min-width: 15%;">First Name</th>
+                    <th style="text-align: center;">Last Name</th>
+                    <th style="text-align: center;">Gender</th>
+                    <th style="text-align: center;">E-mail</th>
+                    <th style="text-align: center;">Phone #</th>
+                    <th style="min-width: 12%;">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="teachers">
+                  <% @teachers.each do |teacher| %>
+                    <tr>
+                      <td><%=  teacher.fname %></td>
+                      <td style="text-align: center;"><%= teacher.lname %></td>
+                      <td style="text-align: center;"><%= teacher.gender %></td>
+                      <td style="text-align: center;"><a href="#"><%= teacher.email %></a></td>
+                      <td style="text-align: center;"><%= teacher.mobile %></td>
+                      <td>
+                        <a class="button round blue image-right ic-right-arrow text-upper" href="#" onclick="viewClassRoomTeacherCourses(this)" employee_id="<%= teacher.employee_id %>">View My Courses &nbsp;</a>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->

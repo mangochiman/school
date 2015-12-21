@@ -2081,10 +2081,32 @@ SELECT p1.* FROM payment p1 WHERE DATE(p1.date) = (
   end
   
   def view_class_teachers
+    teacher_position_id = Position.find_by_name("Teacher").position_id
     @class_room = ClassRoom.find(params[:class_room_id])
+    @teachers = Employee.find_by_sql("SELECT e.* FROM employee e INNER JOIN employee_position ep
+      ON e.employee_id = ep.employee_id AND ep.position_id = #{teacher_position_id}
+      INNER JOIN class_room_teachers crt ON crt.teacher_id = e.employee_id
+      AND crt.class_room_id=#{params[:class_room_id]}"
+    )
+
   end
 
   def void_class_teachers
+    teacher_position_id = Position.find_by_name("Teacher").position_id
     @class_room = ClassRoom.find(params[:class_room_id])
+    @teachers = Employee.find_by_sql("SELECT e.* FROM employee e INNER JOIN employee_position ep
+      ON e.employee_id = ep.employee_id AND ep.position_id = #{teacher_position_id}
+      INNER JOIN class_room_teachers crt ON crt.teacher_id = e.employee_id
+      AND crt.class_room_id=#{params[:class_room_id]}"
+    )
   end
+
+  def view_class_teacher_courses
+    @class_room = ClassRoom.find(params[:class_room_id])
+    @employee = Employee.find(params[:employee_id])
+    @assigned_teacher_class_room_courses = TeacherClassRoomCourse.find(:all,
+      :conditions => ["teacher_id =? AND class_room_id =?", params[:employee_id], params[:class_room_id]]
+    ).map(&:course)
+  end
+  
 end
