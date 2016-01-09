@@ -1664,26 +1664,31 @@ SELECT p1.* FROM payment p1 WHERE DATE(p1.date) = (
   
   def teachers_tab
     @class_room = ClassRoom.find(params[:class_room_id])
+    class_room_courses = @class_room.class_room_courses
+    @class_room_course_id_name_map = {}
     teacher_position_id = Position.find_by_name("Teacher").position_id
-=begin
-    available_teachers = Employee.find_by_sql("SELECT e.* FROM employee e INNER JOIN employee_position ep
+    @course_teacher_hash = {}
+
+    class_room_teacher_ids = Employee.find_by_sql("SELECT e.* FROM employee e INNER JOIN employee_position ep
       ON e.employee_id = ep.employee_id AND ep.position_id = #{teacher_position_id}
       INNER JOIN class_room_teachers crt ON crt.teacher_id = e.employee_id
-      AND crt.class_room_id=#{params[:class_room_id]}")
-=end
-    teacher_courses_data = TeacherClassRoomCourse.find_by_sql("SELECT tcrc.teacher_id, COUNT(tcrc.teacher_id) as count, tcrc.course_id FROM teacher_class_room_course tcrc
+      AND crt.class_room_id=#{params[:class_room_id]}").map(&:employee_id)
+    
+    class_room_teacher_ids = 0 if class_room_teacher_ids.blank?
+    
+    class_room_courses.each  do |class_room_course|
+      next if class_room_course.course.blank?
+      course_id = class_room_course.course_id
+      @class_room_course_id_name_map[course_id] = class_room_course.course.name
+      @course_teacher_hash[course_id] = []
+      class_course_teachers = Employee.find_by_sql("SELECT e.* FROM teacher_class_room_course tcrc
       INNER JOIN course c ON tcrc.course_id = c.course_id AND tcrc.class_room_id=#{params[:class_room_id]}
-      INNER JOIN employee e ON tcrc.teacher_id = e.employee_id
-      GROUP BY tcrc.teacher_id, tcrc.course_id")
-
-    @employee_data = []
-    @y_axis = teacher_courses_data.collect{|t|t.count}
-    employee_ids = teacher_courses_data.map(&:teacher_id)
-    employee_ids.each do |employee_id|
-      employee = Employee.find(employee_id)
-      employee_name = employee.fname.first.capitalize + ' ' + employee.lname.capitalize
-      @employee_data << employee_name
+      INNER JOIN employee e ON tcrc.teacher_id = e.employee_id WHERE c.course_id=#{course_id}
+      AND e.employee_id IN (#{class_room_teacher_ids})")
+      
+      @course_teacher_hash[course_id] << class_course_teachers
     end
+
   end
 
   def student_admissions

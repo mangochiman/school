@@ -19,59 +19,9 @@
 
     </script>
     <style>
-      .label {
-        border-radius: 1.5em;
-        color: #fff;
-        display: inline;
-        background-color: #5bc0de;
-        font-size: 1.2em;
-        font-weight: bold;
-        line-height: 1;
-        padding-left: 20%;
-        padding-right: 20%;
-        padding-top:2%;
-        padding-bottom:2%;
-        text-align: center;
-        vertical-align: baseline;
-        white-space: nowrap;
-        cursor: pointer;
-      }
 
-      table{
-        margin-left:15%;
-        width: 60%;
-      }
-      table td #simple-input{
-        float: right;
-      }
-
-      table label{
-        text-align: left;
-      }
-      #simple-input{
-        font-size: 10pt !important;
-      }
-
-      #registration input[type="text"], input[type="password"], textarea {
-        border: 1px solid #d9dbdd;
-        outline: medium none;
-        padding: 0.5em 0.225em;
-      }
-      input[type="submit"] {
-        margin-left: 37%;
-      }
       table th:first-child {
         border-style: none none none !important;
-      }
-
-      .classes{
-        position: relative;
-        margin-left: 0%;
-        width: 100%;
-      }
-
-      .classes th, tbody{
-        text-align: center;
       }
 
       .modal-title {
@@ -93,10 +43,11 @@
         padding: 0px;
         float: none;
       }
+
       #search-student-form legend {
-        color: #abda0f;
         font-size: 14px;
-        font-weight: 100;
+        font-weight: bold;
+        font-style: italic;
         margin-left: 14px;
         padding: 2px;
         width: initial;
@@ -104,29 +55,20 @@
         border-style: none;
       }
 
-      #search-student-form fieldset input {
-        color: #505050;
-        float: left;
-        margin-right: 5px;
-        width: 250px;
-        padding: 6px;
-        font-size: 14px;
-        border: 1px solid #d9dbdd;
-        outline: medium none;
-      }
-
       #search-student-form table td{
         border-left: none;
-      }
-
-      form.autoform input, select {
-        font-size: 0.8em !important;
-        font-weight: bold;
       }
 
       .orange{
         background-color: #EEEE00 !important;
       }
+
+      .red{
+        background-color: red !important;
+        color: white;
+        font-weight: bold;
+      }
+}
     </style>
   </head>
   <body>
@@ -198,21 +140,52 @@
                 </div>
               <% end %>
 
-              <form id="search-student-form" action="#">
-                <fieldset>
-                  <legend>Search</legend>
-                  <div style="margin-left:2%;">
-                    <table style="width: 45%; float: right;">
-                      <tr>
-                        <td style="font-size: 13pt;">Name</td>
-                        <td style="width: 50px !important;"><input type="text" class="class_room_search"/></td>
-                        <td style="width: 20px"><a onclick="loadSearchResults();" class="button round blue image-right ic-search text-upper">Search</a></td>
-                      </tr>
-                    </table>
-                  </div>
-                </fieldset>
-              </form>
-
+              <% @course_teacher_hash.each do |course_id, teachers| %>
+                <form id="search-student-form" action="#">
+                  <fieldset>
+                    <legend><%= @class_room_course_id_name_map[course_id] %></legend>
+                    <div>
+                      <% unless teachers.flatten.blank? %>
+                      <span style="float: right;">
+                        Total Teachers: <sup class="notice badge badge-info"><%= teachers.flatten.count %></sup>
+                      </span><br /><br />
+                        <table>
+                          <thead>
+                            <tr>
+                              <th style="min-width: 15%;">First Name</th>
+                              <th style="text-align: center;">Last Name</th>
+                              <th style="text-align: center;">Gender</th>
+                              <th style="text-align: center;">E-mail</th>
+                              <th style="text-align: center;">Phone #</th>
+                              <th style="text-align: center;">Action</th>
+                            </tr>
+                          </thead>
+                          <tbody id="teachers">
+                            <% teachers.flatten.each do |teacher| %>
+                              <tr>
+                                <td><%=  teacher.fname %></td>
+                                <td style="text-align: center;"><%= teacher.lname %></td>
+                                <td style="text-align: center;"><%= teacher.gender %></td>
+                                <td style="text-align: center;"><a href="#"><%= teacher.email %></a></td>
+                                <td style="text-align: center;"><%= teacher.mobile %></td>
+                                <td>
+                                  <a class="button round blue image-right ic-right-arrow text-upper" href="#" onclick="removeTeachers(this)" course_id="<%= course_id %>">De-associate</a>
+                                </td>
+                              </tr>
+                            <% end %>
+                          <% else %>
+                          <center>
+                            <i><p>No Teacher Assigned</p></i>
+                            <a class="button round blue image-right ic-right-arrow text-upper" href="#" onclick="assignTeachers(this)" course_id="<%= course_id %>">Assign Teachers</a>
+                          </center>
+                          <br />
+                        <% end %>
+                        </tbody>
+                      </table>
+                    </div>
+                  </fieldset>
+                </form>
+              <% end %>
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->
