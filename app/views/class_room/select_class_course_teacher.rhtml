@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Payments Management</title>
+    <title>Course Management</title>
     <!-- Optimize for mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
@@ -21,7 +21,42 @@
     <%= stylesheet_link_tag("bootstrap") %>
 
     <script type="text/javascript">
+      var classRoomID = '<%= params[:class_room_id] %>';
+      var courseIDs = '<%= params[:course_ids] %>'
 
+      function submitSelection(){
+        inputs = document.getElementsByTagName("input");
+        teacherIDs = []
+        for (var i=0; i<=inputs.length - 1; i++){
+          if (inputs[i].type == 'checkbox'){
+            if (inputs[i].checked){
+              if (inputs[i].hasAttribute("teacher_id")){
+                teacherID = inputs[i].getAttribute("teacher_id");
+                teacherIDs.push(teacherID);
+              }
+            }
+          }
+        }
+
+        if (teacherIDs.length == 0 ){
+          jQuery.confirm({
+            title:"No Option Selected",
+            text:"No option selected. Please select at least one option to continue.",
+            confirm: function(button) {
+
+            },
+            cancel: function(button) {
+
+            },
+            confirmButton: "Okay",
+            cancelButton: "No"
+          });
+        }
+        else{
+          window.location = "/class_room/create_class_course_teacher?class_room_id=" + classRoomID + "&course_ids=" + courseIDs + "&teacher_ids=" + teacherIDs;
+        }
+      }
+      
     </script>
 
     <style type="text/css">
@@ -104,6 +139,9 @@
         border-style: none none none !important;
       }
 
+      .cancel{
+        display: none;
+      }
     </style>
   </head>
   <body>

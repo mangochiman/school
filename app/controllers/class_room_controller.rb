@@ -2040,6 +2040,29 @@ SELECT p1.* FROM payment p1 WHERE DATE(p1.date) = (
     )
   end
 
+  def create_class_course_teacher
+    class_room_id = params[:class_room_id]
+    course_ids = params[:course_ids].split(",")
+    teacher_ids = params[:teacher_ids].split(",")
+
+    ActiveRecord::Base.transaction do
+      teacher_ids.each do |teacher_id|
+        course_ids.each do |course_id|
+          teacher_class_room_course = TeacherClassRoomCourse.find(:last, :conditions => ["class_room_id =? AND
+          course_id =? AND teacher_id =?", class_room_id, course_id, teacher_id])
+          next unless teacher_class_room_course.blank? #next if not blank?
+          teacher_class_room_course = TeacherClassRoomCourse.new
+          teacher_class_room_course.class_room_id = class_room_id
+          teacher_class_room_course.course_id = course_id
+          teacher_class_room_course.teacher_id = teacher_id
+          teacher_class_room_course.save
+        end
+      end
+    end
+
+    redirect_to("/class_room/add_class_course_teacher?class_room_id=#{class_room_id}") and return
+  end
+
   def assign_class_teachers
     teacher_position_id = Position.find_by_name("Teacher").position_id
     @class_room = ClassRoom.find(params[:class_room_id])
