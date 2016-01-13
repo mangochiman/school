@@ -18,51 +18,8 @@
     <script type="text/javascript">
       var classRoomID = '<%= params[:class_room_id] %>';
 
-      function loadCourseStudents(obj){
-        courseId = obj.getAttribute("course_id");
-        courseName = obj.getAttribute("course_name");
-        jQuery.ajax({
-          type: "POST",
-          url: "/class_room/render_class_course_students",
-          data: "course_id=" + courseId + "&class_room_id=" + classRoomID,
-          success: function(results){
-            table = "<table style='width:90%; margin-left:5%;'>";
-            table+="<tr>";
-            table+="<th style='min-width: 45%;'>Student Name</th>";
-            table+="<th>Gender</th>";
-            table+="<th>Phone #</th>";
-            table+="</tr>";
-
-            for (var student_id in results){
-              studentName = results[student_id]["student_name"];
-              gender = results[student_id]["gender"];
-              if (gender == null)gender = '';
-              phone = results[student_id]["phone"];
-              if (phone == null)phone = '';
-              
-              table+="<tr style='background-color:white;'>";
-              table+="<td>" + studentName + "</td>";
-              table+="<td>" + gender + "</td>";
-              table+="<td>" + phone + "</td>";
-              table+="</tr>";
-            }
-
-            table += "</table>";
-            students = table;
-
-            jQuery.confirm({
-              title: courseName,
-              text: students,
-              confirm: function(button) {
-              },
-              cancel: function(button) {
-              },
-              confirmButton: "Done"
-            });
-          }});
-      }
     </script>
-    <style>
+    <style type="text/css">
       .label {
         border-radius: 1.5em;
         color: #fff;
@@ -146,6 +103,7 @@
         font-weight: bold;
         font-size: 10pt;
       }
+
     </style>
   </head>
   <body>
@@ -199,7 +157,7 @@
 
             <div class="content-module-heading cf">
 
-              <h3 class="fl">Courses Management</h3>
+              <h3 class="fl">Assign Courses To Teachers</h3>
               <span class="fr expand-collapse-text">Click to collapse</span>
               <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -217,33 +175,34 @@
                   <%= flash[:error] %>
                 </div>
               <% end %>
-              <h2 style="font-weight: bold;">Courses - Students Summary</h2>
+              <h2>Select Courses to assign teachers</h2>
               <table id="courses">
                 <thead>
                   <tr>
-                    <th>#</th>
-                    <th style="text-align: center;">Course Name</th>
-                    <th style="width: 20%;">Total Students Taking</th>
+                    <th style="width: 100px;">&nbsp;</th>
+                    <th>Course</th>
+                    <th style="width: 100px;">Total Teachers</th>
                   </tr>
                 </thead>
+                <tfoot>
+                  <tr>
+                    <td class="table-footer" colspan="3">
+                      <a class="button round blue image-right ic-right-arrow text-upper" href="#" style="font-size: 10pt;">Continue</a>
+                    </td>
+                  </tr>
+                </tfoot>
                 <tbody>
-                  <% count = 0 %>
-                  <%  @courses_data.each do |course_id, values|%>
+                  <% @courses.each do |course| %>
                     <tr>
-                      <td><%= count = count + 1 %></td>
-                      <td style="text-align: center;"><%= values["course_name"] %></td>
                       <td>
-                        <span onmousedown="loadCourseStudents(this);" class="badge" course_id="<%= course_id %>" course_name="<%= values["course_name"] %>">
-                          <%= values["total_students"] %>
-                        </span>
+                        <input type="checkbox" course_id="<%= course.course_id %>"/>
                       </td>
-
+                      <td><%= course.name %></td>
+                      <td><sup class="notice badge badge-info"><%= Course.total_teachers(params[:class_room_id], course.course_id) %></sup></td>
                     </tr>
                   <% end %>
-                  <tr></tr>
                 </tbody>
               </table>
-
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->

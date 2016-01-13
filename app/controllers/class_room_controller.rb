@@ -2012,6 +2012,16 @@ SELECT p1.* FROM payment p1 WHERE DATE(p1.date) = (
  
   end
 
+  def add_class_course_teacher
+    @class_room = ClassRoom.find(params[:class_room_id])
+    class_room_courses = @class_room.class_room_courses
+    @courses = []
+    class_room_courses.each do |class_room_course|
+      next if class_room_course.course.blank?
+      @courses << class_room_course.course
+    end
+  end
+  
   def assign_class_teachers
     teacher_position_id = Position.find_by_name("Teacher").position_id
     @class_room = ClassRoom.find(params[:class_room_id])
