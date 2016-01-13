@@ -18,6 +18,38 @@
     <script type="text/javascript">
       var classRoomID = '<%= params[:class_room_id] %>';
 
+      function proceedtoTeacherSelection(){
+        inputs = document.getElementsByTagName("input");
+        courseIDs = []
+        for (var i=0; i<=inputs.length - 1; i++){
+          if (inputs[i].type == 'checkbox'){
+            if (inputs[i].checked){
+              if (inputs[i].hasAttribute("course_id")){
+                courseID = inputs[i].getAttribute("course_id");
+                courseIDs.push(courseID);
+              }
+            }
+          }
+        }
+        if (courseIDs.length == 0 ){
+          jQuery.confirm({
+            title:"No Option Selected",
+            text:"No option selected. Please select at least one option to continue.",
+            confirm: function(button) {
+
+            },
+            cancel: function(button) {
+
+            },
+            confirmButton: "Okay",
+            cancelButton: "No"
+          });
+        }
+        else{
+          window.location = "/class_room/select_class_course_teacher?class_room_id=" + classRoomID + "&course_ids=" + courseIDs;
+        }
+      }
+      
     </script>
     <style type="text/css">
       .label {
@@ -104,6 +136,10 @@
         font-size: 10pt;
       }
 
+      .cancel{
+        display: none;
+      }
+
     </style>
   </head>
   <body>
@@ -187,7 +223,7 @@
                 <tfoot>
                   <tr>
                     <td class="table-footer" colspan="3">
-                      <a class="button round blue image-right ic-right-arrow text-upper" href="#" style="font-size: 10pt;">Continue</a>
+                      <a onclick="proceedtoTeacherSelection();" class="button round blue image-right ic-right-arrow text-upper" href="#" style="font-size: 10pt;">Continue</a>
                     </td>
                   </tr>
                 </tfoot>

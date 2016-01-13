@@ -2021,7 +2021,25 @@ SELECT p1.* FROM payment p1 WHERE DATE(p1.date) = (
       @courses << class_room_course.course
     end
   end
-  
+
+  def select_class_course_teacher
+    @class_room = ClassRoom.find(params[:class_room_id])
+    @courses = []
+    
+    course_ids = params[:course_ids].split(",")
+    course_ids.each do |course_id|
+      course = Course.find(course_id)
+      @courses << course
+    end
+
+    teacher_position_id = Position.find_by_name("Teacher").position_id
+    @teachers = Employee.find_by_sql("SELECT e.* FROM employee e INNER JOIN employee_position ep
+      ON e.employee_id = ep.employee_id AND ep.position_id = #{teacher_position_id}
+      INNER JOIN class_room_teachers crt ON crt.teacher_id = e.employee_id
+      AND crt.class_room_id=#{params[:class_room_id]}"
+    )
+  end
+
   def assign_class_teachers
     teacher_position_id = Position.find_by_name("Teacher").position_id
     @class_room = ClassRoom.find(params[:class_room_id])
