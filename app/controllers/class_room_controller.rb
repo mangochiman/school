@@ -2060,7 +2060,28 @@ SELECT p1.* FROM payment p1 WHERE DATE(p1.date) = (
       end
     end
 
+    flash[:notice] = "Operation Successful"
     redirect_to("/class_room/add_class_course_teacher?class_room_id=#{class_room_id}") and return
+  end
+
+  def render_class_course_teachers
+    class_room_id = params[:class_room_id]
+    course_id = params[:course_id]
+    teacher_class_room_courses = TeacherClassRoomCourse.find(:all, :conditions => ["class_room_id =? AND
+          course_id =?", class_room_id, course_id])
+    
+    teachers = {}
+    teacher_class_room_courses.each do |tcrc|
+      teacher_id = tcrc.teacher_id
+      teacher = Employee.find(teacher_id) rescue nil
+      next if teacher.blank?
+      teachers[teacher_id] = {}
+      teachers[teacher_id]["teacher_name"] = teacher.name
+      teachers[teacher_id]["gender"] = teacher.gender
+      teachers[teacher_id]["phone"] = teacher.phone
+    end
+
+    render :json => teachers and return
   end
 
   def assign_class_teachers

@@ -18,6 +18,50 @@
     <script type="text/javascript">
       var classRoomID = '<%= params[:class_room_id] %>';
 
+      function loadClassCourseTeachers(obj){
+        courseId = obj.getAttribute("course_id");
+        courseName = obj.getAttribute("course_name");
+        jQuery.ajax({
+          type: "POST",
+          url: "/class_room/render_class_course_teachers",
+          data: "course_id=" + courseId + "&class_room_id=" + classRoomID,
+          success: function(results){
+            table = "<table style='width:90%; margin-left:5%;'>";
+            table+="<tr>";
+            table+="<th style='min-width: 45%;'>Teacher's Name</th>";
+            table+="<th>Gender</th>";
+            table+="<th>Phone #</th>";
+            table+="</tr>";
+
+            for (var teacher_id in results){
+              teacherName = results[teacher_id]["teacher_name"];
+              gender = results[teacher_id]["gender"];
+              if (gender == null)gender = '';
+              phone = results[teacher_id]["phone"];
+              if (phone == null)phone = '';
+
+              table+="<tr style='background-color:white;'>";
+              table+="<td>" + teacherName + "</td>";
+              table+="<td>" + gender + "</td>";
+              table+="<td>" + phone + "</td>";
+              table+="</tr>";
+            }
+
+            table += "</table>";
+            teachers = table;
+
+            jQuery.confirm({
+              title: courseName,
+              text: teachers,
+              confirm: function(button) {
+              },
+              cancel: function(button) {
+              },
+              confirmButton: "Done"
+            });
+          }});
+      }
+
       function proceedtoTeacherSelection(){
         inputs = document.getElementsByTagName("input");
         courseIDs = []
@@ -234,7 +278,7 @@
                         <input type="checkbox" course_id="<%= course.course_id %>"/>
                       </td>
                       <td><%= course.name %></td>
-                      <td><sup class="notice badge badge-info"><%= Course.total_teachers(params[:class_room_id], course.course_id) %></sup></td>
+                      <td course_id="<%= course.course_id %>" course_name="<%= course.name %>"><sup class="notice badge badge-info"><%= Course.total_teachers(params[:class_room_id], course.course_id) %></sup></td>
                     </tr>
                   <% end %>
                 </tbody>
