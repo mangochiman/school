@@ -278,7 +278,7 @@
                         <input type="checkbox" course_id="<%= course.course_id %>"/>
                       </td>
                       <td><%= course.name %></td>
-                      <td course_id="<%= course.course_id %>" course_name="<%= course.name %>"><sup class="notice badge badge-info"><%= Course.total_teachers(params[:class_room_id], course.course_id) %></sup></td>
+                      <td course_id="<%= course.course_id %>" course_name="<%= course.name %>" onmousedown="loadClassCourseTeachers(this);"><sup class="notice badge badge-info"><%= Course.total_teachers(params[:class_room_id], course.course_id) %></sup></td>
                     </tr>
                   <% end %>
                 </tbody>
