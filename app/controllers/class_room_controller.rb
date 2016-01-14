@@ -1691,6 +1691,16 @@ SELECT p1.* FROM payment p1 WHERE DATE(p1.date) = (
 
   end
 
+  def delete_teacher_class_room_course
+    class_room_id = params[:class_room_id]
+    course_id = params[:course_id]
+    teacher_id = params[:teacher_id]
+    teacher_class_room_course = TeacherClassRoomCourse.find(:last, :conditions => ["class_room_id =? AND
+       course_id =? AND teacher_id=?", class_room_id, course_id, teacher_id])
+    teacher_class_room_course.delete
+    render :text => true and return
+  end
+  
   def student_admissions
     @class_room = ClassRoom.find(params[:class_room_id])
     if (request.method == :post)

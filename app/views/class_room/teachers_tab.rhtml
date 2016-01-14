@@ -15,10 +15,36 @@
     <%= javascript_include_tag("jquery.confirm") %>
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("bootstrap") %>
-    <script>
+    <script type="text/javascript">
+      var classRoomID = '<%= params[:class_room_id] %>'
+      function deassociateTeacherFromCourse(obj){
+        courseID = obj.getAttribute("course_id");
+        courseName = obj.getAttribute("course_name");
+        teacherID = obj.getAttribute("teacher_id");
+        teachersName = obj.getAttribute("teachers_name");
+        
+        jQuery.confirm({
+          title: 'CONFIRM',
+          text: 'Are you sure yo want to remove <b><i>' + teachersName + '</i></b> from this course <b><i>' + courseName + '</i></b>. You can roll back later',
+          confirm: function(button) {
+            jQuery.ajax({
+              type: "POST",
+              url: "/class_room/delete_teacher_class_room_course",
+              data: "course_id=" + courseID + "&teacher_id=" + teacherID + "&class_room_id=" + classRoomID,
+              success: function(results){
+                window.location = location.href.replace('#', '');
+              },
+              cancel: function(button) {
+            
+              },
+              confirmButton: "Done"
+            });
+          }})
+      }
 
     </script>
-    <style>
+
+    <style type="text/css">
 
       table th:first-child {
         border-style: none none none !important;
@@ -68,7 +94,7 @@
         color: white;
         font-weight: bold;
       }
-}
+      }
     </style>
   </head>
   <body>
@@ -144,11 +170,12 @@
                 <form id="search-student-form" action="#">
                   <fieldset>
                     <legend><%= @class_room_course_id_name_map[course_id] %></legend>
+                    <% course_name = Course.find(course_id).name %>
                     <div>
                       <% unless teachers.flatten.blank? %>
-                      <span style="float: right;">
-                        Total Teachers: <sup class="notice badge badge-info"><%= teachers.flatten.count %></sup>
-                      </span><br /><br />
+                        <span style="float: right;">
+                          Total Teachers: <sup class="notice badge badge-info"><%= teachers.flatten.count %></sup>
+                        </span><br /><br />
                         <table>
                           <thead>
                             <tr>
@@ -169,7 +196,10 @@
                                 <td style="text-align: center;"><a href="#"><%= teacher.email %></a></td>
                                 <td style="text-align: center;"><%= teacher.mobile %></td>
                                 <td>
-                                  <a class="button round blue image-right ic-right-arrow text-upper" href="#" onclick="removeTeachers(this)" course_id="<%= course_id %>">De-associate</a>
+                                  <a class="button round blue image-right ic-right-arrow text-upper" href="#"
+                                     onclick="deassociateTeacherFromCourse(this)" teacher_id="<%= teacher.employee_id %>"
+                                     course_id="<%= course_id %>" course_name="<%= course_name %>"
+                                     teachers_name="<%= teacher.name %>">De-associate</a>
                                 </td>
                               </tr>
                             <% end %>
