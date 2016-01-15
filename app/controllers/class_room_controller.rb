@@ -399,16 +399,59 @@ class ClassRoomController < ApplicationController
 
   def attendance_tab
     @class_room = ClassRoom.find(params[:class_room_id])
-    attendance_values = ['Present', 'Absent', 'Sick', 'Leave', 'Late']
-    
-    students = Student.find_by_sql("SELECT s.* FROM student s INNER JOIN student_class_room_adjustment scra ON
+    @students = Student.find_by_sql("SELECT s.* FROM student s INNER JOIN student_class_room_adjustment scra ON
           s.student_id = scra.student_id LEFT JOIN student_archive sa
           ON s.student_id = sa.student_id WHERE scra.new_class_room_id = #{params[:class_room_id]}
-          AND scra.status = 'active' AND sa.student_id IS NULL").map(&:student_id)
+          AND scra.status = 'active' AND sa.student_id IS NULL")
 
-    attendance_values.each do |value|
+    @today = Date.today.strftime("%d/%b/%Y").upcase
+    @this_year = Date.today.year
+    @this_month = Date.today.strftime("%B")
 
+    this_week_start_date = Date.today.beginning_of_week#Monday
+    this_week_end_date = this_week_start_date + 4.days
+
+    @this_week_id = this_week_start_date.strftime("%d-%b-%Y").upcase + '_' + this_week_end_date.strftime("%d-%b-%Y").upcase
+
+    @this_week_dates = (this_week_start_date..this_week_end_date).to_a.collect{|d|d.strftime("%d/%b/%Y").upcase}
+    data = []
+    header = ['student_id', '#','Student Name'] + @this_week_dates
+    data << header
+    count = 1;
+
+    @todays_col = 100000#Just set it a as a bigger number. This is for disabling some inputs
+    header.each_with_index do |element, index|
+      d = element.to_date rescue nil
+      next if d.blank?
+      @todays_col = index - 1 if d >  Date.today
+      break
     end
+
+    @todays_col = 0 if (this_week_start_date > Date.today)
+
+    @students.each do |student|
+      student_id = student.student_id
+      student_name = student.name
+      student_data = [student_id, count, student_name]
+      student_attendance_data = []
+      @this_week_dates.each do |date|
+        #pull attendance value on this date
+        value = StudentAttendance.find(:last, :conditions => ["student_id =? AND
+            date =?", student_id, date.to_date.to_s]).status rescue ''
+        value = 'N/A' if date.to_date > Date.today
+
+        student_attendance_data << value
+      end
+      count = count + 1
+      weekly_data = (student_data + student_attendance_data)
+      data << weekly_data
+    end
+
+    @data  = data.to_json
+
+    start_year = @this_year - 3
+    @years = (start_year..@this_year).to_a.reverse
+    @months = Date::MONTHNAMES.compact
     
   end
 
@@ -463,7 +506,8 @@ class ClassRoomController < ApplicationController
     end
 
     @data  = data.to_json
-    @years = [2015, 2014, 2013]
+    start_year = @this_year - 3
+    @years = (start_year..@this_year).to_a.reverse
     @months = Date::MONTHNAMES.compact
   end
 
@@ -577,7 +621,8 @@ class ClassRoomController < ApplicationController
     end
 
     @data  = data.to_json
-    @years = [2015, 2014, 2013]
+    start_year = @this_year - 3
+    @years = (start_year..@this_year).to_a.reverse
     @months = Date::MONTHNAMES.compact
   end
 
@@ -626,7 +671,8 @@ class ClassRoomController < ApplicationController
     end
 
     @data  = data.to_json
-    @years = [2015, 2014, 2013]
+    start_year = @this_year - 3
+    @years = (start_year..@this_year).to_a.reverse
     @months = Date::MONTHNAMES.compact
   end
 

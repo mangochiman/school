@@ -13,73 +13,177 @@
     <%= javascript_include_tag("script") %>
     <%= javascript_include_tag("jquery-1.9.1.min") %>
     <%= javascript_include_tag("jquery.confirm") %>
+    <%= javascript_include_tag("handsontable.full") %>
+    <%= stylesheet_link_tag("handsontable.full") %>
     <%= stylesheet_link_tag("style") %>
-    <%= stylesheet_link_tag("bootstrap") %>
-    <script>
+
+    <script type="text/javascript">
+      var classRoomId = '<%= params[:class_room_id] %>';
+      var years = eval('<%= @years.to_json %>');
+      var months = eval('<%= @months.to_json %>');
+      var this_year = '<%= @this_year %>';
+      var this_month = '<%= @this_month %>';
+      var this_week_id = '<%= @this_week_id %>';
+
+      function selectDefaults(){
+        document.getElementById(this_year).selected = true;
+        document.getElementById(this_month).selected = true;
+        obj = {value: this_month};
+        updateWeekValue(obj);
+      }
+
+      window.setTimeout("selectDefaults();", 30);
+
+      function updateWeekValue(obj){
+        year = document.getElementsByClassName("year")[0].value;
+        month = obj.value
+
+        jQuery.ajax({
+          type: "POST",
+          url: "/class_room/get_weekly_dates",
+          data: "year=" + year + "&month=" + month,
+          success: function(results){
+            html = ""
+            for (i=0; i<=results.length - 1; i++){
+              week_dates = results[i];
+              first_week_date = week_dates[0];
+              last_week_date = week_dates[week_dates.length - 1];
+              date_range = first_week_date + ' to ' + last_week_date;
+              week_id = first_week_date + '_' + last_week_date;
+              html+="<option value='" + first_week_date + '|' + last_week_date + "' id='" + week_id + "'>" + date_range + " </option>"
+            }
+
+            document.getElementsByClassName("week")[0].innerHTML = html;
+            this_week_option = document.getElementById(this_week_id)
+            if (this_week_option){
+              this_week_option.selected = true;
+            }
+          }
+        });
+      }
+
+      function loadClassAttendanceData(){
+        date_range = document.getElementsByClassName("week")[0].value
+        jQuery.ajax({
+          type: "POST",
+          url: "/class_room/search_class_attendance_data",
+          data: "class_room_id=" + classRoomId + "&date_range=" + date_range,
+          success: function(results){
+            data = results[0];
+            todaysCol = parseInt(results[1]);
+            document.getElementById('students').innerHTML = '';
+            studentAttendance = new Handsontable(container,
+            {
+              data: data,
+              minSpareRows: 0,
+              columnSorting: true,
+              autoWrapRow: true,
+
+              columns: [
+                {
+                  data: 1
+                },
+                {
+                  data: 2,
+                  type: 'dropdown',
+                  source: ['Present', 'Absent', 'Sick', 'Leave', 'Late']
+                },
+                {
+                  data: 3,
+                  type: 'dropdown',
+                  source: ['Present', 'Absent', 'Sick', 'Leave', 'Late']
+                },
+                {
+                  data: 4,
+                  type: 'dropdown',
+                  source: ['Present', 'Absent', 'Sick', 'Leave', 'Late']
+                },
+                {
+                  data: 5,
+                  type: 'dropdown',
+                  source: ['Present', 'Absent', 'Sick', 'Leave', 'Late']
+                },
+                {
+                  data: 6,
+                  type: 'dropdown',
+                  source: ['Present', 'Absent', 'Sick', 'Leave', 'Late']
+                }
+                ,
+                {
+                  data: 7,
+                  type: 'dropdown',
+                  source: ['Present', 'Absent', 'Sick', 'Leave', 'Late']
+                }
+              ],
+              onSelection: function (row, col, row2, col2) {
+                var meta = this.getCellMeta(row2, col2);
+
+                if (meta.readOnly) {
+                  this.updateSettings({fillHandle: false});
+                }
+                else {
+                  this.updateSettings({fillHandle: true});
+                }
+              },
+              cells: function (row, col, prop) {
+                if (col == 0 || col == 1){
+                  var cellProperties = {};
+                  cellProperties.renderer = "firstColumnRenderer";
+                }
+
+                if (row === 0) {
+                  var cellProperties = {};
+                  cellProperties.renderer = firstRowRenderer; // uses function directly
+                }
+                else{
+                  if (col > 1){
+                    var cellProperties = {};
+                    cellProperties.renderer = "readOnlyRenderer";
+                  }
+
+                }
+
+                return cellProperties;
+              }
+            });
+          }
+        });
+      }
 
     </script>
-    <style>
-      .label {
-        border-radius: 1.5em;
-        color: #fff;
-        display: inline;
-        background-color: #5bc0de;
-        font-size: 1.2em;
-        font-weight: bold;
-        line-height: 1;
-        padding-left: 20%;
-        padding-right: 20%;
-        padding-top:2%;
-        padding-bottom:2%;
-        text-align: center;
-        vertical-align: baseline;
-        white-space: nowrap;
-        cursor: pointer;
+
+    <style type="text/css">
+      table { width: 80%; margin-bottom: 1.25em; /* 20/16 */ }
+
+      table th {
+        background-color: #5d6677;
+        color: white;
+        text-transform: uppercase;
+        border-left: inherit;
       }
 
-      table{
-        margin-left:15%;
-        width: 60%;
-      }
-      table td #simple-input{
-        float: right;
+      table tbody td {
+        padding: inherit; /* 10/12 15/12 */
+        border-left: inherit;
+        border-bottom: inherit;
       }
 
-      table label{
-        text-align: left;
-      }
-      #simple-input{
-        font-size: 10pt !important;
-      }
-
-      #registration input[type="text"], input[type="password"], textarea {
-        border: 1px solid #d9dbdd;
-        outline: medium none;
-        padding: 0.5em 0.225em;
-      }
-      input[type="submit"] {
-        margin-left: 37%;
-      }
       table th:first-child {
-        border-style: none none none !important;
+        min-width: 150px;
       }
 
-      .classes{
-        position: relative;
-        margin-left: 0%;
-        width: 100%;
+      table td:first-child, table th:first-child {
+
+        text-align: inherit;
+        padding: inherit;
+        border-bottom: 1px solid #ccc;
+        border-right: 1px solid #ccc;
       }
 
-      .classes th, tbody{
+      table td:last-child, table th:last-child {
+        width: 7em; /* 84/12 */
         text-align: center;
-      }
-
-      .modal-title {
-        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-        font-weight: 500;
-        line-height: 1.1;
-        font-size: 1.2em;
-        color: #317eac;
+        padding: 0;
       }
 
       a{
@@ -119,13 +223,29 @@
         border-left: none;
       }
 
-      form.autoform input, select {
-        font-size: 0.8em !important;
-        font-weight: bold;
-      }
-
       .orange{
         background-color: #EEEE00 !important;
+      }
+
+      #dropdown-actions{
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        color: #555;
+        display: block;
+        font-size: 14px;
+        height: 34px;
+        line-height: 1.42857;
+        min-width: 167px;
+        padding: 6px 12px;
+        text-align: center;
+        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+      }
+
+      #search-student-form table td:first-child {
+        border-style: none none none !important;
       }
     </style>
   </head>
@@ -204,14 +324,39 @@
                   <div style="margin-left:2%;">
                     <table style="width: 45%; float: right;">
                       <tr>
-                        <td style="font-size: 13pt;">Name</td>
-                        <td style="width: 50px !important;"><input type="text" class="class_room_search"/></td>
-                        <td style="width: 20px"><a onclick="loadSearchResults();" class="button round blue image-right ic-search text-upper">Search</a></td>
+                        <td style="text-align:right; font-size: 1.2em; padding-right: 5px;">Year</td>
+                        <td style="">
+                          <select name="year" id="dropdown-actions" class="year">
+                            <% @years.each do |year| %>
+                              <option value="<%= year %>" id="<%= year %>"><%= year %></option>
+                            <% end %>
+                          </select>
+                        </td>
+                        <td style="text-align:right; font-size: 1.2em; padding-left: 20px; padding-right: 5px;">Month</td>
+                        <td>
+                          <select name="month" id="dropdown-actions" class="month" onchange="updateWeekValue(this)">
+                            <% @months.each do |month| %>
+                              <option value="<%=  month %>" id="<%= month %>"><%= month %></option>
+                            <% end %>
+                          </select>
+                        </td>
+                        <td style="text-align:right; font-size: 1.2em; padding-left: 20px; padding-right: 5px;">Week</td>
+                        <td>
+                          <select name="week" id="dropdown-actions" class="week">
+                          </select>
+                        </td>
+                        <td>
+                          <a onclick="loadClassAttendanceData();" class="button round blue image-right ic-search text-upper">Search</a>
+                        </td>
                       </tr>
                     </table>
                   </div>
                 </fieldset>
               </form>
+
+              <div id="students">
+
+              </div><br />
 
             </div> <!-- end content-module-main -->
 
@@ -223,7 +368,131 @@
 
     </div> <!-- end content -->
 
-    <%= javascript_include_tag("bootstrap") %>
+    <script type="text/javascript">
+      var today = '<%= @today %>';
+      var todaysCol = parseInt('<%= @todays_col %>');
+      var maxRows = parseInt('<%= @students.count %>');
 
+    </script>
+
+    <script data-jsfiddle="students">
+      var data = eval('<%= @data %>');
+
+      function firstRowRenderer(instance, td, row, col, prop, value, cellProperties) {
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+        td.style.fontWeight = 'bold';
+        td.style.color = '#222';
+        td.style.background = '#eee';
+        td.style.padding = '2px 4px';
+        td.style.textAlign = 'center';
+
+        cellProperties.readOnly = true;
+
+      }
+
+      function firstColumnRenderer(instance, td, row, col, prop, value, cellProperties){
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+        td.style.color = '#222';
+        if (col != 1){
+          td.style.textAlign = 'center';
+        }
+
+        td.style.background = '#eee';
+        cellProperties.readOnly = true;
+
+      }
+
+      function readOnlyRenderer(instance, td, row, col, prop, value, cellProperties) {
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+        td.style.background = '#FEE0C6';
+        cellProperties.readOnly = true;
+      }
+
+      // maps function to lookup string
+      Handsontable.renderers.registerRenderer('readOnlyRenderer', readOnlyRenderer);
+      Handsontable.renderers.registerRenderer('firstColumnRenderer', firstColumnRenderer);
+
+      var container = document.getElementById('students');
+
+      var studentAttendance = new Handsontable(container,
+      {
+        data: data,
+        minSpareRows: 0,
+        columnSorting: true,
+        autoWrapRow: true,
+
+        columns: [
+          {
+            data: 1
+          },
+          {
+            data: 2,
+            type: 'dropdown',
+            source: ['Present', 'Absent', 'Sick', 'Leave', 'Late']
+          },
+          {
+            data: 3,
+            type: 'dropdown',
+            source: ['Present', 'Absent', 'Sick', 'Leave', 'Late']
+          },
+          {
+            data: 4,
+            type: 'dropdown',
+            source: ['Present', 'Absent', 'Sick', 'Leave', 'Late']
+          },
+          {
+            data: 5,
+            type: 'dropdown',
+            source: ['Present', 'Absent', 'Sick', 'Leave', 'Late']
+          },
+          {
+            data: 6,
+            type: 'dropdown',
+            source: ['Present', 'Absent', 'Sick', 'Leave', 'Late']
+          }
+          ,
+          {
+            data: 7,
+            type: 'dropdown',
+            source: ['Present', 'Absent', 'Sick', 'Leave', 'Late']
+          }
+        ],
+        onSelection: function (row, col, row2, col2) {
+          var meta = this.getCellMeta(row2, col2);
+
+          if (meta.readOnly) {
+            this.updateSettings({fillHandle: false});
+          }
+          else {
+            this.updateSettings({fillHandle: true});
+          }
+        },
+        cells: function (row, col, prop) {
+          if (col == 0 || col == 1){
+            var cellProperties = {};
+            cellProperties.renderer = "firstColumnRenderer";
+          }
+
+          if (row === 0) {
+            var cellProperties = {};
+            cellProperties.renderer = firstRowRenderer; // uses function directly
+          }
+          else{
+            if (col > 1){
+              var cellProperties = {};
+              cellProperties.renderer = "readOnlyRenderer";
+            }
+
+          }
+
+          return cellProperties;
+        }
+      });
+
+      window.setInterval(function(){
+        //document.getElementsByTagName("col")[0].style.width = '50px';
+      }, 10)
+
+    </script>
   </body>
 </html>
