@@ -85,9 +85,7 @@
         font-weight: bold;
       }
 
-      .orange{
-        background-color: #EEEE00 !important;
-      }
+      
 
       a{
         cursor: pointer;
@@ -150,13 +148,11 @@
               <fieldset>
                 <legend>Students Summary</legend>
                 <div style="margin-left: 30%;">
-                  <table style="width: 50%;">
-                    <tr>
-                      <th style="width:30%;">Total Students <span class="badge" style="font-size: 14pt;"><%= @total_students %></span></th>
-                      <th style="text-align: center;">Males <span class="badge"  style="font-size: 14pt;"><%= @males_count %></span></th>
-                      <th style="width:30%;">Females <span class="badge" style="font-size: 14pt;"><%= @females_count %></span></th>
-                    </tr>
-                  </table>
+
+                  <span>Total Students <span class="badge" style="font-size: 14pt;"><%= @total_students %></span></span>
+                  <span style="padding-left: 100px;">Males <span class="badge"  style="font-size: 14pt;"><%= @males_count %></span></span>
+                  <span style="padding-left: 100px;">Females <span class="badge" style="font-size: 14pt;"><%= @females_count %></span></span>
+
                 </div>
                 <br />
 
