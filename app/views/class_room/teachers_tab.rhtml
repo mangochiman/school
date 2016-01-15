@@ -16,7 +16,8 @@
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("bootstrap") %>
     <script type="text/javascript">
-      var classRoomID = '<%= params[:class_room_id] %>'
+      var classRoomID = '<%= params[:class_room_id] %>';
+
       function deassociateTeacherFromCourse(obj){
         courseID = obj.getAttribute("course_id");
         courseName = obj.getAttribute("course_name");
@@ -42,6 +43,18 @@
           }})
       }
 
+      function assignCourseTeachers(obj){
+        courseID = obj.getAttribute("course_id");
+        url = "/class_room/select_class_course_teacher?class_room_id=" + classRoomID + "&course_ids=" + courseID;
+        window.location = url;
+      }
+
+      function addCourseTeacher(obj){
+        courseID = obj.getAttribute("course_id");
+        url = "/class_room/select_class_course_teacher?class_room_id=" + classRoomID + "&course_ids=" + courseID;
+        window.location = url;
+      }
+      
     </script>
 
     <style type="text/css">
@@ -187,6 +200,13 @@
                               <th style="text-align: center;">Action</th>
                             </tr>
                           </thead>
+                          <tfoot>
+                            <tr>
+                              <td style="padding-top: 10px;">
+                                <a onmousedown="addCourseTeacher(this);" class="button round blue image-right ic-right-arrow text-upper" href="#" course_id="<%= course_id %>">Add Teacher</a>
+                              </td>
+                            </tr>
+                          </tfoot>
                           <tbody id="teachers">
                             <% teachers.flatten.each do |teacher| %>
                               <tr>
@@ -206,7 +226,7 @@
                           <% else %>
                           <center>
                             <i><p>No Teacher Assigned</p></i>
-                            <a class="button round blue image-right ic-right-arrow text-upper" href="#" onclick="assignTeachers(this)" course_id="<%= course_id %>">Assign Teachers</a>
+                            <a class="button round blue image-right ic-right-arrow text-upper" href="#" onclick="assignCourseTeachers(this)" course_id="<%= course_id %>">Assign Teachers</a>
                           </center>
                           <br />
                         <% end %>
