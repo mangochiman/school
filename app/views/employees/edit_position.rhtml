@@ -148,7 +148,11 @@
                       <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%=  position.name.titleize %></td>
                       <td><center><%= position.created_at.to_date.strftime("%d-%b-%Y") %></center></td>
                       <td>
-                        <a position_id="<%= position.id %>" onclick="editMe(this)" class="table-actions-button ic-table-edit"></a>
+                        <% unless position.name.upcase.squish == 'TEACHER' %>
+                          <a position_id="<%= position.id %>" onclick="editMe(this)" class="table-actions-button ic-table-edit"></a>
+                        <% else %>
+                          <span style="color: gray;">DISABLED</span>
+                        <% end %>
                       </td>
                     </tr>
                   <% end %>
