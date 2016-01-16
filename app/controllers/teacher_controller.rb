@@ -46,12 +46,12 @@ class TeacherController < ApplicationController
   end
 
   def assign_class
-    @teachers = Teacher.all
+    @teachers = Teacher.available_teachers
     
   end
 
   def remove_class
-    @teachers = Teacher.all
+    @teachers = Teacher.available_teachers
     
   end
 
@@ -187,8 +187,7 @@ class TeacherController < ApplicationController
   end
   
   def assign_subjects
-    @teachers = Teacher.all
-    
+    @teachers = Teacher.available_teachers
   end
 
   def filter_teachers
@@ -197,7 +196,7 @@ class TeacherController < ApplicationController
 
     @courses = [["All", "All"]]
     @courses += Course.all.collect{|c|[c.name, c.id]}
-    @teachers = Teacher.all
+    @teachers =Teacher.available_teachers
     if (request.method == :post)
       class_room_ids = params[:class_room]
       if (params[:class_room].to_s.upcase == 'ALL')
@@ -251,23 +250,30 @@ class TeacherController < ApplicationController
   end
 
   def edit_teacher
-    @teachers = Teacher.all
-    
+    @teachers = Teacher.available_teachers
   end
 
   def create
-    if Teacher.create(:email => params[:email],
-        :fname => params[:firstname],
-        :lname => params[:lastname],
-        :dob => params[:dob].to_date,
-        :gender => params[:gender],
-        :phone => params[:phone],
-        :mobile => params[:mobile],
-        :status => params[:status])
-      flash[:notice] = "Teacher successfully added"
-    else
-      flash[:error] = "Unable to save. Check for errors and try again"
+    teacher_position_id = Position.find_by_name("Teacher").position_id
+    ActiveRecord::Base.transaction do
+      employee = Employee.create({
+          :email => params[:email],
+          :fname => params[:firstname],
+          :lname => params[:lastname],
+          :dob => params[:dob].to_date,
+          :gender => params[:gender],
+          :phone => params[:phone],
+          :mobile => params[:mobile]
+        }
+      )
+
+      EmployeePosition.create({
+          :employee_id => employee.employee_id,
+          :position_id => teacher_position_id
+        })
     end
+
+    flash[:notice] = "Teacher successfully added"
     redirect_to :controller => "teacher", :action => "add_teacher"
   end
 

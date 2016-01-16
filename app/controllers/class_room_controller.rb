@@ -2062,6 +2062,11 @@ SELECT p1.* FROM payment p1 WHERE DATE(p1.date) = (
           :employee_id => employee_id,
           :position_id => teacher_position_id
         })
+
+      ClassRoomTeacher.create({
+          :class_room_id => params[:class_room_id],
+          :teacher_id => employee_id
+        })
     end
 
     redirect_to("/class_room/assign_class_courses_to_teacher?class_room_id=#{params[:class_room_id]}&employee_id=#{employee_id}") and return
