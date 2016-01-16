@@ -428,10 +428,8 @@ class TeacherController < ApplicationController
   end
 
   def select_from_employees
-    @teachers = Teacher.find(:all)
-    employee_ids = EmployeeTeacher.find(:all).map(&:employee_id)
-    employee_ids = '0' if employee_ids.blank?
-    @employees = Employee.find(:all, :conditions => ["employee_id NOT IN (?)", employee_ids])#Employees that are not teachers
+    @employees = Teacher.non_teachers_employees
+    @teachers = Teacher.available_teachers
   end
 
   def set_employee_as_teacher
