@@ -35,6 +35,34 @@ class Teacher < ActiveRecord::Base
     return teachers
   end
 
+  def self.class_room_teachers(class_room_id)
+    teacher_position_id = Position.find_by_name("Teacher").position_id
+    class_room_teachers = Employee.find_by_sql("SELECT e.* FROM employee e INNER JOIN employee_position ep
+      ON e.employee_id = ep.employee_id AND ep.position_id = #{teacher_position_id}
+      INNER JOIN class_room_teachers crt ON crt.teacher_id = e.employee_id
+      AND crt.class_room_id=#{class_room_id}")
+    return class_room_teachers
+  end
+
+  def self.class_room_teachers_by_gender(class_room_id, gender_conditions)
+    teacher_position_id = Position.find_by_name("Teacher").position_id
+    class_room_teachers = Employee.find_by_sql("SELECT e.* FROM employee e INNER JOIN employee_position ep
+      ON e.employee_id = ep.employee_id AND ep.position_id = #{teacher_position_id}
+      INNER JOIN class_room_teachers crt ON crt.teacher_id = e.employee_id
+      AND crt.class_room_id IN (#{class_room_id}) AND #{gender_conditions}")
+    return class_room_teachers
+  end
+
+  def self.class_room_teachers_by_gender_and_course_ids(class_room_ids, gender_conditions, course_ids)
+    teacher_position_id = Position.find_by_name("Teacher").position_id
+    class_room_teachers = Employee.find_by_sql("SELECT e.* FROM employee e INNER JOIN employee_position ep
+      ON e.employee_id = ep.employee_id AND ep.position_id = #{teacher_position_id}
+      INNER JOIN class_room_teachers crt ON crt.teacher_id = e.employee_id
+      INNER JOIN teacher_class_room_course tcrc ON ep.employee_id = tcrc.teacher_id
+      AND crt.class_room_id IN (#{class_room_ids}) AND #{gender_conditions} AND tcrc.course_id IN (#{course_ids})")
+    return class_room_teachers
+  end
+
   def self.non_teachers_employees
     teacher_position_id = Position.find_by_name("Teacher").position_id
     non_employees_teachers = Employee.find_by_sql("SELECT e.* FROM employee e LEFT JOIN employee_position ep

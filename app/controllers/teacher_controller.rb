@@ -211,23 +211,17 @@ class TeacherController < ApplicationController
       gender = params[:gender]
       gender_conditions = ""
       if (gender.to_s.upcase == 'ALL')
-        gender_conditions = "gender IN ('Male', 'Female')"
+        gender_conditions = "e.gender IN ('Male', 'Female')"
       else
-        gender_conditions = "gender = '#{gender}'"
+        gender_conditions = "e.gender = '#{gender}'"
       end
       
       teachers = []
 
       if (params[:course].to_s.upcase == 'ALL')
-        teachers = ClassRoomTeacher.find_by_sql("SELECT * FROM class_room_teachers
-          INNER JOIN teacher USING(teacher_id) WHERE class_room_id IN (#{class_room_ids})
-          AND #{gender_conditions}
-          ").collect{|crt|crt.teacher}
+        teachers = Teacher.class_room_teachers_by_gender(class_room_ids, gender_conditions)
       else
-        teachers = TeacherClassRoomCourse.find_by_sql("SELECT * FROM teacher_class_room_course
-            INNER JOIN teacher USING(teacher_id) WHERE class_room_id IN (#{class_room_ids}) AND
-            course_id IN (#{course_ids})  AND #{gender_conditions}
-          ").collect{|tcrc|tcrc.teacher}
+        teachers = Teacher.class_room_teachers_by_gender_and_course_ids(class_room_ids, gender_conditions, course_ids)
       end
 
       hash = {}

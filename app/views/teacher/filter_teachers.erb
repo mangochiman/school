@@ -170,7 +170,7 @@
                     <table>
                       <tr>
                         <td style="width:5.5em; text-align: left;"><span>Select Class</span></td>
-                        <td><%= select_tag("class_room", options_for_select(@class_rooms), {:onchange=>"loadClassCourses(this);"})%></td>
+                        <td><%= select_tag("class_room", options_for_select(@class_rooms))%></td>
 
                         <td style="text-align: left;"><span>Select Course</span></td>
                         <td><%= select_tag("course", options_for_select(@courses))%></td>
