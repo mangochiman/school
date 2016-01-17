@@ -15,6 +15,141 @@
     <%= javascript_include_tag("exporting") %>
     <%= stylesheet_link_tag("style") %>
 
+    <style type="text/css">
+      .label {
+        border-radius: 1.5em;
+        color: #fff;
+        display: inline;
+        background-color: #5bc0de;
+        font-size: 1.2em;
+        font-weight: bold;
+        line-height: 1;
+        padding-left: 20%;
+        padding-right: 20%;
+        padding-top:2%;
+        padding-bottom:2%;
+        text-align: center;
+        vertical-align: baseline;
+        white-space: nowrap;
+        cursor: pointer;
+      }
+
+      #stats-table{
+        margin-left:15%;
+        width: 60%;
+      }
+
+      table th:first-child {
+        border-style: none none none !important;
+      }
+
+      .classes{
+        position: relative;
+        margin-left: 0%;
+        width: 100%;
+      }
+
+      .classes th, tbody{
+        text-align: center;
+      }
+
+      .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: #317eac;
+      }
+
+      a{
+        cursor: pointer;
+      }
+
+      #search-student-form fieldset {
+        border: 1px solid gray;
+        float: left;
+        margin-bottom: 15px;
+        padding: 0px;
+        float: none;
+      }
+      #search-student-form legend {
+        color: #abda0f;
+        font-size: 14px;
+        font-weight: 100;
+        margin-left: 14px;
+        padding: 2px;
+        width: initial;
+        margin-bottom: initial;
+        border-style: none;
+      }
+
+      #search-student-form fieldset input {
+        color: #505050;
+        float: left;
+        margin-right: 5px;
+        width: 250px;
+        padding: 6px;
+        font-size: 14px;
+        border: 1px solid #d9dbdd;
+        outline: medium none;
+      }
+
+      #search-student-form table td{
+        border-left: none;
+      }
+
+      form.autoform input, select {
+        font-size: 0.8em !important;
+        font-weight: bold;
+      }
+
+      .orange{
+        background-color: #EEEE00 !important;
+      }
+
+      #filter-graph-form fieldset {
+        border: 1px solid gray;
+        padding: 0px;
+        width: 98.7%;
+      }
+      #filter-graph-form legend {
+        color: #abda0f;
+        font-size: 14px;
+        font-weight: 100;
+        margin-left: 14px;
+        padding: 2px;
+      }
+      #filter-graph-form fieldset input {
+        color: #505050;
+        float: left;
+        margin-right: 5px;
+        width: 140px;
+        padding: 0px;
+        font-size: 14px;
+      }
+
+      #semester{
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        color: #555;
+        display: block;
+        font-size: 14px;
+        height: 34px;
+        line-height: 1.42857;
+        padding: 6px 12px;
+        min-width: 167px;
+        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+      }
+
+      a{
+        cursor: pointer;
+      }
+
+    </style>
+
   </head>
   <body>
     <!-- HEADER -->
@@ -72,13 +207,102 @@
 
 
             <div class="content-module-main">
-              <div id="container">
-              </div>
+              <% if flash[:notice] %>
+                <div class="confirmation-box round">
+                  <%= flash[:notice] %>
+                </div>
+              <% end %>
+              <% if flash[:error] %>
+                <div class="error-box round">
+                  <%= flash[:error] %>
+                </div>
+              <% end %>
+
+
+              <form id="search-student-form" action="#">
+                <fieldset>
+                  <legend>Teachers Statistics</legend>
+                  <div style="margin-left:2%;">
+                    <table id="stats-table">
+                      <tbody>
+                        <tr>
+                          <td style="font-size: 12pt; width:160px;">Male Teachers</td>
+                          <td><span class="badge"><%= @male_teachers.count %></span></td>
+                          <td style="font-size: 12pt;">Female Teachers</td>
+                          <td><span class="badge"><%= @female_teachers.count %></span></td>
+                          <td style="font-size: 12pt;">Total Teachers</td>
+                          <td><span class="badge"><%= @total_teachers %></span></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </fieldset>
+              </form>
+
+              <form id="search-student-form" action="#">
+                <fieldset>
+                  <legend>Males</legend>
+                  <div style="margin-left:2%; width: 96%;">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th style="min-width: 15%;">First Name</th>
+                          <th style="text-align: center;">Last Name</th>
+                          <th style="text-align: center;">Gender</th>
+                          <th style="text-align: center;">E-mail</th>
+                          <th style="text-align: center;">Phone #</th>
+                        </tr>
+                      </thead>
+                      <tbody id="teachers">
+                        <% @male_teachers.each do |teacher| %>
+                          <tr>
+                            <td><%=  teacher.fname %></td>
+                            <td style="text-align: center;"><%= teacher.lname %></td>
+                            <td style="text-align: center;"><%= teacher.gender %></td>
+                            <td style="text-align: center;"><a href="#"><%= teacher.email %></a></td>
+                            <td style="text-align: center;"><%= teacher.mobile %></td>
+                          </tr>
+                        <% end %>
+                      </tbody>
+                    </table>
+                  </div>
+                </fieldset>
+              </form>
+
+              <form id="search-student-form" action="#">
+                <fieldset>
+                  <legend>Females</legend>
+                  <div style="margin-left:2%; width: 96%;">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th style="min-width: 15%;">First Name</th>
+                          <th style="text-align: center;">Last Name</th>
+                          <th style="text-align: center;">Gender</th>
+                          <th style="text-align: center;">E-mail</th>
+                          <th style="text-align: center;">Phone #</th>
+                        </tr>
+                      </thead>
+                      <tbody id="teachers">
+                        <% @female_teachers.each do |teacher| %>
+                          <tr>
+                            <td><%=  teacher.fname %></td>
+                            <td style="text-align: center;"><%= teacher.lname %></td>
+                            <td style="text-align: center;"><%= teacher.gender %></td>
+                            <td style="text-align: center;"><a href="#"><%= teacher.email %></a></td>
+                            <td style="text-align: center;"><%= teacher.mobile %></td>
+                          </tr>
+                        <% end %>
+                      </tbody>
+                    </table>
+                  </div>
+                </fieldset>
+              </form>
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->
 
-           <!-- end content-module -->
+          <!-- end content-module -->
 
         </div> <!-- end side-content -->
 
