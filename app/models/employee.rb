@@ -5,6 +5,9 @@ class Employee < ActiveRecord::Base
   has_one :employee_position
   has_many :employee_statuses
 
+  has_many :class_room_teachers, :foreign_key => :teacher_id
+  has_many :teacher_class_room_courses, :foreign_key => :teacher_id
+
   def retire(start_date, end_date)
     employee_status = EmployeeStatus.new
     employee_status.employee_id = self.employee_id
