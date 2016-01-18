@@ -1,44 +1,8 @@
 class TeacherController < ApplicationController
   def index
-    @class_rooms = ClassRoom.find(:all).map(&:name)
-
-    @totals = []
-    @males = []
-    @females = []
-
-    class_rooms = ClassRoom.find(:all)
-    hash = {}
-
-    (class_rooms || []).each do |class_room|
-      total_teachers = class_room.class_room_teachers.count
-      class_room_id = class_room.id
-      hash[class_room_id] = {}
-      hash[class_room_id]["total_teachers"] = total_teachers
-      total_males = 0
-      total_females = 0
-
-      (class_room.class_room_teachers || []).each do |crt|
-        next if crt.teacher.blank?
-        if (crt.teacher.gender.to_s.upcase == 'MALE')
-          total_males += 1
-        end
-        if (crt.teacher.gender.to_s.upcase == 'FEMALE')
-          total_females += 1
-        end
-      end
-      hash[class_room_id]["total_males"] = total_males
-      hash[class_room_id]["total_females"] = total_females
-    end
-
-    @statistics = hash.sort_by{|key, value|key.to_i}
-
-    @statistics.each do |key, value|
-      @males << value["total_males"]
-      @females << value["total_females"]
-      @totals << value["total_teachers"]
-    end
-    
-    
+    @male_teachers = Teacher.teachers_by_gender('male')
+    @female_teachers = Teacher.teachers_by_gender('female')
+    @total_teachers = @male_teachers.count + @female_teachers.count
   end
 
   def add_teacher
