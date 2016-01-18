@@ -53,6 +53,14 @@ class Teacher < ActiveRecord::Base
     return class_room_teachers
   end
 
+  def self.filter_teachers(conditions)
+    teacher_position_id = Position.find_by_name("Teacher").position_id
+    class_room_teachers = Employee.find_by_sql("SELECT e.* FROM employee e INNER JOIN employee_position ep
+      ON e.employee_id = ep.employee_id AND ep.position_id = #{teacher_position_id}
+      WHERE #{conditions}")
+    return class_room_teachers
+  end
+  
   def self.teachers_by_gender(gender)
     teacher_position_id = Position.find_by_name("Teacher").position_id
     class_room_teachers = Employee.find_by_sql("SELECT e.* FROM employee e INNER JOIN employee_position ep

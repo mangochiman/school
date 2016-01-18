@@ -11,12 +11,10 @@ class TeacherController < ApplicationController
 
   def assign_class
     @teachers = Teacher.available_teachers
-    
   end
 
   def remove_class
     @teachers = Teacher.available_teachers
-    
   end
 
   def remove_my_classes
@@ -80,7 +78,7 @@ class TeacherController < ApplicationController
 
   def assign_me_subjects_menu
     teacher_id = params[:teacher_id]
-    teacher = Teacher.find(teacher_id)
+    teacher = Employee.find(teacher_id)
     @my_class_rooms = []
 
     teacher.class_room_teachers.each do |crt|
@@ -270,24 +268,24 @@ class TeacherController < ApplicationController
     multiple = false
     unless first_name.blank?
       multiple = true
-      conditions += "fname LIKE '%#{first_name}%'"
+      conditions += "e.fname LIKE '%#{first_name}%'"
     end
 
     unless last_name.blank?
       multiple = true
       conditions += ' AND ' unless conditions.blank?
-      conditions += "lname LIKE '%#{last_name}%' "
+      conditions += "e.lname LIKE '%#{last_name}%' "
     end
 
     unless gender.blank?
       conditions += ' AND ' if multiple
-      conditions += "gender = '#{gender}' "
+      conditions += "e.gender = '#{gender}' "
     end
 
     unless conditions.blank?
-      teachers = Teacher.find_by_sql("SELECT * FROM teacher WHERE #{conditions}")
+      teachers = Teacher.filter_teachers(conditions)
     else
-      teachers = Teacher.all
+      teachers = Teacher.available_teachers
     end
 
     hash = {}
@@ -360,18 +358,11 @@ class TeacherController < ApplicationController
   end
 
   def set_employee_as_teacher
+    teacher_position_id = Position.find_by_name("Teacher").position_id
     if (params[:mode] == 'single_entry')
-      employee = Employee.find(params[:employee_id])
-      teacher = Teacher.create({
-          :fname => employee.fname,
-          :lname => employee.lname,
-          :email => employee.email,
-          :gender => employee.gender,
-          :dob => employee.dob
-        })
-      EmployeeTeacher.create({
+      EmployeePosition.create({
           :employee_id => params[:employee_id],
-          :teacher_id => teacher.id
+          :position_id => teacher_position_id
         })
       render :text => "true" and return
     end
@@ -379,17 +370,9 @@ class TeacherController < ApplicationController
     employee_ids = params[:employee_ids].split(",")
 
     (employee_ids || []).each do |employee_id|
-      employee = Employee.find(employee_id)
-      teacher = Teacher.create({
-          :fname => employee.fname,
-          :lname => employee.lname,
-          :email => employee.email,
-          :gender => employee.gender,
-          :dob => employee.dob
-        })
-      EmployeeTeacher.create({
+      EmployeePosition.create({
           :employee_id => employee_id,
-          :teacher_id => teacher.id
+          :position_id => teacher_position_id
         })
     end
 
@@ -397,11 +380,11 @@ class TeacherController < ApplicationController
   end
 
   def my_page
-    @teacher = Teacher.find(params[:teacher_id])
+    @teacher = Employee.find(params[:teacher_id])
   end
 
   def my_class
-    @teacher = Teacher.find(params[:teacher_id])
+    @teacher = Employee.find(params[:teacher_id])
     @my_class_rooms = []
     @teacher.class_room_teachers.each do |class_room_teacher|
       next if class_room_teacher.class_room.blank?
@@ -411,7 +394,7 @@ class TeacherController < ApplicationController
 
   def delete_my_class
     ActiveRecord::Base.transaction do
-      teacher = Teacher.find(params[:teacher_id])
+      teacher = Employee.find(params[:teacher_id])
 
       teacher_class_room_courses = teacher.teacher_class_room_courses.find(:all ,
         :conditions => ["class_room_id =?", params[:class_room_id]])
@@ -427,7 +410,7 @@ class TeacherController < ApplicationController
   end
 
   def my_courses
-    @teacher = Teacher.find(params[:teacher_id])
+    @teacher = Employee.find(params[:teacher_id])
     @class_room_hash = {}
     class_rooms = ClassRoom.find(:all)
     class_rooms.each do |c|
@@ -454,7 +437,7 @@ class TeacherController < ApplicationController
   end
 
   def assign_teacher_classes
-    @teacher = Teacher.find(params[:teacher_id])
+    @teacher = Employee.find(params[:teacher_id])
     my_class_room_ids = ClassRoomTeacher.find(:all, :conditions => ["teacher_id =?",
         params[:teacher_id]]).map(&:class_room_id)
     my_class_room_ids = '' if my_class_room_ids.blank?
@@ -463,7 +446,7 @@ class TeacherController < ApplicationController
 
   def assign_teacher_courses
     class_room_id = params[:class_room_id]
-    @teacher = Teacher.find(params[:teacher_id])
+    @teacher = Employee.find(params[:teacher_id])
     current_class_course_ids = @teacher.teacher_class_room_courses.find(:all,
       :conditions => ["class_room_id =?", class_room_id]).map(&:course_id)
     current_class_course_ids = '' if current_class_course_ids.blank?
@@ -474,7 +457,7 @@ class TeacherController < ApplicationController
   def delete_my_class_courses
     class_room_id = params[:class_room_id]
     course_id = params[:course_id]
-    teacher = Teacher.find(params[:teacher_id])
+    teacher = Employee.find(params[:teacher_id])
     teacher_class_room_course = teacher.teacher_class_room_courses.find(:last,
       :conditions => ["class_room_id =? AND course_id =?", class_room_id, course_id])
     teacher_class_room_course.delete
@@ -482,11 +465,11 @@ class TeacherController < ApplicationController
   end
 
   def my_demographics
-    @teacher = Teacher.find(params[:teacher_id])
+    @teacher = Employee.find(params[:teacher_id])
   end
 
   def remove_teacher
-    @teacher = Teacher.find(params[:teacher_id])
+    @teacher = Employee.find(params[:teacher_id])
     if request.method == :post
       ActiveRecord::Base.transaction do
         @teacher.class_room_teachers.each do |class_room_teacher|
