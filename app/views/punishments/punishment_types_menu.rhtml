@@ -12,9 +12,96 @@
     <%= javascript_include_tag("jquery-1.9.1.min") %>
     <%= javascript_include_tag("highcharts") %>
     <%= javascript_include_tag("script") %>
-    
+
     <%= javascript_include_tag("exporting") %>
     <%= stylesheet_link_tag("style") %>
+
+    <script type="text/javascript">
+        function newPunishmentType(){
+          window.location = "/punishments/add_punishment_type/";
+        }
+    </script>
+
+    <style type="text/css">
+
+      table th:first-child {
+        border-style: none none none !important;
+      }
+
+      .classes{
+        position: relative;
+        margin-left: 0%;
+        width: 100%;
+      }
+
+      .classes th, tbody{
+        text-align: center;
+      }
+
+      .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: #317eac;
+      }
+
+      a{
+        cursor: pointer;
+      }
+
+      #search-student-form fieldset {
+        border: 1px solid gray;
+        float: left;
+        margin-bottom: 15px;
+        padding: 0px;
+        float: none;
+      }
+      #search-student-form legend {
+        font-size: 16px;
+        font-weight: bold;
+        margin-left: 14px;
+        padding: 2px;
+        width: initial;
+        margin-bottom: initial;
+        border-style: none;
+      }
+
+      #search-student-form fieldset input {
+        color: #505050;
+        float: left;
+        margin-right: 5px;
+        width: 250px;
+        padding: 6px;
+        font-size: 14px;
+        border: 1px solid #d9dbdd;
+        outline: medium none;
+      }
+
+      #search-student-form table td{
+        border-left: none;
+      }
+
+      form.autoform input, select {
+        font-size: 0.8em !important;
+        font-weight: bold;
+      }
+
+
+
+      a{
+        cursor: pointer;
+      }
+
+      #students_punishments .badge{
+        width: 85%;
+        line-height: 2;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 10pt;
+      }
+
+    </style>
 
   </head>
   <body>   
@@ -70,12 +157,39 @@
 
             <div class="content-module-main">
               <div id="container">
+                <div>
+                  Total Punishment Types <span class="badge" style="font-size: 12pt;"><%= @punishment_types.count %></span>
+                </div><br />
+
+                <table>
+                  <thead>
+                    <tr>
+                      <th style="font-weight:bold;">#</th>
+                      <th style="min-width:35%;">Punishment Type</th>
+                      <th style="min-width:35%;"><center>Date created</center></th>
+                    </tr>
+                  </thead>
+
+                  <tbody id="punishment_types">
+                    <% count = 0 %>
+                    <% @punishment_types.each do |type| %>
+                      <tr>
+                        <td><%= count = count + 1 %></td>
+                        <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= type.name %></td>
+                        <td><center><%= type.created_at.to_date.strftime("%d-%b-%Y") %></center></td>
+                      </tr>
+                    <% end %>
+                  </tbody>
+
+                </table>
+
+                <a onclick="newPunishmentType()" class="button round blue image-right ic-add text-upper">New Punishment Type &nbsp;</a>
               </div>
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->
 
-           <!-- end content-module -->
+          <!-- end content-module -->
 
         </div> <!-- end side-content -->
 

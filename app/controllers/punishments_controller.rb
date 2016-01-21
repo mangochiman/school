@@ -140,7 +140,7 @@ class PunishmentsController < ApplicationController
   end
 
   def punishment_types_menu
-    
+    @punishment_types = PunishmentType.all
   end
 
   def add_punishment_type
