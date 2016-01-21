@@ -1,6 +1,25 @@
 class PunishmentsController < ApplicationController
   def behavior_management_menu
+    @student_punishments_data = []
+    students = Student.find_by_sql("SELECT s.* FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id LEFT JOIN student_archive sa
+          ON s.student_id = sa.student_id WHERE scra.status = 'active' AND sa.student_id IS NULL")
+    student_ids = students.map(&:student_id).join(', ')
+    student_ids = '0' if student_ids.blank?
     
+    top_ten_students_punishments = StudentPunishment.find_by_sql("SELECT COUNT(sp.student_id) as total_punishments,
+         sp.student_id as student_id FROM student_punishment sp WHERE sp.student_id IN (#{student_ids})
+         GROUP BY sp.student_id ORDER BY total_punishments DESC LIMIT 10")
+
+    top_ten_students_punishments.each do |row|
+      student_id = row.student_id
+      student = Student.find(student_id)
+      total_punishments = row.total_punishments
+      student_name = student.name
+      gender = student.gender
+      mobile = student.mobile
+      @student_punishments_data << [student_id, student_name, gender, mobile, total_punishments]
+    end
   end
   
   def behavior_management_dashboard

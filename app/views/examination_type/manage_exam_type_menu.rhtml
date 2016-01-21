@@ -17,7 +17,13 @@
     <%= stylesheet_link_tag("metallic") %>
     <%= stylesheet_link_tag("gvalidator") %>
     <%= stylesheet_link_tag("bootstrap") %>
-    <style>
+    <script type="text/javascript">
+      function newExamType(){
+        window.location = "/examination_type/new_exam_type";
+      }
+    </script>
+
+    <style type="text/css">
       .modal-title {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         font-weight: 500;
@@ -46,9 +52,14 @@
         padding: 0.5em 0.225em;
       }
 
-      #simple-input {
-        font-size: 10pt !important;
+      table th:first-child {
+        border-style: none none none !important;
       }
+
+      a{
+        cursor: pointer;
+      }
+}
     </style>
   </head>
   <body>   
@@ -105,16 +116,47 @@
             <div class="content-module-main">
 
               <% if flash[:notice] %>
-                  <div class="confirmation-box round">
-                    <%= flash[:notice] %>
-                  </div>
-                <% end %>
-                <% if flash[:error] %>
-                  <div class="error-box round">
-                      <%= flash[:error] %>
-                  </div>
-                <% end %>
+                <div class="confirmation-box round">
+                  <%= flash[:notice] %>
+                </div>
+              <% end %>
+              <% if flash[:error] %>
+                <div class="error-box round">
+                  <%= flash[:error] %>
+                </div>
+              <% end %>
 
+              <div>
+                Total Exam Types <span class="badge" style="font-size: 12pt;"><%= @exam_types.count %></span>
+              </div><br />
+              
+              <table>
+
+                <thead>
+
+                  <tr>
+                    <th>#</th>
+                    <th style="min-width:35%;">Exam Type Name</th>
+                    <th style="min-width:35%;"><center>Date created</center></th>
+                  </tr>
+
+                </thead>
+
+                <tbody id="exam_types">
+                  <% count = 0 %>
+                  <% @exam_types.each do |exam_type| %>
+                    <tr>
+                      <td><b><%= count += 1 %></b></td>
+                      <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%=  exam_type.name.titleize %></td>
+                      <td><center><%= exam_type.created_at.to_date.strftime("%d-%b-%Y") %></center></td>
+                    </tr>
+                  <% end %>
+                </tbody>
+
+              </table>
+
+              <a class="button round blue image-right ic-add text-upper" onclick="newExamType()">New Exam Type &nbsp;</a>
+              
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->
@@ -125,6 +167,6 @@
 
     </div> <!-- end content -->
 
-     <%= javascript_include_tag("bootstrap") %>
+    <%= javascript_include_tag("bootstrap") %>
   </body>
 </html>

@@ -12,10 +12,97 @@
     <%= javascript_include_tag("jquery-1.9.1.min") %>
     <%= javascript_include_tag("highcharts") %>
     <%= javascript_include_tag("script") %>
-    
     <%= javascript_include_tag("exporting") %>
+    <%= javascript_include_tag("bootstrap") %>
+    <%= javascript_include_tag("excellentexport") %>
     <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("bootstrap") %>
+    <script type="text/javascript">
+        function assignPunishment(){
+          window.location = "/punishments/add_punishment/";
+        }
+    </script>
 
+    <style type="text/css">
+
+      table th:first-child {
+        border-style: none none none !important;
+      }
+
+      .classes{
+        position: relative;
+        margin-left: 0%;
+        width: 100%;
+      }
+
+      .classes th, tbody{
+        text-align: center;
+      }
+
+      .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: #317eac;
+      }
+
+      a{
+        cursor: pointer;
+      }
+
+      #search-student-form fieldset {
+        border: 1px solid gray;
+        float: left;
+        margin-bottom: 15px;
+        padding: 0px;
+        float: none;
+      }
+      #search-student-form legend {
+        font-size: 16px;
+        font-weight: bold;
+        margin-left: 14px;
+        padding: 2px;
+        width: initial;
+        margin-bottom: initial;
+        border-style: none;
+      }
+
+      #search-student-form fieldset input {
+        color: #505050;
+        float: left;
+        margin-right: 5px;
+        width: 250px;
+        padding: 6px;
+        font-size: 14px;
+        border: 1px solid #d9dbdd;
+        outline: medium none;
+      }
+
+      #search-student-form table td{
+        border-left: none;
+      }
+
+      form.autoform input, select {
+        font-size: 0.8em !important;
+        font-weight: bold;
+      }
+
+
+
+      a{
+        cursor: pointer;
+      }
+
+      #students_punishments .badge{
+        width: 85%;
+        line-height: 2;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 10pt;
+      }
+
+    </style>
   </head>
   <body>
     <!-- HEADER -->
@@ -71,12 +158,53 @@
 
             <div class="content-module-main">
               <div id="container">
+                <form action="#" id="search-student-form">
+                  <fieldset>
+                    <legend>Top 10 Students With More Punishments</legend>
+                    <div class="dropdown" style="padding-left: 8px;">
+                      <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Export As
+                        <span class="caret"></span></button>
+                      <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+                        <li role="presentation">
+                          <a role="menuitem" tabindex="-1" download="students_punishments.xls" href="#"
+                             onclick="return ExcellentExport.excel(this, 'students_punishments', 'Sheet Name Here');">Excel</a>
+                        </li>
+                      </ul>
+                    </div>
+                    <br />
+
+                    <div style="margin-left: 2%; width: 96%;">
+                      <table id="students_punishments">
+                        <thead>
+                          <tr>
+                            <th style="width: 20%;">Student Name</th>
+                            <th>Gender</th>
+                            <th>Phone #</th>
+                            <th style="width: 20%;">Total Punishments</th>
+                          </tr>
+                        <tbody>
+                          <% @student_punishments_data.each do |data| %>
+                            <tr>
+                              <td><%= data[1] %></td>
+                              <td><%= data[2] %></td>
+                              <td><%= data[3] %></td>
+                              <td><span class="badge" onclick="gotoStudentDetails('<%= data[0] %>');"><%= data[4] %></span></td>
+                            </tr>
+                          <% end %>
+                        </tbody>
+                        </thead>
+                      </table>
+                    </div>
+                  </fieldset>
+                </form>
+
+                <a onclick="assignPunishment();" class="button round blue image-right ic-add text-upper">Assign Punishment &nbsp;</a>
               </div>
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->
 
-           <!-- end content-module -->
+          <!-- end content-module -->
 
         </div> <!-- end side-content -->
 

@@ -1,6 +1,6 @@
 class ExaminationTypeController < ApplicationController
   def manage_exam_type_menu
-    
+    @exam_types = ExaminationType.all
   end
   
   def new_exam_type
