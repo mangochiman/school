@@ -16,9 +16,29 @@
     <%= javascript_include_tag("exporting") %>
     <%= stylesheet_link_tag("style") %>
 
+    <script type="text/javascript">
+      
+      function newDocumentType(){
+        window.location = "/attachment_types/new_document_type/";
+      }
+
+    </script>
+
+    <style type="text/css">
+      
+      a{
+        cursor: pointer;
+      }
+
+      table th:first-child {
+        border-style: none none none !important;
+      }
+
+    </style>
+
   </head>
   <body>
- 
+
     <!-- HEADER -->
     <div id="header-with-tabs">
 
@@ -71,12 +91,39 @@
 
             <div class="content-module-main">
               <div id="container">
+                <div>
+                  Total Document Types <span class="badge" style="font-size: 12pt;"><%= @attachment_types.count %></span>
+                </div><br />
+
+                <table>
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th style="min-width:35%;">Document Type</th>
+                      <th style="min-width:35%;"><center>Date created</center></th>
+                    </tr>
+                  </thead>
+
+                  <tbody id="attachment_types">
+                    <% count = 0 %>
+                    <% @attachment_types.each do |attachment_type| %>
+                      <tr>
+                        <td><%= count = count + 1 %></td>
+                        <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%=  attachment_type.name.capitalize %></td>
+                        <td><center><%= attachment_type.created_at.to_date.strftime("%d-%b-%Y") %></center></td>
+                      </tr>
+                    <% end %>
+                  </tbody>
+
+                </table>
+
+                <a onclick="newDocumentType()" class="button round blue image-right ic-add text-upper">New Document Type &nbsp;</a>
               </div>
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->
 
-           <!-- end content-module -->
+          <!-- end content-module -->
 
         </div> <!-- end side-content -->
 

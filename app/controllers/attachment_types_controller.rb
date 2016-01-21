@@ -1,7 +1,7 @@
 class AttachmentTypesController < ApplicationController
 
   def document_types_menu
-    
+    @attachment_types = AttachmentType.find(:all)
   end
   
   def new_document_type
