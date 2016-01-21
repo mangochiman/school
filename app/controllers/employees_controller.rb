@@ -1,10 +1,10 @@
 class EmployeesController < ApplicationController
   def employee_registration_menu
-    
+    @employees = Employee.all
   end
   
   def employee_management_menu
-    
+    @employees = Employee.all
   end
   
   def position_management_menu

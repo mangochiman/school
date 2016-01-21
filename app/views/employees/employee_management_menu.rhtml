@@ -19,68 +19,12 @@
     <%= stylesheet_link_tag("gvalidator") %>
     <%= stylesheet_link_tag("bootstrap") %>
 
-    <style>
-      .modal-title {
-        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-        font-weight: 500;
-        line-height: 1.1;
-        font-size: 1.2em;
-        color: red;
+    <style type="text/css">
+      
+      table th:first-child {
+        border-style: none none none !important;
       }
 
-      form.autoform .msg.icon {
-        margin: 0 10px;
-        padding: 5px 5px 5px 30px;
-        position: unset;
-      }
-
-      form label {
-        font-size: 0.9em;
-        font-weight: bold;
-      }
-      form.autoform input, select{
-        font-size: 0.8em !important;
-        font-weight: bold;
-      }
-
-      table{
-        margin-left:15%;
-        width: 60%;
-      }
-      table td #simple-input{
-        float: right;
-      }
-
-      table label{
-        text-align: left;
-      }
-      #simple-input{
-        font-size: 10pt !important;
-      }
-
-      #registration input[type="text"], input[type="password"], textarea {
-        border: 1px solid #d9dbdd;
-        outline: medium none;
-        padding: 0.5em 0.225em;
-      }
-      input[type="submit"] {
-        margin-left: 37%;
-      }
-      #gender{
-        background-color: #fff;
-        background-image: none;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
-        color: #555;
-        font-size: 14px;
-        height: 34px;
-        line-height: 1.42857;
-        width: 205px;
-        text-align: center;
-        padding: 6px 12px;
-        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
-      }
     </style>
   </head>
   <body>
@@ -146,6 +90,36 @@
                 </div>
               <% end %>
 
+              <div>
+                Total Employees <span class="badge" style="font-size: 12pt;"><%= @employees.count %></span>
+              </div><br />
+
+              <table>
+                <thead>
+                  <tr>
+                    <th style="min-width:15%;">Name</th>
+                    <th>Email</th>
+                    <th>Gender</th>
+                    <th>Date Of Birth</th>
+                    <th>Phone #</th>
+                    <th>Position</th>
+                  </tr>
+                </thead>
+
+                <tbody id="employees">
+                  <% @employees.each do |employee| %>
+                    <tr>
+                      <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= employee.fname.capitalize.to_s + ' ' + employee.lname.capitalize.to_s %></td>
+                      <td><a href="#"><%=  employee.email %></a></td>
+                      <td><%=  employee.gender %></td>
+                      <td><%=  employee.dob.to_date.strftime("%d-%b-%Y") %></td>
+                      <td><%=  employee.phone %></td>
+                      <td><%=  employee.employee_position.position.name.titleize %></td>
+                    </tr>
+                  <% end %>
+                </tbody>
+
+              </table>
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->
@@ -157,12 +131,6 @@
     </div> <!-- end content -->
 
     <%= javascript_include_tag("bootstrap") %>
-    <%= javascript_include_tag("zebra_datepicker") %>
-    <script>
-      $('.date-picker').Zebra_DatePicker({
-        view : 'years',
-        direction: ['<%=  (Date.today - 30.years).strftime("%Y-%m-%d") %>', '<%=  (Date.today - 12.years).strftime("%Y-%m-%d") %>']
-      });
-    </script>
+
   </body>
 </html>
