@@ -852,7 +852,7 @@ class ClassRoomController < ApplicationController
           s.student_id = scra.student_id LEFT JOIN student_archive sa
           ON s.student_id = sa.student_id WHERE scra.new_class_room_id = #{params[:class_room_id]}
           AND scra.status = 'active' AND sa.student_id IS NULL").map(&:student_id)
-    student_ids = '0' if student_ids.blank?
+    student_ids = ['0'] if student_ids.blank?
     @student_punishments_data = []
     top_ten_students_punishments = StudentPunishment.find_by_sql("SELECT COUNT(sp.student_id) as total_punishments,
          sp.student_id as student_id FROM student_punishment sp WHERE sp.student_id IN (#{student_ids.join(', ')})
