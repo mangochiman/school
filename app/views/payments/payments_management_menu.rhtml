@@ -12,14 +12,102 @@
     <%= javascript_include_tag("jquery-1.9.1.min") %>
     <%= javascript_include_tag("highcharts") %>
     <%= javascript_include_tag("script") %>
-
     <%= javascript_include_tag("exporting") %>
+    <%= javascript_include_tag("bootstrap") %>
+    <%= javascript_include_tag("excellentexport") %>
     <%= stylesheet_link_tag("style") %>
+    <%= stylesheet_link_tag("bootstrap") %>
 
-    <script>
+    <script type="text/javascript">
 
+      function newPayment(){
+        window.location = "/payments/add_payment";
+      }
+      
     </script>
+
+    <style type="text/css">
+
+      table th:first-child {
+        border-style: none none none !important;
+      }
+
+      .classes{
+        position: relative;
+        margin-left: 0%;
+        width: 100%;
+      }
+
+      .classes th, tbody{
+        text-align: center;
+      }
+
+      .modal-title {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        line-height: 1.1;
+        font-size: 1.2em;
+        color: #317eac;
+      }
+
+      a{
+        cursor: pointer;
+      }
+
+      #search-student-form fieldset {
+        border: 1px solid gray;
+        float: left;
+        margin-bottom: 15px;
+        padding: 0px;
+        float: none;
+      }
+      #search-student-form legend {
+        font-size: 16px;
+        font-weight: bold;
+        margin-left: 14px;
+        padding: 2px;
+        width: initial;
+        margin-bottom: initial;
+        border-style: none;
+      }
+
+      #search-student-form fieldset input {
+        color: #505050;
+        float: left;
+        margin-right: 5px;
+        width: 250px;
+        padding: 6px;
+        font-size: 14px;
+        border: 1px solid #d9dbdd;
+        outline: medium none;
+      }
+
+      #search-student-form table td{
+        border-left: none;
+      }
+
+      form.autoform input, select {
+        font-size: 0.8em !important;
+        font-weight: bold;
+      }
+
+
+
+      a{
+        cursor: pointer;
+      }
+
+      #students_punishments .badge{
+        width: 85%;
+        line-height: 2;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 10pt;
+      }
+
+    </style>
   </head>
+
   <body>    
     <!-- HEADER -->
     <div id="header-with-tabs">
@@ -74,7 +162,47 @@
 
             <div class="content-module-main">
               <div id="container">
+                <form action="#" id="search-student-form">
+                  <fieldset>
+                    <legend>Latest Ten Student Payments</legend>
+                    <div class="dropdown" style="padding-left: 8px;">
+                      <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Export As
+                        <span class="caret"></span></button>
+                      <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+                        <li role="presentation">
+                          <a role="menuitem" tabindex="-1" download="students_payments.xls" href="#"
+                             onclick="return ExcellentExport.excel(this, 'students_payments', 'Sheet Name Here');">Excel</a>
+                        </li>
+                      </ul>
+                    </div><br />
+                    <div style="margin-left: 2%; width: 96%;">
+                      <table id="students_payments">
+                        <thead>
+                          <tr>
+                            <th style="width: 20%;">Student Name</th>
+                            <th style="text-align: center;">Payment Type</th>
+                            <th style="text-align: center;">Amount Paid</th>
+                            <th style="width: 20%;">Date of Payment</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <% @latest_students_payments.each do |payment| %>
+                            <tr>
+                              <td><%= payment.student.name %></td>
+                              <td style="text-align: center;"><%= payment.payment_type.name %></td>
+                              <td style="text-align: center;"><b><%=  number_to_currency(payment.amount_paid, :unit => 'MK') %></b></td>
+                              <td><%= payment.date.to_date.strftime("%d-%b-%Y") %></td>
+                            </tr>
+                          <% end %>
+                        </tbody>
+                      </table>
+                    </div>
+
+                  </fieldset>
+                </form>
               </div>
+
+              <a onclick="newPayment()" class="button round blue image-right ic-add text-upper">New Payment &nbsp;</a>
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->

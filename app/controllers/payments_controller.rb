@@ -1,7 +1,15 @@
 class PaymentsController < ApplicationController
 
   def payments_management_menu
-    
+    students = Student.find_by_sql("SELECT s.* FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id LEFT JOIN student_archive sa
+          ON s.student_id = sa.student_id WHERE scra.status = 'active' AND sa.student_id IS NULL")
+
+    student_ids = students.map(&:student_id).join(', ')
+    student_ids = '0' if student_ids.blank?
+
+    @latest_students_payments = Payment.find_by_sql("SELECT p.* FROM payment p WHERE p.student_id IN (#{student_ids})
+      ORDER BY DATE(p.date) DESC")
   end
 
   def payments_management_dashboard
