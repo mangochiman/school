@@ -8,7 +8,7 @@ class EmployeesController < ApplicationController
   end
   
   def position_management_menu
-    
+    @positions = Position.all
   end
 
   def employee_registration_dashboard
