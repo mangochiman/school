@@ -1,7 +1,7 @@
 class FacultiesController < ApplicationController
 
   def faculties_menu
-    
+    @faculties = Faculty.find(:all)
   end
 
   def add_faculty
