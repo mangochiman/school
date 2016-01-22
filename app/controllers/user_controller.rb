@@ -25,7 +25,7 @@ class UserController < ApplicationController
   end
   
   def user_management_menu
-    
+    @users = User.find(:all)
   end
 
   def user_management_dashboard

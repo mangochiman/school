@@ -17,7 +17,7 @@
     <%= stylesheet_link_tag("metallic") %>
     <%= stylesheet_link_tag("gvalidator") %>
     <%= stylesheet_link_tag("bootstrap") %>
-    <script>
+    <script type="text/javascript">
       function selectAll(){
         selectAllInput = document.getElementById('table-select-all');
         inputs = document.getElementsByTagName("input");
@@ -25,7 +25,7 @@
           for (var i=0; i<=inputs.length - 1; i++){
             if (inputs[i] == selectAllInput) continue;
             if (inputs[i].type == 'checkbox'){
-              inputs[i].checked = true;
+              if (!inputs[i].disabled) inputs[i].checked = true;
             }
           }
         }
@@ -85,7 +85,8 @@
         });
       }
     </script>
-    <style>
+
+    <style type="text/css">
       .modal-title {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         font-weight: 500;
@@ -211,13 +212,23 @@
                 <tbody id="users">
                   <% @users.each do |user| %>
                     <tr id="<%= user.id %>">
-                      <td><input type="checkbox" user_id="<%= user.id %>"/></td>
+                      <td>
+                        <% unless session[:current_user_id] == user.id %>
+                          <input type="checkbox" user_id="<%= user.id %>"/>
+                        <% else %>
+                          <input type="checkbox" disabled="true"/>
+                        <% end %>
+                      </td>
                       <td style="text-align:center; padding: 0.833em 0 0.833em 1.25em;"><%= user.username %></td>
                       <td style="text-align:center;"><%= user.first_name %></td>
                       <td style="text-align:center;"><%= user.last_name %></td>
                       <td><center><%= user.created_at.to_date.strftime("%d-%b-%Y") %></center></td>
                       <td>
-                        <a user_id="<%= user.id %>" href="#" onmousedown="setCurrentUserId(this)" class="table-actions-button ic-table-delete confirm"></a>
+                        <% unless session[:current_user_id] == user.id %>
+                          <a user_id="<%= user.id %>" href="#" onmousedown="setCurrentUserId(this)" class="table-actions-button ic-table-delete confirm"></a>
+                        <% else %>
+                          Disabled
+                        <% end %>
                       </td>
                     </tr>
                   <% end %>
@@ -245,29 +256,29 @@
     <script>
 
       $(".delete-multiple").confirm({
-            title:"Delete confirmation",
-            text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
-            confirm: function(button) {
-              deleteUsers();
-            },
-            cancel: function(button) {
-            },
-            confirmButton: "Yes I am",
-            cancelButton: "No"
-        });
+        title:"Delete confirmation",
+        text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+        confirm: function(button) {
+          deleteUsers();
+        },
+        cancel: function(button) {
+        },
+        confirmButton: "Yes I am",
+        cancelButton: "No"
+      });
 
-        $(".confirm").confirm({
-            title:"Delete confirmation",
-            text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
-            confirm: function(button) {
-              deleteSingleEntry();
-            },
-            cancel: function(button) {
+      $(".confirm").confirm({
+        title:"Delete confirmation",
+        text:"This is very dangerous, you shouldn't do it! Are you really really sure?",
+        confirm: function(button) {
+          deleteSingleEntry();
+        },
+        cancel: function(button) {
 
-            },
-            confirmButton: "Yes I am",
-            cancelButton: "No"
-        });
+        },
+        confirmButton: "Yes I am",
+        cancelButton: "No"
+      });
     </script>
   </body>
 </html>
