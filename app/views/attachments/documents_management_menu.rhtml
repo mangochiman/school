@@ -17,6 +17,9 @@
     <%= stylesheet_link_tag("style") %>
 
     <script type="text/javascript">
+        function uploadDocument(attachmentTypeId){
+          window.location = "/attachments/upload_document?attachment_type_id=" + attachmentTypeId;
+        }
 
     </script>
 

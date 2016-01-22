@@ -47,8 +47,13 @@
         notifier.className = 'msg icon ok';
         notifier.innerHTML = 'Completed';
       }
+
+<% if params[:attachment_type_id] %>
+      window.setTimeout("selectDocumentType('<%= params[:attachment_type_id] %>')", 150);
+<% end %>
+
     </script>
-    <style>
+    <style type="text/css">
       .modal-title {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         font-weight: 500;
@@ -118,7 +123,7 @@
       a{
         cursor: pointer;
       }
-      
+
     </style>
   </head>
   <body>  
