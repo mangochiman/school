@@ -18,6 +18,27 @@ class AttachmentsController < ApplicationController
   end
 
   def documents_management_menu
+    @attachments_hash = {}
+    @attachment_types_hash = {}
+
+    (AttachmentType.all || []).each do |attachment_type|
+      @attachment_types_hash[attachment_type.attachment_type_id] = attachment_type.name
+    end
+
+    (AttachmentType.all || []).each do |attachment_type|
+      attachment_type_id = attachment_type.attachment_type_id
+      @attachments_hash[attachment_type_id] = {} if @attachments_hash[attachment_type_id].blank?
+      
+      (attachment_type.attachments || []).each do |attachment|
+        attachment_id = attachment.attachment_id
+        @attachments_hash[attachment_type_id][attachment_id] = {}
+        @attachments_hash[attachment_type_id][attachment_id]["file_name"] = attachment.filename
+        @attachments_hash[attachment_type_id][attachment_id]["content_type"] = attachment.content_type
+        @attachments_hash[attachment_type_id][attachment_id]["date_uploaded"] = attachment.created_at.to_date.strftime("%d-%b-%Y")
+      
+      end
+      
+    end
     
   end
   

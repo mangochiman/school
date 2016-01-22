@@ -16,9 +16,19 @@
     <%= javascript_include_tag("exporting") %>
     <%= stylesheet_link_tag("style") %>
 
-    <script>
+    <script type="text/javascript">
 
     </script>
+
+    <style  type="text/css">
+      table th:first-child {
+        border-style: none none none !important;
+      }
+
+      a{
+        cursor: pointer;
+      }
+    </style>
   </head>
   <body>
     <!-- HEADER -->
@@ -74,12 +84,49 @@
 
             <div class="content-module-main">
               <div id="container">
+                <table>
+                  <% @attachments_hash.each do |attachment_type_id, values| %>
+                    <tr>
+                      <th colspan="3" style="font-weight:bold;">Document Type: <i><%= @attachment_types_hash[attachment_type_id] %></i>&nbsp;&nbsp;(<%= values.keys.count %>)</th>
+                    </tr>
+                    <tr style="line-height: 3em;">
+                      <th style="border-top:1px solid white !important">File Name</th>
+                      <th style="border-top:1px solid white; border-left:1px solid white; padding:0px; text-align: center;">Content Type</th>
+                      <th style="border-top:1px solid white; border-left:1px solid white; width: 150px;">Date Uploaded</th>
+                    </tr>
+                    <% unless values.blank? %>
+                      <% values.each do |attachment_id, data| %>
+                        <tr>
+                          <td style="width:20em;"><%= data["file_name"] %></td>
+                          <td style="text-align: center;"><%=  data["content_type"] %></td>
+                          <td style="text-align: center;"><%=  data["date_uploaded"] %></td>
+                        </tr>
+                      <% end %>
+                    <% else %>
+
+                      <tr style="line-height: 4em;">
+                        <td colspan="3">
+                          <span style="font-size: 10pt;">No document uploaded yet</span>
+                        </td>
+                      </tr>
+                    <% end %>
+
+                    <tr style="background-color: white;">
+                      <td colspan="3">&nbsp;</td>
+                    </tr>
+                    <tr style="background-color: white;">
+                      <td>
+                        <a style="margin-left: -105px; " onclick="uploadDocument('<%= attachment_type_id %>')" class="button round blue image-right ic-add text-upper">Upload Document(s) &nbsp;</a>
+                      </td>
+                    </tr>
+                  <% end %>
+                </table>
               </div>
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->
 
-           <!-- end content-module -->
+          <!-- end content-module -->
 
         </div> <!-- end side-content -->
 
