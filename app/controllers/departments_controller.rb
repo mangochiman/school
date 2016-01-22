@@ -1,6 +1,26 @@
 class DepartmentsController < ApplicationController
   
   def department_management_menu
+
+    @departments_hash = {}
+    @faculties_hash = {}
+
+    (Faculty.all || []).each do |faculty|
+      @faculties_hash[faculty.faculty_id] = faculty.name
+    end
+
+    (Faculty.all || []).each do |faculty|
+      faculty_id = faculty.faculty_id
+      @departments_hash[faculty_id] = {} if @departments_hash[faculty_id].blank?
+      (faculty.departments || []).each do |department|
+        department_id = department.department_id
+        @departments_hash[faculty_id][department_id] = {}
+        @departments_hash[faculty_id][department_id]["name"] = department.name
+        @departments_hash[faculty_id][department_id]["date_created"] = department.created_at.to_date.strftime("%d-%b-%Y")
+      end
+
+    end
+
   end
 
   def add_department

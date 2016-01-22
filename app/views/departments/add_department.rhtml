@@ -20,10 +20,27 @@
     <%= stylesheet_link_tag("bootstrap") %>
 
     <script type="text/javascript">
+      function selectFaculty(facultyID){
+        options = document.getElementById('faculty_id').getElementsByTagName('option');
+        for (var i=0; i<=options.length - 1; i++){
+          if (parseInt(options[i].value) == parseInt(facultyID)){
+            options[i].selected = true;
+          }
+        }
 
+        document_type_div = document.getElementById('faculty_id_div');
+        notifier = document_type_div.getElementsByTagName('span')[1];
+        notifier.className = 'msg icon ok';
+        notifier.innerHTML = 'Completed';
+      }
+
+<% if params[:faculty_id] %>
+    window.setTimeout("selectFaculty('<%= params[:faculty_id] %>')", 150);
+<% end %>
+  
     </script>
 
-    <style>
+    <style type="text/css">
       .modal-title {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         font-weight: 500;
@@ -152,7 +169,7 @@
                   <% end %>
                   <form id="departments" class="autoform" action="/departments/create_department" method="POST">
 
-                    <div>
+                    <div id="faculty_id_div">
                       <label for="faculty_id" style="width:101px;">Faculty</label>
                       <%= select_tag("faculty_id", options_for_select(@faculties), {:class => "select required"}) %>
                     </div>
@@ -200,7 +217,7 @@
                         <% (@departments || []).each do |department| %>
                           <tr>
                             <td><%= count = count + 1 %></td>
-                            <td style="padding:2px;"><a href="/departments/edit_department?department_id=<%= department.id %>"><%= department.name %></a></td>
+                            <td style="padding:2px;"><a href="#" onclick="selectFaculty('<%= department.faculty.faculty_id %>')"><%= department.name %></a></td>
                             <td><%= department.code %></td>
                           </tr>
                         <% end %>

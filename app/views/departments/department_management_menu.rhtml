@@ -16,9 +16,24 @@
     <%= javascript_include_tag("exporting") %>
     <%= stylesheet_link_tag("style") %>
 
-    <script>
+    <script type="text/javascript">
+
+      function addDepartment(facultyID){
+        window.location = "/departments/add_department?faculty_id=" + facultyID;
+      }
 
     </script>
+
+    <style  type="text/css">
+      table th:first-child {
+        border-style: none none none !important;
+      }
+
+      a{
+        cursor: pointer;
+      }
+
+    </style>
   </head>
   <body>    
     <!-- HEADER -->
@@ -73,6 +88,42 @@
 
             <div class="content-module-main">
               <div id="container">
+                <table>
+                  <% @departments_hash.each do |faculty_id, values| %>
+                    <tr>
+                      <th colspan="3" style="font-weight:bold;">Faculty: <i><%= @faculties_hash[faculty_id] %></i>&nbsp;&nbsp;(<%= values.keys.count %>)</th>
+                    </tr>
+                    <tr style="line-height: 3em;">
+                      <th style="border-top:1px solid white !important">Name</th>
+                      <th style="border-top:1px solid white; border-left:1px solid white; padding:0px; text-align: center;">Date Created</th>
+                      <th style="border-top:1px solid white; border-left:1px solid white; width: 150px;">Date Uploaded</th>
+                    </tr>
+                    <% unless values.blank? %>
+                      <% values.each do |department_id, data| %>
+                        <tr>
+                          <td style="text-align: center;"><%=  data["name"] %></td>
+                          <td style="text-align: center;"><%=  data["date_created"] %></td>
+                        </tr>
+                      <% end %>
+                    <% else %>
+
+                      <tr style="line-height: 4em;">
+                        <td colspan="3">
+                          <span style="font-size: 10pt;">No Departments Added yet</span>
+                        </td>
+                      </tr>
+                    <% end %>
+
+                    <tr style="background-color: white;">
+                      <td colspan="3">&nbsp;</td>
+                    </tr>
+                    <tr style="background-color: white;">
+                      <td>
+                        <a style="margin-left: -105px; " onclick="addDepartment('<%= faculty_id %>')" class="button round blue image-right ic-add text-upper">Add Department &nbsp;</a>
+                      </td>
+                    </tr>
+                  <% end %>
+                </table>
               </div>
             </div> <!-- end content-module-main -->
 
