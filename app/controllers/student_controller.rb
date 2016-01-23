@@ -700,9 +700,29 @@ class StudentController < ApplicationController
   end
 
   def semester_statement_menu
-    current_semester_id = Semester.current_active_semester_audit.semester_id rescue ''
+    
   end
 
+  def student_semester_report
+    student_id = params[:student_id]
+    current_semester_id = Semester.current_active_semester_audit.semester_id rescue ''
+    payment_types = PaymentType.all
+    @payments_hash = {}
+    payment_types.each do |payment_type|
+      payment_type_id = payment_type.payment_type_id
+      @payments_hash[payment_type_id] = Student.semester_payments(student_id, payment_type_id, current_semester_id)
+    end
+
+    exam_types = ExaminationType.all
+    @exams_hash = {}
+    exam_types.each do |exam_type|
+      exam_type_id = exam_type.exam_type_id
+      @exams_hash[exam_type_id] = Student.semester_performance(student_id, exam_type_id, current_semester_id)
+    end
+
+    @punishments = Student.semester_punishments(student_id, current_semester_id)
+  end
+  
   def warning_letters_menu
     
   end
