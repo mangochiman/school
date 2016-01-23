@@ -14,12 +14,12 @@ class Payment < ActiveRecord::Base
 
   def self.new_payment(student_id, payment_type, amount_paid, date_paid, semester_id)
     Payment.create({
-            :student_id => student_id,
-            :payment_type_id => payment_type,
-            :amount_paid => amount_paid,
-            :date => date_paid,
-            :semester_audit_id => semester_id
-          })
+        :student_id => student_id,
+        :payment_type_id => payment_type,
+        :amount_paid => amount_paid,
+        :date => date_paid,
+        :semester_audit_id => semester_id
+      })
   end
-  
+
 end

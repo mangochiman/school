@@ -9,4 +9,11 @@ class Examination < ActiveRecord::Base
   has_many :exam_attendees, :foreign_key => :exam_id
   has_many :students, :through => :exam_attendees, :foreign_key => :exam_id
   has_many :examination_results, :foreign_key => :exam_id
+
+  before_save :add_defaults_data
+
+  def add_defaults_data
+    self.semester_audit_id = Semester.current_active_semester_audit.semester_id rescue ''
+  end
+  
 end

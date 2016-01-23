@@ -700,7 +700,7 @@ class StudentController < ApplicationController
   end
 
   def semester_statement_menu
-    
+    current_semester_id = Semester.current_active_semester_audit.semester_id rescue ''
   end
 
   def warning_letters_menu

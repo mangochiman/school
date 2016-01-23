@@ -4,6 +4,7 @@ class Exam < ActiveRecord::Migration
       t.integer :class_room_id
       t.integer :exam_type_id
       t.integer :course_id
+      t.integer :semester_audit_id
       t.string :name
       t.string :start_date
       t.timestamps

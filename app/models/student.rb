@@ -67,4 +67,24 @@ class Student < ActiveRecord::Base
   def student_parent
     self.student_parents.last
   end
+
+  def self.semester_payments(student_id, payment_type, semester_audit_id)
+    student_payments = Payment.find(:all, :conditions => ["student_id =? AND payment_type_id =? AND semester_audit_id =?",
+        student_id, payment_type, semester_audit_id])
+    return student_payments
+  end
+
+  def self.semester_punishments(student_id, semester_audit_id)
+    student_punishments = Punishment.find_by_sql("SELECT p.* FROM punishment p INNER JOIN student_punishment sp
+      ON p.punishment_id = sp.punishment_id WHERE p.semester_audit_id = '#{semester_audit_id}'
+        AND sp.student_id='#{student_id}'")
+    return student_punishments
+  end
+
+  def self.semester_performance(student_id, exam_type_id, semester_audit_id)
+    student_exams = Examination.find_by_sql("SELECT e.* FROM exam e INNER JOIN exam_attendee et ON e.exam_id = et.exam_id
+      WHERE et.student_id = '#{student_id}' AND e.exam_type_id = '#{exam_type_id}' AND e.semester_audit_id = '#{semester_audit_id}'")
+    return student_exams
+  end
+
 end
