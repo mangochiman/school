@@ -484,6 +484,10 @@ class StudentController < ApplicationController
     render :json => hash
   end
 
+  def search_all_students
+
+  end
+  
   def assign_subjects_search
     first_name = params[:first_name]
     last_name = params[:last_name]
@@ -700,7 +704,9 @@ class StudentController < ApplicationController
   end
 
   def semester_statement_menu
-    
+    @students = Student.find_by_sql("SELECT s.* FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id LEFT JOIN student_archive sa
+          ON s.student_id = sa.student_id WHERE scra.status = 'active' AND sa.student_id IS NULL")
   end
 
   def student_semester_report
