@@ -15,5 +15,11 @@ class Examination < ActiveRecord::Base
   def add_defaults_data
     self.semester_audit_id = Semester.current_active_semester_audit.semester_id rescue ''
   end
+
+  def self.result(exam_id, student_id)
+    exam_result = ExaminationResult.find(:last, :conditions => ["exam_id =? AND student_id =?", exam_id, student_id])
+    return "" if exam_result.blank?
+    return exam_result.marks
+  end
   
 end

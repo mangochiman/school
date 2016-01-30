@@ -92,7 +92,6 @@
         float: none;
       }
       #search-student-form legend {
-        color: #abda0f;
         font-size: 14px;
         font-weight: 100;
         margin-left: 14px;
@@ -160,9 +159,11 @@
         outline: medium none;
         padding: 0.5em 0.225em;
       }
+
       input[type="submit"] {
         margin-left: 37%;
       }
+
       #gender{
         background-color: #fff;
         background-image: none;
@@ -243,61 +244,96 @@
           <div class="content-module-main">
             <form id="search-student-form" action="#">
               <fieldset>
-                <legend>Search</legend>
-                <div style="margin-right:2%; width: 60%; float: right;">
-                  <table>
-                    <tr>
-                      <td style="width:10%; font-size: 13pt;">Name</td>
-                      <td style="width:20%;"><input type="text" id="name_search"/></td>
-                      <td style="width:10%; text-align: center; font-size: 13pt;"><span>Gender</span></td>
-                      <td style="width:24%">
-                        <select id="dropdown-actions" class="gender_search">
-                          <option value="">[Select Gender]</option>
-                          <option value="Male">Male</option>
-                          <option value="Female">Female</option>
-                        </select>
-                      </td>
-                      <td class="on_off" style="padding-right: 20px;">
-                        <input type="checkbox" checked="checked" id="on_off" />
-                      </td>
-                      <td><a onclick="loadSearchResults();" class="button round blue image-right ic-search text-upper">Search</a></td>
-                    </tr>
+                <legend>Exams</legend>
+                <div style="margin-left:30%; width: 60%; float: left;">
+                  <table style="width: 70%;">
+                    <thead>
+                      <tr>
+                        <th style="width: 150px;">Exam Date</th>
+                        <th style="text-align: center;">Course</th>
+                        <th>Grade</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% @exams_hash.each do |exam_type_id, values| %>
+                        <% values.each do |exam| %>
+                          <tr>
+                            <td><%= exam.start_date %></td>
+                            <td style="text-align: center;"><%= exam.course.name %></td>
+                            <%  exam_result =  Examination.result(exam.exam_id, params[:student_id]) %>
+                            <% unless  exam_result.blank? %>
+                              <td><span class="notice badge badge-info"><%= exam_result %></span></td>
+                            <% else %>
+                              <td>Not Yet</td>
+                            <% end %>
+                          </tr>
+                        <% end %>
+                      <% end  %>
+                    </tbody>
                   </table>
                 </div>
               </fieldset>
             </form>
 
-            <table>
+            <form id="search-student-form" action="#">
+              <fieldset>
+                <legend>Payments</legend>
+                <div style="margin-left:30%; width: 60%; float: left;">
+                  <table style="width: 70%;">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th style="width: 150px;">Date of Payment</th>
+                        <th style="text-align: center;">Amount Paid</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% @payments_hash.each do |payment_type_id, values| %>
+                      <% count = 0 %>
+                        <% values.each do |payment| %>
+                          <tr>
+                            <td><%= count = count + 1 %></td>
+                            <td><%= payment.date %></td>
+                            <td style="text-align: center;"><%= number_to_currency(payment.amount_paid, :unit => 'MK') %></td>
+                          </tr>
+                        <% end %>
+                      <% end  %>
+                    </tbody>
+                  </table>
+                </div>
+              </fieldset>
+            </form>
 
-              <thead>
+            <form id="search-student-form" action="#">
+              <fieldset>
+                <legend>Punishments</legend>
+                <div style="margin-left:30%; width: 60%; float: left;">
+                  <table style="width: 70%;">
+                    <thead>
+                      <tr>
+                        <th>Punishment Type</th>
+                        <th style="width: 150px;">Start Date</th>
+                        <th style="width: 150px;">End Date</th>
+                        <th style="text-align: center;">Punishment Details</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% @punishments.each do |punishment| %>
+                          <tr>
+                            <td><%= punishment.punishment_type.name %></td>
+                            <td><%= punishment.start_date %></td>
+                            <td><%= punishment.end_date %></td>
+                            <td><%= punishment.details %></td>
+                          </tr>
+                      
+                      <% end  %>
+                    </tbody>
+                  </table>
+                </div>
+              </fieldset>
+            </form>
 
-                <tr>
-                  <th style="min-width:15%;">Name</th>
-                  <th>Email</th>
-                  <th>Gender</th>
-                  <th>Date Of Birth</th>
-                  <th>Phone #</th>
-                  <th style="width: 120px;">Action</th>
-                </tr>
-
-              </thead>
-
-              <tbody id="students">
-                <% @students.each do |student| %>
-                  <tr id="<%= student.id %>">
-                    <td style="text-align:left; padding: 0.833em 0 0.833em 1.25em;"><%= student.fname.capitalize.to_s + ' ' + student.lname.capitalize.to_s %></td>
-                    <td><a href="#"><%=  student.email %></a></td>
-                    <td><%=  student.gender %></td>
-                    <td><%=  student.dob.to_date.strftime("%d-%b-%Y") %></td>
-                    <td><%=  student.phone %></td>
-                    <td>
-                      <a student_id="<%= student.id %>" class="button round blue image-right ic-right-arrow text-upper" href="#" onclick="mySemesterSummary(this);">Select Student&nbsp;</a>
-                    </td>
-                  </tr>
-                <% end %>
-              </tbody>
-
-            </table>
+            <a onclick="window.location='/student/semester_statement_menu'" class="button round blue image-right ic-power text-upper">Done &nbsp;</a>
           </div> <!-- end content-module-main -->
 
         </div> <!-- end content-module -->
@@ -305,21 +341,5 @@
       </div> <!-- end full-width -->
 
     </div> <!-- end content -->
-    <script type="text/javascript">
-
-      function iPhoneStyle() {
-        $('.on_off :checkbox').iphoneStyle({
-          checkedLabel: 'Active',
-          uncheckedLabel: 'All',
-          onChange: function(elem, value) {
-            active = value;
-            loadSearchResults();
-          }
-        });
-
-      };
-
-      window.setTimeout("iPhoneStyle();", 150);
-    </script>
   </body>
 </html>
