@@ -56,9 +56,8 @@
               html+="<td>" + gender +  "</td>";
               html+="<td>" + dob +  "</td>";
               html+="<td>" + phone +  "</td>";
-              html+="<td>" + guardian_details +  "</td>";
               html+="<td>"
-              html+= "<a student_id=" + student_id + " onclick='editGuardian(this)' class='table-actions-button ic-table-edit'></a>"
+              html+= "<a student_id=" + student_id + " onclick='mySemesterSummary(this);' class='button round blue image-right ic-right-arrow text-upper'>Select Student&nbsp;</a>"
               html+="</td>";
               html+="</tr>";
             }
@@ -287,7 +286,7 @@
                     <td><%=  student.dob.to_date.strftime("%d-%b-%Y") %></td>
                     <td><%=  student.phone %></td>
                     <td>
-                      <a student_id="<%= student.id %>" class="button round blue image-right ic-right-arrow text-upper" href="#" onclick="mySemesterSummary(this)">Select Student&nbsp;</a>
+                      <a student_id="<%= student.id %>" class="button round blue image-right ic-right-arrow text-upper" href="#" onclick="mySemesterSummary(this);">Select Student&nbsp;</a>
                     </td>
                   </tr>
                 <% end %>
@@ -309,6 +308,7 @@
           uncheckedLabel: 'All',
           onChange: function(elem, value) {
             active = value;
+            loadSearchResults();
           }
         });
 

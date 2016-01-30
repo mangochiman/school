@@ -485,7 +485,59 @@ class StudentController < ApplicationController
   end
 
   def search_all_students
+    first_name = params[:first_name]
+    last_name = params[:last_name]
+    gender = params[:gender]
+    conditions = ""
+    multiple = false
+    unless first_name.blank?
+      multiple = true
+      conditions += "s.fname LIKE '%#{first_name}%'"
+    end
 
+    unless last_name.blank?
+      multiple = true
+      conditions += ' AND ' unless conditions.blank?
+      conditions += "s.lname LIKE '%#{last_name}%' "
+    end
+
+    unless gender.blank?
+      conditions += ' AND ' if multiple
+      conditions += "s.gender = '#{gender}' "
+    end
+
+    unless conditions.blank?
+      students = Student.find_by_sql("SELECT s.* FROM student s LEFT JOIN student_archive sa
+      ON s.student_id = sa.student_id WHERE #{conditions} AND sa.student_id IS NULL") if params[:active] == "true"
+
+      students = Student.find_by_sql("SELECT s.* FROM student s LEFT JOIN student_archive sa
+      ON s.student_id = sa.student_id WHERE #{conditions}") if params[:active] == "false"
+    else
+      students = Student.find_by_sql("SELECT s.* FROM student s LEFT JOIN student_archive sa
+      ON s.student_id = sa.student_id WHERE sa.student_id IS NULL") if params[:active] == "true"
+
+      students = Student.find_by_sql("SELECT s.* FROM student s LEFT JOIN student_archive sa
+      ON s.student_id = sa.student_id") if params[:active] == "false"
+    end
+
+    hash = {}
+    students.each do |student|
+      student_id = student.id.to_s
+      hash[student_id] = {}
+      hash[student_id]["fname"] = student.fname.to_s
+      hash[student_id]["lname"] = student.lname.to_s
+      hash[student_id]["phone"] = student.phone
+      hash[student_id]["email"] = student.email
+      hash[student_id]["gender"] = student.gender
+      hash[student_id]["dob"] = student.dob.to_date.strftime("%d-%b-%Y")
+      hash[student_id]["join_date"] = student.created_at.to_date.strftime("%d-%b-%Y")
+      hash[student_id]["current_class"] = student.current_class
+      hash[student_id]["current_active_class"] = student.current_active_class
+      hash[student_id]["total_photos"] = student.student_photos.count
+      hash[student_id]["guardian_details"] = student.guardian_details
+      hash[student_id]["punishments_count"] = student.punishments.count
+    end
+    render :json => hash
   end
   
   def assign_subjects_search
