@@ -790,10 +790,20 @@ class StudentController < ApplicationController
 
   def student_warning_letter
     @student = Student.find(params[:student_id])
+    @latest_warning_letter = @student.student_warning_letters.last.data rescue ""
   end
 
   def create_warning_letter
-    raise params.inspect
+    current_semester_audit = Semester.current_active_semester_audit
+    semester_audit_id = current_semester_audit.semester_audit_id unless current_semester_audit.blank?
+    semester_audit_id = SemesterAudit.last.semester_audit_id if current_semester_audit.blank?
+
+    student_warning_letter = StudentWarningLetter.new
+    student_warning_letter.student_id = params[:student_id]
+    student_warning_letter.semester_audit_id = semester_audit_id
+    student_warning_letter.data = params[:editor1]
+    student_warning_letter.save
+    redirect_to("/student/warning_letters_menu") and return
   end
 
   def student_dashboard
