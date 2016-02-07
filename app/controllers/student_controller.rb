@@ -763,6 +763,7 @@ class StudentController < ApplicationController
 
   def student_semester_report
     student_id = params[:student_id]
+    @student = Student.find(params[:student_id])
     current_semester_id = Semester.current_active_semester_audit.semester_id rescue ''
     payment_types = PaymentType.all
     @payments_hash = {}
@@ -782,9 +783,15 @@ class StudentController < ApplicationController
   end
   
   def warning_letters_menu
-    
+    @students = Student.find_by_sql("SELECT s.* FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id LEFT JOIN student_archive sa
+          ON s.student_id = sa.student_id WHERE scra.status = 'active' AND sa.student_id IS NULL")
   end
 
+  def student_warning_letter
+    @student = Student.find(params[:student_id])
+  end
+  
   def student_dashboard
 
     current_semester_audit = Semester.current_active_semester_audit

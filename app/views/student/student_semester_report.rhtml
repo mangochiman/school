@@ -202,6 +202,11 @@
       table th:first-child {
         border-style: none none none !important;
       }
+
+      .value{
+        font-weight: bold;
+        padding-right: 20px;
+      }
     </style>
   </head>
   <body>
@@ -242,6 +247,23 @@
 
 
           <div class="content-module-main">
+            <form id="search-student-form" action="#">
+              <fieldset>
+                <legend>Student Details</legend>
+
+                <div style="margin-right:2%; width: 60%; float: right;">
+                  <div style="margin-left: -10%;">
+                    Name: <span class="value"><%= @student.name %></span>
+                    Gender: <span class="value"><%= @student.gender %></span>
+                    Phone: <span class="value"><%= @student.phone.blank? ? 'Not Set':@student.phone %></span>
+                    Class: <span class="value"><%=  @student.current_active_class %></span>
+                    <br /><br />
+                  </div>
+                </div>
+
+              </fieldset>
+            </form>
+
             <form id="search-student-form" action="#">
               <fieldset>
                 <legend>Exams</legend>
@@ -289,7 +311,7 @@
                     </thead>
                     <tbody>
                       <% @payments_hash.each do |payment_type_id, values| %>
-                      <% count = 0 %>
+                        <% count = 0 %>
                         <% values.each do |payment| %>
                           <tr>
                             <td><%= count = count + 1 %></td>
@@ -319,13 +341,13 @@
                     </thead>
                     <tbody>
                       <% @punishments.each do |punishment| %>
-                          <tr>
-                            <td><%= punishment.punishment_type.name %></td>
-                            <td><%= punishment.start_date %></td>
-                            <td><%= punishment.end_date %></td>
-                            <td><%= punishment.details %></td>
-                          </tr>
-                      
+                        <tr>
+                          <td><%= punishment.punishment_type.name %></td>
+                          <td><%= punishment.start_date %></td>
+                          <td><%= punishment.end_date %></td>
+                          <td><%= punishment.details %></td>
+                        </tr>
+
                       <% end  %>
                     </tbody>
                   </table>
