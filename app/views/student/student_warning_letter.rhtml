@@ -14,10 +14,11 @@
     <%= javascript_include_tag("script") %>
     <%= javascript_include_tag("iphone-style-checkboxes") %>
     <%= javascript_include_tag("exporting") %>
-
+    
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag "iphone_like" %>
 
+    <script type="text/javascript" src="/ckeditor/ckeditor.js"></script>
     <script type="text/javascript">
       
     </script>
@@ -113,10 +114,6 @@
         width: 84px;
       }
 
-      #search_results table th {
-        padding: 0;
-      }
-
       a{
         cursor: pointer;
       }
@@ -127,13 +124,14 @@
       }
 
       table th:first-child {
-        border-style: none none none !important;
+        /*border-style: none none none !important;*/
       }
 
       .value{
         font-weight: bold;
         padding-right: 20px;
       }
+      
     </style>
 
   </head>
@@ -190,6 +188,17 @@
 
               </fieldset>
             </form>
+            <div class="form">
+              <form action="#" class="form-horizontal">
+                <div class="form-group">
+                  <label class="control-label col-sm-2">&nbsp;</label>
+                  <div class="col-sm-10">
+                    <textarea class="form-control ckeditor" name="editor1" rows="6"></textarea>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <br />
             <a onclick="window.location='/student/warning_letters_menu'" class="button round blue image-right ic-power text-upper">Done &nbsp;</a>
           </div> <!-- end content-module-main -->
 
