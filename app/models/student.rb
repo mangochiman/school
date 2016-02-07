@@ -16,7 +16,8 @@ class Student < ActiveRecord::Base
   has_many :payments, :foreign_key => :student_id
   has_many :courses, :through => :student_class_room_courses
   has_many :student_photos
-
+  has_many :student_warning_letters
+  
   def current_class
     current_class_room = self.student_class_room_adjustments.last.class_room.name rescue nil
     return current_class_room
