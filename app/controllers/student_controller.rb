@@ -791,7 +791,11 @@ class StudentController < ApplicationController
   def student_warning_letter
     @student = Student.find(params[:student_id])
   end
-  
+
+  def create_warning_letter
+    raise params.inspect
+  end
+
   def student_dashboard
 
     current_semester_audit = Semester.current_active_semester_audit
