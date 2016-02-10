@@ -1,3 +1,8 @@
+require 'barby'
+require 'barby/barcode/code_128'
+require 'barby/outputter/html_outputter'
+require 'RMagick'
+include Magick
 class StudentController < ApplicationController
   def index
     @class_rooms = ClassRoom.find(:all).map(&:name)
@@ -1450,4 +1455,25 @@ class StudentController < ApplicationController
     
     render :json => hash
   end
+
+  def generate_id_card
+    @students = Student.find_by_sql("SELECT s.* FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id LEFT JOIN student_archive sa
+          ON s.student_id = sa.student_id WHERE scra.status = 'active' AND sa.student_id IS NULL")
+  end
+  
+  def preview_student_card
+    @student = Student.find(params[:student_id])
+  end
+
+  def print_id_card
+    @students = Student.find_by_sql("SELECT s.* FROM student s INNER JOIN student_class_room_adjustment scra ON
+          s.student_id = scra.student_id LEFT JOIN student_archive sa
+          ON s.student_id = sa.student_id WHERE scra.status = 'active' AND sa.student_id IS NULL")
+  end
+
+  def print_specific_card
+    @student = Student.find(params[:student_id])
+  end
+  
 end
