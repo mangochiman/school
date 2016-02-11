@@ -1464,6 +1464,11 @@ class StudentController < ApplicationController
   
   def preview_student_card
     @student = Student.find(params[:student_id])
+    barcode = Barby::Code128B.new(@student.student_id)
+    outputter = Barby::HtmlOutputter.new(barcode)
+    @blob = Barby::HtmlOutputter.new(barcode)
+    outputter.to_html
+    @barcode_html = barcode.to_html(:class_name => 'id_card_barcode')
   end
 
   def preview_student_card_plain
