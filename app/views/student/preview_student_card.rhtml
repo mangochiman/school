@@ -329,8 +329,21 @@
                   <% end %>
 
                   <div id="student_card" style="margin-left: 12%;">
-
+                    <div style="margin-top: 117px; margin-left: 236px; font-weight: bold;">
+                      <%= @student.name %>
+                    </div>
+                    <div style="margin-top: 20px; margin-left: 236px; font-weight: bold;">
+                      Test Program
+                    </div>
+                    <div style="margin-top: 20px; margin-left: 236px; font-weight: bold;">
+                      <%= @student.gender %>
+                    </div>
+                    <div style="margin-top: 26px; margin-left: 236px; font-weight: bold;">
+                      <%= (Date.today + 3.years).strftime("%d/%b/%Y") %>
+                    </div>
                   </div>
+                  <br />
+                  <a onclick="saveCard();" class="button round blue image-right ic-right-arrow text-upper" style="font-size: 10pt;">Save Card</a>
                 </div> <!-- end content-module-main -->
 
               </div> <!-- end content-module -->
