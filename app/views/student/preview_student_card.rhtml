@@ -119,31 +119,52 @@
   }
     </script>
 
-    <style>
-      /*table{
-        margin-left:15%;
-        width: 60%;
-      }
-      table td #simple-input{
-        float: right;
+    <style type="text/css">
+
+      #student_card {
+        height: 318px;
+        background-image: url('/images/student_card.png');
+        background-repeat: no-repeat;
+        border: 1px solid black;
+        width: 579px;
+        border-radius: 8px;
       }
 
-      table label{
-       text-align: left;
-      }
-      #simple-input{
-        font-size: 10pt !important;
+      .patient_info {
+        border: 0px solid #eee;
+        vertical-align: top;
+        font-size: 1.5em;
+        -moz-user-select:none
       }
 
-    form input[type="text"], input[type="password"], textarea {
-        border: 1px solid #d9dbdd;
-        outline: medium none;
-        padding: 0.5em 0.225em;
-    }
+      .td_1 {
+        height: 60px;
+        width: 630px;
+      }
 
-    input[type="submit"] {
-      margin-left: 37%;
-    }*/
+      .id_card_barcode {
+        border-spacing: 0;
+        margin-top: 15px;
+        margin-left: 600px;
+      }
+
+      .barby-row {
+
+      }
+
+      .barby-cell {
+        height: 65px;
+      }
+
+      .barby-cell.on {
+        background: #000;
+      }
+
+      @media print {
+        #footer {
+          display: none;
+        }
+      }
 
       .modal-title {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -307,6 +328,9 @@
                     </div>
                   <% end %>
 
+                  <div id="student_card" style="margin-left: 12%;">
+
+                  </div>
                 </div> <!-- end content-module-main -->
 
               </div> <!-- end content-module -->
