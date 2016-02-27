@@ -19,110 +19,28 @@
     <%= stylesheet_link_tag("gvalidator") %>
     <%= stylesheet_link_tag("bootstrap") %>
     <script type="text/javascript">
+      var studentID = '<%= params[:student_id] %>';
 
-      function selectGuardian(obj){
-        parentId = obj.getAttribute("parent_id");
-<% unless (params[:mode] == 'guardian_edit')%>
-      window.location = "/student/create_student_guardian?parent_id=" + parentId + "&student_id=<%= params[:student_id] %>";
-<% else %>
-      window.location = "/student/create_student_guardian?parent_id=" + parentId + "&student_id=<%= params[:student_id] %>&mode=guardian_edit";
-<% end %>
-  }
-
-  function confirmGuardianAssignment(obj){
-    guardianName = obj.getAttribute("guardian_name");
-    studentName = "<%= @student.name %>";
-    jQuery.confirm({
-      title:"Confirm Guardian Assignment",
-      text:"Are you really really sure you want to assign <b><i>" + studentName + "(student)</i><b> to <b><i>" + guardianName + "(guardian)</i><b> ?",
-      confirm: function(button) {
-        selectGuardian(obj);
-      },
-      cancel: function(button) {
-      },
-      confirmButton: "Done"
-    });
-  }
-
-  function newGuardian(){
-    names = document.getElementById('name_search').value.split(/\W+/);
-    fname = names[0];
-    lname = names[1];
-    if (typeof lname == 'undefined'){
-      lname = '';
-    }
-
-    gender = document.getElementsByClassName('gender_search')[0].value;
-<% unless (params[:mode] == 'guardian_edit')%>
-      window.location = "/parent/new_parent_guardian?student_id=<%= params[:student_id] %>&first_name=" + fname + "&last_name=" + lname + "&gender=" + gender;
-<% else %>
-      window.location = "/parent/new_parent_guardian?student_id=<%= params[:student_id] %>&first_name=" + fname + "&last_name=" + lname + "&gender=" + gender + "&mode=guardian_edit";
-<% end %>
-  }
-
-  function confirmSkip(){
-    jQuery.confirm({
-      title:"Skip Guardian Assignment",
-      text:"Are you really really sure you want to skip this process? But you can do it later",
-      confirm: function() {
-        window.location="/payments/add_student_payment?student_id=<%= params[:student_id] %>"
-      },
-      cancel: function() {
-
-      },
-      confirmButton: "Yes I am",
-      cancelButton: "No"
-    });
-  }
-
-  function loadSearchResults(){
-    names = document.getElementById('name_search').value.split(/\W+/);
-    firstName = names[0];
-    lastName = names[1];
-    if (typeof lastName == 'undefined'){
-      lastName = '';
-    }
-    gender = document.getElementsByClassName('gender_search')[0].value;
-    jQuery.ajax({
-      type: "POST",
-      url: "/parent/search_parents",
-      data: "first_name=" + firstName + "&last_name=" + lastName + "&gender=" + gender,
-      success: function(results){
-        //results = eval("(" + results  + ")");
-        html = "";
-        tbody = document.getElementById("parents");
-
-        for (var parent_id in results){
-          firstName = results[parent_id]["fname"];
-          lastName = results[parent_id]["lname"];
-          gender = results[parent_id]["gender"];
-          phone = results[parent_id]["phone"];
-          email = results[parent_id]["email"];
-          dob = results[parent_id]["dob"];
-          guardianName = results[parent_id]["guardian_name"];
-          join_date = results[parent_id]["join_date"];
-          html+="<tr>";
-          html+="<td style='text-align:left; padding: 0.833em 0 0.833em 1.25em;'>" + firstName + ' ' + lastName +  "</td>";
-          html+="<td><a href='#'>" + email +  "</a></td>";
-          html+="<td>" + gender +  "</td>";
-          html+="<td>" + dob +  "</td>";
-          html+="<td>" + phone +  "</td>";
-          html+="<td><a parent_id=" + parent_id + " guardian_name=" + '"' +  guardianName + '"'+ " onclick='confirmGuardianAssignment(this)' class='button round blue image-right text-upper ic-right-arrow'>Select</a></td>";
-          html+="</tr>";
-        }
-
-        tbody.innerHTML = html
+      function saveCard(){
+        jQuery.confirm({
+          title:"Student Card Save",
+          text:"Are you really really sure you want to save this card ?",
+          confirm: function(button) {
+            window.location = "/student/save_student_id_card?student_id=" + studentID;
+          },
+          cancel: function(button) {
+          },
+          confirmButton: "Save"
+        });
+        
       }
-
-    });
-
-  }
+      
     </script>
 
     <style type="text/css">
 
       #student_card {
-        height: 318px;
+        height: 331px;
         background-image: url('/images/student_card.png');
         background-repeat: no-repeat;
         border: 1px solid black;
@@ -160,12 +78,6 @@
         background: #000;
       }
 
-      @media print {
-        #footer {
-          display: none;
-        }
-      }
-
       .modal-title {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         font-weight: 500;
@@ -200,18 +112,6 @@
         outline: medium none;
         padding: 6px;
         width: 180px;
-      }
-
-      .search_table{
-        display: table;
-      }
-
-      .search_row{
-        display: table-row;
-      }
-
-      .search_td{
-        display: table-cell;
       }
 
       table th:first-child {
@@ -256,6 +156,26 @@
         background-color: #CD0000;
       }
 
+      .id_card_barcode {
+        border-spacing: 0;
+        margin-top: 15px;
+        margin-left: 600px;
+      }
+
+      #student_barcode img{
+        position: relative;
+        height: 50px;
+        width: 250px;
+        margin-left: 101px;
+        top: -121px;
+      }
+
+      .student_photo img{
+        position: relative;
+        height: 120px;
+        left: 75%;
+        top: -140px;
+      }
     </style>
   </head>
   <body>
@@ -341,7 +261,15 @@
                     <div style="margin-top: 26px; margin-left: 236px; font-weight: bold;">
                       <%= (Date.today + 3.years).strftime("%d/%b/%Y") %>
                     </div>
+                    <div class="student_photo">
+                      <%= image_tag("m.png") %>
+                    </div>
+                    <br />
+                    <div id="student_barcode">
+                      <%= image_tag(@barcode_name) %>
+                    </div>
                   </div>
+
                   <br />
                   <a onclick="saveCard();" class="button round blue image-right ic-right-arrow text-upper" style="font-size: 10pt;">Save Card</a>
                 </div> <!-- end content-module-main -->

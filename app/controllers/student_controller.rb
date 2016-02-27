@@ -1,9 +1,12 @@
 require 'barby'
+require 'barby/barcode/code_39'
 require 'barby/barcode/code_128'
 require 'barby/outputter/html_outputter'
+require 'barby/outputter/png_outputter'
 require 'RMagick'
 include Magick
 class StudentController < ApplicationController
+  skip_before_filter :authenticate_user, :only => [:preview_student_card_plain]
   def index
     @class_rooms = ClassRoom.find(:all).map(&:name)
 
@@ -1469,10 +1472,48 @@ class StudentController < ApplicationController
     @blob = Barby::HtmlOutputter.new(barcode)
     outputter.to_html
     @barcode_html = barcode.to_html(:class_name => 'id_card_barcode')
+    barcode_data = @student.student_id.to_s.rjust(5, "0")
+    barcode_value = barcode_data
+    full_path = "#{RAILS_ROOT}/public/images/barcode_#{barcode_value}.png"
+    barcode = Barby::Code39.new(barcode_value)
+    File.open(full_path, 'w') { |f|
+      f.write barcode.to_png(:margin => 3, :xdim => 2, :height => 80)
+    }
+    @barcode_name = "barcode_#{barcode_value}.png"
   end
 
+  def save_student_id_card
+    student_id = params[:student_id]
+    Thread.new do
+      Kernel.system "cutycapt --zoom-factor=0.5 --url=http://localhost:3000/student/preview_student_card_plain?student_id=#{student_id} --out=/tmp/card_#{student_id}.png"
+      sleep(15)
+      patient_card=Image.read("/tmp/card_#{student_id}.png").first{self.quality=100}
+      sleep(7)
+      #modified_card = patient_card.crop!(145,106,510,320) #x1=145, y1=106, width=510 height=320
+      modified_card = patient_card.crop!(99,4,290,178) #x1=145, y1=106, width=510 height=320
+      sleep(10)
+      modified_card.write("/tmp/card_#{student_id}.png")
+      sleep(3)
+    end
+    flash[:notice] = "Student ID card successfully generated"
+    redirect_to("/student/generate_id_card/") and return
+  end
+  
   def preview_student_card_plain
     @student = Student.find(params[:student_id])
+    barcode = Barby::Code128B.new(@student.student_id)
+    outputter = Barby::HtmlOutputter.new(barcode)
+    @blob = Barby::HtmlOutputter.new(barcode)
+    outputter.to_html
+    @barcode_html = barcode.to_html(:class_name => 'id_card_barcode')
+    barcode_data = @student.student_id.to_s.rjust(5, "0")
+    barcode_value = barcode_data
+    full_path = "#{RAILS_ROOT}/public/images/barcode_#{barcode_value}.png"
+    barcode = Barby::Code39.new(barcode_value)
+    File.open(full_path, 'w') { |f|
+      f.write barcode.to_png(:margin => 3, :xdim => 2, :height => 80)
+    }
+    @barcode_name = "barcode_#{barcode_value}.png"
     render :layout => false
   end
   

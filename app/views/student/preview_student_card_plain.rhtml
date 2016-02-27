@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Student Management</title>
+    <!-- Optimize for mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!-- jQuery & JS files -->
+
+
+    <style type="text/css">
+
+      #student_card {
+        height: 354px;
+        background-image: url('/images/student_card.png');
+        background-repeat: no-repeat;
+        border: 1px solid black;
+        width: 579px;
+        border-radius: 8px;
+      }
+
+
+      table th:first-child {
+        border-style: none none none !important;
+      }
+      
+      .green {
+        background-color: #458B00;
+        color: white;
+      }
+      .green:hover{
+        background-color: #556B2F;
+        color: white;
+      }
+
+      .id_card_barcode {
+        border-spacing: 0;
+        margin-top: 15px;
+        margin-left: 600px;
+      }
+
+      #student_barcode img{
+        position: relative;
+        height: 50px;
+        width: 250px;
+        margin-left: 101px;
+        top: -121px;
+      }
+
+      .student_photo img{
+        position: relative;
+        height: 120px;
+        left: 75%;
+        top: -140px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- MAIN CONTENT -->
+
+    <div id="student_card" style="margin-left: 12%;">
+      <div style="margin-top: 117px; margin-left: 236px; font-weight: bold;">
+        <%= @student.name %>
+      </div>
+      <div style="margin-top: 20px; margin-left: 236px; font-weight: bold;">
+        Test Program
+      </div>
+      <div style="margin-top: 20px; margin-left: 236px; font-weight: bold;">
+        <%= @student.gender %>
+      </div>
+      <div style="margin-top: 26px; margin-left: 236px; font-weight: bold;">
+        <%= (Date.today + 3.years).strftime("%d/%b/%Y") %>
+      </div>
+      <div class="student_photo">
+        <%= image_tag("m.png") %>
+      </div>
+      <br />
+      <div id="student_barcode">
+        <%= image_tag(@barcode_name) %>
+      </div>
+      
+    </div>
+
+  </body>
+</html>
