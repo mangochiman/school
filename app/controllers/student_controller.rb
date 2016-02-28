@@ -1484,19 +1484,37 @@ class StudentController < ApplicationController
 
   def save_student_id_card
     student_id = params[:student_id]
-    Thread.new do
+    
+    thread = Thread.new do
       Kernel.system "cutycapt --zoom-factor=0.5 --url=http://localhost:3000/student/preview_student_card_plain?student_id=#{student_id} --out=/tmp/card_#{student_id}.png"
-      sleep(15)
+      sleep(8)
       patient_card=Image.read("/tmp/card_#{student_id}.png").first{self.quality=100}
-      sleep(7)
-      #modified_card = patient_card.crop!(145,106,510,320) #x1=145, y1=106, width=510 height=320
-      modified_card = patient_card.crop!(99,4,290,178) #x1=145, y1=106, width=510 height=320
-      sleep(10)
+      sleep(3)
+      modified_card = patient_card.crop!(99,4,290,178) #x1=99, y1=4, width=290 height=178
+      sleep(3)
       modified_card.write("/tmp/card_#{student_id}.png")
       sleep(3)
+      cropped_image = File.read("/tmp/card_#{student_id}.png")
+      save_cropped_image(cropped_image, student_id)
+      sleep(3)
     end
+
+    thread.join #Very Important. Allow the Threads to finish before terminating
     flash[:notice] = "Student ID card successfully generated"
     redirect_to("/student/generate_id_card/") and return
+  end
+
+  def save_cropped_image(cropped_image, student_id)
+    student_card = StudentCard.new
+    student_card.student_id = student_id
+    student_card.data = cropped_image
+    student_card.save
+  end
+  
+  def code_id_card
+    student = Student.find(params[:student_id])
+    data = student.student_cards.last.data rescue nil
+    send_data data, :filename => student.student_id, :type => 'png', :disposition => "inline"
   end
   
   def preview_student_card_plain

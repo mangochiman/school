@@ -17,6 +17,7 @@ class Student < ActiveRecord::Base
   has_many :courses, :through => :student_class_room_courses
   has_many :student_photos
   has_many :student_warning_letters
+  has_many :student_cards
   
   def current_class
     current_class_room = self.student_class_room_adjustments.last.class_room.name rescue nil
