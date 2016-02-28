@@ -1474,7 +1474,7 @@ class StudentController < ApplicationController
     @barcode_html = barcode.to_html(:class_name => 'id_card_barcode')
     barcode_data = @student.student_id.to_s.rjust(5, "0")
     barcode_value = barcode_data
-    full_path = "#{RAILS_ROOT}/public/images/barcode_#{barcode_value}.png"
+    full_path = "#{RAILS_ROOT}/student_barcodes/barcode_#{barcode_value}.png"
     barcode = Barby::Code39.new(barcode_value)
     File.open(full_path, 'w') { |f|
       f.write barcode.to_png(:margin => 3, :xdim => 2, :height => 80)
@@ -1492,11 +1492,11 @@ class StudentController < ApplicationController
       sleep(3)
       modified_card = patient_card.crop!(99,4,290,178) #x1=99, y1=4, width=290 height=178
       sleep(3)
-      modified_card.write("/tmp/card_#{student_id}.png")
-      sleep(3)
-      cropped_image = File.read("/tmp/card_#{student_id}.png")
+      image_path = "/tmp/card_#{student_id}.png"
+      modified_card.write(image_path)
+      cropped_image = File.read(image_path)
+      copy_card_to_cards_folder(image_path, student_id)
       save_cropped_image(cropped_image, student_id)
-      sleep(3)
     end
 
     thread.join #Very Important. Allow the Threads to finish before terminating
@@ -1510,7 +1510,12 @@ class StudentController < ApplicationController
     student_card.data = cropped_image
     student_card.save
   end
-  
+
+  def copy_card_to_cards_folder(image_path, student_id)
+    patient_card=Image.read(image_path).first{self.quality=100}
+    patient_card.write("#{RAILS_ROOT}/student_cards/card_#{student_id}.png")
+  end
+
   def code_id_card
     student = Student.find(params[:student_id])
     data = student.student_cards.last.data rescue nil
@@ -1526,7 +1531,7 @@ class StudentController < ApplicationController
     @barcode_html = barcode.to_html(:class_name => 'id_card_barcode')
     barcode_data = @student.student_id.to_s.rjust(5, "0")
     barcode_value = barcode_data
-    full_path = "#{RAILS_ROOT}/public/images/barcode_#{barcode_value}.png"
+    full_path = "#{RAILS_ROOT}/student_barcodes/barcode_#{barcode_value}.png"
     barcode = Barby::Code39.new(barcode_value)
     File.open(full_path, 'w') { |f|
       f.write barcode.to_png(:margin => 3, :xdim => 2, :height => 80)
