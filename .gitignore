@@ -4,6 +4,7 @@
 config/database.yml
 config/settings.yml
 db/schema.rb
+student_cards/card_*.png
 log/
 tmp/
 *~
