@@ -1521,6 +1521,12 @@ class StudentController < ApplicationController
     data = student.student_cards.last.data rescue nil
     send_data data, :filename => student.student_id, :type => 'png', :disposition => "inline"
   end
+
+  def download_card
+    student = Student.find(params[:student_id])
+    data = student.student_cards.last.data rescue nil
+    send_data data, :filename => "card_#{student.student_id}.png", :type => 'png', :disposition => "attachment"
+  end
   
   def preview_student_card_plain
     @student = Student.find(params[:student_id])

@@ -18,33 +18,28 @@
     <%= stylesheet_link_tag("metallic") %>
     <%= stylesheet_link_tag("gvalidator") %>
     <%= stylesheet_link_tag("bootstrap") %>
-    
+
+    <script type="text/javascript">
+      var studentID = '<%= params[:student_id] %>';
+      
+      function downloadCard(){
+        downloadIframe = document.getElementById('download');
+        
+        body = document.getElementsByTagName('body')[0];
+        iframe = document.createElement('iframe');
+        iframe.src = '/student/download_card?student_id=' + studentID;
+        iframe.id = 'download';
+        iframe.style.display = 'none';
+        body.appendChild(iframe);
+
+        jQuery('#download').load(function(){
+
+        });
+      }
+      
+    </script>
+
     <style type="text/css">
-      /*table{
-        margin-left:15%;
-        width: 60%;
-      }
-      table td #simple-input{
-        float: right;
-      }
-
-      table label{
-       text-align: left;
-      }
-      #simple-input{
-        font-size: 10pt !important;
-      }
-
-    form input[type="text"], input[type="password"], textarea {
-        border: 1px solid #d9dbdd;
-        outline: medium none;
-        padding: 0.5em 0.225em;
-    }
-
-    input[type="submit"] {
-      margin-left: 37%;
-    }*/
-
       .modal-title {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         font-weight: 500;
@@ -207,6 +202,15 @@
                     </div>
                   <% end %>
 
+                  <% if @student.student_cards.blank? %>
+                    <div class="error-box round">
+                      The card for this student is not yet generated. Click <a href="/student/preview_student_card?student_id=<%= params[:student_id] %>">here</a> to generate the card first
+                    </div>
+                  <% else %>
+                    <p>Direct printing is not yet supported. Download the file and print </p>
+                    <%= image_tag("/student/code_id_card?student_id=#{params[:student_id]}") %><br /><br /><br />
+                    <a href="#" onclick="downloadCard();" class="button round blue image-right ic-download text-upper" style="font-size: 10pt;">Download</a>
+                  <% end %>
                 </div> <!-- end content-module-main -->
 
               </div> <!-- end content-module -->
