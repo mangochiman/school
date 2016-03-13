@@ -1563,16 +1563,95 @@ class StudentController < ApplicationController
 
   def student_performance_summary
     @student = Student.last
-    render :layout => "students"
+
+    @class_room_hash = {}
+    class_rooms = ClassRoom.find(:all)
+    class_rooms.each do |c|
+      @class_room_hash[c.id] = c.name
+    end
+    
+    current_class_room_id = ""
+    active_class_adjustment = @student.student_class_room_adjustments.find(:last,
+      :conditions => ["status =?", 'active'])
+    current_class_room_id = active_class_adjustment.new_class_room_id unless active_class_adjustment.blank?
+
+    @exams_hash = {}
+
+    (@student.exam_attendees || []).each do |exam_attendee|
+      exam_id = exam_attendee.examination.id
+      class_room_id = exam_attendee.examination.class_room_id
+      course_name = exam_attendee.examination.course.name
+      exam_type = exam_attendee.examination.examination_type.name
+      exam_date = exam_attendee.examination.start_date
+      exam_results = ""
+      status = "previous"
+      if (class_room_id.to_i == current_class_room_id.to_i)
+        status = 'current'
+      end
+
+      unless (exam_attendee.examination.examination_results.blank?)
+        result = ExaminationResult.find(:last, :conditions => ["exam_id =? AND student_id=?",
+            exam_attendee.examination.id, @student.student_id])
+        exam_results = result.marks unless result.blank?
+      end
+
+      @exams_hash[class_room_id] = {} if @exams_hash[class_room_id].blank?
+      @exams_hash[class_room_id][exam_id] = {} if @exams_hash[class_room_id][exam_id].blank?
+      @exams_hash[class_room_id][exam_id]["exam_type"] = exam_type
+      @exams_hash[class_room_id][exam_id]["course"] = course_name
+      @exams_hash[class_room_id][exam_id]["exam_date"] = exam_date
+      @exams_hash[class_room_id][exam_id]["exam_results"] = exam_results
+      @exams_hash[class_room_id][exam_id]["status"] = status
+      
+      render :layout => "students"
+    end
   end
 
   def student_payments_summary
     @student = Student.last
+    @payment_hash = {}
+    
+    (@student.payments || []).each do |payment|
+      semester_audit_id = payment.semester_audit_id
+      payment_id = payment.id
+      payment_type = payment.payment_type_id
+      date_paid = payment.date
+      amount_paid = payment.amount_paid
+      amount_required = payment.payment_type.amount_required
+      @payment_hash[semester_audit_id] = {} if @payment_hash[semester_audit_id].blank?
+      @payment_hash[semester_audit_id][payment_type] = {} if @payment_hash[semester_audit_id][payment_type].blank?
+      @payment_hash[semester_audit_id][payment_type][payment_id] = {} if @payment_hash[semester_audit_id][payment_type][payment_id].blank?
+      @payment_hash[semester_audit_id][payment_type][payment_id]["date_paid"] = date_paid
+      @payment_hash[semester_audit_id][payment_type][payment_id]["amount_paid"] = amount_paid
+      @payment_hash[semester_audit_id][payment_type]["balance"] = amount_required.to_i if @payment_hash[semester_audit_id][payment_type]["balance"].blank?
+      @payment_hash[semester_audit_id][payment_type]["balance"] -= amount_paid.to_i
+      @payment_hash[semester_audit_id][payment_type]["amount_required"] = amount_required.to_i
+      @payment_hash[semester_audit_id][payment_type]["total_payments"] = 0 if @payment_hash[semester_audit_id][payment_type]["total_payments"].blank?
+      @payment_hash[semester_audit_id][payment_type]["total_payments"] += amount_paid.to_i
+    end
+
     render :layout => "students"
   end
 
   def student_punishments_summary
     @student = Student.last
+    @punishment_hash = {}
+    (@student.student_punishments || []).each do |student_punishment|
+      punishment_id = student_punishment.punishment.id
+      punishment_type = student_punishment.punishment.punishment_type.name
+      start_date = student_punishment.punishment.start_date
+      end_date = student_punishment.punishment.end_date
+      punishment_details = student_punishment.punishment.details
+      status = 'No'
+      status = 'Yes' if student_punishment.completed.to_i == 1
+      @punishment_hash[punishment_id] = {}
+      @punishment_hash[punishment_id]["punishment_type"] = punishment_type
+      @punishment_hash[punishment_id]["details"] = punishment_details
+      @punishment_hash[punishment_id]["start_date"] = start_date
+      @punishment_hash[punishment_id]["end_date"] = end_date
+      @punishment_hash[punishment_id]["completed"] = status
+    end
+    
     render :layout => "students"
   end
 

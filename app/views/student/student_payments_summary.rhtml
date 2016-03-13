@@ -169,6 +169,42 @@
                 </div>
               <% end %>
 
+              <table>
+                <% @payment_hash.each do |semester_audit_id, values| %>
+
+                  <% values.each do |payment_type, payment_details| %>
+                    <tr>
+                      <th colspan="2" style="text-align:left; border-bottom: 2px solid white !important; background-color: #006dcc;">
+                        <span style="padding-left:20px;">Semester : <i style="font-weight:bold;"><%= SemesterAudit.find(semester_audit_id).semester.semester_number %></i></span>
+                        <span style="padding-left:20px;">Payment Type : <i style="font-weight:bold;"><%= PaymentType.find(payment_type).name %></i></span>
+                        <span style="padding-left:20px;">Amount Required : <i style="font-weight:bold;"><%= number_to_currency(payment_details["amount_required"], :unit => 'MK') %></i></span>
+                        <span style="padding-left:20px;">Balance : <i style="font-weight:bold;"><%= number_to_currency(payment_details["balance"], :unit => 'MK') %></i></span>
+                      </th>
+                    </tr>
+                    <tr>
+                      <th>Date of Payment</th>
+                      <th>Amount Paid</th>
+                    </tr>
+                    <% payment_details.each do |payment_id, data|%>
+                      <% next if payment_id.to_s.match(/balance|amount_required|total_payments/i) %>
+                      <tr>
+                        <td><%= data["date_paid"] %></td>
+                        <td><%=  number_to_currency(data["amount_paid"], :unit => 'MK') %></td>
+                      </tr>
+                    <% end %>
+                    <tr style="background-color: #f89406;">
+                      <td colspan="2" style="line-height:16px;"> <i style="padding-left:28%;">Total Payments = <span style="font-weight:bold;"><%= number_to_currency(payment_details["total_payments"], :unit => 'MK') %></span></i></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2" style="line-height:1.5em; background-color: white;">&nbsp;</td>
+                    </tr>
+                  <% end %>
+                <% end %>
+              </table>
+              
+              <% if @payment_hash.blank? %>
+                <h3>No Data</h3>
+              <% end %>
 
             </div> <!-- end content-module-main -->
 
