@@ -1555,5 +1555,30 @@ class StudentController < ApplicationController
   def print_specific_card
     @student = Student.find(params[:student_id])
   end
+
+  def students_page
+    @student = Student.last
+    render :layout => "students"
+  end
+
+  def student_performance_summary
+    @student = Student.last
+    render :layout => "students"
+  end
+
+  def student_payments_summary
+    @student = Student.last
+    render :layout => "students"
+  end
+
+  def student_punishments_summary
+    @student = Student.last
+    render :layout => "students"
+  end
+
+  def student_profile
+    @student = Student.last
+    render :layout => "students"
+  end
   
 end
