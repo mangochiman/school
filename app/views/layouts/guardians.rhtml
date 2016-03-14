@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>myschool</title>
+    <!-- Optimize for mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!-- jQuery & JS files -->
+    <%= javascript_include_tag("jquery") %>
+    <%= stylesheet_link_tag("style") %>
+    <script type="text/javascript">
+
+      String.prototype.capitalize = function(){
+        return this.charAt(0).toUpperCase() + this.slice(1)
+      }
+    </script>
+    <style type="text/css">   
+      .badge {
+        background-color: #2fa4e7;
+        border-radius: 10px;
+        color: #ffffff;
+        display: inline-block;
+        font-size: 12px;
+        font-weight: bold;
+        line-height: 1;
+        min-width: 10px;
+        padding: 3px 7px;
+        text-align: center;
+        vertical-align: baseline;
+        white-space: nowrap;
+      }
+
+      .mode{
+        color: white;
+      }
+      
+      .mode:hover{
+        background-color: inherit !important;
+        color: white;
+      }
+
+    </style>
+  </head>
+  <body>
+
+    <!-- TOP BAR -->
+    <div id="top-bar">
+
+      <div class="page-full-width cf">
+
+        <ul id="nav" class="fl">
+          <li class="v-sep"><a href="#" class="round button dark menu-user image-left">Logged in as <strong><%= User.find(session[:current_user_id]).username %></strong></a>
+            <ul>
+              <li><a href="/user/user_account_settings_menu?edit_mode=username">Edit my username</a></li>
+              <li><a href="/user/user_account_settings_menu?edit_mode=password">Edit my password</a></li>
+              <li><a href="/user/logout">Log out</a></li>
+            </ul>
+          </li>
+          <li class="v-sep"><a href="#" class="round button dark menu-email-special image-left">Notifications</a>
+          </li>
+          <li class="v-sep"><a href="#" class="round button dark menu-settings image-left">Switch Role</a>
+          </li>
+          <li class="v-sep"><a href="#" class="round button mode">Guardian Mode</a>
+          </li>
+        </ul> <!-- end nav -->
+
+      </div> <!-- end full-width -->
+
+    </div> <!-- end top-bar -->
+    <%= yield %>
+
+    <!-- FOOTER -->
+    <div id="footer">
+
+      <p>&copy; Copyright 2015 <a href="#">BlueHosting, LLC</a>. All rights reserved.</p>
+
+    </div> <!-- end footer -->
+
+  </body>
+</html>

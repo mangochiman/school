@@ -420,4 +420,42 @@ class ParentController < ApplicationController
     student_parent.delete
     render :text => "true" and return
   end
+
+  def guardians_page
+    @guardian = Parent.last
+    render :layout => "guardians"
+  end
+
+  def guardians_profile
+    @guardian = Parent.last
+    render :layout => "guardians"
+  end
+
+  def student_performance_summary
+    @guardian = Parent.last
+    render :layout => "guardians"
+  end
+
+  def student_payments_summary
+    @guardian = Parent.last
+    render :layout => "guardians"
+  end
+
+  def student_punishments_summary
+    @guardian = Parent.last
+    render :layout => "guardians"
+  end
+
+  def render_student_payments_summary
+
+  end
+  
+  def render_student_performance_summary
+
+  end
+
+  def render_student_payments_summary
+    
+  end
+  
 end

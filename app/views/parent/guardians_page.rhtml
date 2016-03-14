@@ -105,27 +105,6 @@
       .orange{
         background-color: #EEEE00 !important;
       }
-
-      .left_td_data{
-        text-align: right !important;
-        right: 50px !important;
-        left: 5px !important;
-        font: normal small-caps bolder condensed 14px/3 cursive;
-      }
-
-      .right_td_data{
-        text-align: left !important;
-      }
-
-      .right_td_data span{
-        text-align: left !important;
-        padding-left: 20px;
-        font: normal small-caps bolder condensed 14px/3 cursive;
-      }
-
-      .left_td_data, .right_td_data{
-        background-color: white;
-}
     </style>
   </head>
   <body>
@@ -135,8 +114,8 @@
       <div class="page-full-width cf">
 
         <ul id="tabs" class="fl">
-          <li><a href="/student/students_page" class="dashboard-tab"><%= @student.name %></a></li>
-          <li><a href="/student/student_profile" class="active-tab">My Profile</a></li>
+          <li><a href="/parent/guardians_page" class="active-tab dashboard-tab"><%= @guardian.name %></a></li>
+          <li><a href="/parent/guardians_profile">My Profile</a></li>
         </ul> <!-- end tabs -->
 
         <!-- Change this image to your own company's logo -->
@@ -158,9 +137,9 @@
 
           <h3>Task</h3>
           <ul>
-            <li><a href="/student/student_performance_summary">Performance</a></li>
-            <li><a href="/student/student_payments_summary">Payments</a></li>
-            <li><a href="/student/student_punishments_summary">Punishments</a></li>
+            <li><a href="/parent/student_performance_summary">Performance</a></li>
+            <li><a href="/parent/student_payments_summary">Payments</a></li>
+            <li><a href="/parent/student_punishments_summary">Punishments</a></li>
           </ul>
 
         </div> <!-- end side-menu -->
@@ -171,7 +150,7 @@
 
             <div class="content-module-heading cf">
 
-              <h3 class="fl">Student Profile</h3>
+              <h3 class="fl">Quick Statistics</h3>
               <span class="fr expand-collapse-text">Click to collapse</span>
               <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -189,32 +168,7 @@
                   <%= flash[:error] %>
                 </div>
               <% end %>
-              <table>
-                <tbody>
-                  <tr>
-                    <td class="left_td_data"><span>First Name :</span></td>
-                    <td class="right_td_data"><span><%= @student.fname.capitalize %></span></td>
-                  </tr>
-                  <tr>
-                    <td class="left_td_data"><span>Last Name :</span></td>
-                    <td class="right_td_data"><span><%= @student.lname.capitalize %></span></td>
-                  </tr>
 
-                  <tr>
-                    <td class="left_td_data"><span>Gender :</span></td>
-                    <td class="right_td_data"><span><%= @student.gender.capitalize %></span></td>
-                  </tr>
-
-                  <tr>
-                    <td class="left_td_data"><span>Date of birth :</span></td>
-                    <td class="right_td_data"><span><%= @student.dob.to_date.strftime("%d-%b-%Y") rescue @student.dob  %></span></td>
-                  </tr>
-                  <tr>
-                    <td class="left_td_data"><span>Date Registered :</span></td>
-                    <td class="right_td_data"><span><%= @student.created_at.to_date.strftime("%d-%b-%Y") rescue @student.created_at  %></span></td>
-                  </tr>
-                </tbody>
-              </table>
 
             </div> <!-- end content-module-main -->
 
