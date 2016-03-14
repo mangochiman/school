@@ -433,16 +433,19 @@ class ParentController < ApplicationController
 
   def student_performance_summary
     @guardian = Parent.last
+    @students = Student.find(:all, :limit => 2)
     render :layout => "guardians"
   end
 
   def student_payments_summary
     @guardian = Parent.last
+    @students = Student.find(:all, :limit => 2)
     render :layout => "guardians"
   end
 
   def student_punishments_summary
     @guardian = Parent.last
+    @students = Student.find(:all, :limit => 2)
     render :layout => "guardians"
   end
 

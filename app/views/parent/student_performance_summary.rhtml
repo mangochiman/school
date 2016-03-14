@@ -72,11 +72,12 @@
         box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
         color: #555;
         font-size: 12px !important;
+        font-weight: bold;
         height: 34px;
         line-height: 1.42857;
         margin-left: 0;
-        width: 137px;
-        padding: 6px 12px;
+        width: 150px;
+        padding: 0px 7px;
         transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
       }
 
@@ -87,10 +88,7 @@
         position: unset;
       }
 
-      form label {
-        font-size: 0.9em;
-        font-weight: bold;
-      }
+
 
       form.autoform input, select{
         font-size: 0.8em !important;
@@ -105,6 +103,7 @@
       .orange{
         background-color: #EEEE00 !important;
       }
+
     </style>
   </head>
   <body>
@@ -169,6 +168,28 @@
                 </div>
               <% end %>
 
+              <form id="search-student-form" action="#">
+                <fieldset>
+                  <legend>My Students</legend>
+                  <div style="margin-left:2%;">
+                    <table style="width: 40%; float: right;">
+                      <tbody>
+                        <tr>
+                          <td style="text-align:right; font-size: 1.2em; padding-right: 5px; ">Select Student</td>
+                          <td style="width:60%;">
+                            <select name="student" id="dropdown-actions" class="student" style="width:80%;">
+                              <option value="">Select Here</option>
+                              <% @students.each do |student| %>
+                                <option value="<%= student.student_id %>"><%= "#{student.name} (#{student.gender.first.capitalize})" %></option>
+                              <% end %>
+                            </select>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </fieldset>
+              </form>
 
             </div> <!-- end content-module-main -->
 
