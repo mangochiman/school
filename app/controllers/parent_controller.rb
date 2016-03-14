@@ -455,6 +455,51 @@ class ParentController < ApplicationController
   
   def render_student_performance_summary
 
+    student = Student.find(params[:student_id])
+    class_room_hash = {}
+    class_rooms = ClassRoom.find(:all)
+    class_rooms.each do |c|
+      class_room_hash[c.id] = c.name
+    end
+
+    current_class_room_id = ""
+    active_class_adjustment = student.student_class_room_adjustments.find(:last,
+      :conditions => ["status =?", 'active'])
+    current_class_room_id = active_class_adjustment.new_class_room_id unless active_class_adjustment.blank?
+
+    exams_hash = {}
+
+    (student.exam_attendees || []).each do |exam_attendee|
+      next if exam_attendee.examination.blank? #The exam might have been deleted
+      exam_id = exam_attendee.examination.id
+      class_room_id = exam_attendee.examination.class_room_id
+      course_name = exam_attendee.examination.course.name
+      exam_type = exam_attendee.examination.examination_type.name
+      exam_date = exam_attendee.examination.start_date
+      exam_results = ""
+      status = "previous"
+      if (class_room_id.to_i == current_class_room_id.to_i)
+        status = 'current'
+      end
+
+      unless (exam_attendee.examination.examination_results.blank?)
+        result = ExaminationResult.find(:last, :conditions => ["exam_id =? AND student_id=?",
+            exam_attendee.examination.id, student.student_id])
+        exam_results = result.marks unless result.blank?
+      end
+
+      exams_hash[class_room_id] = {} if exams_hash[class_room_id].blank?
+      exams_hash[class_room_id][exam_id] = {} if exams_hash[class_room_id][exam_id].blank?
+      exams_hash[class_room_id][exam_id]["exam_type"] = exam_type
+      exams_hash[class_room_id][exam_id]["course"] = course_name
+      exams_hash[class_room_id][exam_id]["exam_date"] = exam_date
+      exams_hash[class_room_id][exam_id]["exam_results"] = exam_results
+      exams_hash[class_room_id][exam_id]["status"] = status
+    end
+    
+    hash = {"class_room_hash" => class_room_hash, "exams_hash" => exams_hash}
+    
+    render :text => hash.to_json and return
   end
 
   def render_student_payments_summary

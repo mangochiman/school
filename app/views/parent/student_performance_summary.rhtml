@@ -20,8 +20,58 @@
     <%= stylesheet_link_tag("bootstrap") %>
 
     <script type="text/javascript">
+      function loadStudentPerformanceData(){
+        studentID = document.getElementById('dropdown-actions').value;
 
+        jQuery.ajax({
+          type: "POST",
+          url: "/parent/render_student_performance_summary",
+          data: "student_id=" + studentID,
+          success: function(results){
+            results = eval("(" + results  + ")");
+
+            html = "";
+            tbody = document.getElementById("student_performance");
+            examsHash = results["exams_hash"];
+            classRoomHash = results["class_room_hash"];
+            
+            for (var class_room_id in examsHash){
+              html+="<tr>";
+              html+="<th colspan='4' style='text-align:center; border-bottom: 2px solid white !important; background-color: #006dcc;'>" + classRoomHash[class_room_id] + "</th>";
+              html+="</tr>";
+
+              html+="<tr>";
+              html+="<th style='width:20%;'>Exam Date</th>";
+              html+="<th style='padding:6px; text-align: center;'>Course</th>";
+              html+="<th style='padding:6px; text-align: center;'>Exam Type</th>";
+              html+="<th style='padding:6px; width:24%;'>Exam Results</th>";
+              html+="</tr>";
+              
+              for (var examID in examsHash[class_room_id]){
+                exam_type = examsHash[class_room_id][examID]["exam_type"];
+                console.log(examsHash[class_room_id][examID][5])
+                course = examsHash[class_room_id][examID]["course"];
+                exam_date = examsHash[class_room_id][examID]["exam_date"];
+                exam_results = examsHash[class_room_id][examID]["exam_results"];
+                status = examsHash[class_room_id][examID]["status"];
+
+                html+="<tr>";
+                html+="<td>" + exam_date + "</td>";
+                html+="<td style='text-align: center;'>" + course +  "</td>";
+                html+="<td style='text-align: center;'>" + exam_type +  "</td>";
+                html+="<td style='text-align: center;'><a class='badge' href='#'>" + exam_results +  "</a></td>";
+                
+                html+="</tr>";
+              }              
+            }
+
+            tbody.innerHTML = html
+          }
+
+        });
+      }
     </script>
+
     <style type="text/css">
       .modal-title {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -39,7 +89,6 @@
         float: none;
       }
       #search-student-form legend {
-        color: #abda0f;
         font-size: 14px;
         font-weight: 100;
         margin-left: 14px;
@@ -175,7 +224,7 @@
                     <table style="width: 40%; float: right;">
                       <tbody>
                         <tr>
-                          <td style="text-align:right; font-size: 1.2em; padding-right: 5px; ">Select Student</td>
+                          <td style="text-align:right; font-size: 1.2em; padding-right: 5px; width: 30%;">Select Student</td>
                           <td style="width:60%;">
                             <select name="student" id="dropdown-actions" class="student" style="width:80%;">
                               <option value="">Select Here</option>
@@ -184,12 +233,21 @@
                               <% end %>
                             </select>
                           </td>
+                          <td style="padding-right:5px;">
+                            <a onclick="loadStudentPerformanceData();" class="button round blue image-right ic-search text-upper">Search</a>
+                          </td>
                         </tr>
                       </tbody>
                     </table>
                   </div>
                 </fieldset>
               </form>
+
+              <table>
+                <tbody id="student_performance">
+
+                </tbody>
+              </table>
 
             </div> <!-- end content-module-main -->
 
