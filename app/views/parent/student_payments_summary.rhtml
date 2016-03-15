@@ -20,8 +20,75 @@
     <%= stylesheet_link_tag("bootstrap") %>
 
     <script type="text/javascript">
+      function loadStudentPaymentsData(){
+        studentID = document.getElementById('dropdown-actions').value;
+
+        jQuery.ajax({
+          type: "POST",
+          url: "/parent/render_student_payments_summary",
+          data: "student_id=" + studentID,
+          success: function(results){
+            results = eval("(" + results  + ")");
+            console.log(results)
+            html = "";
+            tbody = document.getElementById("student_payments");
+            
+            paymentTypesHash = results["payment_types_hash"];
+            semesterHash = results["semester_hash"];
+            results = results["payment_hash"];
+
+            for (var semesterAuditId in results){
+              semester_number = semesterHash["semesterAuditId"]
+              for (var payment_type in results[semesterAuditId]){
+                payment_type_name = paymentTypesHash[payment_type];
+                amount_required = results[semesterAuditId][payment_type]["amount_required"];
+                balance = results[semesterAuditId][payment_type]["balance"];
+
+                html +="<tr>";
+                html +="<th colspan='2' style='text-align:left; border-bottom: 2px solid white !important; background-color: #006dcc;'>";
+                html += "<span style='padding-left:20px;'>Semester : <i style='font-weight:bold;'>" + semester_number + "</i></span>";
+                html += "<span style='padding-left:20px;'>Payment Type : <i style='font-weight:bold;'>" + payment_type_name + "</i></span>";
+                html += "<span style='padding-left:20px;'>Amount Required : <i style='font-weight:bold;'>" + amount_required + "</i></span>";
+                html += "<span style='padding-left:20px;'>Balance : <i style='font-weight:bold;'>" + balance + "</i></span>";
+                html += "</th>";
+                html += "</tr>";
+
+                html +="<tr>";
+                html +="<th>Date of Payment</th>";
+                html +="<th>Amount Paid</th>";
+                html +="</tr>";
+            
+                for (var payment_id in results[semesterAuditId][payment_type]){
+                  if (payment_id.match(/balance|amount_required|total_payments/i)) continue;
+                  date_paid = results[semesterAuditId][payment_type][payment_id]["date_paid"];
+                  amount_paid = results[semesterAuditId][payment_type][payment_id]["amount_paid"];
+
+                  html +="<tr>";
+                  html +="<td>" + date_paid + "</td>";
+                  html +="<td>" + amount_paid + "</td>";
+                  html +="</tr>";
+                }
+
+                total_payments = results[semesterAuditId][payment_type]["total_payments"];
+                html +="<tr style='background-color: #f89406;'>";
+                html +="<td colspan='2' style='line-height:16px;'><i style='padding-left:28%;'>Total Payments = <span style='font-weight:bold;'>" + total_payments + "</span></i></td>";
+                html +="</tr>";
+
+                html +="<tr>";
+                html +="<td colspan='2' style='line-height:1.5em; background-color: white;'>&nbsp;</td>";
+                html +="</tr>";
+
+              }
+            }
+
+            tbody.innerHTML = html
+          }
+
+        });
+      }
 
     </script>
+
     <style type="text/css">
       .modal-title {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -169,6 +236,37 @@
                 </div>
               <% end %>
 
+              <form id="search-student-form" action="#">
+                <fieldset>
+                  <legend>My Students</legend>
+                  <div style="margin-left:2%;">
+                    <table style="width: 40%; float: right;">
+                      <tbody>
+                        <tr>
+                          <td style="text-align:right; font-size: 1.2em; padding-right: 5px; width: 30%;">Select Student</td>
+                          <td style="width:60%;">
+                            <select name="student" id="dropdown-actions" class="student" style="width:80%;">
+                              <option value="">Select Here</option>
+                              <% @students.each do |student| %>
+                                <option value="<%= student.student_id %>"><%= "#{student.name} (#{student.gender.first.capitalize})" %></option>
+                              <% end %>
+                            </select>
+                          </td>
+                          <td style="padding-right:5px;">
+                            <a onclick="loadStudentPaymentsData();" class="button round blue image-right ic-search text-upper">Search</a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </fieldset>
+              </form>
+
+              <table>
+                <tbody id="student_payments">
+
+                </tbody>
+              </table>
 
             </div> <!-- end content-module-main -->
 

@@ -450,7 +450,42 @@ class ParentController < ApplicationController
   end
 
   def render_student_payments_summary
+    student = Student.find(params[:student_id])
+    payment_hash = {}
+    semester_hash = {}
+    payment_types_hash = {}
 
+    SemesterAudit.all.each do |semester_audit|
+      semester_audit_id = semester_audit.semester_audit_id
+      semester_hash[semester_audit_id] = semester_audit.semester.semester_number
+    end
+
+    PaymentType.all.each do |payment_type|
+      payment_type_id = payment_type.payment_type_id
+      payment_types_hash[payment_type_id] = payment_type.name
+    end
+
+    (student.payments || []).each do |payment|
+      semester_audit_id = payment.semester_audit_id
+      payment_id = payment.id
+      payment_type = payment.payment_type_id
+      date_paid = payment.date
+      amount_paid = payment.amount_paid
+      amount_required = payment.payment_type.amount_required
+      payment_hash[semester_audit_id] = {} if payment_hash[semester_audit_id].blank?
+      payment_hash[semester_audit_id][payment_type] = {} if payment_hash[semester_audit_id][payment_type].blank?
+      payment_hash[semester_audit_id][payment_type][payment_id] = {} if payment_hash[semester_audit_id][payment_type][payment_id].blank?
+      payment_hash[semester_audit_id][payment_type][payment_id]["date_paid"] = date_paid
+      payment_hash[semester_audit_id][payment_type][payment_id]["amount_paid"] = amount_paid
+      payment_hash[semester_audit_id][payment_type]["balance"] = amount_required.to_i if payment_hash[semester_audit_id][payment_type]["balance"].blank?
+      payment_hash[semester_audit_id][payment_type]["balance"] -= amount_paid.to_i
+      payment_hash[semester_audit_id][payment_type]["amount_required"] = amount_required.to_i
+      payment_hash[semester_audit_id][payment_type]["total_payments"] = 0 if payment_hash[semester_audit_id][payment_type]["total_payments"].blank?
+      payment_hash[semester_audit_id][payment_type]["total_payments"] += amount_paid.to_i
+    end
+
+    hash = {"semester_hash" => semester_hash, "payment_types_hash" => payment_types_hash, "payment_hash" => payment_hash}
+    render :text => hash.to_json and return
   end
   
   def render_student_performance_summary
@@ -502,7 +537,7 @@ class ParentController < ApplicationController
     render :text => hash.to_json and return
   end
 
-  def render_student_payments_summary
+  def render_student_punishments_summary
     
   end
   
