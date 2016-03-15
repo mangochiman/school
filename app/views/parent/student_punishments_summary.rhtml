@@ -20,8 +20,42 @@
     <%= stylesheet_link_tag("bootstrap") %>
 
     <script type="text/javascript">
+      function loadStudentPunishmentsData(){
+        studentID = document.getElementById('dropdown-actions').value;
 
+        jQuery.ajax({
+          type: "POST",
+          url: "/parent/render_student_punishments_summary",
+          data: "student_id=" + studentID,
+          success: function(results){
+            results = eval("(" + results  + ")");
+
+            html = "";
+            tbody = document.getElementById("student_punishments_data");
+
+            for (var punishment_id in results){
+              punishment_type = results[punishment_id]["punishment_type"];
+              start_date = results[punishment_id]["start_date"];
+              end_date = results[punishment_id]["end_date"];
+              details = results[punishment_id]["details"];
+              completed = results[punishment_id]["completed"];
+
+              html+="<tr>";
+              html+="<td>" + punishment_type + "</td>";
+              html+="<td>" + start_date +  "</td>";
+              html+="<td>" + end_date +  "</td>";
+              html+="<td>" + details +  "</td>";
+              html+="<td>" + completed +  "</td>";
+              html+="</tr>";
+            }
+
+            tbody.innerHTML = html;
+          }
+
+        });
+      }
     </script>
+
     <style type="text/css">
       .modal-title {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -169,7 +203,46 @@
                 </div>
               <% end %>
 
+              <form id="search-student-form" action="#">
+                <fieldset>
+                  <legend>My Students</legend>
+                  <div style="margin-left:2%;">
+                    <table style="width: 40%; float: right;">
+                      <tbody>
+                        <tr>
+                          <td style="text-align:right; font-size: 1.2em; padding-right: 5px; width: 30%;">Select Student</td>
+                          <td style="width:60%;">
+                            <select name="student" id="dropdown-actions" class="student" style="width:80%;">
+                              <option value="">Select Here</option>
+                              <% @students.each do |student| %>
+                                <option value="<%= student.student_id %>"><%= "#{student.name} (#{student.gender.first.capitalize})" %></option>
+                              <% end %>
+                            </select>
+                          </td>
+                          <td style="padding-right:5px;">
+                            <a onclick="loadStudentPunishmentsData();" class="button round blue image-right ic-search text-upper">Search</a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </fieldset>
+              </form>
 
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width:20%;">Punishment Type</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Details</th>
+                    <th>Completed?</th>
+                  </tr>
+                </thead>
+                <tbody id="student_punishments_data">
+
+                </tbody>
+              </table>
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->
