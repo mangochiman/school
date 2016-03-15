@@ -35,7 +35,12 @@ class Student < ActiveRecord::Base
       end
     end
   end
-  
+
+  def active_class_object
+    self.student_class_room_adjustments.find(:last, 
+      :conditions => ["status =?", 'active']).class_room rescue ''
+  end
+
   def age
     ((Date.today - (self.dob.to_date rescue nil)).to_i/365) rescue 'Error'
   end
