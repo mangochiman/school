@@ -38,11 +38,11 @@
             results = results["payment_hash"];
 
             for (var semesterAuditId in results){
-              semester_number = semesterHash["semesterAuditId"]
+              semester_number = semesterHash[semesterAuditId]
               for (var payment_type in results[semesterAuditId]){
                 payment_type_name = paymentTypesHash[payment_type];
-                amount_required = results[semesterAuditId][payment_type]["amount_required"];
-                balance = results[semesterAuditId][payment_type]["balance"];
+                amount_required = results[semesterAuditId][payment_type]["amount_required_formatted"];
+                balance = results[semesterAuditId][payment_type]["balance_formatted"];
 
                 html +="<tr>";
                 html +="<th colspan='2' style='text-align:left; border-bottom: 2px solid white !important; background-color: #006dcc;'>";
@@ -61,7 +61,7 @@
                 for (var payment_id in results[semesterAuditId][payment_type]){
                   if (payment_id.match(/balance|amount_required|total_payments/i)) continue;
                   date_paid = results[semesterAuditId][payment_type][payment_id]["date_paid"];
-                  amount_paid = results[semesterAuditId][payment_type][payment_id]["amount_paid"];
+                  amount_paid = results[semesterAuditId][payment_type][payment_id]["amount_paid_formatted"];
 
                   html +="<tr>";
                   html +="<td>" + date_paid + "</td>";
@@ -69,7 +69,7 @@
                   html +="</tr>";
                 }
 
-                total_payments = results[semesterAuditId][payment_type]["total_payments"];
+                total_payments = results[semesterAuditId][payment_type]["total_payments_formatted"];
                 html +="<tr style='background-color: #f89406;'>";
                 html +="<td colspan='2' style='line-height:16px;'><i style='padding-left:28%;'>Total Payments = <span style='font-weight:bold;'>" + total_payments + "</span></i></td>";
                 html +="</tr>";

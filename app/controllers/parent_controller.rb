@@ -477,11 +477,25 @@ class ParentController < ApplicationController
       payment_hash[semester_audit_id][payment_type][payment_id] = {} if payment_hash[semester_audit_id][payment_type][payment_id].blank?
       payment_hash[semester_audit_id][payment_type][payment_id]["date_paid"] = date_paid
       payment_hash[semester_audit_id][payment_type][payment_id]["amount_paid"] = amount_paid
+
+      amount_paid_to_be_formatted = payment_hash[semester_audit_id][payment_type][payment_id]["amount_paid"]
+      payment_hash[semester_audit_id][payment_type][payment_id]["amount_paid_formatted"] = ActionController::Base.helpers.number_to_currency(amount_paid_to_be_formatted, :unit => 'MK')
+
       payment_hash[semester_audit_id][payment_type]["balance"] = amount_required.to_i if payment_hash[semester_audit_id][payment_type]["balance"].blank?
       payment_hash[semester_audit_id][payment_type]["balance"] -= amount_paid.to_i
+
+      balance = payment_hash[semester_audit_id][payment_type]["balance"]
+      payment_hash[semester_audit_id][payment_type]["balance_formatted"] = ActionController::Base.helpers.number_to_currency(balance, :unit => 'MK')
+
       payment_hash[semester_audit_id][payment_type]["amount_required"] = amount_required.to_i
+      amount_required_to_be_formatted = payment_hash[semester_audit_id][payment_type]["amount_required"]
+      payment_hash[semester_audit_id][payment_type]["amount_required_formatted"] = ActionController::Base.helpers.number_to_currency(amount_required_to_be_formatted, :unit => 'MK')
+      
       payment_hash[semester_audit_id][payment_type]["total_payments"] = 0 if payment_hash[semester_audit_id][payment_type]["total_payments"].blank?
       payment_hash[semester_audit_id][payment_type]["total_payments"] += amount_paid.to_i
+
+      total_payments = payment_hash[semester_audit_id][payment_type]["total_payments"]
+      payment_hash[semester_audit_id][payment_type]["total_payments_formatted"] = ActionController::Base.helpers.number_to_currency(total_payments, :unit => 'MK')
     end
 
     hash = {"semester_hash" => semester_hash, "payment_types_hash" => payment_types_hash, "payment_hash" => payment_hash}
