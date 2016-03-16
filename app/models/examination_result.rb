@@ -11,7 +11,7 @@ class ExaminationResult < ActiveRecord::Base
     student_notification = StudentNotification.new
     student_notification.student_id = self.student.student_id
     student_notification.record_id = self.exam_result_id
-    student_notification.record_type = 'examination_results'
+    student_notification.record_type = 'new_examination_results'
     student_notification.save
   end
 
@@ -20,7 +20,7 @@ class ExaminationResult < ActiveRecord::Base
       guardian_notification = GuardianNotification.new
       guardian_notification.guardian_id = self.student.student_parent.parent_id
       guardian_notification.record_id = self.exam_result_id
-      guardian_notification.record_type = 'examination_results'
+      guardian_notification.record_type = 'new_examination_results'
       guardian_notification.save
     end
   end

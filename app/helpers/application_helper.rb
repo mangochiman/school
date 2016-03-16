@@ -216,5 +216,101 @@ module ApplicationHelper
     
     return data
   end
-  
+
+  def student_notifications
+    student_notifications = StudentNotification.find(:all, :conditions => ["student_id =?", student_id])
+    notifications_hash = {}
+    new_examination_count = 0
+    new_payment_count = 0
+    new_examination_results_count = 0
+    new_punishment_count = 0
+
+    student_notifications.each do |notification|
+      new_examination_count += 1 if notification.record_type.match(/new_examination/i)
+      new_payment_count += 1 if notification.record_type.match(/new_payment/i)
+      new_examination_results_count += 1 if notification.record_type.match(/new_examination_results/i)
+      new_punishment_count += 1 if notification.record_type.match(/new_punishment/i)
+    end
+
+    notifications_count  = student_notifications.count
+
+    notifications_hash[notifications_count] = {}
+    notifications_hash[notifications_count]["new_examination"] = {
+      "count" => new_examination_count,
+      "caption" => "New Exams",
+      "link" => "/student/student_new_examination_notifications",
+      "sort_weight" => 1
+    }
+
+    notifications_hash[notifications_count]["new_payment"] = {
+      "count" => new_payment_count,
+      "caption" => "New Payments",
+      "link" => "/student/student_new_payment_notifications",
+      "sort_weight" => 2
+    }
+
+    notifications_hash[notifications_count]["new_examination_results"] = {
+      "count" => new_examination_results_count,
+      "caption" => "New Exam Results",
+      "link" => "/student/student_new_exam_results_notifications",
+      "sort_weight" => 3
+    }
+
+    notifications_hash[notifications_count]["new_punishment"] = {
+      "count" => new_punishment_count,
+      "caption" => "New Punishments",
+      "link" => "/student/student_new_punishments_notifications",
+      "sort_weight" => 4
+    }
+    
+  end
+
+  def guardian_notification
+    guardian_notifications = StudentNotification.find(:all, :conditions => ["guardian_id =?", guardian_id])
+    notifications_hash = {}
+    new_examination_count = 0
+    new_payment_count = 0
+    new_examination_results_count = 0
+    new_punishment_count = 0
+
+    guardian_notifications.each do |notification|
+      new_examination_count += 1 if notification.record_type.match(/new_examination/i)
+      new_payment_count += 1 if notification.record_type.match(/new_payment/i)
+      new_examination_results_count += 1 if notification.record_type.match(/new_examination_results/i)
+      new_punishment_count += 1 if notification.record_type.match(/new_punishment/i)
+    end
+
+    notifications_count = guardian_notifications.count
+    
+    notifications_hash[notifications_count] = {}
+    notifications_hash[notifications_count]["new_examination"] = {
+      "count" => new_examination_count,
+      "caption" => "New Exams",
+      "link" => "/parent/student_new_examination_notifications",
+      "sort_weight" => 1
+    }
+
+    notifications_hash[notifications_count]["new_payment"] = {
+      "count" => new_payment_count,
+      "caption" => "New Payments",
+      "link" => "/parent/student_new_payment_notifications",
+      "sort_weight" => 2
+    }
+
+    notifications_hash[notifications_count]["new_examination_results"] = {
+      "count" => new_examination_results_count,
+      "caption" => "New Exam Results",
+      "link" => "/parent/student_new_exam_results_notifications",
+      "sort_weight" => 3
+    }
+    
+    notifications_hash[notifications_count]["new_punishment"] = {
+      "count" => new_punishment_count,
+      "caption" => "New Punishments",
+      "link" => "/parent/student_new_punishments_notifications",
+      "sort_weight" => 4
+    }
+    
+  end
+
 end
