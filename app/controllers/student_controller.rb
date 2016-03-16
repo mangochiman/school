@@ -1659,5 +1659,25 @@ class StudentController < ApplicationController
     @student = Student.last
     render :layout => "students"
   end
+
+  def student_new_examination_notifications
+    @student = Student.last
+    render :layout => "students"
+  end
+
+  def student_new_payment_notifications
+    @student = Student.last
+    render :layout => "students"
+  end
+
+  def student_new_payment_notifications
+    @student = Student.last
+    render :layout => "students"
+  end
+
+  def student_new_punishments_notifications
+    @student = Student.last
+    render :layout => "students"
+  end
   
 end

@@ -35,7 +35,7 @@
       .mode{
         color: white;
       }
-      
+
       .mode:hover{
         background-color: inherit !important;
         color: white;
@@ -58,8 +58,16 @@
               <li><a href="/user/logout">Log out</a></li>
             </ul>
           </li>
-          <li class="v-sep"><a href="#" class="round button dark menu-email-special image-left">Notifications</a>
+          <li class="v-sep"><a href="#" class="round button dark menu-email-special image-left">Notifications <sup class="notice badge badge-info"><%= guardian_notifications.keys.first %></sup></a>
+            <ul>
+              <% guardian_notifications.each do |total_count, notifications| %>
+                <% notifications.each do |k, values| %>
+                  <li><a href="<%=  values["link"]%>"><%= "#{values["caption"]} <b>(#{values["count"]})</b>" %></a></li>
+                <% end %>
+              <% end %>
+            </ul>
           </li>
+          
           <li class="v-sep"><a href="#" class="round button dark menu-settings image-left">Switch Role</a>
           </li>
           <li class="v-sep"><a href="#" class="round button mode">Guardian Mode</a>

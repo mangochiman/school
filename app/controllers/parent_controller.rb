@@ -573,5 +573,25 @@ class ParentController < ApplicationController
     
     render :text => punishment_hash.to_json and return
   end
-  
+
+  def student_new_examination_notifications
+    @guardian = Parent.last
+    render :layout => "guardians"
+  end
+
+  def student_new_payment_notifications
+    @guardian = Parent.last
+    render :layout => "guardians"
+  end
+
+  def student_new_exam_results_notifications
+    @guardian = Parent.last
+    render :layout => "guardians"
+  end
+
+  def student_new_punishments_notifications
+    @guardian = Parent.last
+    render :layout => "guardians"
+  end
+
 end

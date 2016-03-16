@@ -218,6 +218,7 @@ module ApplicationHelper
   end
 
   def student_notifications
+    student_id = 4 #To be changed later
     student_notifications = StudentNotification.find(:all, :conditions => ["student_id =?", student_id])
     notifications_hash = {}
     new_examination_count = 0
@@ -235,37 +236,40 @@ module ApplicationHelper
     notifications_count  = student_notifications.count
 
     notifications_hash[notifications_count] = {}
+    
     notifications_hash[notifications_count]["new_examination"] = {
       "count" => new_examination_count,
       "caption" => "New Exams",
       "link" => "/student/student_new_examination_notifications",
       "sort_weight" => 1
-    }
+    } if new_examination_count >= 1
 
     notifications_hash[notifications_count]["new_payment"] = {
       "count" => new_payment_count,
       "caption" => "New Payments",
       "link" => "/student/student_new_payment_notifications",
       "sort_weight" => 2
-    }
+    } if new_payment_count >= 1
 
     notifications_hash[notifications_count]["new_examination_results"] = {
       "count" => new_examination_results_count,
       "caption" => "New Exam Results",
       "link" => "/student/student_new_exam_results_notifications",
       "sort_weight" => 3
-    }
+    } if new_examination_results_count >= 1
 
     notifications_hash[notifications_count]["new_punishment"] = {
       "count" => new_punishment_count,
       "caption" => "New Punishments",
       "link" => "/student/student_new_punishments_notifications",
       "sort_weight" => 4
-    }
-    
+    } if new_punishment_count >= 1
+
+    return notifications_hash
   end
 
-  def guardian_notification
+  def guardian_notifications
+    guardian_id = 1
     guardian_notifications = GuardianNotification.find(:all, :conditions => ["guardian_id =?", guardian_id])
     notifications_hash = {}
     new_examination_count = 0
@@ -283,34 +287,36 @@ module ApplicationHelper
     notifications_count = guardian_notifications.count
     
     notifications_hash[notifications_count] = {}
+    
     notifications_hash[notifications_count]["new_examination"] = {
       "count" => new_examination_count,
       "caption" => "New Exams",
       "link" => "/parent/student_new_examination_notifications",
       "sort_weight" => 1
-    }
+    } if new_examination_count >= 1
 
     notifications_hash[notifications_count]["new_payment"] = {
       "count" => new_payment_count,
       "caption" => "New Payments",
       "link" => "/parent/student_new_payment_notifications",
       "sort_weight" => 2
-    }
+    } if new_payment_count >= 1
 
     notifications_hash[notifications_count]["new_examination_results"] = {
       "count" => new_examination_results_count,
       "caption" => "New Exam Results",
       "link" => "/parent/student_new_exam_results_notifications",
       "sort_weight" => 3
-    }
+    } if new_examination_results_count >= 1
     
     notifications_hash[notifications_count]["new_punishment"] = {
       "count" => new_punishment_count,
       "caption" => "New Punishments",
       "link" => "/parent/student_new_punishments_notifications",
       "sort_weight" => 4
-    }
-    
+    } if new_punishment_count >= 1
+
+    return notifications_hash
   end
 
 end
