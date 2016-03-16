@@ -266,7 +266,7 @@ module ApplicationHelper
   end
 
   def guardian_notification
-    guardian_notifications = StudentNotification.find(:all, :conditions => ["guardian_id =?", guardian_id])
+    guardian_notifications = GuardianNotification.find(:all, :conditions => ["guardian_id =?", guardian_id])
     notifications_hash = {}
     new_examination_count = 0
     new_payment_count = 0
