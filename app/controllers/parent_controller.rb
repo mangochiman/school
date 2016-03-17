@@ -576,6 +576,29 @@ class ParentController < ApplicationController
 
   def student_new_examination_notifications
     @guardian = Parent.last
+    guardian_id = 1
+    my_students = @guardian.student_parents.collect{|sp|sp.student}.compact
+    examination_notifications = GuardianNotification.find(:all, :conditions => ["guardian_id =? AND
+      record_type =?", guardian_id, 'new_examination'])
+    @notifications_hash = {}
+
+    my_students.each do |student|
+      student_id = student.student_id
+      @notifications_hash[student_id] = {}
+      examination_notifications.each do |notifications|
+        exam_id = notifications.record_id
+        student_exam_attendance_record = ExamAttendee.find(:last, :conditions => ["exam_id =? AND 
+            student_id =?", exam_id, student_id])
+        unless student_exam_attendance_record.blank?
+          exam = Examination.find(exam_id)
+          @notifications_hash[student_id][exam_id] = {}
+          @notifications_hash[student_id][exam_id]["exam_type"] = exam.examination_type.name
+          @notifications_hash[student_id][exam_id]["course"] = exam.course.name
+          @notifications_hash[student_id][exam_id]["exam_date"] = exam.start_date
+        end
+      end
+    end
+
     render :layout => "guardians"
   end
 
