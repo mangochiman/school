@@ -604,11 +604,58 @@ class ParentController < ApplicationController
 
   def student_new_payment_notifications
     @guardian = Parent.last
+    guardian_id = 1
+    my_students = @guardian.student_parents.collect{|sp|sp.student}.compact
+    payments_notifications = GuardianNotification.find(:all, :conditions => ["guardian_id =? AND
+      record_type =?", guardian_id, 'new_payment'])
+    @notifications_hash = {}
+
+    my_students.each do |student|
+      student_id = student.student_id
+      @notifications_hash[student_id] = {}
+      payments_notifications.each do |notifications|
+        payment_id = notifications.record_id
+        student_payment_record = Payment.find(:last, :conditions => ["payment_id =? AND
+            student_id =?", payment_id, student_id])
+        unless student_payment_record.blank?
+          payment = Payment.find(payment_id)
+          @notifications_hash[student_id][payment_id] = {}
+          @notifications_hash[student_id][payment_id]["payment_type"] = payment.payment_type.name
+          @notifications_hash[student_id][payment_id]["amount_paid"] = payment.amount_paid
+          @notifications_hash[student_id][payment_id]["date_paid"] = payment.date
+        end
+      end
+    end
+
     render :layout => "guardians"
   end
 
   def student_new_exam_results_notifications
     @guardian = Parent.last
+    guardian_id = 1
+    my_students = @guardian.student_parents.collect{|sp|sp.student}.compact
+    exam_results_notifications = GuardianNotification.find(:all, :conditions => ["guardian_id =? AND
+      record_type =?", guardian_id, 'new_examination_results'])
+    @notifications_hash = {}
+
+    my_students.each do |student|
+      student_id = student.student_id
+      @notifications_hash[student_id] = {}
+      exam_results_notifications.each do |notifications|
+        exam_result_id = notifications.record_id
+        exam_result_record = ExaminationResult.find(:last, :conditions => ["exam_result_id =? AND
+            student_id =?", exam_result_id, student_id])
+        unless exam_result_record.blank?
+          exam_result = ExaminationResult.find(exam_result_id)
+          @notifications_hash[student_id][exam_result_id] = {}
+          @notifications_hash[student_id][payment_id]["exam_type"] = exam_result.examination.examination_type.name
+          @notifications_hash[student_id][payment_id]["course"] = exam_result.examination.course.name
+          @notifications_hash[student_id][payment_id]["exam_date"] = exam_result.examination.start_date
+          @notifications_hash[student_id][payment_id]["exam_result"] = exam_result.marks
+        end
+      end
+    end
+
     render :layout => "guardians"
   end
 
