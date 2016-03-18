@@ -648,10 +648,10 @@ class ParentController < ApplicationController
         unless exam_result_record.blank?
           exam_result = ExaminationResult.find(exam_result_id)
           @notifications_hash[student_id][exam_result_id] = {}
-          @notifications_hash[student_id][payment_id]["exam_type"] = exam_result.examination.examination_type.name
-          @notifications_hash[student_id][payment_id]["course"] = exam_result.examination.course.name
-          @notifications_hash[student_id][payment_id]["exam_date"] = exam_result.examination.start_date
-          @notifications_hash[student_id][payment_id]["exam_result"] = exam_result.marks
+          @notifications_hash[student_id][exam_result_id]["exam_type"] = exam_result.examination.examination_type.name
+          @notifications_hash[student_id][exam_result_id]["course"] = exam_result.examination.course.name
+          @notifications_hash[student_id][exam_result_id]["exam_date"] = exam_result.examination.start_date
+          @notifications_hash[student_id][exam_result_id]["exam_result"] = exam_result.marks
         end
       end
     end
@@ -661,6 +661,30 @@ class ParentController < ApplicationController
 
   def student_new_punishments_notifications
     @guardian = Parent.last
+    guardian_id = 1
+    my_students = @guardian.student_parents.collect{|sp|sp.student}.compact
+    punishments_notifications = GuardianNotification.find(:all, :conditions => ["guardian_id =? AND
+      record_type =?", guardian_id, 'new_punishment'])
+    @notifications_hash = {}
+
+    my_students.each do |student|
+      student_id = student.student_id
+      @notifications_hash[student_id] = {}
+      punishments_notifications.each do |notifications|
+        punishment_id = notifications.record_id
+        student_punishment_record = StudentPunishment.find(:last, :conditions => ["punishment_id =? AND
+            student_id =?", punishment_id, student_id])
+        unless student_punishment_record.blank?
+          punishment = Punishment.find(punishment_id)
+          @notifications_hash[student_id][punishment_id] = {}
+          @notifications_hash[student_id][punishment_id]["punishment_type"] = punishment.punishment_type.name
+          @notifications_hash[student_id][punishment_id]["punishment_details"] = punishment.details
+          @notifications_hash[student_id][punishment_id]["start_date"] = punishment.start_date
+          @notifications_hash[student_id][punishment_id]["end_date"] = punishment.end_date
+        end
+      end
+    end
+
     render :layout => "guardians"
   end
 

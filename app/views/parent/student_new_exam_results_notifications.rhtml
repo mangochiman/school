@@ -104,6 +104,18 @@
         background-color: #EEEE00 !important;
       }
 
+      .student-name{
+        font-weight: bold;
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      .gender, .dob{
+        font-weight: bold;
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
     </style>
   </head>
   <body>
@@ -172,9 +184,38 @@
                 <fieldset>
                   <legend>Exam Results Notifications</legend>
                   <div style="margin-left:2%;">
-                    <table style="width: 40%; float: right;">
-
+                    <table style="width:98%;">
+                      <% @notifications_hash.each do |student_id, data| %>
+                        <thead>
+                          <tr>
+                            <% student = Student.find(student_id) %>
+                            <th colspan="4">
+                              Student Name: <span class="student-name"><%= student.name %></span>
+                              Gender: <span class="gender"><%= student.gender.capitalize %></span>
+                              Date of Birth: <span class="dob"><%= student.dob.to_date.strftime("%d/%b/%Y") rescue student.dob %></span>
+                              </th>
+                          </tr>
+                          <tr>
+                            <th style="width:20%;">Exam Type</th>
+                            <th>Course</th>
+                            <th style="width:30%;">Exam Date</th>
+                            <th style="width:30%;">Exam Result</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <% data.each do |exam_result_id, values| %>
+                            <tr>
+                              <td><%= values["exam_type"] %></td>
+                              <td><%= values["course"] %></td>
+                              <td><%= values["exam_date"] %></td>
+                              <td><%= values["exam_result"] %></td>
+                            </tr>
+                          <% end %>
+                        </tbody>
+                      <% end %>
                     </table>
+
+                    <a style="min-width: 100px; text-align: center; font-weight: bold;" href="/parent/student_performance_summary" class="button round blue text-upper">Seen</a><br /><br />
                   </div>
                 </fieldset>
               </form>

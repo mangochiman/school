@@ -203,10 +203,10 @@
                           </tr>
                         </thead>
                         <tbody>
-                          <% data.each do |exam_id, values| %>
+                          <% data.each do |payment_id, values| %>
                             <tr>
                               <td><%= values["payment_type"] %></td>
-                              <td style="text-align: center;"><%= values["amount_paid"] %></td>
+                              <td style="text-align: center;"><%= number_to_currency(values["amount_paid"], :unit => 'MK') %></td>
                               <td><%= values["date_paid"] %></td>
                             </tr>
                           <% end %>

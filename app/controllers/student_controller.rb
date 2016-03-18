@@ -1603,8 +1603,8 @@ class StudentController < ApplicationController
       @exams_hash[class_room_id][exam_id]["exam_results"] = exam_results
       @exams_hash[class_room_id][exam_id]["status"] = status
       
-      render :layout => "students"
     end
+    render :layout => "students"
   end
 
   def student_payments_summary

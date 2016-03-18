@@ -227,7 +227,7 @@ module ApplicationHelper
     new_punishment_count = 0
 
     student_notifications.each do |notification|
-      new_examination_count += 1 if notification.record_type.match(/new_examination/i)
+      new_examination_count += 1 if notification.record_type.downcase.to_s == "new_examination" #To avoid matching with new_examination_results
       new_payment_count += 1 if notification.record_type.match(/new_payment/i)
       new_examination_results_count += 1 if notification.record_type.match(/new_examination_results/i)
       new_punishment_count += 1 if notification.record_type.match(/new_punishment/i)
@@ -278,7 +278,7 @@ module ApplicationHelper
     new_punishment_count = 0
 
     guardian_notifications.each do |notification|
-      new_examination_count += 1 if notification.record_type.match(/new_examination/i)
+      new_examination_count += 1 if notification.record_type.downcase.to_s == "new_examination" #To avoid matching with new_examination_results
       new_payment_count += 1 if notification.record_type.match(/new_payment/i)
       new_examination_results_count += 1 if notification.record_type.match(/new_examination_results/i)
       new_punishment_count += 1 if notification.record_type.match(/new_punishment/i)
