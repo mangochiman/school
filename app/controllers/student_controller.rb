@@ -1661,22 +1661,98 @@ class StudentController < ApplicationController
   end
 
   def student_new_examination_notifications
-    @student = Student.last
+    @student = Student.find(3)
+    student_id = 3
+    examination_notifications = StudentNotification.find(:all, :conditions => ["student_id =? AND
+      record_type =?", student_id, 'new_examination'])
+
+    @notifications_hash = {}
+    examination_notifications.each do |notifications|
+      exam_id = notifications.record_id
+      student_exam_attendance_record = ExamAttendee.find(:last, :conditions => ["exam_id =? AND
+            student_id =?", exam_id, student_id])
+      unless student_exam_attendance_record.blank?
+        exam = Examination.find(exam_id)
+        @notifications_hash[exam_id] = {}
+        @notifications_hash[exam_id]["exam_type"] = exam.examination_type.name
+        @notifications_hash[exam_id]["course"] = exam.course.name
+        @notifications_hash[exam_id]["exam_date"] = exam.start_date
+      end
+    end
+
+    render :layout => "students"
+  end
+
+  def student_new_exam_results_notifications
+    @student = Student.find(3)
+    student_id = 3
+
+    exam_results_notifications = StudentNotification.find(:all, :conditions => ["student_id =? AND
+      record_type =?", student_id, 'new_examination_results'])
+
+    @notifications_hash = {}
+    exam_results_notifications.each do |notifications|
+      exam_result_id = notifications.record_id
+      exam_result_record = ExaminationResult.find(:last, :conditions => ["exam_result_id =? AND
+            student_id =?", exam_result_id, student_id])
+      unless exam_result_record.blank?
+        exam_result = ExaminationResult.find(exam_result_id)
+        @notifications_hash[exam_result_id] = {}
+        @notifications_hash[exam_result_id]["exam_type"] = exam_result.examination.examination_type.name
+        @notifications_hash[exam_result_id]["course"] = exam_result.examination.course.name
+        @notifications_hash[exam_result_id]["exam_date"] = exam_result.examination.start_date
+        @notifications_hash[exam_result_id]["exam_result"] = exam_result.marks
+      end
+    end
+
     render :layout => "students"
   end
 
   def student_new_payment_notifications
-    @student = Student.last
-    render :layout => "students"
-  end
+    @student = Student.find(3)
+    student_id = 3
+    payments_notifications = StudentNotification.find(:all, :conditions => ["student_id =? AND
+      record_type =?", student_id, 'new_payment'])
 
-  def student_new_payment_notifications
-    @student = Student.last
+    @notifications_hash = {}
+    payments_notifications.each do |notifications|
+      payment_id = notifications.record_id
+      student_payment_record = Payment.find(:last, :conditions => ["payment_id =? AND
+            student_id =?", payment_id, student_id])
+      unless student_payment_record.blank?
+        payment = Payment.find(payment_id)
+        @notifications_hash[payment_id] = {}
+        @notifications_hash[payment_id]["payment_type"] = payment.payment_type.name
+        @notifications_hash[payment_id]["amount_paid"] = payment.amount_paid
+        @notifications_hash[payment_id]["date_paid"] = payment.date
+      end
+    end
+    
     render :layout => "students"
   end
 
   def student_new_punishments_notifications
-    @student = Student.last
+    @student = Student.find(3)
+    student_id = 3
+
+    punishments_notifications = StudentNotification.find(:all, :conditions => ["student_id =? AND
+      record_type =?", student_id, 'new_punishment'])
+
+    @notifications_hash = {}
+    punishments_notifications.each do |notifications|
+      punishment_id = notifications.record_id
+      student_punishment_record = StudentPunishment.find(:last, :conditions => ["punishment_id =? AND
+            student_id =?", punishment_id, student_id])
+      unless student_punishment_record.blank?
+        punishment = Punishment.find(punishment_id)
+        @notifications_hash[punishment_id] = {}
+        @notifications_hash[punishment_id]["punishment_type"] = punishment.punishment_type.name
+        @notifications_hash[punishment_id]["punishment_details"] = punishment.details
+        @notifications_hash[punishment_id]["start_date"] = punishment.start_date
+        @notifications_hash[punishment_id]["end_date"] = punishment.end_date
+      end
+    end
+
     render :layout => "students"
   end
   
