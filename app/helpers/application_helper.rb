@@ -218,7 +218,7 @@ module ApplicationHelper
   end
 
   def student_notifications
-    student_id = 4 #To be changed later
+    student_id = 3 #To be changed later
     student_notifications = StudentNotification.find(:all, :conditions => ["student_id =?", student_id])
     notifications_hash = {}
     new_examination_count = 0
