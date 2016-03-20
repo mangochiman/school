@@ -171,6 +171,8 @@ class ParentController < ApplicationController
   end
   
   def create
+    username = params[:username]
+    password = params[:password]
     first_name = params[:firstname]
     last_name = params[:lastname]
     gender = params[:gender]
@@ -178,73 +180,88 @@ class ParentController < ApplicationController
     phone = params[:phone]
     date_of_birth = params[:dob].to_date
 
-    password = params[:password]
-    password_confirm = params[:password_confirm]
-    errors = ""
-    user_exists = Parent.find_by_username(params[:username])
-    errors += 'Username already exists.' if user_exists
-    errors += ' Password mismatch.' if (password != password_confirm)
+    guardian_user = Parent.find_by_username(params[:username])
+    error_messages = []
 
-    unless (errors.blank?)
-      flash[:error] = "#{errors}"
-      redirect_to :controller => "parent", :action => "new_parent_guardian" and return
+    error_messages << "Username already exists" unless  guardian_user.blank?
+    error_messages << "Password do not match" if params[:password].squish != params[:password_confirm].squish
+
+    unless error_messages.blank?
+      flash[:error] = error_messages.join("<br />")
+      redirect_to("/parent/new_parent_guardian") and return
     end
-    
-    if (Parent.create({
-            :fname => first_name,
-            :lname => last_name,
-            :password => password,
-            :username => params[:username],
-            :gender => gender,
-            :email => email,
-            :phone => phone,
-            :dob => date_of_birth
-          }))
 
-      if (params[:mode] == 'guardian_edit')
-        ActiveRecord::Base.transaction do
-          student_parent = StudentParent.find(:last, :conditions => ["student_id =?",
-              params[:student_id]])
-          student_parent.delete
+    guardian_id = 0
 
-          StudentParent.create({
-              :student_id => params[:student_id],
-              :parent_id => Parent.last.id
-            })
-        end
-        flash[:notice] = "Operation successful"
-        redirect_to :controller => "student", :action => "select_guardian", :student_id => params[:student_id], :mode => params[:mode] and return
+    ActiveRecord::Base.transaction do
+      parent = Parent.create({
+          :username => username,
+          :fname => first_name,
+          :lname => last_name,
+          :gender => gender,
+          :email => email,
+          :phone => phone,
+          :dob => date_of_birth
+        })
+
+      guardian_id = parent.parent_id
+
+      new_guardian_user = User.new
+      new_guardian_user.username = username
+      new_guardian_user.first_name = first_name
+      new_guardian_user.last_name = last_name
+      new_guardian_user.password = password
+      new_guardian_user.save
+
+      guardian_user_role = UserRole.new
+      guardian_user_role.username = username
+      guardian_user_role.role = "guardian"
+      guardian_user_role.sort_weight = 2
+      guardian_user_role.save
+
+    end
+
+    if (params[:mode] == 'guardian_edit')
+      ActiveRecord::Base.transaction do
+        student_parent = StudentParent.find(:last, :conditions => ["student_id =?",
+            params[:student_id]])
+        student_parent.delete
+
+        StudentParent.create({
+            :student_id => params[:student_id],
+            :parent_id => guardian_id
+          })
       end
-
-      if (params[:mode].blank?)
-        unless params[:student_id].blank?
-          if (StudentParent.create({
-                  :student_id => params[:student_id],
-                  :parent_id => Parent.last.id
-                }))
-            flash[:notice] = "Operation successful"
-            if params[:return_uri]
-              redirect_to :controller => "student" ,:action => params[:return_uri], :student_id => params[:student_id] and return
-            end
-            redirect_to :controller => "payments", :action => "add_student_payment", :student_id => params[:student_id] and return
-            #redirect_to :controller => "student" ,:action => "assign_parent_guardian" and return
-          else
-            flash[:error] = "Unable to save. Check for errors and try again"
-            if params[:return_uri]
-              redirect_to :controller => "student" ,:action => params[:return_uri], :student_id => params[:student_id] and return
-            end
-            redirect_to :controller => "parent", :action => "new_parent_guardian", :first_name => params[:first_name],
-              :last_name => params[:last_name], :gender => params[:gender] and return
-          end
-        end
-      end
-
       flash[:notice] = "Operation successful"
-      redirect_to :controller => "parent", :action => "new_parent_guardian" and return #creating a parent without a student ID
-    else
-      flash[:error] = "Unable to save. Check for errors and try again"
-      render :controller => "parent", :action => "new_parent_guardian" and return
+      redirect_to :controller => "student", :action => "select_guardian", :student_id => params[:student_id], :mode => params[:mode] and return
     end
+
+    if (params[:mode].blank?)
+      unless params[:student_id].blank?
+        if (StudentParent.create({
+                :student_id => params[:student_id],
+                :parent_id => guardian_id
+              }))
+          flash[:notice] = "Operation successful"
+          if params[:return_uri]
+            redirect_to :controller => "student" ,:action => params[:return_uri], :student_id => params[:student_id] and return
+          end
+          redirect_to :controller => "payments", :action => "add_student_payment", :student_id => params[:student_id] and return
+          #redirect_to :controller => "student" ,:action => "assign_parent_guardian" and return
+        else
+          flash[:error] = "Unable to save. Check for errors and try again"
+          if params[:return_uri]
+            redirect_to :controller => "student" ,:action => params[:return_uri], :student_id => params[:student_id] and return
+          end
+          redirect_to :controller => "parent", :action => "new_parent_guardian", :first_name => params[:first_name],
+            :last_name => params[:last_name], :gender => params[:gender] and return
+        end
+      end
+    end
+
+    flash[:notice] = "Operation successful"
+    redirect_to :controller => "parent", :action => "new_parent_guardian" and return #creating a parent without a student ID
+
   end
 
   def search_parents

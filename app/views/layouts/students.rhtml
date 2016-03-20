@@ -35,7 +35,7 @@
       .mode{
         color: white;
       }
-      
+
       .mode:hover{
         background-color: inherit !important;
         color: white;
@@ -67,8 +67,10 @@
               <% end %>
             </ul>
           </li>
-          <li class="v-sep"><a href="#" class="round button dark menu-settings image-left">Switch Role</a>
-          </li>
+          <% if User.find(session[:current_user_id]).user_roles.count > 1 %>
+            <li class="v-sep"><a href="#" class="round button dark menu-settings image-left">Switch Role</a>
+            </li>
+          <% end %>
           <li class="v-sep"><a href="#" class="round button mode">Student Mode</a>
           </li>
         </ul> <!-- end nav -->
