@@ -7,6 +7,13 @@ require 'RMagick'
 include Magick
 class StudentController < ApplicationController
   skip_before_filter :authenticate_user, :only => [:preview_student_card_plain]
+  
+  before_filter :check_student_role, :only => ['students_page', 'student_performance_summary',
+    'student_payments_summary', 'student_punishments_summary', 'student_profile',
+    'student_new_examination_notifications', 'student_new_exam_results_notifications',
+    'student_new_payment_notifications', 'student_new_punishments_notifications'
+  ]
+
   def index
     @class_rooms = ClassRoom.find(:all).map(&:name)
 

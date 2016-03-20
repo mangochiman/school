@@ -1,4 +1,10 @@
 class ParentController < ApplicationController
+  before_filter :check_guardian_role, :only => ['guardians_page', 'guardians_profile',
+    'student_performance_summary', 'student_payments_summary', 'student_punishments_summary',
+    'student_new_examination_notifications', 'student_new_payment_notifications',
+    'student_new_exam_results_notifications', 'student_new_punishments_notifications'
+  ]
+  
   def index
     @class_rooms = ClassRoom.find(:all).map(&:name)
     class_rooms = ClassRoom.find(:all)
