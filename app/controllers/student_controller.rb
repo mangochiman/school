@@ -661,6 +661,12 @@ class StudentController < ApplicationController
       new_student_user.password = password
       new_student_user.save
 
+      student_user_role = UserRole.new
+      student_user_role.username = username
+      student_user_role.role = "student"
+      student_user_role.sort_weight = 1
+      student_user_role.save
+      
     end
   
     redirect_to :controller => "student", :action => "assign_me_class", :student_id => student_id
@@ -1577,12 +1583,12 @@ class StudentController < ApplicationController
   end
 
   def students_page
-    @student = Student.last
+    @student = Student.find(session[:current_student_id])
     render :layout => "students"
   end
 
   def student_performance_summary
-    @student = Student.last
+    @student = Student.find(session[:current_student_id])
 
     @class_room_hash = {}
     class_rooms = ClassRoom.find(:all)
@@ -1628,7 +1634,7 @@ class StudentController < ApplicationController
   end
 
   def student_payments_summary
-    @student = Student.last
+    @student = Student.find(session[:current_student_id])
     @payment_hash = {}
     
     (@student.payments || []).each do |payment|
@@ -1654,7 +1660,7 @@ class StudentController < ApplicationController
   end
 
   def student_punishments_summary
-    @student = Student.last
+    @student = Student.find(session[:current_student_id])
     @punishment_hash = {}
     (@student.student_punishments || []).each do |student_punishment|
       punishment_id = student_punishment.punishment.id
@@ -1676,13 +1682,14 @@ class StudentController < ApplicationController
   end
 
   def student_profile
-    @student = Student.last
+    @student = Student.find(session[:current_student_id])
     render :layout => "students"
   end
 
   def student_new_examination_notifications
-    @student = Student.find(3)
-    student_id = 3
+    @student = Student.find(session[:current_student_id])
+    student_id = session[:current_student_id]
+
     examination_notifications = StudentNotification.find(:all, :conditions => ["student_id =? AND
       record_type =?", student_id, 'new_examination'])
 
@@ -1704,8 +1711,8 @@ class StudentController < ApplicationController
   end
 
   def student_new_exam_results_notifications
-    @student = Student.find(3)
-    student_id = 3
+    @student = Student.find(session[:current_student_id])
+    student_id = session[:current_student_id]
 
     exam_results_notifications = StudentNotification.find(:all, :conditions => ["student_id =? AND
       record_type =?", student_id, 'new_examination_results'])
@@ -1729,8 +1736,8 @@ class StudentController < ApplicationController
   end
 
   def student_new_payment_notifications
-    @student = Student.find(3)
-    student_id = 3
+    @student = Student.find(session[:current_student_id])
+    student_id = session[:current_student_id]
     payments_notifications = StudentNotification.find(:all, :conditions => ["student_id =? AND
       record_type =?", student_id, 'new_payment'])
 
@@ -1752,8 +1759,8 @@ class StudentController < ApplicationController
   end
 
   def student_new_punishments_notifications
-    @student = Student.find(3)
-    student_id = 3
+    @student = Student.find(session[:current_student_id])
+    student_id = session[:current_student_id]
 
     punishments_notifications = StudentNotification.find(:all, :conditions => ["student_id =? AND
       record_type =?", student_id, 'new_punishment'])

@@ -17,7 +17,22 @@ class UserController < ApplicationController
     logged_in_user = User.authenticate(params[:username], params[:password])
     if logged_in_user
       session[:current_user_id] = user.id
-      redirect_to("/")
+      user_role = user.user_roles.find(:all, :order => "sort_weight ASC").first
+      role = user_role.role rescue user_role
+
+      if role.to_s.downcase.squish == 'student'
+        student = Student.find_by_username(params['username'])
+        session[:current_student_id] = student.student_id
+        redirect_to("/student/students_page") and return
+      end
+
+      if role.to_s.downcase.squish == 'guardian'
+        parent = Parent.find_by_username(params['username'])
+        session[:current_guardian_id] = parent.parent_id
+        redirect_to("/parent/guardians_page") and return
+      end
+
+      redirect_to("/") and return
     else
       flash[:error] = "Invalid username or password"
       redirect_to :controller => "user", :action => "login" and return

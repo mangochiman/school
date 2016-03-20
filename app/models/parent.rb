@@ -6,7 +6,7 @@ class Parent < ActiveRecord::Base
   set_primary_key :parent_id
 
   has_many :student_parents
-
+  has_many :students, :through => :student_parents
   before_save :set_password
 
   def try_to_login

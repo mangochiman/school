@@ -422,30 +422,30 @@ class ParentController < ApplicationController
   end
 
   def guardians_page
-    @guardian = Parent.last
+    @guardian = Parent.find(session[:current_guardian_id])
     render :layout => "guardians"
   end
 
   def guardians_profile
-    @guardian = Parent.last
+    @guardian = Parent.find(session[:current_guardian_id])
     render :layout => "guardians"
   end
 
   def student_performance_summary
-    @guardian = Parent.last
-    @students = Student.find(:all, :limit => 2)
+    @guardian = Parent.find(session[:current_guardian_id])
+    @students = @guardian.students
     render :layout => "guardians"
   end
 
   def student_payments_summary
-    @guardian = Parent.last
-    @students = Student.find(:all, :limit => 2)
+    @guardian = Parent.find(session[:current_guardian_id])
+    @students = @guardian.students
     render :layout => "guardians"
   end
 
   def student_punishments_summary
-    @guardian = Parent.last
-    @students = Student.find(:all, :limit => 2)
+    @guardian = Parent.find(session[:current_guardian_id])
+    @students = @guardian.students
     render :layout => "guardians"
   end
 
@@ -575,9 +575,9 @@ class ParentController < ApplicationController
   end
 
   def student_new_examination_notifications
-    @guardian = Parent.last
-    guardian_id = 1
-    my_students = @guardian.student_parents.collect{|sp|sp.student}.compact
+    @guardian = Parent.find(session[:current_guardian_id])
+    guardian_id = session[:current_guardian_id]
+    my_students = @guardian.students
     examination_notifications = GuardianNotification.find(:all, :conditions => ["guardian_id =? AND
       record_type =?", guardian_id, 'new_examination'])
     @notifications_hash = {}
@@ -603,9 +603,9 @@ class ParentController < ApplicationController
   end
 
   def student_new_payment_notifications
-    @guardian = Parent.last
-    guardian_id = 1
-    my_students = @guardian.student_parents.collect{|sp|sp.student}.compact
+    @guardian = Parent.find(session[:current_guardian_id])
+    guardian_id = session[:current_guardian_id]
+    my_students = @guardian.students
     payments_notifications = GuardianNotification.find(:all, :conditions => ["guardian_id =? AND
       record_type =?", guardian_id, 'new_payment'])
     @notifications_hash = {}
@@ -631,9 +631,9 @@ class ParentController < ApplicationController
   end
 
   def student_new_exam_results_notifications
-    @guardian = Parent.last
-    guardian_id = 1
-    my_students = @guardian.student_parents.collect{|sp|sp.student}.compact
+    @guardian = Parent.find(session[:current_guardian_id])
+    guardian_id = session[:current_guardian_id]
+    my_students = @guardian.students
     exam_results_notifications = GuardianNotification.find(:all, :conditions => ["guardian_id =? AND
       record_type =?", guardian_id, 'new_examination_results'])
     @notifications_hash = {}
@@ -660,9 +660,9 @@ class ParentController < ApplicationController
   end
 
   def student_new_punishments_notifications
-    @guardian = Parent.last
-    guardian_id = 1
-    my_students = @guardian.student_parents.collect{|sp|sp.student}.compact
+    @guardian = Parent.find(session[:current_guardian_id])
+    guardian_id = session[:current_guardian_id]
+    my_students = @guardian.students
     punishments_notifications = GuardianNotification.find(:all, :conditions => ["guardian_id =? AND
       record_type =?", guardian_id, 'new_punishment'])
     @notifications_hash = {}

@@ -1802,6 +1802,12 @@ SELECT p1.* FROM payment p1 WHERE DATE(p1.date) = (
         new_student_user.last_name = last_name
         new_student_user.password = password
         new_student_user.save
+
+        student_user_role = UserRole.new
+        student_user_role.username = username
+        student_user_role.role = "student"
+        student_user_role.sort_weight = 1
+        student_user_role.save
       end
 
     end

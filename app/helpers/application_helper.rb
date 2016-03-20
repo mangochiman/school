@@ -218,7 +218,7 @@ module ApplicationHelper
   end
 
   def student_notifications
-    student_id = 3 #To be changed later
+    student_id = session[:current_student_id]
     student_notifications = StudentNotification.find(:all, :conditions => ["student_id =?", student_id])
     notifications_hash = {}
     new_examination_count = 0
@@ -269,7 +269,7 @@ module ApplicationHelper
   end
 
   def guardian_notifications
-    guardian_id = 1
+    guardian_id = session[:current_guardian_id]
     guardian_notifications = GuardianNotification.find(:all, :conditions => ["guardian_id =?", guardian_id])
     notifications_hash = {}
     new_examination_count = 0
