@@ -153,11 +153,13 @@
       #search_results table th:first-child {
         border-style: none none none !important;
       }
-      #registration input[type="text"], input[type="password"], textarea {
+      
+      #registration input[type="text"], #password_confirm, #password {
         border: 1px solid #d9dbdd;
         outline: medium none;
         padding: 0.5em 0.225em;
       }
+
       input[type="submit"] {
         margin-left: 37%;
       }
@@ -171,7 +173,7 @@
         font-size: 14px;
         height: 34px;
         line-height: 1.42857;
-        width: 205px;
+        width: 171px;
         text-align: center;
         padding: 6px 12px;
         transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
@@ -307,6 +309,19 @@
 
                     <div><label for="dob">Date of Birth</label><input type="text" name="dob" id="dob" class="text required date-picker"/></div>
 
+                    <div class="stripe-separator"><!--  --></div>
+                    <div>
+                      <label for="username">Username</label>
+                      <input type="text" name="username" class="text required" id="username" maxlength="30"/>
+                    </div>
+                    <div>
+                      <label for="password">Password</label>
+                      <input type="password" name="password" class="text required" id="password" maxlength="30"/>
+                    </div>
+                    <div>
+                      <label for="password_confirm">Confirm Password</label>
+                      <input type="password" name="password_confirm" class="text required" id="password_confirm" maxlength="30"/>
+                    </div>
                     <div class="stripe-separator"><!--  --></div>
                     <input type="submit" value="Submit" class="round blue ic-right-arrow" />
                   </form>

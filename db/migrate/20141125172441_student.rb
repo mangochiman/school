@@ -1,6 +1,7 @@
 class Student < ActiveRecord::Migration
   def self.up
     create_table :student, :primary_key => :student_id do |t|
+      t.string :username
       t.string :email
       t.string :password
       t.string :fname

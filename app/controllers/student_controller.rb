@@ -620,30 +620,50 @@ class StudentController < ApplicationController
   end
   
   def create
+    username = params[:username]
+    password = params[:password]
     first_name = params[:firstname]
     last_name = params[:lastname]
     gender = params[:gender]
     email = params[:email]
     phone = params[:phone]
-    password = params[:password] #To be used later
     date_of_birth = params[:dob].to_date
-    username = first_name.first.downcase.to_s + '' + last_name.squish.downcase #To be used later
-    student = Student.create({
-        :fname => first_name,
-        :lname => last_name,
-        :gender => gender,
-        :email => email,
-        :phone => phone,
-        :dob => date_of_birth
-      })
-    if student
-      flash[:notice] = "Operation successful"
-      redirect_to :controller => "student", :action => "assign_me_class", :student_id => student.student_id
-      #redirect_to :controller => "student", :action => "add_student"
-    else
-      flash[:error] = "Unable to save. Check for errors and try again"
-      render :controller => "student", :action => "add_student"
+
+    student_user = Student.find_by_username(params[:username])
+    error_messages = []
+
+    error_messages << "Username already exists" unless  student_user.blank?
+    error_messages << "Password do not match" if params[:password].squish != params[:password_confirm].squish
+
+    unless error_messages.blank?
+      flash[:error] = error_messages.join("<br />")
+      redirect_to("/student/add_student") and return
     end
+
+    student_id = 0
+    ActiveRecord::Base.transaction do
+      student = Student.create({
+          :username => username,
+          :fname => first_name,
+          :lname => last_name,
+          :gender => gender,
+          :email => email,
+          :phone => phone,
+          :dob => date_of_birth
+        })
+
+      student_id = student.student_id
+      
+      new_student_user = User.new
+      new_student_user.username = username
+      new_student_user.first_name = first_name
+      new_student_user.last_name = last_name
+      new_student_user.password = password
+      new_student_user.save
+
+    end
+  
+    redirect_to :controller => "student", :action => "assign_me_class", :student_id => student_id
   end
 
   def registration_menu
@@ -1126,7 +1146,7 @@ class StudentController < ApplicationController
   end
 
   def delete_my_courses
-    student_class_room_course = StudentClassRoomCourse.find(:last, :conditions => ["student_id =? 
+    student_class_room_course = StudentClassRoomCourse.find(:last, :conditions => ["student_id =?
       AND class_room_id =? AND course_id =?", params[:student_id], params[:class_room_id],
         params[:course_id]])
     student_class_room_course.delete

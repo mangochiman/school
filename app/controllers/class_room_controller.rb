@@ -1750,6 +1750,8 @@ SELECT p1.* FROM payment p1 WHERE DATE(p1.date) = (
   def student_admissions
     @class_room = ClassRoom.find(params[:class_room_id])
     if (request.method == :post)
+      username = params[:username]
+      password = params[:password]
       first_name = params[:firstname]
       last_name = params[:lastname]
       gender = params[:gender]
@@ -1757,8 +1759,20 @@ SELECT p1.* FROM payment p1 WHERE DATE(p1.date) = (
       phone = params[:phone]
       date_of_birth = params[:dob].to_date
 
+      student_user = Student.find_by_username(params[:username])
+      error_messages = []
+
+      error_messages << "Username already exists" unless  student_user.blank?
+      error_messages << "Password do not match" if params[:password].squish != params[:password_confirm].squish
+
+      unless error_messages.blank?
+        flash[:error] = error_messages.join("<br />")
+        redirect_to("/class_room/student_admissions?class_room_id=#{params[:class_room_id]}") and return
+      end
+      
       ActiveRecord::Base.transaction do
         student = Student.create({
+            :username => username,
             :fname => first_name,
             :lname => last_name,
             :gender => gender,
@@ -1781,7 +1795,13 @@ SELECT p1.* FROM payment p1 WHERE DATE(p1.date) = (
               :course_id => course.course_id
             })
         end
-        
+
+        new_student_user = User.new
+        new_student_user.username = username
+        new_student_user.first_name = first_name
+        new_student_user.last_name = last_name
+        new_student_user.password = password
+        new_student_user.save
       end
 
     end

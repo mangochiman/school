@@ -18,7 +18,9 @@ class Student < ActiveRecord::Base
   has_many :student_photos
   has_many :student_warning_letters
   has_many :student_cards
-  
+
+  has_one :user, :foreign_key => :username, :primary_key => :username
+
   def current_class
     current_class_room = self.student_class_room_adjustments.last.class_room.name rescue nil
     return current_class_room
