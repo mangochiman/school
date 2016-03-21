@@ -1,4 +1,6 @@
 class EmployeesController < ApplicationController
+  before_filter :check_admin_role
+  
   def employee_registration_menu
     @employees = Employee.all
   end

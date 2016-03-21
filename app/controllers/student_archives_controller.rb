@@ -1,5 +1,6 @@
 class StudentArchivesController < ApplicationController
-
+  before_filter :check_admin_role
+  
   def archive_students
     if (params[:mode] == 'single_entry')
       StudentArchive.create({

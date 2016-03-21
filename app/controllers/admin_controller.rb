@@ -1,5 +1,8 @@
 class AdminController < ApplicationController
   skip_before_filter :authenticate_user, :only => [:school_logo]
+
+  before_filter :check_admin_role, :except => ['school_logo']
+
   def home
     current_semester_audit = Semester.current_active_semester_audit
     semester_audit_id = current_semester_audit.semester_audit_id unless current_semester_audit.blank?

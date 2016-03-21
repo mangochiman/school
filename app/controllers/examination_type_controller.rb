@@ -1,4 +1,6 @@
 class ExaminationTypeController < ApplicationController
+  before_filter :check_admin_role
+  
   def manage_exam_type_menu
     @exam_types = ExaminationType.all
   end

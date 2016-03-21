@@ -1,4 +1,6 @@
 class SemestersController < ApplicationController
+  before_filter :check_admin_role
+  
   def index
     @current_year = Date.today.year
     @current_semester = GlobalProperty.find_by_property("current_semester").value rescue 'Not Set'

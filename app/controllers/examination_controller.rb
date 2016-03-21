@@ -1,4 +1,6 @@
 class ExaminationController < ApplicationController
+  before_filter :check_admin_role
+  
   def index
     @class_rooms = [["---Select Class---", ""]]
     @class_rooms += ClassRoom.all.collect{|c|[c.name, c.id]}

@@ -1,4 +1,5 @@
 class DepartmentsController < ApplicationController
+  before_filter :check_admin_role
   
   def department_management_menu
 

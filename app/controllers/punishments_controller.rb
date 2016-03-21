@@ -1,4 +1,6 @@
 class PunishmentsController < ApplicationController
+  before_filter :check_admin_role
+  
   def behavior_management_menu
     @student_punishments_data = []
     students = Student.find_by_sql("SELECT s.* FROM student s INNER JOIN student_class_room_adjustment scra ON

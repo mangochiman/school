@@ -1,5 +1,6 @@
 class StudentPhotosController < ApplicationController
-
+  before_filter :check_admin_role
+  
   def upload_photo
     student_photo = StudentPhoto.new
     student_photo.uploaded_file = params[:webcam]

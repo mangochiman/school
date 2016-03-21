@@ -1,4 +1,5 @@
 class FacultiesController < ApplicationController
+  before_filter :check_admin_role
 
   def faculties_menu
     @faculties = Faculty.find(:all)

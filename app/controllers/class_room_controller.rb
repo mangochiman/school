@@ -1,4 +1,6 @@
 class ClassRoomController < ApplicationController
+  before_filter :check_admin_role
+
   def index
     @class_rooms = ClassRoom.find(:all).map(&:name)
 

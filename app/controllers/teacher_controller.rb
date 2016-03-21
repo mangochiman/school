@@ -1,4 +1,6 @@
 class TeacherController < ApplicationController
+  before_filter :check_admin_role
+  
   def index
     @male_teachers = Teacher.teachers_by_gender('male')
     @female_teachers = Teacher.teachers_by_gender('female')

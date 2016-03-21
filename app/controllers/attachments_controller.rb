@@ -1,5 +1,5 @@
 class AttachmentsController < ApplicationController
-
+  before_filter :check_admin_role
   def documents_management_dashboard
     current_semester_audit = Semester.current_active_semester_audit
     semester_audit_id = current_semester_audit.semester_audit_id unless current_semester_audit.blank?

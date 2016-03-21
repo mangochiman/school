@@ -1,5 +1,6 @@
 class PaymentTypesController < ApplicationController
-
+  before_filter :check_admin_role
+  
   def payment_types_menu
     
   end

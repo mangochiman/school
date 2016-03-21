@@ -1,4 +1,6 @@
 class AttendanceController < ApplicationController
+  before_filter :check_admin_role
+  
   def index
     @class_rooms = ClassRoom.find(:all)
     week_day_start = Date.today.beginning_of_week #Monday

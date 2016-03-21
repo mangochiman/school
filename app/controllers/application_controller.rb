@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
   # Scrub sensitive parameters from your log
   filter_parameter_logging :password
   before_filter :authenticate_user
-   
+
   def school_setting
     settings = {}
     settings["name"] = GlobalProperty.find_by_property("name").value rescue ""
@@ -50,7 +50,6 @@ class ApplicationController < ActionController::Base
     user = User.find(session[:current_user_id]) rescue nil
     unless user.blank?
       user_roles = user.user_roles.collect{|r|r.role}
-      return true if user_roles.blank? #To be removed later
       return true if user_roles.include?('admin')
       flash[:error] = "An attempt to bypass security was noted. Login with the admin account to continue"
       access_denied

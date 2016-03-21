@@ -14,6 +14,13 @@ class StudentController < ApplicationController
     'student_new_payment_notifications', 'student_new_punishments_notifications'
   ]
 
+  before_filter :check_admin_role, :except => ['students_page', 'student_performance_summary',
+    'student_payments_summary', 'student_punishments_summary', 'student_profile',
+    'student_new_examination_notifications', 'student_new_exam_results_notifications',
+    'student_new_payment_notifications', 'student_new_punishments_notifications',
+    'guardians_page', 'guardians_profile'
+  ]
+
   def index
     @class_rooms = ClassRoom.find(:all).map(&:name)
 
