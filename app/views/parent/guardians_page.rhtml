@@ -39,7 +39,6 @@
         float: none;
       }
       #search-student-form legend {
-        color: #abda0f;
         font-size: 14px;
         font-weight: 100;
         margin-left: 14px;
@@ -105,6 +104,17 @@
       .orange{
         background-color: #EEEE00 !important;
       }
+
+      .student_name{
+        text-align: center !important;
+        padding-left: 20px;
+        font: normal small-caps bolder condensed 14px/3 cursive;
+      }
+
+      table td:first-child, table th:first-child {
+        border-bottom: 0px solid #f8f9fa;
+
+      }
     </style>
   </head>
   <body>
@@ -169,7 +179,107 @@
                 </div>
               <% end %>
 
+              <form id="search-student-form" action="#">
+                <fieldset>
+                  <legend>Latest Three Performances Data Per Student</legend>
+                  <div style="margin-left:2%;">
+                    <table style="width:98%;">
+                      <% @latest_performance_hash.each do |student_id, data| %>
+                        <tr>
+                          <th colspan="4" class="student_name" style="text-align:center; border-bottom: 2px solid white !important; background-color: white; color: black;">
+                            Student Details: <%= Student.find(student_id).name_and_gender %>
+                          </th>
+                        </tr>
+                        <% data.each do |class_room_id, values| %>
+                          <tr>
+                            <th colspan="4" style="text-align:center; border-bottom: 2px solid white !important; background-color: #006dcc;">
+                              <%= ClassRoom.find(class_room_id).name %>
+                            </th>
+                          </tr>
+                          <tr>
+                            <th style="width:20%;">Exam Date</th>
+                            <th style="padding:6px; text-align: center;">Course</th>
+                            <th style="padding:6px; text-align: center;">Exam Type</th>
+                            <th style="padding:6px; width:24%;">Exam Results</th>
+                          </tr>
+                          <% values.each do |exam_id, v| %>
+                            <tr>
+                              <td><%= v["exam_date"] %></td>
+                              <td><%= v["course"] %></td>
+                              <td><%= v["exam_type"] %></td>
+                              <td><%= v["exam_results"] %></td>
+                            </tr>
+                          <% end %>
+                        <% end %>
+                      <% end %>
+                    </table>
+                  </div>
+                </fieldset>
 
+                <fieldset>
+                  <legend>Latest Three Payments Data Per Student</legend>
+                  <div style="margin-left:2%;">
+                    <table style="width:98%;">
+                      <% @latest_payments_hash.each do |student_id, data| %>
+                        <tr>
+                          <th colspan="4" class="student_name" style="text-align:center; border-bottom: 2px solid white !important; background-color: white; color: black;">
+                            Student Details: <%= Student.find(student_id).name_and_gender %>
+                          </th>
+                        </tr>
+                        <% data.each do |payment_type, values| %>
+                          <tr>
+                            <th colspan="2" style="text-align:center; border-bottom: 2px solid white !important; background-color: #006dcc;">
+                              <%= PaymentType.find(payment_type).name %>
+                            </th>
+                          </tr>
+                          <tr>
+                            <th style="width:20%;">Date Of Payment</th>
+                            <th style="padding:6px; text-align: center;">Amount Paid</th>
+                          </tr>
+                          <% values.each do |payment_type, v| %>
+                            <tr>
+                              <td><%= v["date_paid"] %></td>
+                              <td><%= v["amount_paid_formatted"] %></td>
+                            </tr>
+                          <% end %>
+                        <% end %>
+                      <% end %>
+                    </table>
+                  </div>
+                </fieldset>
+
+                <fieldset>
+                  <legend>Latest Three Punishments Data Per Student</legend>
+                  <div style="margin-left:2%;">
+                    <table style="width:98%;">
+                      <% @latest_punishments_hash.each do |student_id, data| %>
+                        <tr>
+                          <th colspan="4" class="student_name" style="text-align:center; border-bottom: 2px solid white !important; background-color: white; color: black;">
+                            Student Details: <%= Student.find(student_id).name_and_gender %>
+                          </th>
+                        </tr>
+                        <tr>
+                          <th style="width:20%;">Punishment Type</th>
+                          <th style="padding:6px; text-align: center;">Details</th>
+                          <th style="padding:6px; text-align: center;">Start Date</th>
+                          <th style="padding:6px; text-align: center;">End Date</th>
+                          <th style="padding:6px; text-align: center;">Completed</th>
+                        </tr>
+                        <% data.each do |punishment_id, values| %>
+                          <tr>
+                            <td><%= values["punishment_type"] %></td>
+                            <td><%= values["details"] %></td>
+                            <td><%= values["start_date"] %></td>
+                            <td><%= values["end_date"] %></td>
+                            <td><%= values["completed"] %></td>
+                          </tr>
+                        <% end %>
+                      <% end %>
+                    </table>
+                  </div>
+                </fieldset>
+
+              </form>
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->

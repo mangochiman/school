@@ -216,38 +216,55 @@
                   <%= flash[:error] %>
                 </div>
               <% end %>
+              <%
+              legend = 'My Students'
+              legend = @students.first.name_and_gender if @students.count == 1
 
+            %>
               <form id="search-student-form" action="#">
                 <fieldset>
-                  <legend>My Students</legend>
+                  <legend><%= legend %></legend>
                   <div style="margin-left:2%;">
-                    <table style="width: 40%; float: right;">
-                      <tbody>
-                        <tr>
-                          <td style="text-align:right; font-size: 1.2em; padding-right: 5px; width: 30%;">Select Student</td>
-                          <td style="width:60%;">
-                            <select name="student" id="dropdown-actions" class="student" style="width:80%;">
-                              <option value="">Select Here</option>
-                              <% @students.each do |student| %>
-                                <option value="<%= student.student_id %>"><%= "#{student.name} (#{student.gender.first.capitalize})" %></option>
-                              <% end %>
-                            </select>
-                          </td>
-                          <td style="padding-right:5px;">
-                            <a onclick="loadStudentPerformanceData();" class="button round blue image-right ic-search text-upper">Search</a>
-                          </td>
-                        </tr>
+                    <% unless @students.blank? %>
+                      <% if @students.count == 1 %>
+                        <select name="student" id="dropdown-actions" style="display: none;">
+                          <option value="<%= @students.first.student_id %>"></option>
+                        </select>
+                        <script type="text/javascript">
+                          loadStudentPerformanceData();
+                        </script>
+                      <% else %>
+                        <table style="width: 40%; float: right;">
+                          <tbody>
+                            <tr>
+                              <td style="text-align:right; font-size: 1.2em; padding-right: 5px; width: 30%;">Select Student</td>
+                              <td style="width:60%;">
+                                <select name="student" id="dropdown-actions" class="student" style="width:80%;">
+                                  <option value="">Select Here</option>
+                                  <% @students.each do |student| %>
+                                    <option value="<%= student.student_id %>"><%= "#{student.name} (#{student.gender.first.capitalize})" %></option>
+                                  <% end %>
+                                </select>
+                              </td>
+                              <td style="padding-right:5px;">
+                                <a onclick="loadStudentPerformanceData();" class="button round blue image-right ic-search text-upper">Search</a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      <% end %>
+                    <% else %>
+                      <h3>No Student Found</h3>
+                    <% end %>
+
+                    <table style="width:98%;">
+                      <tbody id="student_performance">
+
                       </tbody>
                     </table>
                   </div>
                 </fieldset>
               </form>
-
-              <table>
-                <tbody id="student_performance">
-
-                </tbody>
-              </table>
 
             </div> <!-- end content-module-main -->
 

@@ -73,7 +73,6 @@
         float: none;
       }
       #search-student-form legend {
-        color: #abda0f;
         font-size: 14px;
         font-weight: 100;
         margin-left: 14px;
@@ -139,6 +138,7 @@
       .orange{
         background-color: #EEEE00 !important;
       }
+
     </style>
   </head>
   <body>
@@ -203,46 +203,64 @@
                 </div>
               <% end %>
 
+              <%
+              legend = 'My Students'
+              legend = @students.first.name_and_gender if @students.count == 1
+
+            %>
               <form id="search-student-form" action="#">
                 <fieldset>
-                  <legend>My Students</legend>
+                  <legend><%= legend %></legend>
                   <div style="margin-left:2%;">
-                    <table style="width: 40%; float: right;">
-                      <tbody>
+                    <% unless @students.blank? %>
+                      <% if @students.count == 1 %>
+                        <select name="student" id="dropdown-actions" style="display: none;">
+                          <option value="<%= @students.first.student_id %>"></option>
+                        </select>
+                        <script type="text/javascript">
+                          loadStudentPunishmentsData();
+                        </script>
+                      <% else %>
+                        <table style="width: 40%; float: right;">
+                          <tbody>
+                            <tr>
+                              <td style="text-align:right; font-size: 1.2em; padding-right: 5px; width: 30%;">Select Student</td>
+                              <td style="width:60%;">
+                                <select name="student" id="dropdown-actions" class="student" style="width:80%;">
+                                  <option value="">Select Here</option>
+                                  <% @students.each do |student| %>
+                                    <option value="<%= student.student_id %>"><%= "#{student.name} (#{student.gender.first.capitalize})" %></option>
+                                  <% end %>
+                                </select>
+                              </td>
+                              <td style="padding-right:5px;">
+                                <a onclick="loadStudentPunishmentsData();" class="button round blue image-right ic-search text-upper">Search</a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      <% end %>
+                    <% else %>
+                      <h3>No Student Found</h3>
+                    <% end %>
+
+                    <table style="width:98%;">
+                      <thead>
                         <tr>
-                          <td style="text-align:right; font-size: 1.2em; padding-right: 5px; width: 30%;">Select Student</td>
-                          <td style="width:60%;">
-                            <select name="student" id="dropdown-actions" class="student" style="width:80%;">
-                              <option value="">Select Here</option>
-                              <% @students.each do |student| %>
-                                <option value="<%= student.student_id %>"><%= "#{student.name} (#{student.gender.first.capitalize})" %></option>
-                              <% end %>
-                            </select>
-                          </td>
-                          <td style="padding-right:5px;">
-                            <a onclick="loadStudentPunishmentsData();" class="button round blue image-right ic-search text-upper">Search</a>
-                          </td>
+                          <th style="width:20%;">Punishment Type</th>
+                          <th>Start Date</th>
+                          <th>End Date</th>
+                          <th>Details</th>
+                          <th>Completed?</th>
                         </tr>
+                      </thead>
+                      <tbody id="student_punishments_data">
+
                       </tbody>
                     </table>
                   </div>
                 </fieldset>
               </form>
-
-              <table>
-                <thead>
-                  <tr>
-                    <th style="width:20%;">Punishment Type</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
-                    <th>Details</th>
-                    <th>Completed?</th>
-                  </tr>
-                </thead>
-                <tbody id="student_punishments_data">
-
-                </tbody>
-              </table>
             </div> <!-- end content-module-main -->
 
           </div> <!-- end content-module -->

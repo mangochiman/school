@@ -51,6 +51,10 @@ class Student < ActiveRecord::Base
     self.fname.capitalize.to_s + ' ' + self.lname.capitalize.to_s
   end
 
+  def name_and_gender
+    self.fname.capitalize.to_s + ' ' + self.lname.capitalize.to_s + ' (' + self.gender.first.capitalize.to_s + ')'
+  end
+
   def guardian_details
     unless (self.student_parents.blank?)
       fname = self.student_parents.last.parent.fname

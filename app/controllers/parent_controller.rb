@@ -454,6 +454,110 @@ class ParentController < ApplicationController
 
   def guardians_page
     @guardian = Parent.find(session[:current_guardian_id])
+    @students = @guardian.students
+
+    @latest_performance_hash = {}
+    @latest_payments_hash = {}
+    @latest_punishments_hash = {}
+
+    payment_hash = {}
+    semester_hash = {}
+    payment_types_hash = {}
+
+    SemesterAudit.all.each do |semester_audit|
+      semester_audit_id = semester_audit.semester_audit_id
+      semester_hash[semester_audit_id] = semester_audit.semester.semester_number
+    end
+
+    PaymentType.all.each do |payment_type|
+      payment_type_id = payment_type.payment_type_id
+      payment_types_hash[payment_type_id] = payment_type.name
+    end
+
+    @students.each do |student|
+      student_id = student.student_id
+      current_class_room_id = ""
+      active_class_adjustment = student.student_class_room_adjustments.find(:last,
+        :conditions => ["status =?", 'active'])
+      current_class_room_id = active_class_adjustment.new_class_room_id unless active_class_adjustment.blank?
+
+      exams_hash = {}
+
+      exam_attendees = student.exam_attendees.find(:all, :order => 'DATE(created_at) DESC',:limit => 3)
+      student_payments = student.payments.find(:all, :order => 'DATE(date) DESC',:limit => 3)
+      student_punishments = student.student_punishments.find(:all, :order => 'DATE(created_at) DESC',:limit => 3)
+      #>>>>>>>>>>>>>>>>>>>>>>>>>PERFORMANCE >>>>>>>>>>>>>>>>>>>>>>
+      (exam_attendees || []).each do |exam_attendee|
+        next if exam_attendee.examination.blank? #The exam might have been deleted
+        exam_id = exam_attendee.examination.id
+        class_room_id = exam_attendee.examination.class_room_id
+        course_name = exam_attendee.examination.course.name
+        exam_type = exam_attendee.examination.examination_type.name
+        exam_date = exam_attendee.examination.start_date
+        exam_results = ""
+        status = "previous"
+        if (class_room_id.to_i == current_class_room_id.to_i)
+          status = 'current'
+        end
+
+        unless (exam_attendee.examination.examination_results.blank?)
+          result = ExaminationResult.find(:last, :conditions => ["exam_id =? AND student_id=?",
+              exam_attendee.examination.id, student.student_id])
+          exam_results = result.marks unless result.blank?
+        end
+
+        exams_hash[class_room_id] = {} if exams_hash[class_room_id].blank?
+        exams_hash[class_room_id][exam_id] = {} if exams_hash[class_room_id][exam_id].blank?
+        exams_hash[class_room_id][exam_id]["exam_type"] = exam_type
+        exams_hash[class_room_id][exam_id]["course"] = course_name
+        exams_hash[class_room_id][exam_id]["exam_date"] = exam_date
+        exams_hash[class_room_id][exam_id]["exam_results"] = exam_results
+        exams_hash[class_room_id][exam_id]["status"] = status
+      end
+
+      @latest_performance_hash[student_id] = exams_hash
+
+      #>>>>>>>>>>>>>>>>>>>>>>>>>PAYMENTS >>>>>>>>>>>>>>>>>>>>>>
+      (student_payments || []).each do |payment|
+        semester_audit_id = payment.semester_audit_id
+        payment_id = payment.id
+        payment_type = payment.payment_type_id
+        date_paid = payment.date
+        amount_paid = payment.amount_paid
+   
+        payment_hash[payment_type] = {} if payment_hash[payment_type].blank?
+        payment_hash[payment_type][payment_id] = {} if payment_hash[payment_type][payment_id].blank?
+        payment_hash[payment_type][payment_id]["date_paid"] = date_paid
+        payment_hash[payment_type][payment_id]["amount_paid"] = amount_paid
+        amount_paid_to_be_formatted = payment_hash[payment_type][payment_id]["amount_paid"]
+        payment_hash[payment_type][payment_id]["amount_paid_formatted"] = ActionController::Base.helpers.number_to_currency(amount_paid_to_be_formatted, :unit => 'MK')
+      end
+
+      payments_hash = payment_hash
+      @latest_payments_hash[student_id] = payments_hash
+
+      #>>>>>>>>>>>>>>>PUNISHMENTS START >>>>>>>>>>>>>>>>>>>>>>>>>>>>
+      punishment_hash = {}
+      (student_punishments || []).each do |student_punishment|
+        punishment_id = student_punishment.punishment.id
+        punishment_type = student_punishment.punishment.punishment_type.name
+        start_date = student_punishment.punishment.start_date
+        end_date = student_punishment.punishment.end_date
+        punishment_details = student_punishment.punishment.details
+        status = 'No'
+        status = 'Yes' if student_punishment.completed.to_i == 1
+        punishment_hash[punishment_id] = {}
+        punishment_hash[punishment_id]["punishment_type"] = punishment_type
+        punishment_hash[punishment_id]["details"] = punishment_details
+        punishment_hash[punishment_id]["start_date"] = start_date
+        punishment_hash[punishment_id]["end_date"] = end_date
+        punishment_hash[punishment_id]["completed"] = status
+      end
+
+      @latest_punishments_hash[student_id] = punishment_hash
+      #>>>>>>>>>>>>>>>>PUNISHMENTS END >>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    end
+
     render :layout => "guardians"
   end
 
