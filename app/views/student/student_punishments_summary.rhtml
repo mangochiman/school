@@ -14,6 +14,7 @@
     <%= javascript_include_tag("jquery.confirm") %>
     <%= javascript_include_tag("script") %>
     <%= javascript_include_tag("gvalidator") %>
+    <%= javascript_include_tag("excellentexport") %>
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("metallic") %>
     <%= stylesheet_link_tag("gvalidator") %>
@@ -176,7 +177,7 @@
               <% if @punishment_hash.blank? %>
                 <h3>No Data</h3>
               <% else %>
-                <table>
+                <table id="punishments_data">
                   <thead>
                     <tr>
                       <th style="width:20%;">Punishment Type</th>
@@ -201,7 +202,19 @@
               <% end %>
 
             </div> <!-- end content-module-main -->
+            <div class="dropdown" style="padding-left: 20px;">
+              <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Export As
+                <span class="caret"></span></button>
+              <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+                <li role="presentation">
+                  <a role="menuitem" tabindex="-1" download="students_per_semester.xls" href="#"
+                     onclick="return ExcellentExport.excel(this, 'punishments_data', 'Sheet Name Here');">Excel</a>
+                </li>
 
+                <li role="presentation" class="divider"></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">PDF</a></li>
+              </ul>
+            </div><br />
           </div> <!-- end content-module -->
 
         </div> <!-- end side-content -->
