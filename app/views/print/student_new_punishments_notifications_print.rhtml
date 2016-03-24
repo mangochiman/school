@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <title>SimpleAdmin - Dashboard</title>
+  </head>
+  <body>
+    <form id="search-student-form" action="#">
+      <fieldset>
+        <legend>Punishments Notifications</legend>
+        <div style="margin-left:2%;">
+          <table style="width:98%;" id="punishment_notifications">
+            <thead>
+              <tr>
+                <th style="width:20%;">Punishment Type</th>
+                <th style="text-align: center;">Punishment Details Paid</th>
+                <th style="width:30%;">Start Date</th>
+                <th style="width:30%;">End Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @notifications_hash.each do |punishment_id, values| %>
+                <tr>
+                  <td><%= values["punishment_type"] %></td>
+                  <td><%= values["punishment_details"] %></td>
+                  <td><%= values["start_date"] %></td>
+                  <td><%= values["end_date"] %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+
+        </div>
+      </fieldset>
+    </form>
+
+  </body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <title>New Payments Notifications</title>
+  </head>
+  <body>
+    <form id="search-student-form" action="#">
+      <fieldset>
+        <legend>Exam Notifications</legend>
+        <div style="margin-left:2%;">
+          <table style="width:98%;" id="payment_notifications">
+            <thead>
+              <tr>
+                <th style="width:20%;">Payment Type</th>
+                <th style="text-align: center;">Amount Paid</th>
+                <th style="width:30%;">Date Of Payment</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @notifications_hash.each do |payment_id, values| %>
+                <tr>
+                  <td><%= values["payment_type"] %></td>
+                  <td style="text-align: center;"><%= number_to_currency(values["amount_paid"], :unit => 'MK') %></td>
+                  <td><%= values["date_paid"] %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+
+        </div>
+      </fieldset>
+    </form>
+
+  </body>
+</html>

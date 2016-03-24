@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <title>New Exam Notifications</title>
+  </head>
+  <body>
+    <form id="search-student-form" action="#">
+      <fieldset>
+        <legend>Exam Notifications</legend>
+        <div style="margin-left:2%;">
+          <table style="width:98%;" id="exam_notifications">
+            <thead>
+              <tr>
+                <th style="width:20%;">Exam Type</th>
+                <th style="text-align: center;">Course</th>
+                <th style="width:30%;">Exam Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @notifications_hash.each do |exam_id, values| %>
+                <tr>
+                  <td><%= values["exam_type"] %></td>
+                  <td style="text-align: center;"><%= values["course"] %></td>
+                  <td><%= values["exam_date"] %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </fieldset>
+    </form>
+  </body>
+</html>
