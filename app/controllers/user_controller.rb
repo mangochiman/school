@@ -160,6 +160,42 @@ class UserController < ApplicationController
     @user = User.find(session[:current_user_id])
   end
 
+  def switch_role
+
+    role = params[:role]
+    role_link_mapping = {}
+    role_link_mapping["student"] = "/student/students_page"
+    role_link_mapping["guardian"] = "/parent/guardians_page"
+    role_link_mapping["admin"] = "/"
+    
+    username = User.find(session[:current_user_id]).username
+    if role == 'student'
+      student = Student.find_by_username(username) rescue nil
+      if student.blank?
+        flash[:error] = "Oops. Something went wrong. Unable to find your student account"
+        redirect_to(request.referrer) and return
+      end
+      session.delete(:current_guardian_id)
+      session[:current_student_id] = student.student_id
+      session[:current_user_role] = 'student'
+    end
+
+    if role == 'guardian'
+      parent = Parent.find_by_username(username) rescue nil
+      if parent.blank?
+        flash[:error] = "Oops. Something went wrong. Unable to find your guardian account"
+        redirect_to(request.referrer) and return
+      end
+      session.delete(:current_student_id)
+      session[:current_guardian_id] = parent.parent_id
+      session[:current_user_role] = 'guardian'
+    end
+
+    session.delete(:current_user_role)
+    session[:current_user_role] = role
+    redirect_to("#{role_link_mapping[role]}") and return
+  end
+  
   def update_account
     @user = User.find(session[:current_user_id])
     
