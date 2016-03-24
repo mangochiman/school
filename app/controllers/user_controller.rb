@@ -158,6 +158,8 @@ class UserController < ApplicationController
 
   def user_account_settings_menu
     @user = User.find(session[:current_user_id])
+    render :layout => "students" if session[:current_user_role] == 'student'
+    render :layout => "guardians" if session[:current_user_role] == 'guardian'
   end
 
   def switch_role
