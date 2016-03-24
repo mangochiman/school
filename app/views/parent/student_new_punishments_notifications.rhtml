@@ -14,6 +14,7 @@
     <%= javascript_include_tag("jquery.confirm") %>
     <%= javascript_include_tag("script") %>
     <%= javascript_include_tag("gvalidator") %>
+    <%= javascript_include_tag("excellentexport") %>
     <%= stylesheet_link_tag("style") %>
     <%= stylesheet_link_tag("metallic") %>
     <%= stylesheet_link_tag("gvalidator") %>
@@ -115,7 +116,7 @@
         padding-left: 20px;
         padding-right: 20px;
       }
-      
+
     </style>
   </head>
   <body>
@@ -184,7 +185,7 @@
                 <fieldset>
                   <legend>Punishments Notifications</legend>
                   <div style="margin-left:2%;">
-                    <table style="width:98%;">
+                    <table style="width:98%;" id="punishment_notifications">
                       <% @notifications_hash.each do |student_id, data| %>
                         <thead>
                           <tr>
@@ -193,7 +194,7 @@
                               Student Name: <span class="student-name"><%= student.name %></span>
                               Gender: <span class="gender"><%= student.gender.capitalize %></span>
                               Date of Birth: <span class="dob"><%= student.dob.to_date.strftime("%d/%b/%Y") rescue student.dob %></span>
-                              </th>
+                            </th>
                           </tr>
                           <tr>
                             <th style="width:20%;">Punishment Type</th>
@@ -221,7 +222,19 @@
               </form>
 
             </div> <!-- end content-module-main -->
+            <div class="dropdown" style="padding-left: 20px;">
+              <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Export As
+                <span class="caret"></span></button>
+              <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+                <li role="presentation">
+                  <a role="menuitem" tabindex="-1" download="students_per_semester.xls" href="#"
+                     onclick="return ExcellentExport.excel(this, 'punishment_notifications', 'Sheet Name Here');">Excel</a>
+                </li>
 
+                <li role="presentation" class="divider"></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">PDF</a></li>
+              </ul>
+            </div><br />
           </div> <!-- end content-module -->
 
         </div> <!-- end side-content -->
