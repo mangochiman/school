@@ -69,6 +69,11 @@
           </li>
           <% if User.find(session[:current_user_id]).user_roles.count > 1 %>
             <li class="v-sep"><a href="#" class="round button dark menu-settings image-left">Switch Role</a>
+              <ul>
+                <% user_roles_data.each do |role, values| %>
+                  <li><a href="<%=  values["link"]%>"><%= role %></a></li>
+                <% end %>
+              </ul>
             </li>
           <% end %>
           <li class="v-sep"><a href="#" class="round button mode">Student Mode</a>

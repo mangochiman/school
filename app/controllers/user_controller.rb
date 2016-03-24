@@ -23,12 +23,14 @@ class UserController < ApplicationController
       if role.to_s.downcase.squish == 'student'
         student = Student.find_by_username(params['username'])
         session[:current_student_id] = student.student_id
+        session[:current_user_role] = 'student'
         redirect_to("/student/students_page") and return
       end
 
       if role.to_s.downcase.squish == 'guardian'
         parent = Parent.find_by_username(params['username'])
         session[:current_guardian_id] = parent.parent_id
+        session[:current_user_role] = 'guardian'
         redirect_to("/parent/guardians_page") and return
       end
 

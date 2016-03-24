@@ -319,4 +319,19 @@ module ApplicationHelper
     return notifications_hash
   end
 
+  def user_roles_data
+    username = User.find(session[:current_user_id]).username
+    user_roles = UserRole.find(:all, :conditions => ["username =?", username], :order => "sort_weight ASC")
+    user_role_hash = {}
+    user_roles.each do |user_role|
+      current_user_role = session[:current_user_role]
+      next if user_role.role.match(/#{current_user_role}/i)
+      role = user_role.role
+      user_role_hash[role] = {}
+      user_role_hash[role]["link"] = "/user/switch_role?role=#{role}"
+    end
+
+    return user_role_hash
+  end
+  
 end
