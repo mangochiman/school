@@ -381,11 +381,37 @@ class PrintController < ApplicationController
     render :layout => "guardians"
   end
 
+  def print_to_pdf_guardian_student_payments_summary_print
+    destination_path = "/tmp/guardian_student_payments_summary.pdf"
+    print_path = "/print/guardian_student_payments_summary_print"
+    student_id = params[:student_id]
+    guardian_id = session[:current_guardian_id]
+    thread = Thread.new{
+      Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
+        request.env["HTTP_HOST"] + "\"#{print_path}/?student_id=#{student_id}&guardian_id=#{guardian_id}" + "\" #{destination_path} \n"
+    }
+    thread.join #Make sure the thread is done
+    send_file "#{destination_path}", :disposition => "attachment"
+  end
+
   def guardian_student_punishments_summary_print
     #@guardian = Parent.find(session[:current_guardian_id])
     @guardian = Parent.find(params[:guardian_id])
     @student = Student.find(params{:student_id})
     render :layout => "guardians"
+  end
+
+  def print_to_pdf_guardian_student_punishments_summary_print
+    destination_path = "/tmp/guardian_student_punishments_summary.pdf"
+    print_path = "/print/guardian_student_punishments_summary_print"
+    student_id = params[:student_id]
+    guardian_id = session[:current_guardian_id]
+    thread = Thread.new{
+      Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
+        request.env["HTTP_HOST"] + "\"#{print_path}/?student_id=#{student_id}&guardian_id=#{guardian_id}" + "\" #{destination_path} \n"
+    }
+    thread.join #Make sure the thread is done
+    send_file "#{destination_path}", :disposition => "attachment"
   end
 
   def guardian_student_new_examination_notifications_print
@@ -416,6 +442,19 @@ class PrintController < ApplicationController
     render :layout => "guardians"
   end
 
+  def print_to_pdf_guardian_student_new_examination_notifications_print
+    destination_path = "/tmp/guardian_student_new_examination_notifications.pdf"
+    print_path = "/print/guardian_student_new_examination_notifications_print"
+    student_id = params[:student_id]
+    guardian_id = session[:current_guardian_id]
+    thread = Thread.new{
+      Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
+        request.env["HTTP_HOST"] + "\"#{print_path}/?student_id=#{student_id}&guardian_id=#{guardian_id}" + "\" #{destination_path} \n"
+    }
+    thread.join #Make sure the thread is done
+    send_file "#{destination_path}", :disposition => "attachment"
+  end
+
   def guardian_student_new_payment_notifications_print
     @guardian = Parent.find(session[:current_guardian_id])
     guardian_id = session[:current_guardian_id]
@@ -442,6 +481,19 @@ class PrintController < ApplicationController
     end
 
     render :layout => "guardians"
+  end
+
+  def print_to_pdf_guardian_student_new_payment_notifications_print
+    destination_path = "/tmp/guardian_student_new_payment_notifications.pdf"
+    print_path = "/print/guardian_student_new_payment_notifications_print"
+    student_id = params[:student_id]
+    guardian_id = session[:current_guardian_id]
+    thread = Thread.new{
+      Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
+        request.env["HTTP_HOST"] + "\"#{print_path}/?student_id=#{student_id}&guardian_id=#{guardian_id}" + "\" #{destination_path} \n"
+    }
+    thread.join #Make sure the thread is done
+    send_file "#{destination_path}", :disposition => "attachment"
   end
 
   def guardian_student_new_exam_results_notifications_print
@@ -473,6 +525,19 @@ class PrintController < ApplicationController
     render :layout => "guardians"
   end
 
+  def print_to_pdf_guardian_student_new_exam_results_notifications_print
+    destination_path = "/tmp/guardian_student_new_exam_results_notifications.pdf"
+    print_path = "/print/guardian_student_new_exam_results_notifications_print"
+    student_id = params[:student_id]
+    guardian_id = session[:current_guardian_id]
+    thread = Thread.new{
+      Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
+        request.env["HTTP_HOST"] + "\"#{print_path}/?student_id=#{student_id}&guardian_id=#{guardian_id}" + "\" #{destination_path} \n"
+    }
+    thread.join #Make sure the thread is done
+    send_file "#{destination_path}", :disposition => "attachment"
+  end
+
   def guardian_student_new_punishments_notifications_print
     @guardian = Parent.find(session[:current_guardian_id])
     guardian_id = session[:current_guardian_id]
@@ -500,6 +565,19 @@ class PrintController < ApplicationController
     end
 
     render :layout => "guardians"
+  end
+
+  def print_to_pdf_guardian_student_new_punishments_notifications_print
+    destination_path = "/tmp/guardian_student_new_punishments_notifications.pdf"
+    print_path = "/print/guardian_student_new_punishments_notifications_print"
+    student_id = params[:student_id]
+    guardian_id = session[:current_guardian_id]
+    thread = Thread.new{
+      Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
+        request.env["HTTP_HOST"] + "\"#{print_path}/?student_id=#{student_id}&guardian_id=#{guardian_id}" + "\" #{destination_path} \n"
+    }
+    thread.join #Make sure the thread is done
+    send_file "#{destination_path}", :disposition => "attachment"
   end
 
 end
