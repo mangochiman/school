@@ -2,11 +2,101 @@
 
 <html lang="en">
   <head>
-    <meta charset="utf-8">
     <title>Performance Summary</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <style type="text/css">
+      table {
+        width: 100%;
+        margin-bottom: 1.25em; /* 20/16 */ }
+
+      table th {
+        background-color: #5d6677;
+        color: white;
+        text-transform: uppercase;
+        padding: 0.75em 0 0.75em 0.75em; /* 15/12 */
+        border-left: 1px solid #747c8a;
+        font-size: 9pt;
+      }
+
+      table tbody td {
+        padding: 0.433em 0 0.433em 0.25em; /* 10/12 15/12 */
+        border-left: 1px solid white;
+        border-bottom: 1px solid #f8f9fa;
+      }
+
+      /* Alternate table row */
+      table tbody tr:nth-child(odd) { background-color: #f8f9fa; }
+
+      /* Push the first cell to the right so it doesn't stick to the table border */
+      table td:first-child, table th:first-child {
+        width: 4em /* 48/12 */;
+        text-align: center;
+        padding: 0;
+        border: none;
+        border-bottom: 1px solid #f8f9fa;
+      }
+
+      table td:last-child, table th:last-child {
+        width: 7em; /* 84/12 */
+        text-align: center;
+        padding: 0;
+      }
+
+      table td.table-footer {
+        text-align: left;
+        vertical-align: middle;
+        padding-top: 1.25em /* 15/12 */;
+        border: none;
+      }
+
+      table th:first-child {
+        border-style: none none none !important;
+      }
+
+      table tr td span{
+        position: relative;
+        margin-left: 20px;
+
+      }
+
+    </style>
 
   </head>
   <body>
+    <form id="search-student-form" action="#">
+      <fieldset>
+        <legend><%= @student.name %></legend>
+        <div style="margin-left:2%;">
+          <table id="performance_data">
+            <% @exams_hash.each do |class_room_id, values| %>
+              <tr>
+                <th colspan="4" style="text-align:center; border-bottom: 2px solid white !important; padding: 5px;">
+                  <%= @class_room_hash[class_room_id] %>
+                </th>
+              </tr>
+              <tr>
+
+                <th style="width:20%;">Exam Date</th>
+                <th style="padding:6px; text-align: center;">Course</th>
+                <th style="padding:6px; text-align: center;">Exam Type</th>
+                <th style="padding:6px; width:24%;">Exam Results</th>
+              </tr>
+              <% values.each do |exam_id, exam_data| %>
+                <tr>
+                  <td><%= exam_data["exam_date"] %></td>
+                  <td><span><%= exam_data["course"] %></span></td>
+                  <td><span><%= exam_data["exam_type"] %></span></td>
+                  <td><%= exam_data["exam_results"] %></td>
+                </tr>
+              <% end %>
+            <% end %>
+          </table>
+
+          <% if @exams_hash.blank? %>
+            <h3>No Data</h3>
+          <% end %>
+        </div>
+      </fieldset>
+    </form>
   </body>
 </html>

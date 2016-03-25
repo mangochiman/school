@@ -21,9 +21,10 @@
     <%= stylesheet_link_tag("bootstrap") %>
 
     <script type="text/javascript">
+      var studentID;
       function loadStudentPerformanceData(){
         studentID = document.getElementById('dropdown-actions').value;
-
+        studentID = studentID;
         jQuery.ajax({
           type: "POST",
           url: "/parent/render_student_performance_summary",
@@ -50,7 +51,6 @@
               
               for (var examID in examsHash[class_room_id]){
                 exam_type = examsHash[class_room_id][examID]["exam_type"];
-                console.log(examsHash[class_room_id][examID][5])
                 course = examsHash[class_room_id][examID]["course"];
                 exam_date = examsHash[class_room_id][examID]["exam_date"];
                 exam_results = examsHash[class_room_id][examID]["exam_results"];
@@ -71,6 +71,19 @@
 
         });
       }
+
+      function printToPDF(){
+        pdfIframe = document.getElementById('pdfIframe');
+        if (pdfIframe) pdfIframe.parentNode.removeChild(pdfIframe);
+
+        iframe = document.createElement("iframe");
+        iframe.id = 'pdfIframe';
+        iframe.src = "/print/print_to_pdf_guardian_student_performance_summary_print?student_id=" + studentID;
+        iframe.style.display = 'none';
+        body = document.getElementsByTagName("body")[0];
+        body.appendChild(iframe);
+      }
+
     </script>
 
     <style type="text/css">
@@ -281,7 +294,7 @@
                 </li>
 
                 <li role="presentation" class="divider"></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">PDF</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="printToPDF();">PDF</a></li>
               </ul>
             </div><br />
           </div> <!-- end content-module -->
