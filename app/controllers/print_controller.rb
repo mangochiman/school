@@ -52,15 +52,15 @@ class PrintController < ApplicationController
   end
 
   def print_to_pdf_student_performance_summary_print
-    destsination_path = "/tmp/student_performance_summary.pdf"
+    destination_path = "/tmp/student_performance_summary.pdf"
     print_path = "/print/student_performance_summary_print"
     student_id = session[:current_student_id]
     thread = Thread.new{
       Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
-        request.env["HTTP_HOST"] + "\"#{print_path}/?student_id=#{student_id}" + "\" #{destsination_path} \n"
+        request.env["HTTP_HOST"] + "\"#{print_path}/?student_id=#{student_id}" + "\" #{destination_path} \n"
     }
     thread.join #Make sure the thread is done
-    render :text => "done" and return
+    send_file "#{destination_path}", :disposition => "attachment"
   end
 
   def student_payments_summary_print
