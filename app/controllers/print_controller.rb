@@ -377,8 +377,30 @@ class PrintController < ApplicationController
   def guardian_student_payments_summary_print
     #@guardian = Parent.find(session[:current_guardian_id])
     @guardian = Parent.find(params[:guardian_id])
-    @student = Student.find(params{:student_id})
-    render :layout => "guardians"
+    @student = Student.find(params[:student_id])
+
+    @payment_hash = {}
+
+    (@student.payments || []).each do |payment|
+      semester_audit_id = payment.semester_audit_id
+      payment_id = payment.id
+      payment_type = payment.payment_type_id
+      date_paid = payment.date
+      amount_paid = payment.amount_paid
+      amount_required = payment.payment_type.amount_required
+      @payment_hash[semester_audit_id] = {} if @payment_hash[semester_audit_id].blank?
+      @payment_hash[semester_audit_id][payment_type] = {} if @payment_hash[semester_audit_id][payment_type].blank?
+      @payment_hash[semester_audit_id][payment_type][payment_id] = {} if @payment_hash[semester_audit_id][payment_type][payment_id].blank?
+      @payment_hash[semester_audit_id][payment_type][payment_id]["date_paid"] = date_paid
+      @payment_hash[semester_audit_id][payment_type][payment_id]["amount_paid"] = amount_paid
+      @payment_hash[semester_audit_id][payment_type]["balance"] = amount_required.to_i if @payment_hash[semester_audit_id][payment_type]["balance"].blank?
+      @payment_hash[semester_audit_id][payment_type]["balance"] -= amount_paid.to_i
+      @payment_hash[semester_audit_id][payment_type]["amount_required"] = amount_required.to_i
+      @payment_hash[semester_audit_id][payment_type]["total_payments"] = 0 if @payment_hash[semester_audit_id][payment_type]["total_payments"].blank?
+      @payment_hash[semester_audit_id][payment_type]["total_payments"] += amount_paid.to_i
+    end
+    
+    render :layout => false
   end
 
   def print_to_pdf_guardian_student_payments_summary_print
@@ -397,7 +419,7 @@ class PrintController < ApplicationController
   def guardian_student_punishments_summary_print
     #@guardian = Parent.find(session[:current_guardian_id])
     @guardian = Parent.find(params[:guardian_id])
-    @student = Student.find(params{:student_id})
+    @student = Student.find(params[:student_id])
     render :layout => "guardians"
   end
 

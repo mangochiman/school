@@ -21,6 +21,7 @@
     <%= stylesheet_link_tag("bootstrap") %>
 
     <script type="text/javascript">
+      var studentID;
       function loadStudentPaymentsData(){
         studentID = document.getElementById('dropdown-actions').value;
 
@@ -86,6 +87,18 @@
           }
 
         });
+      }
+
+      function printToPDF(){
+        pdfIframe = document.getElementById('pdfIframe');
+        if (pdfIframe) pdfIframe.parentNode.removeChild(pdfIframe);
+
+        iframe = document.createElement("iframe");
+        iframe.id = 'pdfIframe';
+        iframe.src = "/print/print_to_pdf_guardian_student_payments_summary_print?student_id=" + studentID;
+        iframe.style.display = 'none';
+        body = document.getElementsByTagName("body")[0];
+        body.appendChild(iframe);
       }
 
     </script>
@@ -298,7 +311,7 @@
                 </li>
 
                 <li role="presentation" class="divider"></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">PDF</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="printToPDF();">PDF</a></li>
               </ul>
             </div><br />
           </div> <!-- end content-module -->
