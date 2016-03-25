@@ -2,44 +2,99 @@
 <html lang="en">
   <head>
     <title>Payments Summary</title>
+    <style type="text/css">
+      table {
+        width: 100%;
+        margin-bottom: 1.25em; /* 20/16 */ }
+
+      table th {
+        background-color: #5d6677;
+        color: white;
+        text-transform: uppercase;
+        padding: 0.25em 0 0.25em 0.25em; /* 15/12 */
+        border-left: 1px solid #747c8a;
+        font-size: 9pt;
+      }
+
+      table tbody td {
+        padding: 0.833em 0 0.833em 0.25em; /* 10/12 15/12 */
+        border-left: 1px solid white;
+        border-bottom: 1px solid #f8f9fa;
+      }
+
+      /* Alternate table row */
+      table tbody tr:nth-child(odd) { background-color: #f8f9fa; }
+
+      /* Push the first cell to the right so it doesn't stick to the table border */
+      table td:first-child, table th:first-child {
+        width: 4em /* 48/12 */;
+        text-align: center;
+        padding: 0;
+        border: none;
+        border-bottom: 1px solid #f8f9fa;
+      }
+
+      table td:last-child, table th:last-child {
+        width: 7em; /* 84/12 */
+        text-align: center;
+        padding: 0;
+      }
+
+      table td.table-footer {
+        text-align: left;
+        vertical-align: middle;
+        padding-top: 1.25em /* 15/12 */;
+        border: none;
+      }
+
+      table th:first-child {
+        border-style: none none none !important;
+      }
+
+      table tr td span{
+        position: absolute;
+        margin-left: 20px;
+
+      }
+    </style>
   </head>
   <body>
-
-    <table id="payments_data">
-      <% @payment_hash.each do |semester_audit_id, values| %>
-        <% values.each do |payment_type, payment_details| %>
-          <tr>
-            <th colspan="2" style="text-align:left; border-bottom: 2px solid white !important; background-color: #006dcc;">
-              <span style="padding-left:20px;">Semester : <i style="font-weight:bold;"><%= SemesterAudit.find(semester_audit_id).semester.semester_number %></i></span>
-              <span style="padding-left:20px;">Payment Type : <i style="font-weight:bold;"><%= PaymentType.find(payment_type).name %></i></span>
-              <span style="padding-left:20px;">Amount Required : <i style="font-weight:bold;"><%= number_to_currency(payment_details["amount_required"], :unit => 'MK') %></i></span>
-              <span style="padding-left:20px;">Balance : <i style="font-weight:bold;"><%= number_to_currency(payment_details["balance"], :unit => 'MK') %></i></span>
-            </th>
-          </tr>
-          <tr>
-            <th>Date of Payment</th>
-            <th>Amount Paid</th>
-          </tr>
-          <% payment_details.each do |payment_id, data|%>
-            <% next if payment_id.to_s.match(/balance|amount_required|total_payments/i) %>
+    <div style="padding-left: 10px; padding-top: 10px; width: 98.5%;">
+      <table id="payments_data">
+        <% @payment_hash.each do |semester_audit_id, values| %>
+          <% values.each do |payment_type, payment_details| %>
             <tr>
-              <td><%= data["date_paid"] %></td>
-              <td><%=  number_to_currency(data["amount_paid"], :unit => 'MK') %></td>
+              <th colspan="2" style="text-align:left; border-bottom: 2px solid white !important; background-color: #006dcc;">
+                <span style="padding-left:20px;">Semester : <i style="font-weight:bold;"><%= SemesterAudit.find(semester_audit_id).semester.semester_number %></i></span>
+                <span style="padding-left:20px;">Payment Type : <i style="font-weight:bold;"><%= PaymentType.find(payment_type).name %></i></span>
+                <span style="padding-left:20px;">Amount Required : <i style="font-weight:bold;"><%= number_to_currency(payment_details["amount_required"], :unit => 'MK') %></i></span>
+                <span style="padding-left:20px;">Balance : <i style="font-weight:bold;"><%= number_to_currency(payment_details["balance"], :unit => 'MK') %></i></span>
+              </th>
+            </tr>
+            <tr>
+              <th>Date of Payment</th>
+              <th>Amount Paid</th>
+            </tr>
+            <% payment_details.each do |payment_id, data|%>
+              <% next if payment_id.to_s.match(/balance|amount_required|total_payments/i) %>
+              <tr>
+                <td><%= data["date_paid"] %></td>
+                <td><%=  number_to_currency(data["amount_paid"], :unit => 'MK') %></td>
+              </tr>
+            <% end %>
+            <tr style="background-color: #f89406;">
+              <td colspan="2" style="line-height:16px;"> <i style="padding-left:28%;">Total Payments = <span style="font-weight:bold;"><%= number_to_currency(payment_details["total_payments"], :unit => 'MK') %></span></i></td>
+            </tr>
+            <tr>
+              <td colspan="2" style="line-height:1.5em; background-color: white;">&nbsp;</td>
             </tr>
           <% end %>
-          <tr style="background-color: #f89406;">
-            <td colspan="2" style="line-height:16px;"> <i style="padding-left:28%;">Total Payments = <span style="font-weight:bold;"><%= number_to_currency(payment_details["total_payments"], :unit => 'MK') %></span></i></td>
-          </tr>
-          <tr>
-            <td colspan="2" style="line-height:1.5em; background-color: white;">&nbsp;</td>
-          </tr>
         <% end %>
+      </table>
+
+      <% if @payment_hash.blank? %>
+        <h3>No Data</h3>
       <% end %>
-    </table>
-
-    <% if @payment_hash.blank? %>
-      <h3>No Data</h3>
-    <% end %>
-
+    </div>
   </body>
 </html>

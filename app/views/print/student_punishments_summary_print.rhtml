@@ -3,6 +3,61 @@
 <html lang="en">
   <head>
     <title>Student Punishments Summary</title>
+    <style type="text/css">
+      table {
+        width: 100%;
+        margin-bottom: 1.25em; /* 20/16 */ }
+
+      table th {
+        background-color: #5d6677;
+        color: white;
+        text-transform: uppercase;
+        padding: 0.75em 0 0.75em 0.75em; /* 15/12 */
+        border-left: 1px solid #747c8a;
+        font-size: 9pt;
+      }
+
+      table tbody td {
+        padding: 0.433em 0 0.433em 0.25em; /* 10/12 15/12 */
+        border-left: 1px solid white;
+        border-bottom: 1px solid #f8f9fa;
+      }
+
+      /* Alternate table row */
+      table tbody tr:nth-child(odd) { background-color: #f8f9fa; }
+
+      /* Push the first cell to the right so it doesn't stick to the table border */
+      table td:first-child, table th:first-child {
+        width: 4em /* 48/12 */;
+        text-align: center;
+        padding: 0;
+        border: none;
+        border-bottom: 1px solid #f8f9fa;
+      }
+
+      table td:last-child, table th:last-child {
+        width: 7em; /* 84/12 */
+        text-align: center;
+        padding: 0;
+      }
+
+      table td.table-footer {
+        text-align: left;
+        vertical-align: middle;
+        padding-top: 1.25em /* 15/12 */;
+        border: none;
+      }
+
+      table th:first-child {
+        border-style: none none none !important;
+      }
+
+      table tr td span{
+        position: relative;
+        margin-left: 20px;
+
+      }
+    </style>
   </head>
   <body>
     <% if @punishment_hash.blank? %>
@@ -22,9 +77,9 @@
           <% @punishment_hash.each do |punishment_id, values| %>
             <tr>
               <td><%= values["punishment_type"] %></td>
-              <td><%= values["start_date"] %></td>
-              <td><%= values["end_date"] %></td>
-              <td><%= values["details"] %></td>
+              <td><span><%= values["start_date"] %></span></td>
+              <td><span><%= values["end_date"] %></span></td>
+              <td><span><%= values["details"] %></span></td>
               <td><%= values["completed"] %></td>
             </tr>
           <% end %>

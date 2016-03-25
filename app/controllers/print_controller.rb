@@ -64,7 +64,12 @@ class PrintController < ApplicationController
   end
 
   def student_payments_summary_print
-    @student = Student.find(session[:current_student_id])
+    if params[:student_id].blank?
+      @student = Student.find(session[:current_student_id])
+    else
+      @student = Student.find(params[:student_id]) #wkhtmltopdf does not recognize session variables
+    end
+    
     @payment_hash = {}
 
     (@student.payments || []).each do |payment|
@@ -89,8 +94,25 @@ class PrintController < ApplicationController
     render :layout => false
   end
 
+  def print_to_pdf_student_payments_summary_print
+    destination_path = "/tmp/student_payments_summary.pdf"
+    print_path = "/print/student_payments_summary_print"
+    student_id = session[:current_student_id]
+    thread = Thread.new{
+      Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
+        request.env["HTTP_HOST"] + "\"#{print_path}/?student_id=#{student_id}" + "\" #{destination_path} \n"
+    }
+    thread.join #Make sure the thread is done
+    send_file "#{destination_path}", :disposition => "attachment"
+  end
+
   def student_punishments_summary_print
-    @student = Student.find(session[:current_student_id])
+    if params[:student_id].blank?
+      @student = Student.find(session[:current_student_id])
+    else
+      @student = Student.find(params[:student_id]) #wkhtmltopdf does not recognize session variables
+    end
+    
     @punishment_hash = {}
     (@student.student_punishments || []).each do |student_punishment|
       punishment_id = student_punishment.punishment.id
@@ -111,8 +133,25 @@ class PrintController < ApplicationController
     render :layout => false
   end
 
+  def print_to_pdf_student_punishments_summary_print
+    destination_path = "/tmp/student_punishments_summary.pdf"
+    print_path = "/print/student_punishments_summary_print"
+    student_id = session[:current_student_id]
+    thread = Thread.new{
+      Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
+        request.env["HTTP_HOST"] + "\"#{print_path}/?student_id=#{student_id}" + "\" #{destination_path} \n"
+    }
+    thread.join #Make sure the thread is done
+    send_file "#{destination_path}", :disposition => "attachment"
+  end
+
   def student_new_examination_notifications_print
-    @student = Student.find(session[:current_student_id])
+    if params[:student_id].blank?
+      @student = Student.find(session[:current_student_id])
+    else
+      @student = Student.find(params[:student_id]) #wkhtmltopdf does not recognize session variables
+    end
+    
     student_id = session[:current_student_id]
 
     examination_notifications = StudentNotification.find(:all, :conditions => ["student_id =? AND
@@ -136,7 +175,12 @@ class PrintController < ApplicationController
   end
 
   def student_new_exam_results_notifications_print
-    @student = Student.find(session[:current_student_id])
+    if params[:student_id].blank?
+      @student = Student.find(session[:current_student_id])
+    else
+      @student = Student.find(params[:student_id]) #wkhtmltopdf does not recognize session variables
+    end
+    
     student_id = session[:current_student_id]
 
     exam_results_notifications = StudentNotification.find(:all, :conditions => ["student_id =? AND
@@ -161,7 +205,12 @@ class PrintController < ApplicationController
   end
 
   def student_new_payment_notifications_print
-    @student = Student.find(session[:current_student_id])
+    if params[:student_id].blank?
+      @student = Student.find(session[:current_student_id])
+    else
+      @student = Student.find(params[:student_id]) #wkhtmltopdf does not recognize session variables
+    end
+    
     student_id = session[:current_student_id]
     payments_notifications = StudentNotification.find(:all, :conditions => ["student_id =? AND
       record_type =?", student_id, 'new_payment'])
@@ -184,7 +233,12 @@ class PrintController < ApplicationController
   end
 
   def student_new_punishments_notifications_print
-    @student = Student.find(session[:current_student_id])
+    if params[:student_id].blank?
+      @student = Student.find(session[:current_student_id])
+    else
+      @student = Student.find(params[:student_id]) #wkhtmltopdf does not recognize session variables
+    end
+    
     student_id = session[:current_student_id]
 
     punishments_notifications = StudentNotification.find(:all, :conditions => ["student_id =? AND
