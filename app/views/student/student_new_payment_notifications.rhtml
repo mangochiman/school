@@ -21,8 +21,20 @@
     <%= stylesheet_link_tag("bootstrap") %>
 
     <script type="text/javascript">
+      function printToPDF(){
+        pdfIframe = document.getElementById('pdfIframe');
+        if (pdfIframe) pdfIframe.parentNode.removeChild(pdfIframe);
+
+        iframe = document.createElement("iframe");
+        iframe.id = 'pdfIframe';
+        iframe.src = "/print/print_to_pdf_student_new_payment_notifications_print";
+        iframe.style.display = 'none';
+        body = document.getElementsByTagName("body")[0];
+        body.appendChild(iframe);
+      }
 
     </script>
+
     <style type="text/css">
       .modal-title {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -155,7 +167,7 @@
 
             <div class="content-module-heading cf">
 
-              <h3 class="fl">Exam Notifications</h3>
+              <h3 class="fl">Payment Notifications</h3>
               <span class="fr expand-collapse-text">Click to collapse</span>
               <span class="fr expand-collapse-text initial-expand">Click to expand</span>
 
@@ -176,7 +188,7 @@
 
               <form id="search-student-form" action="#">
                 <fieldset>
-                  <legend>Exam Notifications</legend>
+                  <legend>Payment Notifications</legend>
                   <div style="margin-left:2%;">
                     <table style="width:98%;" id="payment_notifications">
                       <thead>
@@ -213,7 +225,7 @@
                 </li>
 
                 <li role="presentation" class="divider"></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">PDF</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="printToPDF();">PDF</a></li>
               </ul>
             </div><br />
           </div> <!-- end content-module -->
