@@ -1,7 +1,13 @@
 class PrintController < ApplicationController
+  skip_before_filter :authenticate_user
   def student_performance_summary_print
-    @student = Student.find(session[:current_student_id])
 
+    if params[:student_id].blank?
+      @student = Student.find(session[:current_student_id])
+    else
+      @student = Student.find(params[:student_id]) #wkhtmltopdf does not recognize session variables
+    end
+    
     @class_room_hash = {}
     class_rooms = ClassRoom.find(:all)
     class_rooms.each do |c|
@@ -43,6 +49,18 @@ class PrintController < ApplicationController
 
     end
     render :layout => false
+  end
+
+  def print_to_pdf_student_performance_summary_print
+    destsination_path = "/tmp/student_performance_summary.pdf"
+    print_path = "/print/student_performance_summary_print"
+    student_id = session[:current_student_id]
+    thread = Thread.new{
+      Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
+        request.env["HTTP_HOST"] + "\"#{print_path}/?student_id=#{student_id}" + "\" #{destsination_path} \n"
+    }
+    thread.join #Make sure the thread is done
+    render :text => "done" and return
   end
 
   def student_payments_summary_print

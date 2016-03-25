@@ -3,36 +3,93 @@
 <html lang="en">
   <head>
     <title>Performance Summary Print</title>
+    <style type="text/css">
+      table { 
+        width: 100%;
+        margin-bottom: 1.25em; /* 20/16 */ }
+
+      table th {
+        background-color: #5d6677;
+        color: white;
+        text-transform: uppercase;
+        padding: 0.25em 0 0.25em 0.25em; /* 15/12 */
+        border-left: 1px solid #747c8a;
+        font-size: 9pt;
+      }
+
+      table tbody td {
+        padding: 0.833em 0 0.833em 0.25em; /* 10/12 15/12 */
+        border-left: 1px solid white;
+        border-bottom: 1px solid #f8f9fa;
+      }
+
+      /* Alternate table row */
+      table tbody tr:nth-child(odd) { background-color: #f8f9fa; }
+
+      /* Push the first cell to the right so it doesn't stick to the table border */
+      table td:first-child, table th:first-child {
+        width: 4em /* 48/12 */;
+        text-align: center;
+        padding: 0;
+        border: none;
+        border-bottom: 1px solid #f8f9fa;
+      }
+
+      table td:last-child, table th:last-child {
+        width: 7em; /* 84/12 */
+        text-align: center;
+        padding: 0;
+      }
+
+      table td.table-footer {
+        text-align: left;
+        vertical-align: middle;
+        padding-top: 1.25em /* 15/12 */;
+        border: none;
+      }
+
+      table th:first-child {
+        border-style: none none none !important;
+      }
+
+      table tr td span{
+        position: absolute;
+        margin-left: 20px;
+
+}
+    </style>
   </head>
   <body>
-
-    <table id="performance_data">
-      <% @exams_hash.each do |class_room_id, values| %>
-        <tr>
-          <th colspan="4" style="text-align:center; border-bottom: 2px solid white !important; background-color: #006dcc;">
-            <%= @class_room_hash[class_room_id] %>
-          </th>
-        </tr>
-        <tr>
-          <th style="width:20%;">Exam Date</th>
-          <th style="padding:6px; text-align: center;">Course</th>
-          <th style="padding:6px; text-align: center;">Exam Type</th>
-          <th style="padding:6px; width:24%;">Exam Results</th>
-        </tr>
-        <% values.each do |exam_id, exam_data| %>
+    <div style="padding-left: 10px; padding-top: 10px; width: 98.5%;">
+      <table id="performance_data" width="60%">
+        <% @exams_hash.each do |class_room_id, values| %>
           <tr>
-            <td><%= exam_data["exam_date"] %></td>
-            <td><%= exam_data["course"] %></td>
-            <td><%= exam_data["exam_type"] %></td>
-            <td><%= exam_data["exam_results"] %></td>
+            <th colspan="4" style="text-align:center; border-bottom: 2px solid white !important; ">
+              <%= @class_room_hash[class_room_id] %>
+            </th>
           </tr>
+          <tr>
+            <th style="width:20%;">Exam Date</th>
+            <th style="padding:6px; text-align: center;">Course</th>
+            <th style="padding:6px; text-align: center;">Exam Type</th>
+            <th style="padding:6px; width:24%;">Exam Results</th>
+          </tr>
+          <tbody>
+            <% values.each do |exam_id, exam_data| %>
+              <tr style="line-height: 5px; font-size: 8pt;">
+                <td><%= exam_data["exam_date"] %></td>
+                <td><span><%= exam_data["course"] %></span></td>
+                <td><span><%= exam_data["exam_type"] %></span></td>
+                <td><%= exam_data["exam_results"] %></td>
+              </tr>
+            <% end %>
+          </tbody>
         <% end %>
+      </table>
+
+      <% if @exams_hash.blank? %>
+        <h3>No Data</h3>
       <% end %>
-    </table>
-
-    <% if @exams_hash.blank? %>
-      <h3>No Data</h3>
-    <% end %>
-
+    </div>
   </body>
 </html>
