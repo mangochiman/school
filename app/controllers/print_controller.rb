@@ -420,7 +420,24 @@ class PrintController < ApplicationController
     #@guardian = Parent.find(session[:current_guardian_id])
     @guardian = Parent.find(params[:guardian_id])
     @student = Student.find(params[:student_id])
-    render :layout => "guardians"
+
+    @punishment_hash = {}
+    (@student.student_punishments || []).each do |student_punishment|
+      punishment_id = student_punishment.punishment.id
+      punishment_type = student_punishment.punishment.punishment_type.name
+      start_date = student_punishment.punishment.start_date
+      end_date = student_punishment.punishment.end_date
+      punishment_details = student_punishment.punishment.details
+      status = 'No'
+      status = 'Yes' if student_punishment.completed.to_i == 1
+      @punishment_hash[punishment_id] = {}
+      @punishment_hash[punishment_id]["punishment_type"] = punishment_type
+      @punishment_hash[punishment_id]["details"] = punishment_details
+      @punishment_hash[punishment_id]["start_date"] = start_date
+      @punishment_hash[punishment_id]["end_date"] = end_date
+      @punishment_hash[punishment_id]["completed"] = status
+    end
+    render :layout => false
   end
 
   def print_to_pdf_guardian_student_punishments_summary_print
