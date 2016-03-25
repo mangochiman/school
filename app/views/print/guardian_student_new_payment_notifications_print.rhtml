@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Student Payments</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <style type="text/css">
+      table {
+        width: 100%;
+        margin-bottom: 1.25em; /* 20/16 */ }
+
+      table th {
+        background-color: #5d6677;
+        color: white;
+        text-transform: uppercase;
+        padding: 0.75em 0 0.75em 0.75em; /* 15/12 */
+        border-left: 1px solid #747c8a;
+        font-size: 9pt;
+      }
+
+      table tbody td {
+        padding: 0.433em 0 0.433em 0.25em; /* 10/12 15/12 */
+        border-left: 1px solid white;
+        border-bottom: 1px solid #f8f9fa;
+      }
+
+      /* Alternate table row */
+      table tbody tr:nth-child(odd) { background-color: #f8f9fa; }
+
+      /* Push the first cell to the right so it doesn't stick to the table border */
+      table td:first-child, table th:first-child {
+        width: 4em /* 48/12 */;
+        text-align: center;
+        padding: 0;
+        border: none;
+        border-bottom: 1px solid #f8f9fa;
+      }
+
+      table td:last-child, table th:last-child {
+        width: 7em; /* 84/12 */
+        text-align: center;
+        padding: 0;
+      }
+
+      table td.table-footer {
+        text-align: left;
+        vertical-align: middle;
+        padding-top: 1.25em /* 15/12 */;
+        border: none;
+      }
+
+      table th:first-child {
+        border-style: none none none !important;
+      }
+
+      table tr td span{
+        position: relative;
+        margin-left: 20px;
+
+      }
+
+    </style>
+  </head>
+  <body>
+    <div style="padding-left: 10px; padding-top: 10px; width: 98.5%;">
+      <form id="search-student-form" action="#">
+        <fieldset>
+          <legend>Payments Notifications</legend>
+          <div style="margin-left:2%;">
+
+            <table style="width:98%;" id="payment_notifications">
+              <% @notifications_hash.each do |student_id, data| %>
+                <thead>
+                  <tr>
+                    <% student = Student.find(student_id) %>
+                    <th colspan="3" style="padding: 5px;">
+                      Student Name: <span class="student-name"><%= student.name %></span>
+                      Gender: <span class="gender"><%= student.gender.capitalize %></span>
+                      Date of Birth: <span class="dob"><%= student.dob.to_date.strftime("%d/%b/%Y") rescue student.dob %></span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th style="width:20%; border-style: none none none;">Payment Type</th>
+                    <th style="text-align: center;">Amount Paid</th>
+                    <th style="width:30%;">Date Of Payment</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% data.each do |payment_id, values| %>
+                    <tr>
+                      <td><%= values["payment_type"] %></td>
+                      <td style="text-align: center;"><%= number_to_currency(values["amount_paid"], :unit => 'MK') %></td>
+                      <td><%= values["date_paid"] %></td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              <% end %>
+            </table>
+
+          </div>
+        </fieldset>
+      </form>
+    </div>
+
+  </body>
+</html>

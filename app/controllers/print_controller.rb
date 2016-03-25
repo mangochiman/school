@@ -454,8 +454,13 @@ class PrintController < ApplicationController
   end
 
   def guardian_student_new_examination_notifications_print
-    @guardian = Parent.find(session[:current_guardian_id])
-    guardian_id = session[:current_guardian_id]
+    if params[:guardian_id].blank?
+      @guardian = Parent.find(session[:current_guardian_id])
+    else
+      @guardian = Parent.find(params[:guardian_id])
+    end
+
+    guardian_id = @guardian.parent_id
     my_students = @guardian.students
     examination_notifications = GuardianNotification.find(:all, :conditions => ["guardian_id =? AND
       record_type =?", guardian_id, 'new_examination'])
@@ -478,25 +483,29 @@ class PrintController < ApplicationController
       end
     end
 
-    render :layout => "guardians"
+    render :layout => false
   end
 
   def print_to_pdf_guardian_student_new_examination_notifications_print
     destination_path = "/tmp/guardian_student_new_examination_notifications.pdf"
     print_path = "/print/guardian_student_new_examination_notifications_print"
-    student_id = params[:student_id]
     guardian_id = session[:current_guardian_id]
     thread = Thread.new{
       Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
-        request.env["HTTP_HOST"] + "\"#{print_path}/?student_id=#{student_id}&guardian_id=#{guardian_id}" + "\" #{destination_path} \n"
+        request.env["HTTP_HOST"] + "\"#{print_path}/?guardian_id=#{guardian_id}" + "\" #{destination_path} \n"
     }
     thread.join #Make sure the thread is done
     send_file "#{destination_path}", :disposition => "attachment"
   end
 
   def guardian_student_new_payment_notifications_print
-    @guardian = Parent.find(session[:current_guardian_id])
-    guardian_id = session[:current_guardian_id]
+    if params[:guardian_id].blank?
+      @guardian = Parent.find(session[:current_guardian_id])
+    else
+      @guardian = Parent.find(params[:guardian_id])
+    end
+    
+    guardian_id = @guardian.parent_id
     my_students = @guardian.students
     payments_notifications = GuardianNotification.find(:all, :conditions => ["guardian_id =? AND
       record_type =?", guardian_id, 'new_payment'])
@@ -519,25 +528,29 @@ class PrintController < ApplicationController
       end
     end
 
-    render :layout => "guardians"
+    render :layout => false
   end
 
   def print_to_pdf_guardian_student_new_payment_notifications_print
     destination_path = "/tmp/guardian_student_new_payment_notifications.pdf"
     print_path = "/print/guardian_student_new_payment_notifications_print"
-    student_id = params[:student_id]
     guardian_id = session[:current_guardian_id]
     thread = Thread.new{
       Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
-        request.env["HTTP_HOST"] + "\"#{print_path}/?student_id=#{student_id}&guardian_id=#{guardian_id}" + "\" #{destination_path} \n"
+        request.env["HTTP_HOST"] + "\"#{print_path}/?guardian_id=#{guardian_id}" + "\" #{destination_path} \n"
     }
     thread.join #Make sure the thread is done
     send_file "#{destination_path}", :disposition => "attachment"
   end
 
   def guardian_student_new_exam_results_notifications_print
-    @guardian = Parent.find(session[:current_guardian_id])
-    guardian_id = session[:current_guardian_id]
+    if params[:guardian_id].blank?
+      @guardian = Parent.find(session[:current_guardian_id])
+    else
+      @guardian = Parent.find(params[:guardian_id])
+    end
+
+    guardian_id = @guardian.parent_id
     my_students = @guardian.students
     exam_results_notifications = GuardianNotification.find(:all, :conditions => ["guardian_id =? AND
       record_type =?", guardian_id, 'new_examination_results'])
@@ -561,25 +574,29 @@ class PrintController < ApplicationController
       end
     end
 
-    render :layout => "guardians"
+    render :layout => false
   end
 
   def print_to_pdf_guardian_student_new_exam_results_notifications_print
     destination_path = "/tmp/guardian_student_new_exam_results_notifications.pdf"
     print_path = "/print/guardian_student_new_exam_results_notifications_print"
-    student_id = params[:student_id]
     guardian_id = session[:current_guardian_id]
     thread = Thread.new{
       Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
-        request.env["HTTP_HOST"] + "\"#{print_path}/?student_id=#{student_id}&guardian_id=#{guardian_id}" + "\" #{destination_path} \n"
+        request.env["HTTP_HOST"] + "\"#{print_path}/?guardian_id=#{guardian_id}" + "\" #{destination_path} \n"
     }
     thread.join #Make sure the thread is done
     send_file "#{destination_path}", :disposition => "attachment"
   end
 
   def guardian_student_new_punishments_notifications_print
-    @guardian = Parent.find(session[:current_guardian_id])
-    guardian_id = session[:current_guardian_id]
+    if params[:guardian_id].blank?
+      @guardian = Parent.find(session[:current_guardian_id])
+    else
+      @guardian = Parent.find(params[:guardian_id])
+    end
+
+    guardian_id = @guardian.parent_id
     my_students = @guardian.students
     punishments_notifications = GuardianNotification.find(:all, :conditions => ["guardian_id =? AND
       record_type =?", guardian_id, 'new_punishment'])
@@ -603,17 +620,16 @@ class PrintController < ApplicationController
       end
     end
 
-    render :layout => "guardians"
+    render :layout => false
   end
 
   def print_to_pdf_guardian_student_new_punishments_notifications_print
     destination_path = "/tmp/guardian_student_new_punishments_notifications.pdf"
     print_path = "/print/guardian_student_new_punishments_notifications_print"
-    student_id = params[:student_id]
     guardian_id = session[:current_guardian_id]
     thread = Thread.new{
       Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
-        request.env["HTTP_HOST"] + "\"#{print_path}/?student_id=#{student_id}&guardian_id=#{guardian_id}" + "\" #{destination_path} \n"
+        request.env["HTTP_HOST"] + "\"#{print_path}/?guardian_id=#{guardian_id}" + "\" #{destination_path} \n"
     }
     thread.join #Make sure the thread is done
     send_file "#{destination_path}", :disposition => "attachment"
