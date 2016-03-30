@@ -635,4 +635,159 @@ class PrintController < ApplicationController
     send_file "#{destination_path}", :disposition => "attachment"
   end
 
+  #>>>>>>>>>>>>>>>>>>>>>>>>>>>REPORTS>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+  def students_per_semester_report_print
+    render :layout => false
+  end
+
+  def print_to_pdf_students_per_semester_report_print
+    destination_path = "/tmp/students_per_semester_report.pdf"
+    print_path = "/print/students_per_semester_report_print"
+
+    thread = Thread.new{
+      Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
+        request.env["HTTP_HOST"] + "\"#{print_path}/?guardian_id=#{guardian_id}" + "\" #{destination_path} \n"
+    }
+    
+    thread.join #Make sure the thread is done
+    send_file "#{destination_path}", :disposition => "attachment"
+  end
+
+  def students_per_year_report_print
+    render :layout => false
+  end
+
+  def print_to_pdf_students_per_year_report_print
+    destination_path = "/tmp/students_per_year_report.pdf"
+    print_path = "/print/students_per_year_report_print"
+
+    thread = Thread.new{
+      Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
+        request.env["HTTP_HOST"] + "\"#{print_path}/?guardian_id=#{guardian_id}" + "\" #{destination_path} \n"
+    }
+
+    thread.join #Make sure the thread is done
+    send_file "#{destination_path}", :disposition => "attachment"
+  end
+
+  def students_per_class_report_print
+    render :layout => false
+  end
+
+  def print_to_pdf_students_per_class_report_print
+    destination_path = "/tmp/students_per_class_report.pdf"
+    print_path = "/print/students_per_class_report_print"
+
+    thread = Thread.new{
+      Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
+        request.env["HTTP_HOST"] + "\"#{print_path}/?guardian_id=#{guardian_id}" + "\" #{destination_path} \n"
+    }
+
+    thread.join #Make sure the thread is done
+    send_file "#{destination_path}", :disposition => "attachment"
+  end
+
+  def courses_report_print
+    render :layout => false
+  end
+
+  def print_to_pdf_courses_report_print
+    destination_path = "/tmp/courses_report.pdf"
+    print_path = "/print/courses_report_print"
+
+    thread = Thread.new{
+      Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
+        request.env["HTTP_HOST"] + "\"#{print_path}/?guardian_id=#{guardian_id}" + "\" #{destination_path} \n"
+    }
+
+    thread.join #Make sure the thread is done
+    send_file "#{destination_path}", :disposition => "attachment"
+  end
+
+  def courses_per_class_report_print
+    render :layout => false
+  end
+
+  def print_to_pdf_courses_per_class_report_print
+    destination_path = "/tmp/courses_per_class_report.pdf"
+    print_path = "/print/courses_per_class_report_print"
+
+    thread = Thread.new{
+      Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
+        request.env["HTTP_HOST"] + "\"#{print_path}/?guardian_id=#{guardian_id}" + "\" #{destination_path} \n"
+    }
+
+    thread.join #Make sure the thread is done
+    send_file "#{destination_path}", :disposition => "attachment"
+  end
+
+  def teachers_report_print
+    render :layout => false
+  end
+
+  def print_to_pdf_teachers_report_print
+    destination_path = "/tmp/teachers_report.pdf"
+    print_path = "/print/teachers_report_print"
+
+    thread = Thread.new{
+      Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
+        request.env["HTTP_HOST"] + "\"#{print_path}/?guardian_id=#{guardian_id}" + "\" #{destination_path} \n"
+    }
+
+    thread.join #Make sure the thread is done
+    send_file "#{destination_path}", :disposition => "attachment"
+  end
+
+  def teachers_per_subjects_report_print
+    render :layout => false
+  end
+
+  def print_to_pdf_teachers_per_subjects_report_print
+    destination_path = "/tmp/teachers_per_subjects_report.pdf"
+    print_path = "/print/teachers_per_subjects_report_print"
+
+    thread = Thread.new{
+      Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
+        request.env["HTTP_HOST"] + "\"#{print_path}/?guardian_id=#{guardian_id}" + "\" #{destination_path} \n"
+    }
+
+    thread.join #Make sure the thread is done
+    send_file "#{destination_path}", :disposition => "attachment"
+  end
+
+  def student_performance_report_menu_print
+    render :layout => false
+  end
+
+  def print_to_pdf_student_performance_report_menu_print
+    destination_path = "/tmp/student_performance_report_menu.pdf"
+    print_path = "/print/student_performance_report_menu_print"
+
+    thread = Thread.new{
+      Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
+        request.env["HTTP_HOST"] + "\"#{print_path}/?guardian_id=#{guardian_id}" + "\" #{destination_path} \n"
+    }
+
+    thread.join #Make sure the thread is done
+    send_file "#{destination_path}", :disposition => "attachment"
+  end
+
+  def student_payments_report_menu_print
+    render :layout => false
+  end
+
+  def print_to_pdf_student_payments_report_menu_print
+    destination_path = "/tmp/student_payments_report_menu.pdf"
+    print_path = "/print/student_payments_report_menu_print"
+
+    thread = Thread.new{
+      Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
+        request.env["HTTP_HOST"] + "\"#{print_path}/?guardian_id=#{guardian_id}" + "\" #{destination_path} \n"
+    }
+
+    thread.join #Make sure the thread is done
+    send_file "#{destination_path}", :disposition => "attachment"
+  end
+
 end
