@@ -62,24 +62,22 @@
   </head>
   <body>
         <div style="margin-left:2%;">
-          <table style="width:98%;" id="exam_notifications">
+          <table style="width:98%;">
             <thead>
               <tr>
                 <th style="width:200px;">Name</th>
                 <th>Email</th>
                 <th>Gender</th>
                 <th>Date of Birth</th>
-                <th>Class Room</th>
               </tr>
             </thead>
             <tbody>
-              <% @report_hash.each do |student_id, values| %>
+              <% @report_hash.each do |teacher_id, values| %>
                 <tr style="line-height: 1em;">
                   <td style="text-align: left;"><span style="padding-left:10px;"><%= values["name"] %></span></td>
                   <td style="text-align: center;"><%= values["email"] %></td>
                   <td style="text-align: center;"><%= values["gender"] %></td>
                   <td style="text-align: center;"><%= values["dob"] %></td>
-                  <td><%= values["class_room"] %></td>
                 </tr>
               <% end %>
             </tbody>
