@@ -799,7 +799,7 @@ class PrintController < ApplicationController
     @current_semester_audit_id = current_semester_audit.semester_audit_id unless current_semester_audit.blank?
     @current_semester_audit_id = SemesterAudit.last.semester_audit_id if current_semester_audit.blank?
 
-    class_room_id = params[:class_room]
+    class_room_id = params[:class_room_id]
     semester_audit_id = params[:semester_audit_id]
 
     hash = {}
@@ -833,7 +833,7 @@ class PrintController < ApplicationController
     destination_path = "/tmp/courses_per_class_report.pdf"
     print_path = "/print/courses_per_class_report_print"
 
-    class_room_id = params[:class_room]
+    class_room_id = params[:class_room_id]
     semester_audit_id = params[:semester_audit_id]
     thread = Thread.new{
       Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +

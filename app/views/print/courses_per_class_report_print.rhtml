@@ -2,7 +2,7 @@
 
 <html lang="en">
   <head>
-    <title>New Exam Notifications</title>
+    <title>Courses Per Class Report</title>
     <style type="text/css">
       table {
         width: 100%;
@@ -61,30 +61,28 @@
     </style>
   </head>
   <body>
-        <div style="margin-left:2%;">
-          <table style="width:98%;" id="exam_notifications">
-            <thead>
-              <tr>
-                <th style="width:200px;">Name</th>
-                <th>Email</th>
-                <th>Gender</th>
-                <th>Date of Birth</th>
-                <th>Class Room</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% @report_hash.each do |student_id, values| %>
-                <tr style="line-height: 1em;">
-                  <td style="text-align: left;"><span style="padding-left:10px;"><%= values["name"] %></span></td>
-                  <td style="text-align: center;"><%= values["email"] %></td>
-                  <td style="text-align: center;"><%= values["gender"] %></td>
-                  <td style="text-align: center;"><%= values["dob"] %></td>
-                  <td><%= values["class_room"] %></td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </div>
-      
+    <div style="margin-left:2%;">
+      <table style="width:98%;">
+        <thead>
+          <tr>
+            <th style='font-weight:bold;'>#</th>
+            <th style='text-align:center;'>Course Name</th>
+            <th style='width:150px;'>Date Created</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%  count = 1%>
+          <% @report_hash.each do |course_id, values| %>
+            <tr style="line-height: 1em;">
+              <td style='font-weight:bold;'><%= count %></td>
+              <td style='padding-left:25%;'><%= values["course_name"] %></td>
+              <td><%= values["date_created"] %></td>
+            </tr>
+            <%  count += 1%>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
   </body>
 </html>
