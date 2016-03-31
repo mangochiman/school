@@ -18,7 +18,7 @@
     <%= stylesheet_link_tag("gvalidator") %>
     <%= stylesheet_link_tag("bootstrap") %>
 
-    <script>
+    <script type="text/javascript">
       var classRoomHash = eval('(' + '<%= @class_room_hash.to_json %>' + ')');
       requiredData = {'exam_type':'Exam Type', 'course':' Course', 'class_room':'Class Room', 'semester':'Semester'}
 
@@ -58,7 +58,7 @@
               html = "<table id='report_table'>";
               html += "<thead>";
               html += "<tr>";
-              html += "<th style='min-width:30%;'>Name</th><th>Email</th><th>Gender</th><th>Exam Date</th><th>Grade</th>";
+              html += "<th style='width:200px;'>Name</th><th>Email</th><th>Gender</th><th>Exam Date</th><th>Grade</th>";
               html += "</tr>";
               html += "</thead>";
               results = eval('(' + results + ')');
@@ -105,9 +105,26 @@
       }
 
       window.setTimeout("selectCurrentSemester();", 100);
+
+      function printToPDF(){
+        examType = document.getElementById('exam_type').value;
+        course = document.getElementById('course').value;
+        classRoomID = document.getElementById('class_room').value;
+        semesterAuditID = document.getElementById('semester').value;
+
+        pdfIframe = document.getElementById('pdfIframe');
+        if (pdfIframe) pdfIframe.parentNode.removeChild(pdfIframe);
+
+        iframe = document.createElement("iframe");
+        iframe.id = 'pdfIframe';
+        iframe.src = "/print/print_to_pdf_student_performance_report_menu_print?class_room_id=" + classRoomID + "&semester_audit_id=" + semesterAuditID + '&course=' + course + '&exam_type=' + examType;
+        iframe.style.display = 'none';
+        body = document.getElementsByTagName("body")[0];
+        body.appendChild(iframe);
+      }
     </script>
 
-    <style>
+    <style type="text/css">
       .modal-title {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         font-weight: 500;
@@ -270,7 +287,7 @@
                          onclick="return ExcellentExport.csv(this, 'report_table');">CSV</a>
                     </li>
                     <li role="presentation" class="divider"></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">PDF</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="printToPDF();">PDF</a></li>
                   </ul>
                 </div>
                 <div id="report_data">

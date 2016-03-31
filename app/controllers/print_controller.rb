@@ -963,7 +963,7 @@ class PrintController < ApplicationController
     exam_type = params[:exam_type]
     course = params[:course]
     semester_audit_id = params[:semester_audit_id]
-    class_room_id = params[:class_room]
+    class_room_id = params[:class_room_id]
     hash = {}
 
     students = Student.find_by_sql("SELECT s.*, e.start_date as exam_date, er.marks as grade FROM exam e
@@ -996,7 +996,7 @@ class PrintController < ApplicationController
     exam_type = params[:exam_type]
     course = params[:course]
     semester_audit_id = params[:semester_audit_id]
-    class_room_id = params[:class_room]
+    class_room_id = params[:class_room_id]
 
     thread = Thread.new{
       Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
