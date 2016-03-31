@@ -1067,7 +1067,7 @@ class PrintController < ApplicationController
 
     payment_type = params[:payment_type]
     semester_audit_id = params[:semester_audit_id]
-    class_room_id = params[:class_room]
+    class_room_id = params[:class_room_id]
 
     hash = {}
     students = Student.find_by_sql("SELECT s.*, SUM(p.amount_paid) as total_amount_paid,
@@ -1094,13 +1094,13 @@ class PrintController < ApplicationController
     @report_hash = hash
     render :layout => false
   end
-
+  
   def print_to_pdf_students_without_balances_print
     destination_path = "/tmp/students_without_balances.pdf"
     print_path = "/print/students_without_balances_print"
     payment_type = params[:payment_type]
     semester_audit_id = params[:semester_audit_id]
-    class_room_id = params[:class_room]
+    class_room_id = params[:class_room_id]
 
     thread = Thread.new{
       Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
@@ -1118,7 +1118,7 @@ class PrintController < ApplicationController
 
     payment_type = params[:payment_type]
     semester_audit_id = params[:semester_audit_id]
-    class_room_id = params[:class_room]
+    class_room_id = params[:class_room_id]
 
     hash = {}
     hash[class_room_id] = {}
@@ -1145,12 +1145,12 @@ class PrintController < ApplicationController
     render :layout => false
   end
 
-  def print_to_pdf_students_without_balances_print
+  def print_to_pdf_students_without_payments_print
     destination_path = "/tmp/students_without_payments.pdf"
     print_path = "/print/students_without_payments_print"
     payment_type = params[:payment_type]
     semester_audit_id = params[:semester_audit_id]
-    class_room_id = params[:class_room]
+    class_room_id = params[:class_room_id]
 
     thread = Thread.new{
       Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
@@ -1160,5 +1160,18 @@ class PrintController < ApplicationController
     thread.join #Make sure the thread is done
     send_file "#{destination_path}", :disposition => "attachment"
   end
-  
+
+  def students_who_paid(semester_audit_id, class_room_id, payment_type)
+    students = Student.find_by_sql("SELECT s.*, SUM(p.amount_paid) as total_amount_paid,
+              pt.amount_required as amount_required FROM student s
+              INNER JOIN payment p ON s.student_id = p.student_id
+              INNER JOIN student_class_room_adjustment scra ON s.student_id = scra.student_id
+              INNER JOIN payment_type pt ON p.payment_type_id = pt.payment_type_id
+              WHERE scra.new_class_room_id = #{class_room_id} AND
+              p.semester_audit_id = '#{semester_audit_id}' AND pt.payment_type_id = #{payment_type}
+              GROUP BY student_id HAVING total_amount_paid > 0")
+
+    return students.map(&:student_id)
+
+  end
 end
