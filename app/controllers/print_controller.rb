@@ -1014,7 +1014,7 @@ class PrintController < ApplicationController
     
     payment_type = params[:payment_type]
     semester_audit_id = params[:semester_audit_id]
-    class_room_id = params[:class_room]
+    class_room_id = params[:class_room_id]
 
     hash = {}
 
@@ -1049,7 +1049,7 @@ class PrintController < ApplicationController
 
     payment_type = params[:payment_type]
     semester_audit_id = params[:semester_audit_id]
-    class_room_id = params[:class_room]
+    class_room_id = params[:class_room_id]
 
     thread = Thread.new{
       Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
