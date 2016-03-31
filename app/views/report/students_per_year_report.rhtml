@@ -20,7 +20,7 @@
     <%= stylesheet_link_tag("gvalidator") %>
     <%= stylesheet_link_tag("bootstrap") %>
 
-    <script>
+    <script type="text/javascript">
       function queryReportData(){
         year = document.getElementById('year').value;
         jQuery.ajax({
@@ -31,7 +31,7 @@
             html = "<table id='report_table'>";
             html += "<thead>";
             html += "<tr>";
-            html += "<th style='min-width:30%;'>Name</th><th>Email</th><th>Gender</th><th>Date of Birth</th><th>Class Room</th>";
+            html += "<th style='width:200px;'>Name</th><th>Email</th><th>Gender</th><th>Date of Birth</th><th>Class Room</th>";
             html += "</tr>";
             html += "</thead>";
             results = eval('(' + results + ')');
@@ -61,9 +61,22 @@
         });
       }
 
+      function printToPDF(){
+        year = document.getElementById('year').value;
+        pdfIframe = document.getElementById('pdfIframe');
+        if (pdfIframe) pdfIframe.parentNode.removeChild(pdfIframe);
+
+        iframe = document.createElement("iframe");
+        iframe.id = 'pdfIframe';
+        iframe.src = "/print/print_to_pdf_students_per_year_report_print?year=" + year;
+        iframe.style.display = 'none';
+        body = document.getElementsByTagName("body")[0];
+        body.appendChild(iframe);
+      }
+
     </script>
 
-    <style>
+    <style type="text/css">
       #year, #semester{
         background-color: #fff;
         background-image: none;
@@ -196,7 +209,7 @@
                          onclick="return ExcellentExport.csv(this, 'report_table');">CSV</a>
                     </li>
                     <li role="presentation" class="divider"></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">PDF</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="printToPDF();">PDF</a></li>
                   </ul>
                 </div>
 
