@@ -720,7 +720,7 @@ class PrintController < ApplicationController
     @current_semester_audit_id = current_semester_audit.semester_audit_id unless current_semester_audit.blank?
     @current_semester_audit_id = SemesterAudit.last.semester_audit_id if current_semester_audit.blank?
 
-    class_room_id = params[:class_room]
+    class_room_id = params[:class_room_id]
     semester_audit_id = params[:semester_audit_id]
 
     hash = {}
