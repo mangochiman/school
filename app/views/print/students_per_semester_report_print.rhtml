@@ -2,7 +2,7 @@
 
 <html lang="en">
   <head>
-    <title>New Exam Notifications</title>
+    <title>Students Per Semester Report</title>
     <style type="text/css">
       table {
         width: 100%;
@@ -61,30 +61,36 @@
     </style>
   </head>
   <body>
-        <div style="margin-left:2%;">
-          <table style="width:98%;" id="exam_notifications">
-            <thead>
-              <tr>
-                <th style="width:200px;">Name</th>
-                <th>Email</th>
-                <th>Gender</th>
-                <th>Date of Birth</th>
-                <th>Class Room</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% @report_hash.each do |student_id, values| %>
-                <tr style="line-height: 1em;">
-                  <td style="text-align: left;"><span style="padding-left:10px;"><%= values["name"] %></span></td>
-                  <td style="text-align: center;"><%= values["email"] %></td>
-                  <td style="text-align: center;"><%= values["gender"] %></td>
-                  <td style="text-align: center;"><%= values["dob"] %></td>
-                  <td><%= values["class_room"] %></td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </div>
-      
+    <div style="margin-left:2%;">
+      Report Type: <b><i>Students Per Semester</i></b><br/>
+      Semester Details: <b><i><%=  @formatted_semester_details %></i></b><br/>
+      Total Students: <b><i><%=  @report_hash.keys.count %></i></b><br/>
+      <p>Date Generated: <b><i><%= Date.today.strftime("%d/%b/%Y") %></i></b></p>
+      <br/>
+
+      <table style="width:98%;">
+        <thead>
+          <tr>
+            <th style="width:200px;">Name</th>
+            <th>Email</th>
+            <th>Gender</th>
+            <th>Date of Birth</th>
+            <th>Class Room</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @report_hash.each do |student_id, values| %>
+            <tr style="line-height: 1em;">
+              <td style="text-align: left;"><span style="padding-left:10px;"><%= values["name"] %></span></td>
+              <td style="text-align: center;"><%= values["email"] %></td>
+              <td style="text-align: center;"><%= values["gender"] %></td>
+              <td style="text-align: center;"><%= values["dob"] %></td>
+              <td><%= values["class_room"] %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
   </body>
 </html>

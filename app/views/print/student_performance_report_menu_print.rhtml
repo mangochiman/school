@@ -62,7 +62,15 @@
   </head>
   <body>
     <div style="margin-left:2%;">
-      <table style="width:98%;" id="exam_notifications">
+      Report Type: <b><i>Student Performance</i></b><br/>
+      Exam Type: <b><i><%= @exam_type_name %></i></b><br/>
+      Class: <b><i><%= @class_name %></i></b><br/>
+      Course: <b><i><%= @course_name %></i></b><br/>
+      Semester Details: <b><i><%=  @formatted_semester_details %></i></b><br/>
+      Total Students: <b><i><%=  @report_hash.keys.count %></i></b><br/>
+      <p>Date Generated: <b><i><%= Date.today.strftime("%d/%b/%Y") %></i></b></p>
+      <br/>
+      <table style="width:98%;">
         <thead>
           <tr>
             <th style="width:200px;">Name</th>

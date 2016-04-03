@@ -643,7 +643,7 @@ class PrintController < ApplicationController
     @current_semester_audit_id = SemesterAudit.last.semester_audit_id if current_semester_audit.blank?
 
     semester_audit_id = params[:semester_audit_id]
-
+    @formatted_semester_details = SemesterAudit.formatted_semester_details(semester_audit_id)
     hash = {}
     students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra ON
           s.student_id = scra.student_id WHERE scra.semester_audit_id = #{semester_audit_id}")
@@ -722,7 +722,8 @@ class PrintController < ApplicationController
 
     class_room_id = params[:class_room_id]
     semester_audit_id = params[:semester_audit_id]
-
+    @class_name = ClassRoom.find(class_room_id).name
+    @formatted_semester_details = SemesterAudit.formatted_semester_details(semester_audit_id)
     hash = {}
     students = Student.find_by_sql("SELECT * FROM student s INNER JOIN student_class_room_adjustment scra
           ON s.student_id = scra.student_id INNER JOIN semester_audit sa
@@ -801,7 +802,8 @@ class PrintController < ApplicationController
 
     class_room_id = params[:class_room_id]
     semester_audit_id = params[:semester_audit_id]
-
+    @class_name = ClassRoom.find(class_room_id).name
+    @formatted_semester_details = SemesterAudit.formatted_semester_details(semester_audit_id)
     hash = {}
     courses = Course.find_by_sql("SELECT c.course_id, c.name, c.created_at FROM course c INNER JOIN class_room_course crc ON
             c.course_id = crc.course_id INNER JOIN class_room cr ON crc.class_room_id = cr.class_room_id
@@ -883,6 +885,8 @@ class PrintController < ApplicationController
   def teachers_per_subjects_report_print
     hash = {}
     class_rooms = ClassRoom.all
+    @teacher_details = 'ALL' if (params[:teacher_id].match(/ALL/i))
+    @teacher_details = Teacher.find(params[:teacher_id]).name_and_gender unless (params[:teacher_id].match(/ALL/i))
     if (params[:teacher_id].match(/ALL/i))
       teachers = Teacher.all
       teachers.each do |teacher|
@@ -964,6 +968,10 @@ class PrintController < ApplicationController
     course = params[:course]
     semester_audit_id = params[:semester_audit_id]
     class_room_id = params[:class_room_id]
+    @class_name = ClassRoom.find(class_room_id).name
+    @exam_type_name = ExaminationType.find(exam_type).name
+    @course_name = Course.find(course).name
+    @formatted_semester_details = SemesterAudit.formatted_semester_details(semester_audit_id)
     hash = {}
 
     students = Student.find_by_sql("SELECT s.*, e.start_date as exam_date, er.marks as grade FROM exam e
@@ -997,7 +1005,7 @@ class PrintController < ApplicationController
     course = params[:course]
     semester_audit_id = params[:semester_audit_id]
     class_room_id = params[:class_room_id]
-
+    @class_name = ClassRoom.find(class_room_id).name
     thread = Thread.new{
       Kernel.system "wkhtmltopdf --margin-top 0 --margin-bottom 0 -s A4 http://" +
         request.env["HTTP_HOST"] + "\"#{print_path}/?exam_type=#{exam_type}&course=#{course}&semester_audit_id=#{semester_audit_id}&class_room_id=#{class_room_id}" + "\" #{destination_path} \n"
@@ -1015,7 +1023,9 @@ class PrintController < ApplicationController
     payment_type = params[:payment_type]
     semester_audit_id = params[:semester_audit_id]
     class_room_id = params[:class_room_id]
-
+    @class_name = ClassRoom.find(class_room_id).name
+    @payment_type_name = PaymentType.find(payment_type).name
+    @formatted_semester_details = SemesterAudit.formatted_semester_details(semester_audit_id)
     hash = {}
 
     students = Student.find_by_sql("SELECT s.*, SUM(p.amount_paid) as total_amount_paid,
@@ -1068,7 +1078,9 @@ class PrintController < ApplicationController
     payment_type = params[:payment_type]
     semester_audit_id = params[:semester_audit_id]
     class_room_id = params[:class_room_id]
-
+    @class_name = ClassRoom.find(class_room_id).name
+    @payment_type_name = PaymentType.find(payment_type).name
+    @formatted_semester_details = SemesterAudit.formatted_semester_details(semester_audit_id)
     hash = {}
     students = Student.find_by_sql("SELECT s.*, SUM(p.amount_paid) as total_amount_paid,
               pt.amount_required as amount_required FROM student s
@@ -1119,7 +1131,8 @@ class PrintController < ApplicationController
     payment_type = params[:payment_type]
     semester_audit_id = params[:semester_audit_id]
     class_room_id = params[:class_room_id]
-
+    @class_name = ClassRoom.find(class_room_id).name
+    @formatted_semester_details = SemesterAudit.formatted_semester_details(semester_audit_id)
     hash = {}
     hash[class_room_id] = {}
     students_who_paid_ids = students_who_paid(semester_audit_id, class_room_id, payment_type).join(', ')

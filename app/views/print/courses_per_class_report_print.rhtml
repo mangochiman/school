@@ -62,6 +62,13 @@
   </head>
   <body>
     <div style="margin-left:2%;">
+      Report Type: <b><i>Courses Per Class</i></b><br/>
+      Class: <b><i><%= @class_name %></i></b><br/>
+      Semester Details: <b><i><%=  @formatted_semester_details %></i></b><br/>
+      Total Students: <b><i><%=  @report_hash.keys.count %></i></b><br/>
+      <p>Date Generated: <b><i><%= Date.today.strftime("%d/%b/%Y") %></i></b></p>
+      <br/>
+
       <table style="width:98%;">
         <thead>
           <tr>

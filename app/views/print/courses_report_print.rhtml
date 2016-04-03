@@ -62,6 +62,12 @@
   </head>
   <body>
     <div style="margin-left:2%;">
+      Report Type: <b><i>Courses Per Year</i></b><br/>
+      Year: <b><i><%= params[:year] %></i></b><br/>
+      Total Courses: <b><i><%=  @report_hash.keys.count %></i></b><br/>
+      <p>Date Generated: <b><i><%= Date.today.strftime("%d/%b/%Y") %></i></b></p>
+      <br/>
+
       <table style="width:98%;">
         <thead>
           <tr>

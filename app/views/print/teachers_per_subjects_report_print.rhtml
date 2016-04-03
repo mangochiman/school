@@ -2,7 +2,7 @@
 
 <html lang="en">
   <head>
-    <title>New Exam Notifications</title>
+    <title>Teachers Per Subjects Report</title>
     <style type="text/css">
       table {
         width: 100%;
@@ -62,7 +62,11 @@
   </head>
   <body>
     <div style="margin-left:2%;">
-      <table style="width:98%;" id="exam_notifications">
+      Report Type: <b><i>Teachers Per Subjects Report</i></b><br/>
+      Teacher Details: <b><i><%= @teacher_details %></i></b><br/>
+      <p>Date Generated: <b><i><%= Date.today.strftime("%d/%b/%Y") %></i></b></p>
+      <br/>
+      <table style="width:98%;">
         <thead>
           <tr>
             <th colspan='5'>Teacher-Class-Course Info</th>
