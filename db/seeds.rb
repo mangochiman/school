@@ -25,7 +25,7 @@ students = {
 }
             
 students.each do |key, data|
-  Student.create(data)
+  #Student.create(data)
 end
 
 teachers = {
